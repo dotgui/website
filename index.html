@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>.gui</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f0f;
+      --surface: #161616;
+      --border: #222;
+      --border-subtle: #1a1a1a;
+      --text: #e8e8e8;
+      --text-muted: #666;
+      --text-dim: #444;
+      --accent: #e8e8e8;
+      --green: #4ade80;
+      --mono: "Berkeley Mono", "Fira Code", "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    }
+
+    html { background: var(--bg); color: var(--text); font-family: var(--mono); font-size: 14px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+    body { min-height: 100vh; }
+
+    /* layout */
+    .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+    /* ─── nav ─── */
+    nav {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      animation: fadeDown 700ms var(--ease-out) both;
+    }
+    nav .wrap { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-size: 15px; font-weight: 600; color: var(--text); text-decoration: none; letter-spacing: -0.01em; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 180ms var(--ease-out);
+      position: relative;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -2px; left: 0; right: 100%;
+        height: 1px;
+        background: var(--text-muted);
+        transition: right 200ms var(--ease-out);
+      }
+      .nav-links a:hover { color: var(--text); }
+      .nav-links a:hover::after { right: 0; }
+    }
+
+    /* ─── hero ─── */
+    .hero {
+      padding: 96px 0 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-eyebrow {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      animation: fadeUp 700ms var(--ease-out) both;
+      animation-delay: 120ms;
+    }
+    .hero h1 {
+      font-size: clamp(40px, 7vw, 64px);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 28px;
+      color: var(--text);
+    }
+    /* Word-level stagger on the headline */
+    .hero h1 .w1 {
+      display: inline-block;
+      animation: fadeUp 900ms var(--ease-out) both;
+      animation-delay: 240ms;
+    }
+    .hero h1 .w2 {
+      display: inline-block;
+      animation: fadeUp 900ms var(--ease-out) both;
+      animation-delay: 420ms;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--text-muted);
+    }
+    .hero-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+      max-width: 520px;
+      line-height: 1.75;
+      font-family: var(--sans);
+      animation: fadeUp 800ms var(--ease-out) both;
+      animation-delay: 560ms;
+    }
+    .hero-desc strong { color: var(--text); font-weight: 500; }
+
+    /* ─── sections ─── */
+    section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+    section:last-child { border-bottom: none; }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 32px;
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-family: var(--sans);
+      margin-bottom: 16px;
+    }
+    p:last-child { margin-bottom: 0; }
+    p strong { color: var(--text); font-weight: 500; }
+
+    /* ─── code block ─── */
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 24px 0;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .code-filename {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .code-lang {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    pre {
+      padding: 20px;
+      overflow-x: auto;
+      font-size: 12.5px;
+      line-height: 1.75;
+      color: #aaa;
+    }
+    .tok-tag { color: #6ea8fe; }
+    .tok-attr { color: #79c0ff; }
+    .tok-val { color: #a5d6ff; }
+    .tok-str { color: #a8d8a8; }
+    .tok-comment { color: #484f58; font-style: italic; }
+    .tok-punct { color: #555; }
+
+    /* ─── feature grid ─── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 32px;
+    }
+    .feature {
+      background: var(--bg);
+      padding: 28px 24px;
+    }
+    .feature-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+    .feature-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .feature-body {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-family: var(--sans);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ─── tag pills ─── */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .tag {
+      font-size: 12px;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 10px;
+      font-family: var(--mono);
+    }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+    code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      color: var(--text);
+    }
+
+    /* ─── steps ─── */
+    .steps { margin-top: 32px; }
+    .step {
+      display: flex;
+      gap: 20px;
+      padding: 24px 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .step:first-child { border-top: none; padding-top: 0; }
+    .step-num {
+      font-size: 12px;
+      color: var(--text-dim);
+      width: 24px;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+    .step-content h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .step-content p { margin: 0; font-size: 13px; }
+
+    /* ─── footer ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+    }
+    footer .wrap { display: flex; align-items: center; justify-content: space-between; }
+    .footer-logo { font-size: 13px; color: var(--text-dim); }
+    .footer-note { font-size: 12px; color: var(--text-dim); font-family: var(--sans); }
+
+    /* ─── scroll reveal ─── */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 800ms var(--ease-out), transform 800ms var(--ease-out);
+    }
+    [data-reveal][data-visible] {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger container: the parent itself doesn't animate, children do */
+    [data-reveal="stagger"] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    [data-reveal="stagger"] > * {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 650ms var(--ease-out), transform 650ms var(--ease-out);
+    }
+    [data-reveal="stagger"][data-visible] > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0ms; }
+    [data-reveal="stagger"][data-visible] > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 90ms; }
+    [data-reveal="stagger"][data-visible] > *:nth-child(3) { opacity: 1; transform: none; transition-delay: 180ms; }
+    [data-reveal="stagger"][data-visible] > *:nth-child(4) { opacity: 1; transform: none; transition-delay: 270ms; }
+    [data-reveal="stagger"][data-visible] > *:nth-child(5) { opacity: 1; transform: none; transition-delay: 340ms; }
+    [data-reveal="stagger"][data-visible] > *:nth-child(6) { opacity: 1; transform: none; transition-delay: 400ms; }
+    [data-reveal="stagger"][data-visible] > *:nth-child(7) { opacity: 1; transform: none; transition-delay: 450ms; }
+    [data-reveal="stagger"][data-visible] > *:nth-child(8) { opacity: 1; transform: none; transition-delay: 490ms; }
+    [data-reveal="stagger"][data-visible] > *:nth-child(9) { opacity: 1; transform: none; transition-delay: 520ms; }
+    [data-reveal="stagger"][data-visible] > *:nth-child(n+10) { opacity: 1; transform: none; transition-delay: 550ms; }
+
+    /* Tags get a tighter stagger */
+    .tags[data-reveal="stagger"] > * { transition-duration: 450ms; }
+    .tags[data-reveal="stagger"][data-visible] > *:nth-child(2) { transition-delay: 50ms; }
+    .tags[data-reveal="stagger"][data-visible] > *:nth-child(3) { transition-delay: 100ms; }
+    .tags[data-reveal="stagger"][data-visible] > *:nth-child(4) { transition-delay: 150ms; }
+    .tags[data-reveal="stagger"][data-visible] > *:nth-child(5) { transition-delay: 190ms; }
+    .tags[data-reveal="stagger"][data-visible] > *:nth-child(6) { transition-delay: 225ms; }
+    .tags[data-reveal="stagger"][data-visible] > *:nth-child(n+7) { transition-delay: 255ms; }
+
+    /* ─── keyframes ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── reduced motion ─── */
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal],
+      [data-reveal="stagger"] > *,
+      .hero-eyebrow, .hero h1 .w1, .hero h1 .w2, .hero-desc,
+      nav {
+        animation: none !important;
+        transition: opacity 200ms ease !important;
+        transform: none !important;
+      }
+      [data-reveal],
+      [data-reveal="stagger"] > * { opacity: 0; }
+      [data-reveal][data-visible],
+      [data-reveal="stagger"][data-visible] > * { opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .hero { padding: 64px 0 56px; }
+      .nav-links { display: none; }
+      footer .wrap { flex-direction: column; gap: 12px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="wrap">
+      <a class="nav-logo" href="#">.gui</a>
+      <div class="nav-links">
+        <a href="#format">Format</a>
+        <a href="#render">Renderer</a>
+        <a href="#figma">Figma</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="wrap">
+
+    <div class="hero">
+      <div class="hero-eyebrow">v1.0 — Open Format</div>
+      <h1><span class="w1">UI as</span> <span class="w2"><em>text.</em></span></h1>
+      <p class="hero-desc">
+        <strong>.gui</strong> is a portable, text-based format for describing user interfaces.
+        Export any Figma screen to a single <code>.gui</code> file.
+        Render it in a browser. Feed it to an AI agent. Build with it programmatically.
+      </p>
+    </div>
+
+    <section id="format">
+      <div data-reveal>
+        <div class="section-label">What it is</div>
+        <h2>A UI file that tools can read</h2>
+        <p>
+          Most design formats are binary blobs — opaque to code, invisible to AI. <strong>.gui</strong> is different:
+          it's plain XML that carries your complete screen exactly as Figma drew it, in a format any tool can parse.
+        </p>
+        <p>
+          Frames, stacks, text, images, shapes, tokens, fonts, effects — everything is in one file,
+          with attributes you can read without a schema decoder.
+        </p>
+      </div>
+
+      <div class="code-block" data-reveal>
+        <div class="code-header">
+          <span class="code-filename">checkout.gui</span>
+          <span class="code-lang">XML</span>
+        </div>
+        <pre><span class="tok-comment">&lt;!-- a complete mobile screen --&gt;</span>
+<span class="tok-punct">&lt;</span><span class="tok-tag">gui</span> <span class="tok-attr">version</span><span class="tok-punct">="</span><span class="tok-val">1.0</span><span class="tok-punct">"</span> <span class="tok-attr">name</span><span class="tok-punct">="</span><span class="tok-val">Checkout</span><span class="tok-punct">"</span> <span class="tok-attr">viewport</span><span class="tok-punct">="</span><span class="tok-val">390x844</span><span class="tok-punct">"&gt;</span>
+
+  <span class="tok-comment">&lt;!-- design tokens --&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">tokens</span><span class="tok-punct">&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">color</span> <span class="tok-attr">name</span><span class="tok-punct">="</span><span class="tok-val">primary</span><span class="tok-punct">"</span> <span class="tok-attr">value</span><span class="tok-punct">="</span><span class="tok-val">#007AFF</span><span class="tok-punct">" /&gt;</span>
+    <span class="tok-punct">&lt;</span><span class="tok-tag">number</span> <span class="tok-attr">name</span><span class="tok-punct">="</span><span class="tok-val">radius-card</span><span class="tok-punct">"</span> <span class="tok-attr">value</span><span class="tok-punct">="</span><span class="tok-val">12</span><span class="tok-punct">" /&gt;</span>
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">tokens</span><span class="tok-punct">&gt;</span>
+
+  <span class="tok-comment">&lt;!-- the screen --&gt;</span>
+  <span class="tok-punct">&lt;</span><span class="tok-tag">stack</span> <span class="tok-attr">direction</span><span class="tok-punct">="</span><span class="tok-val">vertical</span><span class="tok-punct">"</span> <span class="tok-attr">fill</span><span class="tok-punct">="</span><span class="tok-val">#F2F2F7</span><span class="tok-punct">"</span> <span class="tok-attr">gap</span><span class="tok-punct">="</span><span class="tok-val">16</span><span class="tok-punct">"</span> <span class="tok-attr">padding</span><span class="tok-punct">="</span><span class="tok-val">24</span><span class="tok-punct">"&gt;</span>
+
+    <span class="tok-punct">&lt;</span><span class="tok-tag">text</span> <span class="tok-attr">value</span><span class="tok-punct">="</span><span class="tok-val">Checkout</span><span class="tok-punct">"</span>
+          <span class="tok-attr">font-family</span><span class="tok-punct">="</span><span class="tok-val">Inter</span><span class="tok-punct">"</span> <span class="tok-attr">font-size</span><span class="tok-punct">="</span><span class="tok-val">28</span><span class="tok-punct">"</span>
+          <span class="tok-attr">font-weight</span><span class="tok-punct">="</span><span class="tok-val">700</span><span class="tok-punct">"</span> <span class="tok-attr">color</span><span class="tok-punct">="</span><span class="tok-val">#1C1C1E</span><span class="tok-punct">" /&gt;</span>
+
+    <span class="tok-punct">&lt;</span><span class="tok-tag">stack</span> <span class="tok-attr">fill</span><span class="tok-punct">="</span><span class="tok-val">#FFFFFF</span><span class="tok-punct">"</span> <span class="tok-attr">radius</span><span class="tok-punct">="</span><span class="tok-val">$radius-card</span><span class="tok-punct">"</span>
+           <span class="tok-attr">direction</span><span class="tok-punct">="</span><span class="tok-val">horizontal</span><span class="tok-punct">"</span> <span class="tok-attr">padding</span><span class="tok-punct">="</span><span class="tok-val">16</span><span class="tok-punct">"</span>
+           <span class="tok-attr">align</span><span class="tok-punct">="</span><span class="tok-val">center</span><span class="tok-punct">"</span> <span class="tok-attr">justify</span><span class="tok-punct">="</span><span class="tok-val">space-between</span><span class="tok-punct">"&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">text</span> <span class="tok-attr">value</span><span class="tok-punct">="</span><span class="tok-val">Total</span><span class="tok-punct">"</span> <span class="tok-attr">font-size</span><span class="tok-punct">="</span><span class="tok-val">15</span><span class="tok-punct">"</span> <span class="tok-attr">color</span><span class="tok-punct">="</span><span class="tok-val">#8E8E93</span><span class="tok-punct">" /&gt;</span>
+      <span class="tok-punct">&lt;</span><span class="tok-tag">text</span> <span class="tok-attr">value</span><span class="tok-punct">="</span><span class="tok-val">$84.00</span><span class="tok-punct">"</span> <span class="tok-attr">font-size</span><span class="tok-punct">="</span><span class="tok-val">15</span><span class="tok-punct">"</span> <span class="tok-attr">font-weight</span><span class="tok-punct">="</span><span class="tok-val">600</span><span class="tok-punct">"</span> <span class="tok-attr">color</span><span class="tok-punct">="</span><span class="tok-val">#1C1C1E</span><span class="tok-punct">" /&gt;</span>
+    <span class="tok-punct">&lt;/</span><span class="tok-tag">stack</span><span class="tok-punct">&gt;</span>
+
+    <span class="tok-punct">&lt;</span><span class="tok-tag">shape</span> <span class="tok-attr">type</span><span class="tok-punct">="</span><span class="tok-val">rect</span><span class="tok-punct">"</span>
+           <span class="tok-attr">fill</span><span class="tok-punct">="</span><span class="tok-val">$primary</span><span class="tok-punct">"</span> <span class="tok-attr">radius</span><span class="tok-punct">="</span><span class="tok-val">12</span><span class="tok-punct">"</span>
+           <span class="tok-attr">sizing-h</span><span class="tok-punct">="</span><span class="tok-val">fill</span><span class="tok-punct">"</span> <span class="tok-attr">height</span><span class="tok-punct">="</span><span class="tok-val">52</span><span class="tok-punct">" /&gt;</span>
+
+  <span class="tok-punct">&lt;/</span><span class="tok-tag">stack</span><span class="tok-punct">&gt;</span>
+<span class="tok-punct">&lt;/</span><span class="tok-tag">gui</span><span class="tok-punct">&gt;</span></pre>
+      </div>
+
+      <div class="tags" data-reveal="stagger">
+        <span class="tag">&lt;frame&gt;</span>
+        <span class="tag">&lt;stack&gt;</span>
+        <span class="tag">&lt;text&gt;</span>
+        <span class="tag">&lt;img&gt;</span>
+        <span class="tag">&lt;shape&gt;</span>
+        <span class="tag">&lt;svg&gt;</span>
+        <span class="tag">&lt;tokens&gt;</span>
+        <span class="tag">&lt;fonts&gt;</span>
+        <span class="tag">&lt;assets&gt;</span>
+        <span class="tag">&lt;appearance&gt;</span>
+      </div>
+    </section>
+
+    <section>
+      <div data-reveal>
+        <div class="section-label">Why it exists</div>
+        <h2>Designed for AI agents</h2>
+        <p>
+          When an AI agent needs to understand or reproduce a UI, it needs text. Figma's native format is a binary API — not something you paste into a prompt.
+          <strong>.gui</strong> bridges that gap: it's compact, human-readable XML that fits in a context window.
+        </p>
+        <p>
+          An agent can read a <code>.gui</code> file and know exactly what's on screen —
+          the layout structure, every text value, colors, spacing, font weights — without screenshots or visual reasoning.
+          It can also <em>write</em> <code>.gui</code> to produce screens that render correctly.
+        </p>
+      </div>
+
+      <div class="features" data-reveal="stagger">
+        <div class="feature">
+          <div class="feature-label">01</div>
+          <div class="feature-title">Portable</div>
+          <p class="feature-body">A single <code>.gui</code> file carries structure, styles, tokens, fonts, and assets. No external references needed.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-label">02</div>
+          <div class="feature-title">Renderable</div>
+          <p class="feature-body">Drop in <code>dotgui-render</code> to turn any <code>.gui</code> string into live DOM with one function call. Zero dependencies.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-label">03</div>
+          <div class="feature-title">Figma-accurate</div>
+          <p class="feature-body">1-1 mapping to Figma's layer model. Auto-layout, fills, gradients, effects, tokens — nothing is approximated.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-label">04</div>
+          <div class="feature-title">AI-native</div>
+          <p class="feature-body">Plain text. No proprietary decoder required. LLMs can read, write, and reason about <code>.gui</code> files directly.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="render">
+      <div data-reveal>
+        <div class="section-label">Renderer</div>
+        <h2>dotgui-render</h2>
+        <p>
+          A standalone TypeScript library that takes a <code>.gui</code> document string and renders it
+          into a live container element. It handles layout, fonts, images, shapes, gradients, effects —
+          everything the format describes.
+        </p>
+      </div>
+
+      <div class="code-block" data-reveal>
+        <div class="code-header">
+          <span class="code-filename">app.ts</span>
+          <span class="code-lang">TypeScript</span>
+        </div>
+        <pre><span class="tok-comment">// render a .gui document into any container</span>
+<span class="tok-tag">import</span> <span class="tok-punct">{</span> render <span class="tok-punct">}</span> <span class="tok-attr">from</span> <span class="tok-str">'dotgui-render'</span>
+
+<span class="tok-tag">const</span> setZoom <span class="tok-punct">=</span> render<span class="tok-punct">(</span>guiCode<span class="tok-punct">,</span> containerEl<span class="tok-punct">)</span>
+
+setZoom<span class="tok-punct">?.(</span><span class="tok-val">1</span><span class="tok-punct">)</span>   <span class="tok-comment">// fit to container</span>
+setZoom<span class="tok-punct">?.(</span><span class="tok-val">2</span><span class="tok-punct">)</span>   <span class="tok-comment">// 2× zoom</span></pre>
+      </div>
+
+      <div data-reveal>
+        <p>
+          The renderer also accepts a pre-built <strong>asset map</strong> — useful when you want to
+          avoid re-parsing large base64 image blobs on each render update.
+        </p>
+      </div>
+
+      <div class="code-block" data-reveal>
+        <div class="code-header">
+          <span class="code-filename">with-assets.ts</span>
+          <span class="code-lang">TypeScript</span>
+        </div>
+        <pre><span class="tok-comment">// pass assets separately for faster re-renders</span>
+<span class="tok-tag">const</span> assetMap <span class="tok-punct">= {</span>
+  <span class="tok-str">'$img-1'</span><span class="tok-punct">:</span> <span class="tok-str">'data:image/webp;base64,AAAA...'</span><span class="tok-punct">,</span>
+  <span class="tok-str">'$svg-1'</span><span class="tok-punct">:</span> <span class="tok-str">'data:image/svg+xml;base64,AAAA...'</span><span class="tok-punct">,</span>
+<span class="tok-punct">}</span>
+
+render<span class="tok-punct">(</span>guiCode<span class="tok-punct">,</span> containerEl<span class="tok-punct">,</span> assetMap<span class="tok-punct">)</span></pre>
+      </div>
+    </section>
+
+    <section id="figma">
+      <div data-reveal>
+        <div class="section-label">Export</div>
+        <h2>Export from Figma</h2>
+        <p>
+          Select any layer — a frame, a component, a group, or even a single shape — and export it as <code>.gui</code>
+          with the Figma plugin. The plugin handles everything: token extraction, font mapping, image
+          encoding, gradient computation.
+        </p>
+      </div>
+
+      <div class="steps" data-reveal="stagger">
+        <div class="step">
+          <span class="step-num">01</span>
+          <div class="step-content">
+            <h3>Install the plugin</h3>
+            <p>Add the dotgui Figma plugin from the Figma Community.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">02</span>
+          <div class="step-content">
+            <h3>Select a layer</h3>
+            <p>Any visible layer works — frames, components, groups, or individual shapes.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">03</span>
+          <div class="step-content">
+            <h3>Export as .gui</h3>
+            <p>
+              Small exports produce a single inline <code>.gui</code> XML file with embedded assets.
+              Larger exports download as a packaged <code>.gui</code> container with an
+              <code>assets/</code> folder.
+            </p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">04</span>
+          <div class="step-content">
+            <h3>Render or process</h3>
+            <p>
+              Pass the file to <code>dotgui-render</code> for a live preview,
+              or feed it directly to an AI agent as structured context.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div data-reveal>
+        <div class="section-label">Format</div>
+        <h2>What a .gui file contains</h2>
+        <p>Every <code>.gui</code> document is a self-contained XML file with these top-level blocks:</p>
+      </div>
+
+      <div data-reveal>
+        <hr />
+        <p><strong><code>&lt;tokens&gt;</code></strong> — Design system primitives. Colors, numbers, strings, referenced by <code>$name</code> anywhere in the tree.</p>
+        <p><strong><code>&lt;fonts&gt;</code></strong> — Font declarations. The renderer uses these to load Google Fonts or fall back gracefully to system fonts.</p>
+        <p><strong><code>&lt;assets&gt;</code></strong> — Embedded images (WebP) and vector artwork (SVG), base64-encoded. Referenced as <code>$img-1</code>, <code>$svg-1</code>, etc.</p>
+        <p><strong><code>&lt;frame&gt;</code> / <code>&lt;stack&gt;</code></strong> — The UI tree. Frames have absolutely-positioned children; stacks are auto-layout (flex or grid).</p>
+        <p><strong><code>&lt;text&gt;</code></strong> — Text nodes, with full typography attributes and optional mixed-style <code>&lt;segment&gt;</code> children.</p>
+        <p><strong><code>&lt;shape&gt;</code></strong> — Rectangles, ellipses, lines, and vector paths.</p>
+        <p><strong><code>&lt;appearance&gt;</code></strong> — Multi-fill and multi-effect paint stacks for any node that needs more than a single solid color.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <span class="footer-logo">.gui — v1.0</span>
+      <span class="footer-note">A portable UI description format</span>
+    </div>
+  </footer>
+
+  <script>
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.setAttribute('data-visible', '');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
+
+    document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+  </script>
+</body>
+</html>
