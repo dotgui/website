@@ -1,0 +1,1212 @@
+<template>
+  <div class="pg-shell">
+    <TheNav />
+    <div class="pg-body">
+
+      <!-- Left column: tabbed editor / assets -->
+      <div class="pg-left-col" :style="{ flexBasis: splitPct + '%' }">
+
+        <div class="pg-tab-bar">
+          <div class="pg-tabs">
+            <button class="pg-tab" :class="{ active: activeTab === 'gui' }" @click="activeTab = 'gui'">gui</button>
+            <button class="pg-tab" :class="{ active: activeTab === 'assets' }" @click="activeTab = 'assets'">assets</button>
+          </div>
+          <div class="pg-tab-actions">
+            <template v-if="activeTab === 'gui'">
+              <span class="pg-hint" :class="{ 'pg-hint--error': !!parseError }">
+                {{ parseError || 'live preview' }}
+              </span>
+              <label class="pg-format-btn" title="Open .gui file">
+                open
+                <input ref="guiFileInputEl" type="file" accept=".gui,.xml" style="display:none" @change="onGuiFileUpload" />
+              </label>
+              <button class="pg-format-btn" @click="formatCode" title="Format code (Shift+Alt+F)">format</button>
+            </template>
+            <template v-if="activeTab === 'assets'">
+              <label class="pg-format-btn" title="Upload image">
+                + upload
+                <input ref="fileInputEl" type="file" accept="image/*" multiple style="display:none" @change="onFileUpload" />
+              </label>
+            </template>
+          </div>
+        </div>
+
+        <div class="pg-tab-content" :class="{ hidden: activeTab !== 'gui' }">
+          <div ref="editorEl" class="pg-editor-mount" />
+        </div>
+
+        <div class="pg-tab-content pg-assets-panel" :class="{ hidden: activeTab !== 'assets' }">
+          <div class="pg-assets-list">
+            <div v-if="!Object.keys(assets).length" class="pg-assets-empty">
+              upload an image — reference it as <code>$img-1</code> in your code
+            </div>
+            <div
+              v-for="(url, id) in assets"
+              :key="id"
+              class="pg-asset-item"
+              :class="{ copied: copiedId === id }"
+            >
+              <button class="pg-asset-delete" @click="deleteAsset(String(id))" title="Remove">×</button>
+              <img :src="url" class="pg-asset-thumb" @click="copyId(String(id))" :title="copiedId === id ? 'copied!' : `click to copy ${id}`" />
+              <span class="pg-asset-id">{{ copiedId === id ? 'copied!' : id }}</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pg-divider" @mousedown.prevent="startDrag" />
+
+      <!-- Preview pane -->
+      <div class="pg-pane pg-preview-pane" :style="{ flexBasis: (100 - splitPct) + '%' }">
+        <div class="pg-pane-header">
+          <span class="pg-pane-label">preview</span>
+          <span class="pg-hint">scroll to zoom · drag to pan</span>
+        </div>
+        <div ref="previewEl" class="pg-preview" @wheel.prevent="onWheel" />
+      </div>
+
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { EditorView, keymap, lineNumbers, drawSelection, highlightActiveLine, dropCursor } from '@codemirror/view'
+import { EditorState } from '@codemirror/state'
+import { xml, xmlLanguage } from '@codemirror/lang-xml'
+import { linter, lintGutter, type Diagnostic } from '@codemirror/lint'
+import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
+import {
+  foldGutter, foldKeymap, indentOnInput,
+  syntaxHighlighting, HighlightStyle, syntaxTree,
+} from '@codemirror/language'
+import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap, startCompletion, type CompletionContext, type CompletionResult } from '@codemirror/autocomplete'
+import { tags } from '@lezer/highlight'
+import { render } from 'gui-render'
+import xmlFormat from 'xml-formatter'
+import { unzip } from 'fflate'
+
+definePageMeta({ ssr: false })
+
+// ─── sample ───────────────────────────────────────────────────────────────────
+
+const SAMPLE = `<gui version="1.0" name="Profile" viewport="390x280">
+  <tokens>
+    <color name="bg"      value="#0f172a" />
+    <color name="surface" value="#1e293b" />
+    <color name="primary" value="#6366f1" />
+    <color name="green"   value="#22c55e" />
+    <color name="text"    value="#f8fafc" />
+    <color name="muted"   value="#94a3b8" />
+    <number name="r"      value="14" />
+  </tokens>
+  <fonts>
+    <font family="Inter" source="google"
+          weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <stack direction="vertical" fill="$bg"
+         padding="24" gap="20"
+         sizing-h="fill" sizing-v="fill">
+
+    <!-- header card -->
+    <stack direction="horizontal" fill="$surface"
+           radius="$r" padding="20" gap="16" align="center">
+      <shape type="ellipse" width="52" height="52" fill="$primary" />
+      <stack direction="vertical" gap="4" sizing-h="fill">
+        <text value="Alex Chen"
+              font-family="Inter" font-size="16" font-weight="700"
+              color="$text" />
+        <text value="Product Designer · San Francisco"
+              font-family="Inter" font-size="12" color="$muted" />
+      </stack>
+      <shape type="rect" fill="$primary" radius="8"
+             width="72" height="32" />
+    </stack>
+
+    <!-- stats row -->
+    <stack direction="horizontal" gap="12">
+      <stack direction="vertical" fill="$surface" radius="$r"
+             padding="16" gap="4" align="center" sizing-h="fill">
+        <text value="248" font-family="Inter" font-size="20"
+              font-weight="700" color="$text" />
+        <text value="projects" font-family="Inter"
+              font-size="11" color="$muted" />
+      </stack>
+      <stack direction="vertical" fill="$surface" radius="$r"
+             padding="16" gap="4" align="center" sizing-h="fill">
+        <text value="12k" font-family="Inter" font-size="20"
+              font-weight="700" color="$green" />
+        <text value="followers" font-family="Inter"
+              font-size="11" color="$muted" />
+      </stack>
+      <stack direction="vertical" fill="$surface" radius="$r"
+             padding="16" gap="4" align="center" sizing-h="fill">
+        <text value="99%" font-family="Inter" font-size="20"
+              font-weight="700" color="$text" />
+        <text value="rating" font-family="Inter"
+              font-size="11" color="$muted" />
+      </stack>
+    </stack>
+
+  </stack>
+</gui>`
+
+// ─── .gui schema for completions ──────────────────────────────────────────────
+
+const SHARED_VISUAL = [
+  { name: 'opacity' }, { name: 'blend' }, { name: 'rotation' },
+  { name: 'sizing-h', values: ['hug', 'fill'] },
+  { name: 'sizing-v', values: ['hug', 'fill'] },
+  { name: 'layout-position', values: ['absolute'] },
+  { name: 'min-width' }, { name: 'max-width' },
+  { name: 'min-height' }, { name: 'max-height' },
+]
+
+const SHARED_LAYOUT = [
+  { name: 'width' }, { name: 'height' }, { name: 'x' }, { name: 'y' },
+  { name: 'fill' }, { name: 'radius' }, { name: 'shadow' },
+  { name: 'stroke' }, { name: 'stroke-width' },
+  { name: 'clip', values: ['true'] },
+  ...SHARED_VISUAL,
+]
+
+const GUI_ELEMENTS = [
+  {
+    name: 'gui',
+    attrs: [
+      { name: 'version', values: ['1.0'] },
+      { name: 'name' },
+      { name: 'viewport' },
+    ],
+  },
+  { name: 'tokens', children: ['color', 'number', 'string'] },
+  { name: 'color', selfClosing: true, attrs: [{ name: 'name' }, { name: 'value' }] },
+  { name: 'number', selfClosing: true, attrs: [{ name: 'name' }, { name: 'value' }] },
+  { name: 'string', selfClosing: true, attrs: [{ name: 'name' }, { name: 'value' }] },
+  {
+    name: 'fonts',
+    children: ['font'],
+  },
+  {
+    name: 'font',
+    selfClosing: true,
+    attrs: [
+      { name: 'family' },
+      { name: 'source', values: ['google', 'system', 'unresolved'] },
+      { name: 'weights' },
+      { name: 'styles', values: ['normal', 'italic'] },
+      { name: 'category', values: ['sans-serif', 'serif', 'monospace', 'handwriting'] },
+    ],
+  },
+  { name: 'assets', children: ['image'] },
+  {
+    name: 'image',
+    selfClosing: true,
+    attrs: [{ name: 'id' }, { name: 'format', values: ['webp', 'png', 'jpg', 'svg'] }, { name: 'src' }],
+  },
+  { name: 'styles', children: ['text-style', 'fill-style', 'effect-style'] },
+  {
+    name: 'text-style',
+    selfClosing: true,
+    attrs: [
+      { name: 'name' }, { name: 'font-family' }, { name: 'font-size' }, { name: 'font-weight' },
+      { name: 'font-style', values: ['normal', 'italic'] }, { name: 'line-height' },
+      { name: 'letter-spacing' }, { name: 'decoration' }, { name: 'text-case' },
+    ],
+  },
+  {
+    name: 'fill-style',
+    selfClosing: true,
+    attrs: [{ name: 'name' }, { name: 'value' }],
+  },
+  {
+    name: 'effect-style',
+    attrs: [{ name: 'name' }],
+  },
+  {
+    name: 'stack',
+    attrs: [
+      { name: 'direction', values: ['horizontal', 'vertical', 'grid'] },
+      { name: 'gap' }, { name: 'padding' },
+      { name: 'align', values: ['start', 'center', 'end', 'stretch', 'baseline'] },
+      { name: 'justify', values: ['start', 'center', 'end', 'space-between'] },
+      { name: 'wrap', values: ['true'] },
+      { name: 'grid-columns' }, { name: 'grid-rows' },
+      ...SHARED_LAYOUT,
+    ],
+  },
+  {
+    name: 'frame',
+    attrs: [...SHARED_LAYOUT],
+  },
+  {
+    name: 'group',
+    attrs: [{ name: 'x' }, { name: 'y' }, { name: 'width' }, { name: 'height' }, ...SHARED_VISUAL],
+  },
+  {
+    name: 'text',
+    selfClosing: true,
+    attrs: [
+      { name: 'value' },
+      { name: 'font-family' }, { name: 'font-size' }, { name: 'font-weight' },
+      { name: 'font-style', values: ['normal', 'italic'] },
+      { name: 'color' }, { name: 'line-height' }, { name: 'letter-spacing' },
+      { name: 'align', values: ['left', 'center', 'right'] },
+      { name: 'vertical-align', values: ['top', 'center', 'bottom'] },
+      { name: 'truncate', values: ['true'] }, { name: 'max-lines' },
+      ...SHARED_LAYOUT,
+    ],
+  },
+  {
+    name: 'shape',
+    selfClosing: true,
+    attrs: [
+      { name: 'type', values: ['rect', 'ellipse', 'line', 'path'] },
+      { name: 'stroke-cap', values: ['round', 'flat'] },
+      { name: 'arc-start' }, { name: 'arc-end' }, { name: 'arc-inner' },
+      ...SHARED_LAYOUT,
+    ],
+  },
+  {
+    name: 'img',
+    selfClosing: true,
+    attrs: [
+      { name: 'src' },
+      { name: 'fit', values: ['cover', 'contain', 'crop', 'tile'] },
+      ...SHARED_LAYOUT,
+    ],
+  },
+  {
+    name: 'svg',
+    selfClosing: true,
+    attrs: [{ name: 'src' }, ...SHARED_LAYOUT],
+  },
+  {
+    name: 'appearance',
+    children: ['fill', 'effect'],
+  },
+  {
+    name: 'fill',
+    selfClosing: true,
+    attrs: [
+      { name: 'type', values: ['color', 'linear-gradient', 'radial-gradient', 'angular-gradient', 'image'] },
+      { name: 'value' }, { name: 'src' },
+      { name: 'fit', values: ['cover', 'contain', 'crop', 'tile'] },
+      { name: 'opacity' },
+    ],
+  },
+  {
+    name: 'effect',
+    selfClosing: true,
+    attrs: [
+      { name: 'type', values: ['drop-shadow', 'inner-shadow', 'layer-blur', 'background-blur'] },
+      { name: 'x' }, { name: 'y' }, { name: 'radius' }, { name: 'spread' }, { name: 'color' },
+    ],
+  },
+  {
+    name: 'segment',
+    selfClosing: true,
+    attrs: [
+      { name: 'value' }, { name: 'font-family' }, { name: 'font-size' },
+      { name: 'font-weight' }, { name: 'color' }, { name: 'href' },
+    ],
+  },
+]
+
+// ─── attribute name completion ────────────────────────────────────────────────
+
+function guiAttrNameCompletion(ctx: CompletionContext): CompletionResult | null {
+  const word = ctx.matchBefore(/[\w-]*/)
+  if (!ctx.explicit && !word?.text) return null
+
+  const tree = syntaxTree(ctx.state)
+
+  // Must not be inside an AttributeValue
+  let check = tree.resolveInner(ctx.pos, -1)
+  while (check && check.name !== 'AttributeValue' && check.name !== 'Document') check = check.parent!
+  if (check?.name === 'AttributeValue') return null
+
+  // Walk up to OpenTag / SelfClosingTag
+  let tagNode = tree.resolveInner(ctx.pos, -1)
+  while (tagNode && tagNode.name !== 'OpenTag' && tagNode.name !== 'SelfClosingTag' && tagNode.name !== 'Document') {
+    tagNode = tagNode.parent!
+  }
+  if (!tagNode || (tagNode.name !== 'OpenTag' && tagNode.name !== 'SelfClosingTag')) return null
+
+  const tagNameNode = tagNode.getChild('TagName')
+  if (!tagNameNode) return null
+  const tagName = ctx.state.doc.sliceString(tagNameNode.from, tagNameNode.to)
+
+  const elSpec = GUI_ELEMENTS.find(e => e.name === tagName)
+  if (!elSpec || !elSpec.attrs?.length) return null
+
+  // Attrs already present in this tag
+  const usedAttrs = new Set(
+    tagNode.getChildren('Attribute')
+      .map(a => a.getChild('AttributeName'))
+      .filter(Boolean)
+      .map(n => ctx.state.doc.sliceString(n!.from, n!.to))
+  )
+
+  const from = word ? word.from : ctx.pos
+
+  const options = elSpec.attrs
+    .filter(a => !usedAttrs.has(a.name))
+    .map(a => ({
+      label: a.name,
+      type: 'property' as const,
+      apply(view: EditorView, _completion: any, f: number, to: number) {
+        const insert = `${a.name}=""`
+        view.dispatch({
+          changes: { from: f, to, insert },
+          selection: { anchor: f + a.name.length + 2 },
+        })
+        setTimeout(() => startCompletion(view), 0)
+      },
+    }))
+
+  if (!options.length) return null
+  return { from, options, validFor: /^[\w-]*$/ }
+}
+
+// ─── attribute value completion ──────────────────────────────────────────────
+
+// Attributes that also accept $token references
+const TOKEN_ATTRS = new Set([
+  'fill', 'color', 'stroke', 'radius', 'font-family',
+  'font-size', 'font-weight', 'gap', 'padding',
+])
+
+function guiAttrValueCompletion(ctx: CompletionContext): CompletionResult | null {
+  const tree = syntaxTree(ctx.state)
+  let valNode = tree.resolveInner(ctx.pos, -1)
+
+  while (valNode && valNode.name !== 'AttributeValue') {
+    valNode = valNode.parent!
+  }
+  if (!valNode) return null
+
+  const attrNode = valNode.parent
+  if (!attrNode || attrNode.name !== 'Attribute') return null
+
+  const attrNameNode = attrNode.getChild('AttributeName')
+  if (!attrNameNode) return null
+  const attrName = ctx.state.doc.sliceString(attrNameNode.from, attrNameNode.to)
+
+  const tagNode = attrNode.parent
+  if (!tagNode) return null
+  const tagNameNode = tagNode.getChild('TagName')
+  if (!tagNameNode) return null
+  const tagName = ctx.state.doc.sliceString(tagNameNode.from, tagNameNode.to)
+
+  const elSpec = GUI_ELEMENTS.find(e => e.name === tagName)
+  const attrSpec = elSpec?.attrs?.find(a => a.name === attrName)
+
+  const from = valNode.from + 1
+  const to = valNode.to > ctx.pos ? valNode.to - 1 : ctx.pos
+
+  // Snapshot of the doc for preview rendering
+  const baseCode = ctx.state.doc.toString()
+
+  function makeInfo(label: string) {
+    return () => {
+      const wrap = document.createElement('div')
+      wrap.style.cssText = [
+        'width:220px;height:200px',
+        'position:relative;overflow:hidden',
+        'background:#0c0c0c',
+        'border-left:1px solid var(--border)',
+        'pointer-events:none',
+        'background-image:radial-gradient(circle,#1a1a1a 1px,transparent 1px)',
+        'background-size:20px 20px',
+      ].join(';')
+
+      // Replace current attribute value with the hovered option
+      const previewCode = baseCode.slice(0, from) + label + baseCode.slice(to)
+      // Defer until CodeMirror adds the element to the DOM
+      setTimeout(() => render(previewCode, wrap), 0)
+      return wrap
+    }
+  }
+
+  const options: { label: string; type: string; detail?: string; info?: () => HTMLElement }[] = []
+
+  if (attrSpec && 'values' in attrSpec && Array.isArray(attrSpec.values)) {
+    for (const v of attrSpec.values) {
+      options.push({ label: v, type: 'constant', info: makeInfo(v) })
+    }
+  }
+
+  if (TOKEN_ATTRS.has(attrName)) {
+    const tokens = collectTokens(baseCode)
+    for (const t of tokens) {
+      options.push({ label: `$${t}`, type: 'variable', detail: 'token', info: makeInfo(`$${t}`) })
+    }
+  }
+
+  if (attrName === 'src') {
+    for (const id of Object.keys(assets.value)) {
+      options.push({ label: id, type: 'variable', detail: 'asset', info: makeInfo(id) })
+    }
+  }
+
+  if (!options.length) return null
+
+  return { from, to, options, validFor: /^[$a-z0-9._-]*$/ }
+}
+
+// ─── .gui linter ──────────────────────────────────────────────────────────────
+
+const VALID_ELEMENTS = new Set(GUI_ELEMENTS.map(e => e.name))
+
+const ENUM_ATTRS: Record<string, Record<string, Set<string>>> = {
+  stack: { direction: new Set(['horizontal', 'vertical', 'grid']) },
+  shape: { type: new Set(['rect', 'ellipse', 'line', 'path']) },
+  font: { source: new Set(['google', 'system', 'unresolved']) },
+  img: { fit: new Set(['cover', 'contain', 'crop', 'tile']) },
+  fill: {
+    type: new Set(['color', 'linear-gradient', 'radial-gradient', 'angular-gradient', 'image']),
+    fit: new Set(['cover', 'contain', 'crop', 'tile']),
+  },
+  effect: { type: new Set(['drop-shadow', 'inner-shadow', 'layer-blur', 'background-blur']) },
+}
+
+function collectTokens(code: string): Set<string> {
+  const found = new Set<string>()
+  const tokenRe = /<(?:color|number|string)\s[^>]*name="([^"]+)"/g
+  let m
+  while ((m = tokenRe.exec(code)) !== null) found.add(m[1])
+  const assetRe = /<image\s[^>]*id="([^"]+)"/g
+  while ((m = assetRe.exec(code)) !== null) found.add(m[1])
+  return found
+}
+
+function guiLintFn(view: EditorView): Diagnostic[] {
+  const diagnostics: Diagnostic[] = []
+  const code = view.state.doc.toString()
+  const definedTokens = collectTokens(code)
+  const doc = view.state.doc
+
+  syntaxTree(view.state).iterate({
+    enter(node) {
+      const isTag = node.name === 'OpenTag' || node.name === 'SelfClosingTag'
+      if (!isTag) return
+
+      const tagNameNode = node.node.getChild('TagName')
+      if (!tagNameNode) return
+      const tagName = doc.sliceString(tagNameNode.from, tagNameNode.to)
+
+      // unknown element
+      if (!VALID_ELEMENTS.has(tagName)) {
+        diagnostics.push({
+          from: tagNameNode.from,
+          to: tagNameNode.to,
+          severity: 'error',
+          message: `Unknown element <${tagName}>. Valid elements: ${[...VALID_ELEMENTS].join(', ')}.`,
+        })
+        return false
+      }
+
+      // check each attribute
+      for (const attrNode of node.node.getChildren('Attribute')) {
+        const nameNode = attrNode.getChild('AttributeName')
+        const valNode = attrNode.getChild('AttributeValue')
+        if (!nameNode || !valNode) continue
+
+        const attrName = doc.sliceString(nameNode.from, nameNode.to)
+        // strip surrounding quotes
+        const raw = doc.sliceString(valNode.from, valNode.to)
+        const attrVal = raw.slice(1, -1)
+
+        // enum validation
+        const enumMap = ENUM_ATTRS[tagName]
+        if (enumMap && enumMap[attrName] && !enumMap[attrName].has(attrVal)) {
+          diagnostics.push({
+            from: valNode.from + 1,
+            to: valNode.to - 1,
+            severity: 'error',
+            message: `"${attrVal}" is not valid for ${tagName}[${attrName}]. Expected: ${[...enumMap[attrName]].join(' | ')}.`,
+          })
+        }
+
+        // undefined token reference  ($name, not inside gradient/function calls)
+        if (attrVal.startsWith('$') && !attrVal.includes('(')) {
+          const tokenName = attrVal.slice(1)
+          if (!definedTokens.has(tokenName)) {
+            diagnostics.push({
+              from: valNode.from + 1,
+              to: valNode.to - 1,
+              severity: 'warning',
+              message: `Token "$${tokenName}" is not defined in <tokens>.`,
+            })
+          }
+        }
+      }
+
+      // missing required attributes
+      if (tagName === 'gui') {
+        const attrs = node.node.getChildren('Attribute')
+        const names = attrs
+          .map(a => a.getChild('AttributeName'))
+          .filter(Boolean)
+          .map(n => doc.sliceString(n!.from, n!.to))
+        if (!names.includes('version')) {
+          diagnostics.push({
+            from: tagNameNode.from,
+            to: tagNameNode.to,
+            severity: 'warning',
+            message: '<gui> is missing the required version attribute.',
+          })
+        }
+        if (!names.includes('viewport')) {
+          diagnostics.push({
+            from: tagNameNode.from,
+            to: tagNameNode.to,
+            severity: 'warning',
+            message: '<gui> is missing the viewport attribute (e.g. viewport="390x844").',
+          })
+        }
+      }
+    },
+  })
+
+  return diagnostics
+}
+
+// ─── CodeMirror theme ─────────────────────────────────────────────────────────
+
+const guiHighlight = HighlightStyle.define([
+  { tag: tags.tagName, color: '#6ea8fe' },
+  { tag: tags.attributeName, color: '#79c0ff' },
+  { tag: tags.attributeValue, color: '#a5d6ff' },
+  { tag: tags.string, color: '#a8d8a8' },
+  { tag: tags.comment, color: '#484f58', fontStyle: 'italic' },
+  { tag: tags.angleBracket, color: '#4a4a5a' },
+  { tag: tags.operator, color: '#4a4a5a' },
+  { tag: tags.punctuation, color: '#4a4a5a' },
+  { tag: tags.meta, color: '#666' },
+])
+
+const guiTheme = EditorView.theme({
+  '&': {
+    background: 'var(--bg)',
+    color: '#aaa',
+    height: '100%',
+    fontSize: '12.5px',
+  },
+  '.cm-scroller': {
+    fontFamily: '"Berkeley Mono", "Fira Code", "Cascadia Code", ui-monospace, monospace',
+    lineHeight: '1.75',
+    overflow: 'auto',
+  },
+  '.cm-content': {
+    padding: '16px 0',
+    caretColor: '#6366f1',
+  },
+  '.cm-cursor, .cm-dropCursor': { borderLeftColor: '#6366f1', borderLeftWidth: '2px' },
+  '.cm-selectionBackground': { background: 'rgba(99,102,241,0.18)' },
+  '&.cm-focused .cm-selectionBackground': { background: 'rgba(99,102,241,0.25)' },
+  '.cm-activeLine': { background: 'rgba(255,255,255,0.025)' },
+  '.cm-activeLineGutter': { background: 'rgba(255,255,255,0.025)' },
+  '.cm-gutters': {
+    background: 'var(--bg)',
+    borderRight: '1px solid var(--border-subtle)',
+    color: 'var(--text-dim)',
+  },
+  '.cm-lineNumbers .cm-gutterElement': { padding: '0 12px 0 8px', minWidth: '36px' },
+  '.cm-foldGutter .cm-gutterElement': {
+    color: 'var(--text-dim)',
+    cursor: 'pointer',
+    padding: '0 4px',
+  },
+  '.cm-foldGutter .cm-gutterElement:hover': { color: 'var(--text-muted)' },
+  '.cm-lintGutter': { width: '16px' },
+  '.cm-lintGutter .cm-gutterElement': { padding: '0 2px' },
+
+  // lint underlines
+  '.cm-lintRange-error': { backgroundImage: 'none', textDecoration: 'underline 2px #f87171' },
+  '.cm-lintRange-warning': { backgroundImage: 'none', textDecoration: 'underline 1.5px #fb923c' },
+
+  // tooltip / autocomplete
+  '.cm-tooltip': {
+    background: 'var(--surface)',
+    border: '1px solid var(--border)',
+    borderRadius: '6px',
+    boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+  },
+  '.cm-tooltip-autocomplete > ul': { fontFamily: '"Berkeley Mono", ui-monospace, monospace', fontSize: '12px' },
+  '.cm-tooltip-autocomplete > ul > li': { padding: '4px 12px', color: '#aaa' },
+  '.cm-tooltip-autocomplete > ul > li[aria-selected]': { background: '#1e1e2e', color: '#e8e8e8' },
+  '.cm-completionLabel': { color: '#79c0ff' },
+  '.cm-completionDetail': { color: '#484f58', fontStyle: 'italic', marginLeft: '8px' },
+
+  // lint panel
+  '.cm-diagnostic': { padding: '4px 8px', fontSize: '12px', fontFamily: 'var(--sans)', lineHeight: '1.5' },
+  '.cm-diagnostic-error': { borderLeft: '2px solid #f87171' },
+  '.cm-diagnostic-warning': { borderLeft: '2px solid #fb923c' },
+  '.cm-diagnosticText': { color: '#e8e8e8' },
+
+  // fold placeholder
+  '.cm-foldPlaceholder': {
+    background: 'var(--border)',
+    border: '1px solid var(--border)',
+    borderRadius: '3px',
+    color: 'var(--text-dim)',
+    padding: '0 6px',
+  },
+}, { dark: true })
+
+// ─── editor setup ─────────────────────────────────────────────────────────────
+
+const activeTab = ref<'gui' | 'assets'>('gui')
+
+const editorEl = ref<HTMLElement | null>(null)
+const previewEl = ref<HTMLElement | null>(null)
+const fileInputEl = ref<HTMLInputElement | null>(null)
+const guiFileInputEl = ref<HTMLInputElement | null>(null)
+const parseError = ref('')
+const assets = ref<Record<string, string>>({})
+const copiedId = ref('')
+let assetCounter = 0
+let setZoom: ((f: number, ax?: number, ay?: number) => void) | null = null
+let zoomFactor = 1
+let editorView: EditorView | null = null
+let lastAttrValFrom = -1
+
+const splitPct = ref(65)
+
+function startDrag(e: MouseEvent) {
+  const bodyEl = (e.currentTarget as HTMLElement).parentElement!
+  const startX = e.clientX
+  const startPct = splitPct.value
+
+  function onMove(ev: MouseEvent) {
+    const dx = ev.clientX - startX
+    const totalW = bodyEl.clientWidth
+    splitPct.value = Math.min(80, Math.max(20, startPct + (dx / totalW) * 100))
+  }
+
+  function onUp() {
+    document.removeEventListener('mousemove', onMove)
+    document.removeEventListener('mouseup', onUp)
+    document.body.style.cursor = ''
+    document.body.style.userSelect = ''
+  }
+
+  document.body.style.cursor = 'col-resize'
+  document.body.style.userSelect = 'none'
+  document.addEventListener('mousemove', onMove)
+  document.addEventListener('mouseup', onUp)
+}
+
+function loadGuiCode(code: string) {
+  if (!editorView) return
+  editorView.dispatch({
+    changes: { from: 0, to: editorView.state.doc.length, insert: code },
+  })
+}
+
+function mimeForExt(ext: string): string {
+  if (ext === 'svg') return 'image/svg+xml'
+  if (ext === 'jpg' || ext === 'jpeg') return 'image/jpeg'
+  return `image/${ext}`
+}
+
+function onGuiFileUpload(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (!file) return
+  ;(e.target as HTMLInputElement).value = ''
+
+  const reader = new FileReader()
+  reader.onload = async ev => {
+    const bytes = new Uint8Array(ev.target!.result as ArrayBuffer)
+
+    // Detect ZIP by magic bytes PK (0x50 0x4B)
+    const isZip = bytes[0] === 0x50 && bytes[1] === 0x4b
+
+    if (!isZip) {
+      // Plain .guix — read as text
+      loadGuiCode(new TextDecoder().decode(bytes))
+      return
+    }
+
+    // .gui package — unzip and extract design.guix + assets
+    unzip(bytes, (err, data) => {
+      if (err) return
+
+      // Find design.guix
+      const guixEntry = Object.entries(data).find(([name]) => name.endsWith('.guix'))
+      if (!guixEntry) return
+      const code = new TextDecoder().decode(guixEntry[1])
+      loadGuiCode(code)
+
+      // Parse <assets> block to get id → src path mappings
+      const doc = new DOMParser().parseFromString(code, 'text/xml')
+      const idToPath: Record<string, string> = {}
+      for (const img of Array.from(doc.querySelectorAll('assets > image'))) {
+        const id = img.getAttribute('id')
+        const src = img.getAttribute('src')
+        if (id && src) idToPath['$' + id] = src
+      }
+
+      // Build assetMap from ZIP entries
+      const newAssets: Record<string, string> = {}
+      for (const [name, fileBytes] of Object.entries(data)) {
+        if (name.endsWith('.guix') || name === 'preview.webp') continue
+        // Match by path or by filename
+        const assetId = Object.keys(idToPath).find(
+          id => idToPath[id] === name || idToPath[id].endsWith('/' + name.split('/').pop())
+        )
+        if (!assetId) continue
+        const ext = name.split('.').pop() || 'png'
+        const blob = new Blob([fileBytes], { type: mimeForExt(ext) })
+        newAssets[assetId] = URL.createObjectURL(blob)
+      }
+
+      if (Object.keys(newAssets).length) {
+        assets.value = { ...assets.value, ...newAssets }
+      }
+    })
+  }
+  reader.readAsArrayBuffer(file)
+}
+
+function onFileUpload(e: Event) {
+  const files = (e.target as HTMLInputElement).files
+  if (!files) return
+  for (const file of Array.from(files)) {
+    const reader = new FileReader()
+    reader.onload = ev => {
+      const id = `$img-${++assetCounter}`
+      assets.value[id] = ev.target!.result as string
+      runRender(editorView?.state.doc.toString() ?? '')
+    }
+    reader.readAsDataURL(file)
+  }
+  // reset so same file can be re-uploaded
+  ;(e.target as HTMLInputElement).value = ''
+}
+
+let copyTimer: ReturnType<typeof setTimeout> | null = null
+function copyId(id: string) {
+  navigator.clipboard.writeText(id)
+  copiedId.value = id
+  if (copyTimer) clearTimeout(copyTimer)
+  copyTimer = setTimeout(() => { copiedId.value = '' }, 1500)
+}
+
+function deleteAsset(id: string) {
+  const map = { ...assets.value }
+  delete map[id]
+  assets.value = map
+}
+
+function runRender(code: string) {
+  if (!previewEl.value) return
+  const result = render(code, previewEl.value, assets.value)
+  if (result) {
+    setZoom = result
+    zoomFactor = 1
+    parseError.value = ''
+  } else {
+    parseError.value = 'parse error'
+  }
+}
+
+// watch assets changes and re-render
+watch(assets, () => runRender(editorView?.state.doc.toString() ?? ''), { deep: true })
+
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
+function onCodeChange(code: string) {
+  if (debounceTimer) clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => runRender(code), 280)
+}
+
+function formatCode() {
+  if (!editorView) return
+  const code = editorView.state.doc.toString()
+  try {
+    const formatted = xmlFormat(code, {
+      indentation: '  ',
+      collapseContent: true,
+      lineSeparator: '\n',
+      whiteSpaceAtEndOfSelfclosingTag: true,
+    })
+    editorView.dispatch({
+      changes: { from: 0, to: editorView.state.doc.length, insert: formatted },
+    })
+  } catch {
+    // leave as-is if XML is unparseable
+  }
+}
+
+onMounted(() => {
+  if (!editorEl.value) return
+
+  editorView = new EditorView({
+    state: EditorState.create({
+      doc: SAMPLE,
+      extensions: [
+        lineNumbers(),
+        lintGutter(),
+        foldGutter(),
+        history(),
+        drawSelection(),
+        dropCursor(),
+        indentOnInput(),
+        highlightActiveLine(),
+        xml({ elements: GUI_ELEMENTS }),
+        xmlLanguage.data.of({ autocomplete: guiAttrNameCompletion }),
+        xmlLanguage.data.of({ autocomplete: guiAttrValueCompletion }),
+        closeBrackets(),
+        autocompletion({ activateOnTyping: true }),
+        linter(guiLintFn, { delay: 400 }),
+        syntaxHighlighting(guiHighlight),
+        guiTheme,
+        keymap.of([
+          { key: 'Shift-Alt-f', run: () => { formatCode(); return true } },
+          indentWithTab,
+          ...closeBracketsKeymap,
+          ...defaultKeymap,
+          ...historyKeymap,
+          ...foldKeymap,
+          ...completionKeymap,
+        ]),
+        EditorView.updateListener.of(update => {
+          if (update.docChanged) onCodeChange(update.state.doc.toString())
+
+          if (!update.selectionSet && !update.docChanged) return
+          const pos = update.state.selection.main.head
+
+          // Find which AttributeValue node (if any) the cursor is now inside
+          let node = syntaxTree(update.state).resolveInner(pos, -1)
+          while (node && node.name !== 'AttributeValue') node = node.parent!
+          const currentFrom = node?.name === 'AttributeValue' ? node.from : -1
+
+          // "" or '' — the value content is empty (node is just the two quote chars)
+          const isEmpty = node?.name === 'AttributeValue' && (node.to - node.from) <= 2
+
+          if (currentFrom !== -1) {
+            // cursor is inside an AttributeValue
+            if (currentFrom !== lastAttrValFrom || isEmpty) {
+              lastAttrValFrom = currentFrom
+              startCompletion(update.view)
+            }
+          } else {
+            lastAttrValFrom = -1
+
+            // always trigger attribute name completions when cursor is anywhere in a tag body
+            let tagNode = syntaxTree(update.state).resolveInner(pos, -1)
+            while (
+              tagNode &&
+              tagNode.name !== 'OpenTag' &&
+              tagNode.name !== 'SelfClosingTag' &&
+              tagNode.name !== 'Document'
+            ) tagNode = tagNode.parent!
+
+            if (tagNode?.name === 'OpenTag' || tagNode?.name === 'SelfClosingTag') {
+              startCompletion(update.view)
+            }
+          }
+        }),
+      ],
+    }),
+    parent: editorEl.value,
+  })
+
+  runRender(SAMPLE)
+})
+
+onBeforeUnmount(() => {
+  editorView?.destroy()
+})
+
+function onWheel(e: WheelEvent) {
+  if (!setZoom || !previewEl.value) return
+  const delta = e.deltaY > 0 ? -0.15 : 0.15
+  zoomFactor = Math.max(0.25, Math.min(4, zoomFactor + delta))
+  const rect = previewEl.value.getBoundingClientRect()
+  setZoom(zoomFactor, e.clientX - rect.left, e.clientY - rect.top)
+}
+</script>
+
+<style scoped>
+.pg-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.pg-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.pg-divider {
+  position: relative;
+  width: 1px;
+  background: var(--border);
+  flex-shrink: 0;
+  cursor: col-resize;
+  z-index: 10;
+}
+
+.pg-divider::after {
+  content: '';
+  position: absolute;
+  inset: 0 -4px;
+}
+
+.pg-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pg-left-col {
+  flex: 0 0 65%;
+  min-width: 20%;
+  max-width: 80%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pg-preview-pane {
+  flex: 0 0 35%;
+  min-width: 20%;
+  max-width: 80%;
+}
+
+/* ─── tab bar ─── */
+.pg-tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  padding: 0 16px 0 0;
+}
+
+.pg-tabs {
+  display: flex;
+}
+
+.pg-tab {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 16px;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: color 150ms ease, border-color 150ms ease;
+  margin-bottom: -1px;
+}
+
+.pg-tab:hover { color: var(--text); }
+
+.pg-tab.active {
+  color: var(--text);
+  border-bottom-color: var(--text);
+}
+
+.pg-tab-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* preview pane header (reused for right side) */
+.pg-pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.pg-pane-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ─── tab content ─── */
+.pg-tab-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pg-tab-content.hidden { display: none; }
+
+.pg-hint {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--sans);
+  transition: color 180ms ease;
+}
+
+.pg-hint--error {
+  color: #f87171;
+}
+
+.pg-format-btn {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text-dim);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: color 150ms ease, border-color 150ms ease;
+  letter-spacing: 0.04em;
+}
+
+.pg-format-btn:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+
+.pg-editor-mount {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* make CodeMirror fill the pane */
+.pg-editor-mount :deep(.cm-editor) {
+  height: 100%;
+}
+.pg-editor-mount :deep(.cm-scroller) {
+  flex: 1;
+  min-height: 0;
+}
+
+.pg-preview {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #0c0c0c;
+  background-image: radial-gradient(circle, #1a1a1a 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ─── assets panel ─── */
+.pg-assets-panel {
+  overflow-y: auto;
+}
+
+.pg-assets-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 16px;
+}
+
+.pg-assets-empty {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--sans);
+}
+
+.pg-assets-empty code {
+  font-size: 11px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  color: var(--text-muted);
+}
+
+.pg-asset-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px;
+  transition: border-color 150ms ease;
+  flex-shrink: 0;
+}
+
+.pg-asset-item:hover {
+  border-color: var(--text-dim);
+}
+
+.pg-asset-item.copied {
+  border-color: #6366f1;
+}
+
+.pg-asset-delete {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-dim);
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 120ms ease, color 120ms ease;
+  padding: 0;
+}
+
+.pg-asset-item:hover .pg-asset-delete {
+  opacity: 1;
+}
+
+.pg-asset-delete:hover {
+  color: #f87171;
+  border-color: #f87171;
+}
+
+.pg-asset-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 3px;
+  display: block;
+  cursor: pointer;
+}
+
+.pg-asset-id {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  max-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pg-asset-item.copied .pg-asset-id {
+  color: #6366f1;
+}
+</style>

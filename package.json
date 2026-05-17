@@ -1,0 +1,21 @@
+{
+  "name": "gui-landing",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "@codemirror/lang-xml": "^6.1.0",
+    "codemirror": "^6.0.2",
+    "fflate": "^0.8.3",
+    "gui-render": "file:../gui-render",
+    "xml-formatter": "^3.7.0"
+  },
+  "devDependencies": {
+    "nuxt": "^3.13.0"
+  }
+}
