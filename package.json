@@ -13,7 +13,7 @@
     "codemirror": "^6.0.2",
     "commander": "^13.1.0",
     "fflate": "^0.8.3",
-    "gui-render": "file:../gui-render",
+    "@panzoom/panzoom": "^4.6.2",
     "xml-formatter": "^3.7.0"
   },
   "devDependencies": {

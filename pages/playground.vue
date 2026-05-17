@@ -82,7 +82,7 @@ import {
 } from '@codemirror/language'
 import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap, startCompletion, type CompletionContext, type CompletionResult } from '@codemirror/autocomplete'
 import { tags } from '@lezer/highlight'
-import { render } from 'gui-render'
+import { render } from '~/lib/gui-render'
 import xmlFormat from 'xml-formatter'
 import { unzip } from 'fflate'
 
