@@ -1,10 +1,6 @@
 export default defineNuxtConfig({
+  ssr: false,
   css: ['~/assets/css/main.css'],
-  vite: {
-    ssr: {
-      noExternal: ['@panzoom/panzoom'],
-    },
-  },
   app: {
     head: {
       title: '.gui',
