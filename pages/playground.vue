@@ -674,6 +674,50 @@ let zoomFactor = 1
 let editorView: EditorView | null = null
 let lastAttrValFrom = -1
 
+// ─── inspect hover ────────────────────────────────────────────────────────────
+
+let previewNodes: HTMLElement[] = []
+let highlightedEl: HTMLElement | null = null
+
+// OpenTag/SelfClosingTag start position → DFS node index
+// Keyed by the exact character offset of '<' in the source, so it's immune to
+// attribute value content, multi-line tags, and reformatting.
+let nodePosMap: Map<number, number> = new Map()
+
+const GUI_NODE_TAGS = new Set(['frame', 'stack', 'group', 'text', 'img', 'svg', 'shape'])
+
+// Walk the syntax tree in document order (= DFS pre-order) and map each GUI
+// element's opening-tag start position to the index it will occupy in
+// previewEl.querySelectorAll('.gui-node').
+function buildNodePosMap(view: EditorView) {
+  const map: Map<number, number> = new Map()
+  const state = view.state
+  let idx = 0
+  syntaxTree(state).iterate({
+    enter(nodeRef) {
+      if (nodeRef.name !== 'OpenTag' && nodeRef.name !== 'SelfClosingTag') return
+      const tn = nodeRef.node.getChild('TagName')
+      if (!tn) return
+      if (GUI_NODE_TAGS.has(state.doc.sliceString(tn.from, tn.to))) {
+        map.set(nodeRef.from, idx++)
+      }
+    },
+  })
+  nodePosMap = map
+}
+
+function setInspectHighlight(idx: number) {
+  if (highlightedEl) { highlightedEl.style.boxShadow = ''; highlightedEl = null }
+  if (idx >= 0 && previewNodes[idx]) {
+    highlightedEl = previewNodes[idx]
+    highlightedEl.style.boxShadow = 'inset 0 0 0 2px #0d99ff'
+  }
+}
+
+function clearInspectHighlight() {
+  setInspectHighlight(-1)
+}
+
 const splitPct = ref(65)
 
 function startDrag(e: MouseEvent) {
@@ -804,6 +848,7 @@ function deleteAsset(id: string) {
 
 function runRender(code: string) {
   if (!previewEl.value) return
+  clearInspectHighlight()
   const result = render(code, previewEl.value, assets.value)
   if (result) {
     setZoom = result
@@ -812,6 +857,8 @@ function runRender(code: string) {
   } else {
     parseError.value = 'parse error'
   }
+  previewNodes = Array.from(previewEl.value.querySelectorAll('.gui-node')) as HTMLElement[]
+  if (editorView) buildNodePosMap(editorView)
 }
 
 // watch assets changes and re-render
@@ -873,8 +920,32 @@ onMounted(() => {
           ...foldKeymap,
           ...completionKeymap,
         ]),
+        EditorView.domEventHandlers({
+          mousemove(event, view) {
+            // Lazily build on first hover (syntax tree ready by then)
+            if (nodePosMap.size === 0) buildNodePosMap(view)
+            const pos = view.posAtCoords({ x: event.clientX, y: event.clientY })
+            if (pos === null) { clearInspectHighlight(); return }
+            // Walk up the syntax tree from the cursor to find the enclosing tag
+            let node = syntaxTree(view.state).resolveInner(pos, -1)
+            while (node.parent && node.name !== 'OpenTag' && node.name !== 'SelfClosingTag') {
+              node = node.parent
+            }
+            if (node.name !== 'OpenTag' && node.name !== 'SelfClosingTag') {
+              clearInspectHighlight(); return
+            }
+            const idx = nodePosMap.get(node.from)
+            setInspectHighlight(idx !== undefined ? idx : -1)
+          },
+          mouseleave(_event, _view) {
+            clearInspectHighlight()
+          },
+        }),
         EditorView.updateListener.of(update => {
-          if (update.docChanged) onCodeChange(update.state.doc.toString())
+          if (update.docChanged) {
+            onCodeChange(update.state.doc.toString())
+            buildNodePosMap(update.view)
+          }
 
           if (!update.selectionSet && !update.docChanged) return
           const pos = update.state.selection.main.head

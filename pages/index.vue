@@ -6,6 +6,7 @@
       <SectionFormat />
       <SectionWhy />
       <SectionRenderer />
+      <SectionInspect />
       <SectionFigma />
       <SectionFileContents />
     </div>
