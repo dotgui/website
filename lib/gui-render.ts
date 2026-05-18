@@ -1,4 +1,4 @@
-import Panzoom, { type PanzoomObject } from '@panzoom/panzoom'
+import type { PanzoomObject } from '@panzoom/panzoom'
 
 type Ctx = { absolute: boolean; offsetX?: number; offsetY?: number; parentDirection?: 'horizontal' | 'vertical' | 'grid' }
 
@@ -1258,7 +1258,8 @@ export function render(
     }, { animate: false, force: true })
   }
 
-  requestAnimationFrame(() => {
+  requestAnimationFrame(async () => {
+    const { default: Panzoom } = await import('@panzoom/panzoom')
     baseZoom = fitZoom()
     const pan = centeredPan(baseZoom)
     panzoom = Panzoom(stage, {
