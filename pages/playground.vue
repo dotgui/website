@@ -155,19 +155,25 @@ const SAMPLE = `<gui version="1.0" name="Profile" viewport="390x280">
 // ─── .gui schema for completions ──────────────────────────────────────────────
 
 const SHARED_VISUAL = [
-  { name: 'opacity' }, { name: 'blend' }, { name: 'rotation' },
-  { name: 'sizing-h', values: ['hug', 'fill'] },
-  { name: 'sizing-v', values: ['hug', 'fill'] },
+  { name: 'opacity' }, { name: 'blend', values: ['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity', 'linear-burn', 'linear-dodge'] },
+  { name: 'mask', values: ['true', 'false'] }, { name: 'rotation' },
+  { name: 'constraint-h', values: ['left', 'right', 'center', 'scale', 'stretch'] },
+  { name: 'constraint-v', values: ['top', 'bottom', 'center', 'scale', 'stretch'] },
+  { name: 'sizing-h', values: ['hug', 'fill', 'fixed'] },
+  { name: 'sizing-v', values: ['hug', 'fill', 'fixed'] },
   { name: 'layout-position', values: ['absolute'] },
   { name: 'min-width' }, { name: 'max-width' },
   { name: 'min-height' }, { name: 'max-height' },
 ]
 
 const SHARED_LAYOUT = [
+  { name: 'id' }, { name: 'name' },
   { name: 'width' }, { name: 'height' }, { name: 'x' }, { name: 'y' },
-  { name: 'fill' }, { name: 'radius' }, { name: 'shadow' },
+  { name: 'fill' }, { name: 'fill-style' }, { name: 'effect-style' },
+  { name: 'radius' }, { name: 'corner-smoothing' }, { name: 'shadow' },
   { name: 'stroke' }, { name: 'stroke-width' },
-  { name: 'clip', values: ['true'] },
+  { name: 'stroke-position', values: ['inside', 'outside', 'center'] },
+  { name: 'clip', values: ['true', 'false'] },
   ...SHARED_VISUAL,
 ]
 
@@ -197,6 +203,7 @@ const GUI_ELEMENTS = [
       { name: 'weights' },
       { name: 'styles', values: ['normal', 'italic'] },
       { name: 'category', values: ['sans-serif', 'serif', 'monospace', 'handwriting'] },
+      { name: 'variants' },
     ],
   },
   { name: 'assets', children: ['image'] },
@@ -212,7 +219,9 @@ const GUI_ELEMENTS = [
     attrs: [
       { name: 'name' }, { name: 'font-family' }, { name: 'font-size' }, { name: 'font-weight' },
       { name: 'font-style', values: ['normal', 'italic'] }, { name: 'line-height' },
-      { name: 'letter-spacing' }, { name: 'decoration' }, { name: 'text-case' },
+      { name: 'letter-spacing' },
+      { name: 'decoration', values: ['underline', 'strikethrough'] },
+      { name: 'text-case', values: ['uppercase', 'lowercase', 'capitalize', 'small-caps', 'small-caps-forced'] },
     ],
   },
   {
@@ -231,8 +240,47 @@ const GUI_ELEMENTS = [
       { name: 'gap' }, { name: 'padding' },
       { name: 'align', values: ['start', 'center', 'end', 'stretch', 'baseline'] },
       { name: 'justify', values: ['start', 'center', 'end', 'space-between'] },
-      { name: 'wrap', values: ['true'] },
+      { name: 'wrap', values: ['true', 'false'] },
+      { name: 'wrap-gap' },
+      { name: 'wrap-align', values: ['space-between'] },
+      { name: 'reverse-z', values: ['true', 'false'] },
       { name: 'grid-columns' }, { name: 'grid-rows' },
+      { name: 'grid-col-gap' }, { name: 'grid-row-gap' },
+      ...SHARED_LAYOUT,
+    ],
+  },
+  {
+    name: 'row',
+    attrs: [
+      { name: 'gap' }, { name: 'padding' },
+      { name: 'align', values: ['start', 'center', 'end', 'stretch', 'baseline'] },
+      { name: 'justify', values: ['start', 'center', 'end', 'space-between'] },
+      { name: 'wrap', values: ['true', 'false'] },
+      { name: 'wrap-gap' },
+      { name: 'wrap-align', values: ['space-between'] },
+      { name: 'reverse-z', values: ['true', 'false'] },
+      ...SHARED_LAYOUT,
+    ],
+  },
+  {
+    name: 'col',
+    attrs: [
+      { name: 'gap' }, { name: 'padding' },
+      { name: 'align', values: ['start', 'center', 'end', 'stretch', 'baseline'] },
+      { name: 'justify', values: ['start', 'center', 'end', 'space-between'] },
+      { name: 'wrap', values: ['true', 'false'] },
+      { name: 'wrap-gap' },
+      { name: 'wrap-align', values: ['space-between'] },
+      { name: 'reverse-z', values: ['true', 'false'] },
+      ...SHARED_LAYOUT,
+    ],
+  },
+  {
+    name: 'grid',
+    attrs: [
+      { name: 'columns' }, { name: 'rows' },
+      { name: 'col-gap' }, { name: 'row-gap' },
+      { name: 'padding' },
       ...SHARED_LAYOUT,
     ],
   },
@@ -242,7 +290,13 @@ const GUI_ELEMENTS = [
   },
   {
     name: 'group',
-    attrs: [{ name: 'x' }, { name: 'y' }, { name: 'width' }, { name: 'height' }, ...SHARED_VISUAL],
+    attrs: [
+      { name: 'id' }, { name: 'name' },
+      { name: 'x' }, { name: 'y' }, { name: 'width' }, { name: 'height' },
+      { name: 'mask-src' }, { name: 'mask-x' }, { name: 'mask-y' },
+      { name: 'mask-width' }, { name: 'mask-height' },
+      ...SHARED_VISUAL,
+    ],
   },
   {
     name: 'text',
@@ -252,34 +306,43 @@ const GUI_ELEMENTS = [
       { name: 'font-family' }, { name: 'font-size' }, { name: 'font-weight' },
       { name: 'font-style', values: ['normal', 'italic'] },
       { name: 'color' }, { name: 'line-height' }, { name: 'letter-spacing' },
-      { name: 'align', values: ['left', 'center', 'right'] },
+      { name: 'paragraph-spacing' }, { name: 'paragraph-indent' },
+      { name: 'align', values: ['left', 'center', 'right', 'justified'] },
       { name: 'vertical-align', values: ['top', 'center', 'bottom'] },
-      { name: 'truncate', values: ['true'] }, { name: 'max-lines' },
+      { name: 'decoration', values: ['underline', 'strikethrough'] },
+      { name: 'text-case', values: ['uppercase', 'lowercase', 'capitalize', 'small-caps', 'small-caps-forced'] },
+      { name: 'leading-trim', values: ['cap-height', 'normal'] },
+      { name: 'truncate', values: ['true', 'false'] }, { name: 'max-lines' },
+      { name: 'href' }, { name: 'text-style' }, { name: 'fill-style' },
       ...SHARED_LAYOUT,
     ],
   },
   {
     name: 'shape',
-    selfClosing: true,
     attrs: [
       { name: 'type', values: ['rect', 'ellipse', 'line', 'path'] },
-      { name: 'stroke-cap', values: ['round', 'flat'] },
+      { name: 'stroke-cap', values: ['round', 'square', 'arrow-lines', 'arrow-equilateral'] },
       { name: 'arc-start' }, { name: 'arc-end' }, { name: 'arc-inner' },
       ...SHARED_LAYOUT,
     ],
+    children: ['appearance', 'path'],
+  },
+  {
+    name: 'path',
+    selfClosing: true,
+    attrs: [{ name: 'd' }],
   },
   {
     name: 'img',
     selfClosing: true,
     attrs: [
       { name: 'src' },
-      { name: 'fit', values: ['cover', 'contain', 'crop', 'tile'] },
+      { name: 'fit', values: ['cover', 'contain', 'fill', 'none'] },
       ...SHARED_LAYOUT,
     ],
   },
   {
     name: 'svg',
-    selfClosing: true,
     attrs: [{ name: 'src' }, ...SHARED_LAYOUT],
   },
   {
@@ -293,6 +356,7 @@ const GUI_ELEMENTS = [
       { name: 'type', values: ['color', 'linear-gradient', 'radial-gradient', 'angular-gradient', 'image'] },
       { name: 'value' }, { name: 'src' },
       { name: 'fit', values: ['cover', 'contain', 'crop', 'tile'] },
+      { name: 'x' }, { name: 'y' }, { name: 'width' }, { name: 'height' },
       { name: 'opacity' },
     ],
   },
@@ -300,8 +364,9 @@ const GUI_ELEMENTS = [
     name: 'effect',
     selfClosing: true,
     attrs: [
-      { name: 'type', values: ['drop-shadow', 'inner-shadow', 'layer-blur', 'background-blur'] },
+      { name: 'type', values: ['drop-shadow', 'inner-shadow', 'layer-blur', 'background-blur', 'glass'] },
       { name: 'x' }, { name: 'y' }, { name: 'radius' }, { name: 'spread' }, { name: 'color' },
+      { name: 'blend' }, { name: 'saturation' },
     ],
   },
   {
@@ -309,9 +374,19 @@ const GUI_ELEMENTS = [
     selfClosing: true,
     attrs: [
       { name: 'value' }, { name: 'font-family' }, { name: 'font-size' },
-      { name: 'font-weight' }, { name: 'color' }, { name: 'href' },
+      { name: 'font-weight' }, { name: 'font-style', values: ['normal', 'italic'] },
+      { name: 'color' }, { name: 'line-height' }, { name: 'letter-spacing' },
+      { name: 'decoration', values: ['underline', 'strikethrough'] },
+      { name: 'text-case', values: ['uppercase', 'lowercase', 'capitalize', 'small-caps'] },
+      { name: 'href' },
     ],
   },
+  {
+    name: 'preview',
+    selfClosing: true,
+    attrs: [{ name: 'format', values: ['webp', 'png'] }, { name: 'src' }],
+  },
+  { name: 'meta' },
 ]
 
 // ─── attribute name completion ────────────────────────────────────────────────

@@ -242,7 +242,19 @@ Used for complex graphic clusters — boolean operations, compound vectors, icon
 <!-- Line -->
 <shape type="line" x="0" y="100" width="390"
        stroke="#E5E5EA" stroke-width="1" />
+
+<!-- Path (vector / boolean operation / star / polygon) — filled -->
+<shape type="path" x="12" y="12" width="24" height="24" fill="#1C1C1E">
+  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+</shape>
+
+<!-- Path — stroked outline (Lucide / icon pattern) -->
+<shape type="path" x="12" y="12" width="24" height="24" fill="none" stroke="#6366F1" stroke-width="1.5">
+  <path d="M5 12h14M12 5l7 7-7 7" />
+</shape>
 ```
+
+`type="path"` is used for VECTOR, STAR, POLYGON, and BOOLEAN_OPERATION nodes. The SVG path data is emitted as a `<path d="..." />` child element. `fill="none" stroke="..." stroke-width="..."` produces a stroked outline path — the standard pattern for stroke-only icons (Lucide, Heroicons, etc.). `stroke-position` (`center` | `inside` | `outside`) mirrors Figma's stroke alignment.
 
 ### Appearance Block
 
@@ -322,6 +334,7 @@ The Figma plugin. Select any visible layer — frame, component, group, shape, t
 - Computes gradient angles and positions from Figma's transform matrices
 - Collects font usage and validates families against the Google Fonts catalog
 - Generates a WebP preview thumbnail
+- Extracts component and component-set definitions — emits `<component>`, `<component-set>`, and `<instance>` tags with declared props and ad-hoc instance overrides
 
 The extractor is deterministic. Given the same Figma layer, it always produces the same output. It does not guess, summarize, or interpret.
 
@@ -440,10 +453,10 @@ The optimizer's job is structural cleanup, not interpretation. Interpretation is
 - `gui-optimizer` with 21 rules across 8 passes
 - Inline and packaged export formats
 - Asset deduplication and WebP conversion
+- `<component>`, `<component-set>`, and `<instance>` — component definitions and reuse with declared props and ad-hoc overrides
 
 ## Deferred to v2
 
-- `<component>` and `<instance>` — component definitions and reuse
 - `<scroll>` — scrollable containers
 - `<overlay>` / `<sheet>` — modal and bottom sheet layers
 - Semantic roles — `role="button|input|nav"`

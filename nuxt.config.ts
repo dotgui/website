@@ -1,5 +1,9 @@
 export default defineNuxtConfig({
   ssr: false,
+  compatibilityDate: '2026-05-20',
+  experimental: {
+    viteEnvironmentApi: true
+  },
   css: ['~/assets/css/main.css'],
   app: {
     head: {

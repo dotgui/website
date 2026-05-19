@@ -420,17 +420,19 @@ function renderFrame(el: Element, assets: Record<string, string>, ctx: Ctx, isSt
   let negativeGap: number | null = null
   let reverseZ = false
   if (isStack) {
-    const dir = get(el, 'direction')
+    const tagName = el.tagName
+    const dir = tagName === 'row' ? 'horizontal' : tagName === 'col' ? 'vertical' : tagName === 'grid' ? 'grid' : (get(el, 'direction') || 'vertical')
     const p = get(el, 'padding')
     if (p) div.style.padding = pad(p)
 
     if (dir === 'grid') {
       stackDirection = 'grid'
       addClass(div, 'gui-display-grid')
-      const cols = get(el, 'grid-columns')
-      const rows = get(el, 'grid-rows')
-      const colGap = get(el, 'grid-col-gap')
-      const rowGap = get(el, 'grid-row-gap')
+      const isGridTag = tagName === 'grid'
+      const cols = isGridTag ? get(el, 'columns') : get(el, 'grid-columns')
+      const rows = isGridTag ? get(el, 'rows') : get(el, 'grid-rows')
+      const colGap = isGridTag ? get(el, 'col-gap') : get(el, 'grid-col-gap')
+      const rowGap = isGridTag ? get(el, 'row-gap') : get(el, 'grid-row-gap')
       if (cols) div.style.gridTemplateColumns = `repeat(${cols}, 1fr)`
       if (rows) div.style.gridTemplateRows = `repeat(${rows}, 1fr)`
       if (colGap) div.style.columnGap = `${colGap}px`
@@ -706,13 +708,34 @@ function renderImg(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLE
 }
 
 function renderSvgAsset(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLElement {
+  const src = get(el, 'src')
+  const w = get(el, 'width') || '0'
+  const h = get(el, 'height') || '0'
+
+  if (!src) {
+    // Inline SVG: create a real <svg> element and set innerHTML so children parse in SVG namespace
+    const ns = 'http://www.w3.org/2000/svg'
+    const svg = document.createElementNS(ns, 'svg')
+    svg.setAttribute('viewBox', '0 0 ' + w + ' ' + h)
+    position(svg, el, ctx)
+    addClass(svg, 'gui-block')
+
+    const serializer = new XMLSerializer()
+    let innerSvg = ''
+    const childEls = Array.from(el.children)
+    for (let ci = 0; ci < childEls.length; ci++) {
+      innerSvg += serializer.serializeToString(childEls[ci])
+    }
+    svg.innerHTML = innerSvg.replace(/\s+xmlns=""/g, '')
+
+    return svg as unknown as HTMLElement
+  }
+
   const img = document.createElement('img')
   position(img, el, ctx)
   addClass(img, 'gui-block')
   addClass(img, 'gui-fit-fill')
-
-  const src = get(el, 'src')
-  if (src && assets[src]) img.src = assets[src]
+  if (assets[src]) img.src = assets[src]
 
   return img as unknown as HTMLElement
 }
@@ -932,7 +955,10 @@ function svgPath(
 function renderNode(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLElement | null {
   switch (el.tagName) {
     case 'frame': return renderFrame(el, assets, ctx, false)
-    case 'stack': return renderFrame(el, assets, ctx, true)
+    case 'stack':
+    case 'row':
+    case 'col':
+    case 'grid': return renderFrame(el, assets, ctx, true)
     case 'group': return renderGroup(el, assets, ctx)
     case 'text': return renderText(el, assets, ctx)
     case 'img': return renderImg(el, assets, ctx)
@@ -1166,13 +1192,14 @@ export function render(
   const vw = parseInt(vwStr) || 390
   const vh = parseInt(vhStr) || 844
 
+  const STACK_TAGS = new Set(['stack', 'row', 'col', 'grid'])
   let screenEl: Element | null = null
   for (const child of Array.from(gui.children)) {
-    if (child.tagName === 'frame' || child.tagName === 'stack') { screenEl = child; break }
+    if (child.tagName === 'frame' || STACK_TAGS.has(child.tagName)) { screenEl = child; break }
   }
   if (!screenEl) return null
 
-  const screen = renderFrame(screenEl, assets, { absolute: false }, screenEl.tagName === 'stack')
+  const screen = renderFrame(screenEl, assets, { absolute: false }, STACK_TAGS.has(screenEl.tagName))
   screen.style.width = `${vw}px`
   screen.style.height = `${vh}px`
   addClass(screen, 'gui-relative')
