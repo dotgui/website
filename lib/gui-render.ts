@@ -1,4 +1,4 @@
-import type { PanzoomObject } from '@panzoom/panzoom'
+import Panzoom, { type PanzoomObject } from '@panzoom/panzoom'
 
 type Ctx = { absolute: boolean; offsetX?: number; offsetY?: number; parentDirection?: 'horizontal' | 'vertical' | 'grid' }
 
@@ -9,6 +9,59 @@ let activeFonts: Record<string, FontInfo> = {}
 let activeStyles: Record<string, Record<string, string>> = {}
 let activeFillStyles: Record<string, string> = {}
 let activeEffectStyles: Record<string, Element[]> = {}
+let activeComponents: Map<string, Element> = new Map()
+
+const BOOLEAN_ATTRS = new Set(['abs', 'clip', 'mask', 'reverse-z', 'truncate', 'wrap'])
+
+function normalizeBooleanAttrs(code: string): string {
+  let out = ''
+  let i = 0
+
+  while (i < code.length) {
+    const tagStart = code.indexOf('<', i)
+    if (tagStart === -1) {
+      out += code.slice(i)
+      break
+    }
+
+    out += code.slice(i, tagStart)
+
+    if (code.startsWith('<!--', tagStart)) {
+      const commentEnd = code.indexOf('-->', tagStart + 4)
+      const end = commentEnd === -1 ? code.length : commentEnd + 3
+      out += code.slice(tagStart, end)
+      i = end
+      continue
+    }
+
+    let tagEnd = tagStart + 1
+    let quote: string | null = null
+    while (tagEnd < code.length) {
+      const ch = code[tagEnd]
+      if (quote) {
+        if (ch === quote) quote = null
+      } else if (ch === '"' || ch === "'") {
+        quote = ch
+      } else if (ch === '>') {
+        break
+      }
+      tagEnd++
+    }
+
+    const end = tagEnd < code.length ? tagEnd + 1 : code.length
+    const tag = code.slice(tagStart, end)
+    if (/^<\/|^<\?|^<!/.test(tag)) {
+      out += tag
+    } else {
+      out += tag.replace(/\s([A-Za-z][\w-]*)(?=\s|\/?>)/g, (match, name) =>
+        BOOLEAN_ATTRS.has(name) ? ` ${name}="true"` : match,
+      )
+    }
+    i = end
+  }
+
+  return out
+}
 
 function resolveToken(v: string | null): string | null {
   if (!v || v.indexOf('$') === -1) return v
@@ -98,9 +151,74 @@ function fontStack(family: string): string {
   return `${cssString(family)}, ${genericFontFallback(activeFonts[family], family)}`
 }
 
-const AL: Record<string, string> = {
-  start: 'flex-start', center: 'center', end: 'flex-end',
-  stretch: 'stretch', baseline: 'baseline', 'space-between': 'space-between',
+const VERT_MAP: Record<string, string> = { top: 'flex-start', middle: 'center', bottom: 'flex-end' }
+const HORIZ_MAP: Record<string, string> = { left: 'flex-start', center: 'center', right: 'flex-end' }
+
+/**
+ * Apply 9-point align + gap to a flex stack container.
+ * Returns negative gap value if present (needs margin treatment), else null.
+ */
+function applyStackLayout(
+  div: HTMLElement,
+  direction: 'horizontal' | 'vertical',
+  gapRaw: string | null,
+  alignVal: string | null,
+): number | null {
+  // Parse gap: null=unset, "auto"=space-between, "16"=fixed, "16 10"=main+cross
+  let mainGap: string | null = null
+  let crossGap: string | null = null
+  if (gapRaw !== null) {
+    const parts = (gapRaw === '' ? 'auto' : gapRaw).trim().split(/\s+/)
+    mainGap = parts[0]
+    crossGap = parts[1] || null
+  }
+
+  // Apply 9-point align
+  if (alignVal === 'stretch') {
+    div.style.alignItems = 'stretch'
+  } else if (alignVal === 'baseline') {
+    div.style.alignItems = 'baseline'
+  } else if (alignVal) {
+    const ap = alignVal.split('-')
+    const vertPart = VERT_MAP[ap[0]] || 'flex-start'
+    const horizPart = HORIZ_MAP[ap[1]] || 'flex-start'
+    if (direction === 'horizontal') {
+      div.style.alignItems = vertPart
+      if (mainGap !== 'auto') div.style.justifyContent = horizPart
+    } else {
+      if (mainGap !== 'auto') div.style.justifyContent = vertPart
+      div.style.alignItems = horizPart
+    }
+  }
+
+  // Apply main-axis gap
+  let negativeGap: number | null = null
+  if (mainGap === 'auto') {
+    div.style.justifyContent = 'space-between'
+  } else if (mainGap !== null) {
+    const gv = parseFloat(mainGap)
+    if (Number.isFinite(gv) && gv < 0) {
+      negativeGap = gv
+    } else if (Number.isFinite(gv)) {
+      if (direction === 'horizontal') div.style.columnGap = `${gv}px`
+      else div.style.rowGap = `${gv}px`
+    }
+  }
+
+  // Apply cross-axis gap (wrap only, but set unconditionally — only matters when wrapping)
+  if (crossGap !== null) {
+    if (crossGap === 'auto') {
+      div.style.alignContent = 'space-between'
+    } else {
+      const cv = parseFloat(crossGap)
+      if (Number.isFinite(cv)) {
+        if (direction === 'horizontal') div.style.rowGap = `${cv}px`
+        else div.style.columnGap = `${cv}px`
+      }
+    }
+  }
+
+  return negativeGap
 }
 
 const RENDER_UTILITIES = `
@@ -184,15 +302,16 @@ let clipId = 0
 
 function position(el: HTMLElement | SVGElement, guiEl: Element, ctx: Ctx): void {
   addClass(el, 'gui-node')
-  const sizingH = get(guiEl, 'sizing-h')
-  const sizingV = get(guiEl, 'sizing-v')
-  const width = px(get(guiEl, 'width'))
-  const height = px(get(guiEl, 'height'))
-  el.style.setProperty('--gui-width', width)
-  el.style.setProperty('--gui-height', height)
+  // w/h: absent=hug, "fill"=fill, number=fixed
+  const wVal = get(guiEl, 'w')
+  const hVal = get(guiEl, 'h')
+  const sizingH = wVal === null ? 'hug' : wVal === 'fill' ? 'fill' : 'fixed'
+  const sizingV = hVal === null ? 'hug' : hVal === 'fill' ? 'fill' : 'fixed'
+  el.style.setProperty('--gui-width', px(wVal))
+  el.style.setProperty('--gui-height', px(hVal))
 
-  addClass(el, `gui-sizing-h-${sizingH === 'fill' || sizingH === 'hug' ? sizingH : 'fixed'}`)
-  addClass(el, `gui-sizing-v-${sizingV === 'fill' || sizingV === 'hug' ? sizingV : 'fixed'}`)
+  addClass(el, `gui-sizing-h-${sizingH}`)
+  addClass(el, `gui-sizing-v-${sizingV}`)
   if (ctx.parentDirection) {
     addClass(el, `gui-parent-${ctx.parentDirection}`)
   }
@@ -212,8 +331,8 @@ function position(el: HTMLElement | SVGElement, guiEl: Element, ctx: Ctx): void 
   const blend = get(guiEl, 'blend')
   if (blend) el.style.mixBlendMode = blend as CSSStyleDeclaration['mixBlendMode']
 
-  const mask = get(guiEl, 'mask')
-  if (mask === 'true') el.setAttribute('data-mask', 'true')
+  const maskVal = getRaw(guiEl, 'mask')
+  if (maskVal !== null && maskVal !== 'false') el.setAttribute('data-mask', 'true')
 
   rotationStyle(el, guiEl)
   if (ctx.absolute) {
@@ -406,7 +525,8 @@ function renderFrame(el: Element, assets: Record<string, string>, ctx: Ctx, isSt
   const radius = r ? radii(r) : null
   if (radius) div.style.borderRadius = radius
 
-  if (get(el, 'clip') === 'true') addClass(div, 'gui-overflow-hidden')
+  const clipVal = getRaw(el, 'clip')
+  if (clipVal !== null && clipVal !== 'false') addClass(div, 'gui-overflow-hidden')
 
   const sh = shadow(get(el, 'shadow'))
   if (sh) appendBoxShadow(div, sh)
@@ -422,8 +542,14 @@ function renderFrame(el: Element, assets: Record<string, string>, ctx: Ctx, isSt
   if (isStack) {
     const tagName = el.tagName
     const dir = tagName === 'row' ? 'horizontal' : tagName === 'col' ? 'vertical' : tagName === 'grid' ? 'grid' : (get(el, 'direction') || 'vertical')
-    const p = get(el, 'padding')
-    if (p) div.style.padding = pad(p)
+
+    // Padding: p (new) or padding (old), plus per-side overrides
+    const pVal = get(el, 'p') || get(el, 'padding')
+    if (pVal) div.style.padding = pad(pVal)
+    const ptVal = get(el, 'pt'); if (ptVal) div.style.paddingTop = `${ptVal}px`
+    const prVal = get(el, 'pr'); if (prVal) div.style.paddingRight = `${prVal}px`
+    const pbVal = get(el, 'pb'); if (pbVal) div.style.paddingBottom = `${pbVal}px`
+    const plVal = get(el, 'pl'); if (plVal) div.style.paddingLeft = `${plVal}px`
 
     if (dir === 'grid') {
       stackDirection = 'grid'
@@ -441,36 +567,37 @@ function renderFrame(el: Element, assets: Record<string, string>, ctx: Ctx, isSt
       stackDirection = dir === 'horizontal' ? 'horizontal' : 'vertical'
       addClass(div, 'gui-display-flex')
       addClass(div, `gui-direction-${stackDirection}`)
-      reverseZ = get(el, 'reverse-z') === 'true'
-      const gap = get(el, 'gap')
-      const justify = get(el, 'justify')
-      if (gap) {
-        const gapValue = parseFloat(gap)
-        if (gapValue < 0) negativeGap = gapValue
-        else if (justify !== 'space-between') div.style.gap = `${gap}px`
-      }
-      const align = get(el, 'align')
-      if (align) addClass(div, `gui-align-${align}`)
-      if (justify) addClass(div, `gui-justify-${justify}`)
-      if (get(el, 'wrap') === 'true') {
+      // reverse-z: boolean presence convention
+      const rzVal = getRaw(el, 'reverse-z')
+      reverseZ = rzVal !== null && rzVal !== 'false'
+      // gap (new: "auto"|"16"|"16 10"|"16 auto") + 9-point align
+      const gapRaw = getRaw(el, 'gap')
+      const alignVal = get(el, 'align')
+      negativeGap = applyStackLayout(div, stackDirection, gapRaw, alignVal)
+      // wrap: boolean presence convention
+      const wrapVal = getRaw(el, 'wrap')
+      if (wrapVal !== null && wrapVal !== 'false') {
         addClass(div, 'gui-wrap')
-        const wrapGap = get(el, 'wrap-gap')
-        if (wrapGap) div.style.rowGap = `${wrapGap}px`
-        const wrapAlign = get(el, 'wrap-align')
-        if (wrapAlign) addClass(div, `gui-wrap-align-${wrapAlign}`)
       }
     }
   }
 
   const children = Array.from(el.children)
+
+  function isAbsoluteChild(child: Element): boolean {
+    const absVal = getRaw(child, 'abs')
+    if (absVal !== null && absVal !== 'false') return true
+    return getRaw(child, 'layout-position') === 'absolute'
+  }
+
   const flowChildTotal = children.filter(child =>
-    child.tagName !== 'appearance' && (isStack && get(child, 'layout-position') !== 'absolute')
+    child.tagName !== 'appearance' && !(isStack && isAbsoluteChild(child))
   ).length
   let flowChildCount = 0
   let prevFlowChild: Element | null = null
   for (const child of children) {
     if (child.tagName === 'appearance') continue
-    const isAbsolute = !isStack || get(child, 'layout-position') === 'absolute'
+    const isAbsolute = !isStack || isAbsoluteChild(child)
     const childCtx: Ctx = { absolute: isAbsolute, parentDirection: isAbsolute ? undefined : stackDirection }
     const childEl = renderNode(child, assets, childCtx)
     if (childEl) {
@@ -481,7 +608,7 @@ function renderFrame(el: Element, assets: Record<string, string>, ctx: Ctx, isSt
         if (flowChildCount > 0) {
           // Clamp: B can't go past the left/top edge of the previous sibling (Figma behaviour)
           const prevSize = prevFlowChild ? parseFloat(
-            stackDirection === 'horizontal' ? (get(prevFlowChild, 'width') || '') : (get(prevFlowChild, 'height') || '')
+            stackDirection === 'horizontal' ? (get(prevFlowChild, 'w') || '') : (get(prevFlowChild, 'h') || '')
           ) : NaN
           const clampedGap = !isNaN(prevSize) ? Math.max(negativeGap, -prevSize) : negativeGap
           if (stackDirection === 'horizontal') childEl.style.marginLeft = `${clampedGap}px`
@@ -593,7 +720,8 @@ function renderText(el: Element, assets: Record<string, string>, ctx: Ctx): HTML
 
   const align = get(el, 'align')
   const va = get(el, 'vertical-align')
-  const truncate = get(el, 'truncate') === 'true'
+  const truncateVal = getRaw(el, 'truncate')
+  const truncate = truncateVal !== null && truncateVal !== 'false'
   const maxLines = get(el, 'max-lines')
   const leadingTrim = get(el, 'leading-trim')
 
@@ -709,8 +837,8 @@ function renderImg(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLE
 
 function renderSvgAsset(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLElement {
   const src = get(el, 'src')
-  const w = get(el, 'width') || '0'
-  const h = get(el, 'height') || '0'
+  const w = get(el, 'w') || '0'
+  const h = get(el, 'h') || '0'
 
   if (!src) {
     // Inline SVG: create a real <svg> element and set innerHTML so children parse in SVG namespace
@@ -747,8 +875,8 @@ function renderEllipseArc(
   stroke: string | null,
   strokeWidth: string | null,
 ): HTMLElement {
-  const w = parseFloat(get(el, 'width') || '24')
-  const h = parseFloat(get(el, 'height') || '24')
+  const w = parseFloat(get(el, 'w') || '24')
+  const h = parseFloat(get(el, 'h') || '24')
   const startDeg = parseFloat(get(el, 'arc-start') || '0')
   const endDeg = parseFloat(get(el, 'arc-end') || '360')
   const innerRatio = parseFloat(get(el, 'arc-inner') || '0')
@@ -826,7 +954,7 @@ function renderShape(el: Element, assets: Record<string, string>, ctx: Ctx): HTM
     const sw = get(el, 'stroke-width') || '1'
     const strokeCap = get(el, 'stroke-cap')
     const rotation = normalizedRightAngle(el)
-    const length = get(el, 'width') || '0'
+    const length = get(el, 'w') || '0'
 
     if (rotation !== null) {
       div.style.transform = ''
@@ -839,7 +967,7 @@ function renderShape(el: Element, assets: Record<string, string>, ctx: Ctx): HTM
         div.style.height = `${sw}px`
       }
     } else {
-      div.style.width = px(get(el, 'width'))
+      div.style.width = px(get(el, 'w'))
       div.style.height = `${sw}px`
     }
 
@@ -876,8 +1004,8 @@ function renderShape(el: Element, assets: Record<string, string>, ctx: Ctx): HTM
 }
 
 function renderPath(el: Element, ctx: Ctx): HTMLElement {
-  const w = get(el, 'width') || '24'
-  const h = get(el, 'height') || '24'
+  const w = get(el, 'w') || '24'
+  const h = get(el, 'h') || '24'
   const fill = get(el, 'fill')
   const s = get(el, 'stroke')
   const sw = get(el, 'stroke-width')
@@ -952,6 +1080,113 @@ function svgPath(
   return path
 }
 
+function parseComponents(gui: Element): Map<string, Element> {
+  const map = new Map<string, Element>()
+  for (const block of Array.from(gui.children)) {
+    if (block.tagName !== 'components') continue
+    for (const comp of Array.from(block.children)) {
+      if (comp.tagName === 'component') {
+        const id = comp.getAttribute('id')
+        if (id) map.set(id, comp)
+      } else if (comp.tagName === 'component-set') {
+        for (const variant of Array.from(comp.children)) {
+          if (variant.tagName === 'variant') {
+            const id = variant.getAttribute('id')
+            if (id) map.set(id, variant)
+          }
+        }
+      }
+    }
+  }
+  return map
+}
+
+function findById(root: Element, id: string): Element | null {
+  if (root.getAttribute('id') === id) return root
+  for (const child of Array.from(root.children)) {
+    const found = findById(child, id)
+    if (found) return found
+  }
+  return null
+}
+
+const INSTANCE_POSITIONAL_ATTRS = new Set([
+  'component', 'name', 'x', 'y', 'w', 'h',
+  'constraint-h', 'constraint-v', 'abs', 'rotation', 'opacity', 'blend',
+  'min-width', 'max-width', 'min-height', 'max-height',
+])
+
+function applyPropsToBody(body: Element, instance: Element, compEl: Element): void {
+  // Build prop name → type map from declared <props> block
+  const propTypes: Record<string, string> = {}
+  const propsEl = Array.from(compEl.children).find(c => c.tagName === 'props')
+  if (propsEl) {
+    for (const propEl of Array.from(propsEl.children)) {
+      if (propEl.tagName !== 'prop') continue
+      const propName = propEl.getAttribute('name')
+      const propType = propEl.getAttribute('type')
+      const propTarget = propEl.getAttribute('target')
+      if (!propName || !propType || !propTarget) continue
+      propTypes[propName] = propType
+      const overrideVal = instance.getAttribute(propName)
+      if (overrideVal === null) continue
+      const targetEl = findById(body, propTarget)
+      if (!targetEl) continue
+      applyOverride(targetEl, propType, overrideVal)
+    }
+  }
+
+  // Also apply any ad-hoc overrides — instance attrs that aren't positional/structural
+  // and weren't already handled by a declared prop. Target = element with matching id.
+  for (const attr of Array.from(instance.attributes)) {
+    if (INSTANCE_POSITIONAL_ATTRS.has(attr.name)) continue
+    if (propTypes[attr.name] !== undefined) continue  // already handled above
+    const targetEl = findById(body, attr.name)
+    if (!targetEl) continue
+    // Infer type from element tag
+    const inferredType = targetEl.tagName === 'text' ? 'text'
+      : attr.value === 'false' || attr.value === 'true' ? 'visible'
+      : targetEl.getAttribute('src') !== null ? 'src'
+      : 'text'
+    applyOverride(targetEl, inferredType, attr.value)
+  }
+}
+
+function applyOverride(targetEl: Element, type: string, value: string): void {
+  if (type === 'text') {
+    targetEl.setAttribute('value', value)
+  } else if (type === 'visible' && value === 'false') {
+    targetEl.parentNode && targetEl.parentNode.removeChild(targetEl)
+  } else if (type === 'image' || type === 'src') {
+    targetEl.setAttribute('src', value)
+  } else if (type === 'fill') {
+    targetEl.setAttribute('fill', value)
+  }
+}
+
+function renderInstance(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLElement | null {
+  const compId = get(el, 'component')
+  if (!compId) return null
+  const compEl = activeComponents.get(compId)
+  if (!compEl) return null
+
+  const STACK_TAGS = new Set(['stack', 'row', 'col', 'grid'])
+  const bodyEl = Array.from(compEl.children).find(c => c.tagName !== 'props')
+  if (!bodyEl) return null
+
+  const body = bodyEl.cloneNode(true) as Element
+
+  applyPropsToBody(body, el, compEl)
+
+  // Override position/sizing from instance element
+  for (const attr of ['x', 'y', 'w', 'h', 'constraint-h', 'constraint-v', 'abs', 'rotation', 'opacity', 'blend', 'min-width', 'max-width', 'min-height', 'max-height']) {
+    const val = el.getAttribute(attr)
+    if (val !== null) body.setAttribute(attr, val)
+  }
+
+  return renderFrame(body, assets, ctx, STACK_TAGS.has(body.tagName))
+}
+
 function renderNode(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLElement | null {
   switch (el.tagName) {
     case 'frame': return renderFrame(el, assets, ctx, false)
@@ -964,6 +1199,7 @@ function renderNode(el: Element, assets: Record<string, string>, ctx: Ctx): HTML
     case 'img': return renderImg(el, assets, ctx)
     case 'svg': return renderSvgAsset(el, assets, ctx)
     case 'shape': return renderShape(el, assets, ctx)
+    case 'instance': return renderInstance(el, assets, ctx)
     default: return null
   }
 }
@@ -1171,7 +1407,7 @@ export function render(
 
   let doc: Document
   try {
-    const sanitized = code.replace(/&(?!amp;|lt;|gt;|quot;|apos;|#)/g, '&amp;')
+    const sanitized = normalizeBooleanAttrs(code).replace(/&(?!amp;|lt;|gt;|quot;|apos;|#)/g, '&amp;')
     doc = new DOMParser().parseFromString(sanitized, 'text/xml')
     if (doc.querySelector('parsererror')) throw new Error()
   } catch {
@@ -1185,6 +1421,7 @@ export function render(
   activeStyles = parseStyles(gui)
   activeFillStyles = parseFillStyles(gui)
   activeEffectStyles = parseEffectStyles(gui)
+  activeComponents = parseComponents(gui)
   const assets = assetMap || parseAssets(gui)
   injectFonts(gui)
   const viewport = gui.getAttribute('viewport') || '390x844'
@@ -1285,8 +1522,7 @@ export function render(
     }, { animate: false, force: true })
   }
 
-  requestAnimationFrame(async () => {
-    const { default: Panzoom } = await import('@panzoom/panzoom')
+  requestAnimationFrame(() => {
     baseZoom = fitZoom()
     const pan = centeredPan(baseZoom)
     panzoom = Panzoom(stage, {

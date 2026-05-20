@@ -105,76 +105,82 @@ const SAMPLE = `<gui version="1.0" name="Profile" viewport="390x280">
           weights="400 500 600 700" styles="normal" />
   </fonts>
 
-  <stack direction="vertical" fill="$bg"
-         padding="24" gap="20"
-         sizing-h="fill" sizing-v="fill">
+  <col fill="$bg" p="24" gap="20" w="fill" h="fill">
 
     <!-- header card -->
-    <stack direction="horizontal" fill="$surface"
-           radius="$r" padding="20" gap="16" align="center">
-      <shape type="ellipse" width="52" height="52" fill="$primary" />
-      <stack direction="vertical" gap="4" sizing-h="fill">
+    <row fill="$surface" radius="$r" p="20" gap="16" align="middle-left">
+      <shape type="ellipse" w="52" h="52" fill="$primary" />
+      <col gap="4" w="fill">
         <text value="Alex Chen"
               font-family="Inter" font-size="16" font-weight="700"
               color="$text" />
         <text value="Product Designer · San Francisco"
               font-family="Inter" font-size="12" color="$muted" />
-      </stack>
+      </col>
       <shape type="rect" fill="$primary" radius="8"
-             width="72" height="32" />
-    </stack>
+             w="72" h="32" />
+    </row>
 
     <!-- stats row -->
-    <stack direction="horizontal" gap="12">
-      <stack direction="vertical" fill="$surface" radius="$r"
-             padding="16" gap="4" align="center" sizing-h="fill">
+    <row gap="12">
+      <col fill="$surface" radius="$r" p="16" gap="4" align="top-center" w="fill">
         <text value="248" font-family="Inter" font-size="20"
               font-weight="700" color="$text" />
         <text value="projects" font-family="Inter"
               font-size="11" color="$muted" />
-      </stack>
-      <stack direction="vertical" fill="$surface" radius="$r"
-             padding="16" gap="4" align="center" sizing-h="fill">
+      </col>
+      <col fill="$surface" radius="$r" p="16" gap="4" align="top-center" w="fill">
         <text value="12k" font-family="Inter" font-size="20"
               font-weight="700" color="$green" />
         <text value="followers" font-family="Inter"
               font-size="11" color="$muted" />
-      </stack>
-      <stack direction="vertical" fill="$surface" radius="$r"
-             padding="16" gap="4" align="center" sizing-h="fill">
+      </col>
+      <col fill="$surface" radius="$r" p="16" gap="4" align="top-center" w="fill">
         <text value="99%" font-family="Inter" font-size="20"
               font-weight="700" color="$text" />
         <text value="rating" font-family="Inter"
               font-size="11" color="$muted" />
-      </stack>
-    </stack>
+      </col>
+    </row>
 
-  </stack>
+  </col>
 </gui>`
 
 // ─── .gui schema for completions ──────────────────────────────────────────────
 
 const SHARED_VISUAL = [
   { name: 'opacity' }, { name: 'blend', values: ['normal', 'multiply', 'screen', 'overlay', 'darken', 'lighten', 'color-dodge', 'color-burn', 'hard-light', 'soft-light', 'difference', 'exclusion', 'hue', 'saturation', 'color', 'luminosity', 'linear-burn', 'linear-dodge'] },
-  { name: 'mask', values: ['true', 'false'] }, { name: 'rotation' },
+  { name: 'mask' }, { name: 'rotation' },
   { name: 'constraint-h', values: ['left', 'right', 'center', 'scale', 'stretch'] },
   { name: 'constraint-v', values: ['top', 'bottom', 'center', 'scale', 'stretch'] },
-  { name: 'sizing-h', values: ['hug', 'fill', 'fixed'] },
-  { name: 'sizing-v', values: ['hug', 'fill', 'fixed'] },
-  { name: 'layout-position', values: ['absolute'] },
+  { name: 'abs' },
   { name: 'min-width' }, { name: 'max-width' },
   { name: 'min-height' }, { name: 'max-height' },
 ]
 
 const SHARED_LAYOUT = [
   { name: 'id' }, { name: 'name' },
-  { name: 'width' }, { name: 'height' }, { name: 'x' }, { name: 'y' },
+  { name: 'w' }, { name: 'h' }, { name: 'x' }, { name: 'y' },
   { name: 'fill' }, { name: 'fill-style' }, { name: 'effect-style' },
   { name: 'radius' }, { name: 'corner-smoothing' }, { name: 'shadow' },
   { name: 'stroke' }, { name: 'stroke-width' },
   { name: 'stroke-position', values: ['inside', 'outside', 'center'] },
-  { name: 'clip', values: ['true', 'false'] },
+  { name: 'clip' },
   ...SHARED_VISUAL,
+]
+
+const ALIGN_VALUES = [
+  'top-left', 'top-center', 'top-right',
+  'middle-left', 'middle-center', 'middle-right',
+  'bottom-left', 'bottom-center', 'bottom-right',
+  'stretch', 'baseline',
+]
+
+const STACK_LAYOUT_ATTRS = [
+  { name: 'gap' }, { name: 'p' }, { name: 'pt' }, { name: 'pr' }, { name: 'pb' }, { name: 'pl' },
+  { name: 'align', values: ALIGN_VALUES },
+  { name: 'wrap' },
+  { name: 'reverse-z' },
 ]
 
 const GUI_ELEMENTS = [
@@ -213,6 +219,28 @@ const GUI_ELEMENTS = [
     attrs: [{ name: 'id' }, { name: 'format', values: ['webp', 'png', 'jpg', 'svg'] }, { name: 'src' }],
   },
   { name: 'styles', children: ['text-style', 'fill-style', 'effect-style'] },
+  { name: 'components', children: ['component', 'component-set'] },
+  {
+    name: 'component',
+    attrs: [{ name: 'name' }, { name: 'id' }],
+    children: ['props', 'frame', 'stack', 'row', 'col', 'grid'],
+  },
+  {
+    name: 'component-set',
+    attrs: [{ name: 'name' }, { name: 'id' }],
+    children: ['variant'],
+  },
+  {
+    name: 'variant',
+    attrs: [{ name: 'id' }],
+    children: ['props', 'frame', 'stack', 'row', 'col', 'grid'],
+  },
+  { name: 'props', children: ['prop'] },
+  {
+    name: 'prop',
+    selfClosing: true,
+    attrs: [{ name: 'name' }, { name: 'type', values: ['text', 'visible', 'image', 'src', 'fill'] }, { name: 'target' }],
+  },
   {
     name: 'text-style',
     selfClosing: true,
@@ -237,13 +265,7 @@ const GUI_ELEMENTS = [
     name: 'stack',
     attrs: [
       { name: 'direction', values: ['horizontal', 'vertical', 'grid'] },
-      { name: 'gap' }, { name: 'padding' },
-      { name: 'align', values: ['start', 'center', 'end', 'stretch', 'baseline'] },
-      { name: 'justify', values: ['start', 'center', 'end', 'space-between'] },
-      { name: 'wrap', values: ['true', 'false'] },
-      { name: 'wrap-gap' },
-      { name: 'wrap-align', values: ['space-between'] },
-      { name: 'reverse-z', values: ['true', 'false'] },
+      ...STACK_LAYOUT_ATTRS,
       { name: 'grid-columns' }, { name: 'grid-rows' },
       { name: 'grid-col-gap' }, { name: 'grid-row-gap' },
       ...SHARED_LAYOUT,
@@ -252,26 +274,14 @@ const GUI_ELEMENTS = [
   {
     name: 'row',
     attrs: [
-      { name: 'gap' }, { name: 'padding' },
-      { name: 'align', values: ['start', 'center', 'end', 'stretch', 'baseline'] },
-      { name: 'justify', values: ['start', 'center', 'end', 'space-between'] },
-      { name: 'wrap', values: ['true', 'false'] },
-      { name: 'wrap-gap' },
-      { name: 'wrap-align', values: ['space-between'] },
-      { name: 'reverse-z', values: ['true', 'false'] },
+      ...STACK_LAYOUT_ATTRS,
       ...SHARED_LAYOUT,
     ],
   },
   {
     name: 'col',
     attrs: [
-      { name: 'gap' }, { name: 'padding' },
-      { name: 'align', values: ['start', 'center', 'end', 'stretch', 'baseline'] },
-      { name: 'justify', values: ['start', 'center', 'end', 'space-between'] },
-      { name: 'wrap', values: ['true', 'false'] },
-      { name: 'wrap-gap' },
-      { name: 'wrap-align', values: ['space-between'] },
-      { name: 'reverse-z', values: ['true', 'false'] },
+      ...STACK_LAYOUT_ATTRS,
       ...SHARED_LAYOUT,
     ],
   },
@@ -280,7 +290,7 @@ const GUI_ELEMENTS = [
     attrs: [
       { name: 'columns' }, { name: 'rows' },
       { name: 'col-gap' }, { name: 'row-gap' },
-      { name: 'padding' },
+      { name: 'p' }, { name: 'pt' }, { name: 'pr' }, { name: 'pb' }, { name: 'pl' },
       ...SHARED_LAYOUT,
     ],
   },
@@ -292,7 +302,7 @@ const GUI_ELEMENTS = [
     name: 'group',
     attrs: [
       { name: 'id' }, { name: 'name' },
-      { name: 'x' }, { name: 'y' }, { name: 'width' }, { name: 'height' },
+      { name: 'x' }, { name: 'y' }, { name: 'w' }, { name: 'h' },
       { name: 'mask-src' }, { name: 'mask-x' }, { name: 'mask-y' },
       { name: 'mask-width' }, { name: 'mask-height' },
       ...SHARED_VISUAL,
@@ -312,9 +322,18 @@ const GUI_ELEMENTS = [
       { name: 'decoration', values: ['underline', 'strikethrough'] },
       { name: 'text-case', values: ['uppercase', 'lowercase', 'capitalize', 'small-caps', 'small-caps-forced'] },
       { name: 'leading-trim', values: ['cap-height', 'normal'] },
-      { name: 'truncate', values: ['true', 'false'] }, { name: 'max-lines' },
+      { name: 'truncate' }, { name: 'max-lines' },
       { name: 'href' }, { name: 'text-style' }, { name: 'fill-style' },
       ...SHARED_LAYOUT,
+    ],
+  },
+  {
+    name: 'instance',
+    selfClosing: true,
+    attrs: [
+      { name: 'component' },
+      { name: 'name' }, { name: 'x' }, { name: 'y' }, { name: 'w' }, { name: 'h' },
+      ...SHARED_VISUAL,
     ],
   },
   {
@@ -432,12 +451,12 @@ function guiAttrNameCompletion(ctx: CompletionContext): CompletionResult | null 
       label: a.name,
       type: 'property' as const,
       apply(view: EditorView, _completion: any, f: number, to: number) {
-        const insert = `${a.name}=""`
+        const insert = BOOLEAN_ATTRS.has(a.name) ? a.name : `${a.name}=""`
         view.dispatch({
           changes: { from: f, to, insert },
-          selection: { anchor: f + a.name.length + 2 },
+          selection: { anchor: f + insert.length },
         })
-        setTimeout(() => startCompletion(view), 0)
+        if (!BOOLEAN_ATTRS.has(a.name)) setTimeout(() => startCompletion(view), 0)
       },
     }))
 
@@ -450,8 +469,10 @@ function guiAttrNameCompletion(ctx: CompletionContext): CompletionResult | null 
 // Attributes that also accept $token references
 const TOKEN_ATTRS = new Set([
   'fill', 'color', 'stroke', 'radius', 'font-family',
-  'font-size', 'font-weight', 'gap', 'padding',
+  'font-size', 'font-weight', 'gap', 'p', 'pt', 'pr', 'pb', 'pl', 'w', 'h',
 ])
+
+const BOOLEAN_ATTRS = new Set(['mask', 'clip', 'abs', 'wrap', 'reverse-z', 'truncate'])
 
 function guiAttrValueCompletion(ctx: CompletionContext): CompletionResult | null {
   const tree = syntaxTree(ctx.state)
@@ -535,32 +556,64 @@ function guiAttrValueCompletion(ctx: CompletionContext): CompletionResult | null
 
 const VALID_ELEMENTS = new Set(GUI_ELEMENTS.map(e => e.name))
 
-const ENUM_ATTRS: Record<string, Record<string, Set<string>>> = {
-  stack: { direction: new Set(['horizontal', 'vertical', 'grid']) },
-  shape: { type: new Set(['rect', 'ellipse', 'line', 'path']) },
-  font: { source: new Set(['google', 'system', 'unresolved']) },
-  img: { fit: new Set(['cover', 'contain', 'crop', 'tile']) },
-  fill: {
-    type: new Set(['color', 'linear-gradient', 'radial-gradient', 'angular-gradient', 'image']),
-    fit: new Set(['cover', 'contain', 'crop', 'tile']),
-  },
-  effect: { type: new Set(['drop-shadow', 'inner-shadow', 'layer-blur', 'background-blur']) },
+const ENUM_ATTRS: Record<string, Record<string, Set<string>>> = {}
+for (const element of GUI_ELEMENTS) {
+  const enumAttrs: Record<string, Set<string>> = {}
+  for (const attr of element.attrs || []) {
+    if ('values' in attr && Array.isArray(attr.values)) {
+      enumAttrs[attr.name] = new Set(attr.values)
+    }
+  }
+  if (Object.keys(enumAttrs).length) ENUM_ATTRS[element.name] = enumAttrs
+}
+
+const LAYOUT_TAGS = new Set(['frame', 'stack', 'row', 'col', 'grid', 'group', 'instance'])
+const CONTENT_TAGS = new Set(['text', 'img', 'svg', 'shape'])
+const CHILD_TAGS = new Set([...LAYOUT_TAGS, ...CONTENT_TAGS])
+const TOKEN_REF_ATTRS = new Set(['fill', 'color', 'stroke', 'radius', 'font-family', 'font-size', 'font-weight', 'gap', 'p', 'pt', 'pr', 'pb', 'pl', 'w', 'h'])
+const ASSET_REF_ATTRS = new Set(['src', 'mask-src'])
+
+function collectDefinitions(code: string) {
+  const tokens = new Set<string>()
+  const assets = new Set<string>()
+  const tokenRe = /<(?:color|number|string)\s[^>]*name="([^"]+)"/g
+  let m
+  while ((m = tokenRe.exec(code)) !== null) tokens.add(m[1])
+  const assetRe = /<image\s[^>]*id="([^"]+)"/g
+  while ((m = assetRe.exec(code)) !== null) assets.add(m[1])
+  return { tokens, assets }
 }
 
 function collectTokens(code: string): Set<string> {
-  const found = new Set<string>()
-  const tokenRe = /<(?:color|number|string)\s[^>]*name="([^"]+)"/g
-  let m
-  while ((m = tokenRe.exec(code)) !== null) found.add(m[1])
-  const assetRe = /<image\s[^>]*id="([^"]+)"/g
-  while ((m = assetRe.exec(code)) !== null) found.add(m[1])
-  return found
+  const defs = collectDefinitions(code)
+  return new Set([...defs.tokens, ...defs.assets])
+}
+
+function hasAttr(node: any, doc: any, name: string): boolean {
+  return node.getChildren('Attribute')
+    .some(a => {
+      const nameNode = a.getChild('AttributeName')
+      return !!nameNode && doc.sliceString(nameNode.from, nameNode.to) === name
+    })
+}
+
+function childTagNames(tagNode: any, doc: any): string[] {
+  const elementNode = tagNode.name === 'OpenTag' ? tagNode.parent : tagNode
+  if (!elementNode) return []
+
+  const names: string[] = []
+  for (let child = elementNode.firstChild; child; child = child.nextSibling) {
+    if (child.name !== 'Element' && child.name !== 'SelfClosingTag') continue
+    const tagNode = child.getChild('OpenTag')?.getChild('TagName') || child.getChild('TagName')
+    if (tagNode) names.push(doc.sliceString(tagNode.from, tagNode.to))
+  }
+  return names
 }
 
 function guiLintFn(view: EditorView): Diagnostic[] {
   const diagnostics: Diagnostic[] = []
   const code = view.state.doc.toString()
-  const definedTokens = collectTokens(code)
+  const { tokens: definedTokens, assets: definedAssets } = collectDefinitions(code)
   const doc = view.state.doc
 
   syntaxTree(view.state).iterate({
@@ -605,15 +658,24 @@ function guiLintFn(view: EditorView): Diagnostic[] {
           })
         }
 
-        // undefined token reference  ($name, not inside gradient/function calls)
+        // undefined token / asset references ($name, not inside gradient/function calls)
         if (attrVal.startsWith('$') && !attrVal.includes('(')) {
-          const tokenName = attrVal.slice(1)
-          if (!definedTokens.has(tokenName)) {
+          const refName = attrVal.slice(1)
+          const expectsAsset = ASSET_REF_ATTRS.has(attrName)
+          const expectsToken = TOKEN_REF_ATTRS.has(attrName) || !expectsAsset
+          if (expectsAsset && !definedAssets.has(refName)) {
             diagnostics.push({
               from: valNode.from + 1,
               to: valNode.to - 1,
               severity: 'warning',
-              message: `Token "$${tokenName}" is not defined in <tokens>.`,
+              message: `Asset "$${refName}" is not defined in <assets>.`,
+            })
+          } else if (expectsToken && !definedTokens.has(refName)) {
+            diagnostics.push({
+              from: valNode.from + 1,
+              to: valNode.to - 1,
+              severity: 'warning',
+              message: `Token "$${refName}" is not defined in <tokens>.`,
             })
           }
         }
@@ -640,6 +702,69 @@ function guiLintFn(view: EditorView): Diagnostic[] {
             to: tagNameNode.to,
             severity: 'warning',
             message: '<gui> is missing the viewport attribute (e.g. viewport="390x844").',
+          })
+        }
+      }
+
+      const childTags = childTagNames(node.node, doc)
+      if (tagName === 'gui') {
+        const hasRootNode = childTags.some(t => CHILD_TAGS.has(t))
+        if (!hasRootNode) {
+          diagnostics.push({
+            from: tagNameNode.from,
+            to: tagNameNode.to,
+            severity: 'error',
+            message: '<gui> must contain a root layout node.',
+          })
+        }
+      } else if (tagName === 'stack' && hasAttr(node.node, doc, 'direction')) {
+        const directionAttr = node.node.getChildren('Attribute')
+          .find(a => a.getChild('AttributeName') && doc.sliceString(a.getChild('AttributeName')!.from, a.getChild('AttributeName')!.to) === 'direction')
+        const directionVal = directionAttr?.getChild('AttributeValue')
+        if (directionVal && doc.sliceString(directionVal.from + 1, directionVal.to - 1) === 'grid' && !hasAttr(node.node, doc, 'grid-columns')) {
+          diagnostics.push({
+            from: tagNameNode.from,
+            to: tagNameNode.to,
+            severity: 'warning',
+            message: '<stack direction="grid"> should specify grid-columns.',
+          })
+        }
+      } else if (tagName === 'grid' && !hasAttr(node.node, doc, 'columns')) {
+        diagnostics.push({
+          from: tagNameNode.from,
+          to: tagNameNode.to,
+          severity: 'warning',
+          message: '<grid> should specify columns.',
+        })
+      } else if (tagName === 'text') {
+        const hasValue = hasAttr(node.node, doc, 'value')
+        const hasSegments = childTags.includes('segment')
+        if (!hasValue && !hasSegments) {
+          diagnostics.push({
+            from: tagNameNode.from,
+            to: tagNameNode.to,
+            severity: 'error',
+            message: '<text> must have either a value attribute or <segment> children.',
+          })
+        } else if (hasValue && hasSegments) {
+          diagnostics.push({
+            from: tagNameNode.from,
+            to: tagNameNode.to,
+            severity: 'error',
+            message: '<text> must not have both a value attribute and <segment> children.',
+          })
+        }
+      } else if (tagName === 'shape') {
+        const typeAttr = node.node.getChildren('Attribute')
+          .find(a => a.getChild('AttributeName') && doc.sliceString(a.getChild('AttributeName')!.from, a.getChild('AttributeName')!.to) === 'type')
+        const typeNode = typeAttr?.getChild('AttributeValue')
+        const shapeType = typeNode ? doc.sliceString(typeNode.from + 1, typeNode.to - 1) : ''
+        if (shapeType === 'path' && !childTags.includes('path')) {
+          diagnostics.push({
+            from: tagNameNode.from,
+            to: tagNameNode.to,
+            severity: 'warning',
+            message: '<shape type="path"> should include a <path d="..." /> child.',
           })
         }
       }
@@ -759,7 +884,7 @@ let highlightedEl: HTMLElement | null = null
 // attribute value content, multi-line tags, and reformatting.
 let nodePosMap: Map<number, number> = new Map()
 
-const GUI_NODE_TAGS = new Set(['frame', 'stack', 'group', 'text', 'img', 'svg', 'shape'])
+const GUI_NODE_TAGS = new Set(['frame', 'stack', 'row', 'col', 'grid', 'group', 'text', 'img', 'svg', 'shape', 'instance'])
 
 // Walk the syntax tree in document order (= DFS pre-order) and map each GUI
 // element's opening-tag start position to the index it will occupy in
