@@ -187,7 +187,7 @@ const GUI_ELEMENTS = [
   {
     name: 'gui',
     attrs: [
-      { name: 'version', values: ['1.0'] },
+      { name: 'version', values: ['0.2', '1.0'] },
       { name: 'name' },
       { name: 'viewport' },
     ],
@@ -289,7 +289,7 @@ const GUI_ELEMENTS = [
     name: 'grid',
     attrs: [
       { name: 'columns' }, { name: 'rows' },
-      { name: 'col-gap' }, { name: 'row-gap' },
+      { name: 'gap' }, { name: 'col-gap' }, { name: 'row-gap' },
       { name: 'p' }, { name: 'pt' }, { name: 'pr' }, { name: 'pb' }, { name: 'pl' },
       ...SHARED_LAYOUT,
     ],
@@ -555,6 +555,7 @@ function guiAttrValueCompletion(ctx: CompletionContext): CompletionResult | null
 // ─── .gui linter ──────────────────────────────────────────────────────────────
 
 const VALID_ELEMENTS = new Set(GUI_ELEMENTS.map(e => e.name))
+const ATTRS_BY_ELEMENT = new Map(GUI_ELEMENTS.map(e => [e.name, new Set((e.attrs || []).map(a => a.name))]))
 
 const ENUM_ATTRS: Record<string, Record<string, Set<string>>> = {}
 for (const element of GUI_ELEMENTS) {
@@ -572,6 +573,14 @@ const CONTENT_TAGS = new Set(['text', 'img', 'svg', 'shape'])
 const CHILD_TAGS = new Set([...LAYOUT_TAGS, ...CONTENT_TAGS])
 const TOKEN_REF_ATTRS = new Set(['fill', 'color', 'stroke', 'radius', 'font-family', 'font-size', 'font-weight', 'gap', 'p', 'pt', 'pr', 'pb', 'pl', 'w', 'h'])
 const ASSET_REF_ATTRS = new Set(['src', 'mask-src'])
+type ParsedAttr = {
+  name: string
+  value: string | null
+  nameFrom: number
+  nameTo: number
+  valueFrom: number
+  valueTo: number
+}
 
 function collectDefinitions(code: string) {
   const tokens = new Set<string>()
@@ -590,11 +599,71 @@ function collectTokens(code: string): Set<string> {
 }
 
 function hasAttr(node: any, doc: any, name: string): boolean {
-  return node.getChildren('Attribute')
-    .some(a => {
-      const nameNode = a.getChild('AttributeName')
-      return !!nameNode && doc.sliceString(nameNode.from, nameNode.to) === name
+  return parseTagAttrs(node, doc).some(attr => attr.name === name)
+}
+
+function attrValue(node: any, doc: any, name: string): string | null {
+  return parseTagAttrs(node, doc).find(attr => attr.name === name)?.value ?? null
+}
+
+function parseTagAttrs(node: any, doc: any): ParsedAttr[] {
+  const tagNameNode = node.getChild('TagName')
+  if (!tagNameNode) return []
+
+  const raw = doc.sliceString(node.from, node.to)
+  const tagOffset = node.from
+  const tagNameEnd = tagNameNode.to - tagOffset
+  const attrs: ParsedAttr[] = []
+  let i = tagNameEnd
+
+  while (i < raw.length) {
+    while (i < raw.length && /\s/.test(raw[i])) i++
+    if (i >= raw.length || raw[i] === '>' || raw[i] === '/') break
+
+    const nameStart = i
+    while (i < raw.length && /[^\s=/>]/.test(raw[i])) i++
+    const nameEnd = i
+    const name = raw.slice(nameStart, nameEnd)
+    if (!name) break
+
+    while (i < raw.length && /\s/.test(raw[i])) i++
+
+    let value: string | null = null
+    let valueFrom = tagOffset + nameEnd
+    let valueTo = tagOffset + nameEnd
+
+    if (raw[i] === '=') {
+      i++
+      while (i < raw.length && /\s/.test(raw[i])) i++
+      const quote = raw[i]
+      if (quote === '"' || quote === "'") {
+        i++
+        const valueStart = i
+        while (i < raw.length && raw[i] !== quote) i++
+        value = raw.slice(valueStart, i)
+        valueFrom = tagOffset + valueStart
+        valueTo = tagOffset + i
+        if (raw[i] === quote) i++
+      } else {
+        const valueStart = i
+        while (i < raw.length && /[^\s/>]/.test(raw[i])) i++
+        value = raw.slice(valueStart, i)
+        valueFrom = tagOffset + valueStart
+        valueTo = tagOffset + i
+      }
+    }
+
+    attrs.push({
+      name,
+      value,
+      nameFrom: tagOffset + nameStart,
+      nameTo: tagOffset + nameEnd,
+      valueFrom,
+      valueTo,
     })
+  }
+
+  return attrs
 }
 
 function childTagNames(tagNode: any, doc: any): string[] {
@@ -602,12 +671,25 @@ function childTagNames(tagNode: any, doc: any): string[] {
   if (!elementNode) return []
 
   const names: string[] = []
-  for (let child = elementNode.firstChild; child; child = child.nextSibling) {
-    if (child.name !== 'Element' && child.name !== 'SelfClosingTag') continue
-    const tagNode = child.getChild('OpenTag')?.getChild('TagName') || child.getChild('TagName')
-    if (tagNode) names.push(doc.sliceString(tagNode.from, tagNode.to))
+  const raw = doc.sliceString(elementNode.from, elementNode.to)
+  const tagRe = /<([A-Za-z][\w-]*)\b/g
+  let match
+  while ((match = tagRe.exec(raw)) !== null) {
+    names.push(match[1])
   }
+  const ownTag = elementNode.getChild('OpenTag')?.getChild('TagName') || elementNode.getChild('TagName')
+  if (ownTag && names[0] === doc.sliceString(ownTag.from, ownTag.to)) names.shift()
   return names
+}
+
+function isInsideInlineSvg(node: any, doc: any): boolean {
+  let current = node.parent
+  while (current) {
+    const tagNode = current.getChild('OpenTag')?.getChild('TagName') || current.getChild('TagName')
+    if (tagNode && doc.sliceString(tagNode.from, tagNode.to) === 'svg') return true
+    current = current.parent
+  }
+  return false
 }
 
 function guiLintFn(view: EditorView): Diagnostic[] {
@@ -624,6 +706,8 @@ function guiLintFn(view: EditorView): Diagnostic[] {
       const tagNameNode = node.node.getChild('TagName')
       if (!tagNameNode) return
       const tagName = doc.sliceString(tagNameNode.from, tagNameNode.to)
+      const insideInlineSvg = tagName !== 'svg' && isInsideInlineSvg(node.node, doc)
+      if (insideInlineSvg) return
 
       // unknown element
       if (!VALID_ELEMENTS.has(tagName)) {
@@ -636,23 +720,41 @@ function guiLintFn(view: EditorView): Diagnostic[] {
         return false
       }
 
-      // check each attribute
-      for (const attrNode of node.node.getChildren('Attribute')) {
-        const nameNode = attrNode.getChild('AttributeName')
-        const valNode = attrNode.getChild('AttributeValue')
-        if (!nameNode || !valNode) continue
+      const allowedAttrs = ATTRS_BY_ELEMENT.get(tagName)
 
-        const attrName = doc.sliceString(nameNode.from, nameNode.to)
-        // strip surrounding quotes
-        const raw = doc.sliceString(valNode.from, valNode.to)
-        const attrVal = raw.slice(1, -1)
+      // check each attribute
+      for (const attr of parseTagAttrs(node.node, doc)) {
+        const attrName = attr.name
+
+        if (allowedAttrs && !allowedAttrs.has(attrName) && tagName !== 'instance' && tagName !== 'variant') {
+          diagnostics.push({
+            from: attr.nameFrom,
+            to: attr.nameTo,
+            severity: 'warning',
+            message: `"${attrName}" is not a known attribute for <${tagName}>.`,
+          })
+        }
+
+        if (attr.value === null) {
+          if (!BOOLEAN_ATTRS.has(attrName)) {
+            diagnostics.push({
+              from: attr.nameFrom,
+              to: attr.nameTo,
+              severity: 'error',
+              message: `"${attrName}" needs a value. Only boolean attributes can be written without one.`,
+            })
+          }
+          continue
+        }
+
+        const attrVal = attr.value
 
         // enum validation
         const enumMap = ENUM_ATTRS[tagName]
         if (enumMap && enumMap[attrName] && !enumMap[attrName].has(attrVal)) {
           diagnostics.push({
-            from: valNode.from + 1,
-            to: valNode.to - 1,
+            from: attr.valueFrom,
+            to: attr.valueTo,
             severity: 'error',
             message: `"${attrVal}" is not valid for ${tagName}[${attrName}]. Expected: ${[...enumMap[attrName]].join(' | ')}.`,
           })
@@ -665,15 +767,15 @@ function guiLintFn(view: EditorView): Diagnostic[] {
           const expectsToken = TOKEN_REF_ATTRS.has(attrName) || !expectsAsset
           if (expectsAsset && !definedAssets.has(refName)) {
             diagnostics.push({
-              from: valNode.from + 1,
-              to: valNode.to - 1,
+              from: attr.valueFrom,
+              to: attr.valueTo,
               severity: 'warning',
               message: `Asset "$${refName}" is not defined in <assets>.`,
             })
           } else if (expectsToken && !definedTokens.has(refName)) {
             diagnostics.push({
-              from: valNode.from + 1,
-              to: valNode.to - 1,
+              from: attr.valueFrom,
+              to: attr.valueTo,
               severity: 'warning',
               message: `Token "$${refName}" is not defined in <tokens>.`,
             })
@@ -683,11 +785,7 @@ function guiLintFn(view: EditorView): Diagnostic[] {
 
       // missing required attributes
       if (tagName === 'gui') {
-        const attrs = node.node.getChildren('Attribute')
-        const names = attrs
-          .map(a => a.getChild('AttributeName'))
-          .filter(Boolean)
-          .map(n => doc.sliceString(n!.from, n!.to))
+        const names = parseTagAttrs(node.node, doc).map(attr => attr.name)
         if (!names.includes('version')) {
           diagnostics.push({
             from: tagNameNode.from,
@@ -717,11 +815,8 @@ function guiLintFn(view: EditorView): Diagnostic[] {
             message: '<gui> must contain a root layout node.',
           })
         }
-      } else if (tagName === 'stack' && hasAttr(node.node, doc, 'direction')) {
-        const directionAttr = node.node.getChildren('Attribute')
-          .find(a => a.getChild('AttributeName') && doc.sliceString(a.getChild('AttributeName')!.from, a.getChild('AttributeName')!.to) === 'direction')
-        const directionVal = directionAttr?.getChild('AttributeValue')
-        if (directionVal && doc.sliceString(directionVal.from + 1, directionVal.to - 1) === 'grid' && !hasAttr(node.node, doc, 'grid-columns')) {
+      } else if (tagName === 'stack' && attrValue(node.node, doc, 'direction') === 'grid') {
+        if (!hasAttr(node.node, doc, 'grid-columns')) {
           diagnostics.push({
             from: tagNameNode.from,
             to: tagNameNode.to,
@@ -736,6 +831,23 @@ function guiLintFn(view: EditorView): Diagnostic[] {
           severity: 'warning',
           message: '<grid> should specify columns.',
         })
+      } else if (tagName === 'frame' || tagName === 'img' || tagName === 'svg' || tagName === 'group') {
+        if (!hasAttr(node.node, doc, 'w')) {
+          diagnostics.push({
+            from: tagNameNode.from,
+            to: tagNameNode.to,
+            severity: 'warning',
+            message: `<${tagName}> should specify w.`,
+          })
+        }
+        if (!hasAttr(node.node, doc, 'h')) {
+          diagnostics.push({
+            from: tagNameNode.from,
+            to: tagNameNode.to,
+            severity: 'warning',
+            message: `<${tagName}> should specify h.`,
+          })
+        }
       } else if (tagName === 'text') {
         const hasValue = hasAttr(node.node, doc, 'value')
         const hasSegments = childTags.includes('segment')
@@ -755,10 +867,23 @@ function guiLintFn(view: EditorView): Diagnostic[] {
           })
         }
       } else if (tagName === 'shape') {
-        const typeAttr = node.node.getChildren('Attribute')
-          .find(a => a.getChild('AttributeName') && doc.sliceString(a.getChild('AttributeName')!.from, a.getChild('AttributeName')!.to) === 'type')
-        const typeNode = typeAttr?.getChild('AttributeValue')
-        const shapeType = typeNode ? doc.sliceString(typeNode.from + 1, typeNode.to - 1) : ''
+        const shapeType = attrValue(node.node, doc, 'type') || ''
+        if (!hasAttr(node.node, doc, 'w')) {
+          diagnostics.push({
+            from: tagNameNode.from,
+            to: tagNameNode.to,
+            severity: 'warning',
+            message: '<shape> should specify w.',
+          })
+        }
+        if (shapeType !== 'line' && !hasAttr(node.node, doc, 'h')) {
+          diagnostics.push({
+            from: tagNameNode.from,
+            to: tagNameNode.to,
+            severity: 'warning',
+            message: '<shape> should specify h.',
+          })
+        }
         if (shapeType === 'path' && !childTags.includes('path')) {
           diagnostics.push({
             from: tagNameNode.from,

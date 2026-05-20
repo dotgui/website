@@ -561,6 +561,16 @@ function renderFrame(el: Element, assets: Record<string, string>, ctx: Ctx, isSt
       const rowGap = isGridTag ? get(el, 'row-gap') : get(el, 'grid-row-gap')
       if (cols) div.style.gridTemplateColumns = `repeat(${cols}, 1fr)`
       if (rows) div.style.gridTemplateRows = `repeat(${rows}, 1fr)`
+      const gridGap = isGridTag ? get(el, 'gap') : null
+      if (gridGap) {
+        const parts = gridGap.trim().split(/\s+/)
+        const firstGap = parts[0]
+        const secondGap = parts[1] || parts[0]
+        if (firstGap === 'auto') div.style.columnGap = '0px'
+        else if (firstGap) div.style.columnGap = `${firstGap}px`
+        if (secondGap === 'auto') div.style.rowGap = '0px'
+        else if (secondGap) div.style.rowGap = `${secondGap}px`
+      }
       if (colGap) div.style.columnGap = `${colGap}px`
       if (rowGap) div.style.rowGap = `${rowGap}px`
     } else {
