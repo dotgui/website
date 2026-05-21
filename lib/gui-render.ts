@@ -11,9 +11,64 @@ let activeFillStyles: Record<string, string> = {}
 let activeEffectStyles: Record<string, Element[]> = {}
 let activeComponents: Map<string, Element> = new Map()
 
-const BOOLEAN_ATTRS = new Set(['abs', 'clip', 'mask', 'reverse-z', 'truncate', 'wrap'])
+const PRESENCE_ATTR_VALUES: Record<string, string> = {
+  abs: 'true',
+  clip: 'true',
+  gap: 'auto',
+  mask: 'true',
+  'reverse-z': 'true',
+  truncate: 'true',
+  wrap: 'true',
+}
 
-function normalizeBooleanAttrs(code: string): string {
+function normalizeTagPresenceAttrs(tag: string): string {
+  let out = ''
+  let i = 0
+
+  while (i < tag.length) {
+    const ch = tag[i]
+    if (ch === '"' || ch === "'") {
+      const quote = ch
+      const start = i
+      i++
+      while (i < tag.length && tag[i] !== quote) i++
+      if (i < tag.length) i++
+      out += tag.slice(start, i)
+      continue
+    }
+
+    const isAttrBoundary = /\s/.test(ch)
+    if (!isAttrBoundary) {
+      out += ch
+      i++
+      continue
+    }
+
+    const wsStart = i
+    while (i < tag.length && /\s/.test(tag[i])) i++
+    const nameStart = i
+    if (!/[A-Za-z]/.test(tag[i] || '')) {
+      out += tag.slice(wsStart, i + 1)
+      i++
+      continue
+    }
+
+    while (i < tag.length && /[\w-]/.test(tag[i])) i++
+    const name = tag.slice(nameStart, i)
+    const afterName = tag[i]
+    const value = PRESENCE_ATTR_VALUES[name]
+
+    if (value && (/\s/.test(afterName || '') || afterName === '/' || afterName === '>')) {
+      out += `${tag.slice(wsStart, nameStart)}${name}="${value}"`
+    } else {
+      out += tag.slice(wsStart, i)
+    }
+  }
+
+  return out
+}
+
+export function normalizeBooleanAttrs(code: string): string {
   let out = ''
   let i = 0
 
@@ -53,9 +108,7 @@ function normalizeBooleanAttrs(code: string): string {
     if (/^<\/|^<\?|^<!/.test(tag)) {
       out += tag
     } else {
-      out += tag.replace(/\s([A-Za-z][\w-]*)(?=\s|\/?>)/g, (match, name) =>
-        BOOLEAN_ATTRS.has(name) ? ` ${name}="true"` : match,
-      )
+      out += normalizeTagPresenceAttrs(tag)
     }
     i = end
   }
@@ -133,6 +186,13 @@ function shadow(v: string | null): string | null {
   const p = v.split(' ')
   if (p.length >= 5) return `${p[0]}px ${p[1]}px ${p[2]}px ${p[3]}px ${col(p[4])}`
   return null
+}
+
+function lineHeight(v: string): string {
+  if (v.includes('%')) return v
+  const n = parseFloat(v)
+  if (Number.isFinite(n) && n > 0 && n <= 4) return String(n)
+  return `${v}px`
 }
 
 function cssString(v: string): string {
@@ -236,7 +296,7 @@ const RENDER_UTILITIES = `
   flex-shrink: 1;
   flex-basis: 0%;
 }
-.gui-sizing-v-fixed { height: var(--gui-height, auto); }
+.gui-sizing-v-fixed { height: var(--gui-height, auto); flex-shrink: 0; }
 .gui-sizing-v-hug { height: fit-content; }
 .gui-parent-vertical.gui-sizing-v-hug { height: auto; }
 .gui-sizing-v-fill { height: 100%; }
@@ -282,6 +342,7 @@ const RENDER_UTILITIES = `
 .gui-w-full { width: 100%; }
 .gui-h-full { height: 100%; }
 .gui-pre-wrap { white-space: pre-wrap; }
+.gui-text.gui-sizing-v-hug { height: auto; min-height: max-content; }
 `
 
 function ensureRenderUtilities(): void {
@@ -700,7 +761,7 @@ function applyTextStyle(el: HTMLElement, guiEl: Element): void {
   if (fs) el.style.fontSize = `${fs}px`
   if (fw) el.style.fontWeight = fw
   if (fst) el.style.fontStyle = fst
-  if (lh) el.style.lineHeight = lh.includes('%') ? lh : `${lh}px`
+  if (lh) el.style.lineHeight = lineHeight(lh)
   if (ls) el.style.letterSpacing = ls.includes('%') ? ls : `${ls}px`
   if (c) el.style.color = col(c)
   if (deco === 'underline') el.style.textDecoration = 'underline'
@@ -725,7 +786,7 @@ function wrapHref(child: HTMLElement, href: string | null): HTMLElement {
 function renderText(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLElement {
   const div = document.createElement('div')
   position(div, el, ctx)
-  addClass(div, 'gui-overflow-hidden')
+  addClass(div, 'gui-text')
   addClass(div, 'gui-pre-wrap')
 
   const align = get(el, 'align')
@@ -734,6 +795,7 @@ function renderText(el: Element, assets: Record<string, string>, ctx: Ctx): HTML
   const truncate = truncateVal !== null && truncateVal !== 'false'
   const maxLines = get(el, 'max-lines')
   const leadingTrim = get(el, 'leading-trim')
+  const hasFixedHeight = get(el, 'h') !== null
 
   if (align) div.style.textAlign = align as CanvasTextAlign
 
@@ -769,6 +831,7 @@ function renderText(el: Element, assets: Record<string, string>, ctx: Ctx): HTML
   const href = get(el, 'href')
 
   const clamp = maxLines || (truncate ? '1' : null)
+  if (hasFixedHeight || clamp) addClass(div, 'gui-overflow-hidden')
 
   if (va && va !== 'top') {
     div.style.display = 'flex'
@@ -1180,7 +1243,6 @@ function renderInstance(el: Element, assets: Record<string, string>, ctx: Ctx): 
   const compEl = activeComponents.get(compId)
   if (!compEl) return null
 
-  const STACK_TAGS = new Set(['stack', 'row', 'col', 'grid'])
   const bodyEl = Array.from(compEl.children).find(c => c.tagName !== 'props')
   if (!bodyEl) return null
 
@@ -1194,7 +1256,7 @@ function renderInstance(el: Element, assets: Record<string, string>, ctx: Ctx): 
     if (val !== null) body.setAttribute(attr, val)
   }
 
-  return renderFrame(body, assets, ctx, STACK_TAGS.has(body.tagName))
+  return renderNode(body, assets, ctx)
 }
 
 function renderNode(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLElement | null {
@@ -1318,14 +1380,14 @@ function googleFamilyParam(font: Element): string | null {
   if (!family) return null
 
   const weights = (font.getAttribute('weights') || '400')
-    .split(/\s+/)
+    .split(/[\s,]+/)
     .filter(Boolean)
     .sort((a, b) => parseInt(a) - parseInt(b))
   const styles = (font.getAttribute('styles') || 'normal')
-    .split(/\s+/)
+    .split(/[\s,]+/)
     .filter(Boolean)
   const variants = (font.getAttribute('variants') || '')
-    .split(/\s+/)
+    .split(/[\s,]+/)
     .filter(Boolean)
   const variantSet = variants.reduce((set, variant) => {
     set[variant] = true

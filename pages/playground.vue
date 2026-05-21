@@ -82,7 +82,7 @@ import {
 } from '@codemirror/language'
 import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap, startCompletion, type CompletionContext, type CompletionResult } from '@codemirror/autocomplete'
 import { tags } from '@lezer/highlight'
-import { render } from '~/lib/gui-render'
+import { normalizeBooleanAttrs, render } from '~/lib/gui-render'
 import xmlFormat from 'xml-formatter'
 import { unzip } from 'fflate'
 
@@ -451,12 +451,12 @@ function guiAttrNameCompletion(ctx: CompletionContext): CompletionResult | null 
       label: a.name,
       type: 'property' as const,
       apply(view: EditorView, _completion: any, f: number, to: number) {
-        const insert = BOOLEAN_ATTRS.has(a.name) ? a.name : `${a.name}=""`
+        const insert = BARE_COMPLETION_ATTRS.has(a.name) ? a.name : `${a.name}=""`
         view.dispatch({
           changes: { from: f, to, insert },
           selection: { anchor: f + insert.length },
         })
-        if (!BOOLEAN_ATTRS.has(a.name)) setTimeout(() => startCompletion(view), 0)
+        if (!BARE_COMPLETION_ATTRS.has(a.name)) setTimeout(() => startCompletion(view), 0)
       },
     }))
 
@@ -472,7 +472,8 @@ const TOKEN_ATTRS = new Set([
   'font-size', 'font-weight', 'gap', 'p', 'pt', 'pr', 'pb', 'pl', 'w', 'h',
 ])
 
-const BOOLEAN_ATTRS = new Set(['mask', 'clip', 'abs', 'wrap', 'reverse-z', 'truncate'])
+const PRESENCE_ATTRS = new Set(['mask', 'clip', 'abs', 'wrap', 'reverse-z', 'truncate', 'gap'])
+const BARE_COMPLETION_ATTRS = new Set(['mask', 'clip', 'abs', 'wrap', 'reverse-z', 'truncate'])
 
 function guiAttrValueCompletion(ctx: CompletionContext): CompletionResult | null {
   const tree = syntaxTree(ctx.state)
@@ -736,12 +737,12 @@ function guiLintFn(view: EditorView): Diagnostic[] {
         }
 
         if (attr.value === null) {
-          if (!BOOLEAN_ATTRS.has(attrName)) {
+          if (!PRESENCE_ATTRS.has(attrName)) {
             diagnostics.push({
               from: attr.nameFrom,
               to: attr.nameTo,
               severity: 'error',
-              message: `"${attrName}" needs a value. Only boolean attributes can be written without one.`,
+              message: `"${attrName}" needs a value. Only presence attributes can be written without one.`,
             })
           }
           continue
@@ -1111,7 +1112,7 @@ function onGuiFileUpload(e: Event) {
       loadGuiCode(code)
 
       // Parse <assets> block to get id → src path mappings
-      const doc = new DOMParser().parseFromString(code, 'text/xml')
+      const doc = new DOMParser().parseFromString(normalizeBooleanAttrs(code), 'text/xml')
       const idToPath: Record<string, string> = {}
       for (const img of Array.from(doc.querySelectorAll('assets > image'))) {
         const id = img.getAttribute('id')
