@@ -428,16 +428,41 @@ function normalizedRightAngle(el: Element): number | null {
   return rounded % 360
 }
 
+function parseBorder(val: string): { color: string; width: number; style: string; align: string } | null {
+  const ALIGN = new Set(['inside', 'outside', 'center'])
+  const STYLE = new Set(['solid', 'dashed', 'dotted'])
+  let color = '', width = 1, style = 'solid', align = 'center'
+  for (const tok of val.trim().split(/\s+/)) {
+    if (tok.startsWith('#') || tok.startsWith('$') || /^rgba?/.test(tok)) color = tok
+    else if (ALIGN.has(tok)) align = tok
+    else if (STYLE.has(tok)) style = tok
+    else if (/^\d/.test(tok)) width = parseFloat(tok)
+  }
+  return color ? { color, width, style, align } : null
+}
+
 function strokeStyle(el: HTMLElement, guiEl: Element, radius?: string | null): void {
-  const s = get(guiEl, 'stroke')
-  const sw = get(guiEl, 'stroke-width')
-  if (!s || !sw) return
+  const borderVal = get(guiEl, 'border')
+  let color: string, width: number, align: string
 
-  const width = parseFloat(sw)
+  if (borderVal) {
+    const parsed = parseBorder(borderVal)
+    if (!parsed) return
+    color = parsed.color
+    width = parsed.width
+    align = parsed.align
+  } else {
+    // Legacy fallback for files using stroke= / stroke-width=
+    const s = get(guiEl, 'stroke')
+    const sw = get(guiEl, 'stroke-width')
+    if (!s || !sw) return
+    color = s
+    width = parseFloat(sw)
+    align = get(guiEl, 'stroke-position') || 'center'
+  }
+
   if (!Number.isFinite(width) || width <= 0) return
-
-  const pos = get(guiEl, 'stroke-position') || 'center'
-  const outset = pos === 'outside' ? width : pos === 'center' ? width / 2 : 0
+  const outset = align === 'outside' ? width : align === 'center' ? width / 2 : 0
   const stroke = document.createElement('div')
 
   stroke.style.position = 'absolute'
@@ -446,7 +471,7 @@ function strokeStyle(el: HTMLElement, guiEl: Element, radius?: string | null): v
   stroke.style.top = `${-outset}px`
   stroke.style.right = `${-outset}px`
   stroke.style.bottom = `${-outset}px`
-  stroke.style.border = `${width}px solid ${col(s)}`
+  stroke.style.border = `${width}px solid ${col(color)}`
   stroke.style.boxSizing = 'border-box'
   stroke.style.zIndex = '2'
   if (radius) stroke.style.borderRadius = radius
@@ -754,7 +779,7 @@ function applyTextStyle(el: HTMLElement, guiEl: Element): void {
   const lh = styledAttr('line-height')
   const ls = styledAttr('letter-spacing')
   const fillStyleName = getRaw(guiEl, 'fill-style')
-  const c = fillStyleName ? (activeFillStyles[fillStyleName] || null) : get(guiEl, 'color')
+  const c = fillStyleName ? (activeFillStyles[fillStyleName] || null) : (get(guiEl, 'fill') || get(guiEl, 'color'))
   const deco = styledAttr('decoration')
   const transform = styledAttr('text-case')
   if (ff) el.style.fontFamily = fontStack(ff)
@@ -1003,6 +1028,62 @@ function renderEllipseArc(
   }
   svg.appendChild(path)
   return svg as unknown as HTMLElement
+}
+
+function renderRect(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLElement {
+  const div = document.createElement('div')
+  position(div, el, ctx)
+  if (!ctx.absolute) addClass(div, 'gui-relative')
+  const appearanceOwnsFill = hasAppearanceFill(el)
+  const fillStyleName = getRaw(el, 'fill-style')
+  const resolvedFill = fillStyleName ? (activeFillStyles[fillStyleName] || null) : get(el, 'fill')
+  if (resolvedFill && !appearanceOwnsFill) div.style.background = col(resolvedFill)
+  const r = get(el, 'radius')
+  if (r) div.style.borderRadius = radii(r)
+  const sh = shadow(get(el, 'shadow'))
+  if (sh) appendBoxShadow(div, sh)
+  renderAppearance(el, div, assets, div.style.borderRadius || null)
+  const effectStyleName = getRaw(el, 'effect-style')
+  if (effectStyleName) applyEffectStyle(div, effectStyleName)
+  strokeStyle(div, el, div.style.borderRadius || null)
+  return div
+}
+
+function renderEllipse(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLElement {
+  const div = document.createElement('div')
+  position(div, el, ctx)
+  if (!ctx.absolute) addClass(div, 'gui-relative')
+  const appearanceOwnsFill = hasAppearanceFill(el)
+  const fillStyleName = getRaw(el, 'fill-style')
+  const resolvedFill = fillStyleName ? (activeFillStyles[fillStyleName] || null) : get(el, 'fill')
+  if (resolvedFill && !appearanceOwnsFill) div.style.background = col(resolvedFill)
+  div.style.borderRadius = '50%'
+  const sh = shadow(get(el, 'shadow'))
+  if (sh) appendBoxShadow(div, sh)
+  renderAppearance(el, div, assets, '50%')
+  const effectStyleName = getRaw(el, 'effect-style')
+  if (effectStyleName) applyEffectStyle(div, effectStyleName)
+  strokeStyle(div, el, '50%')
+  return div
+}
+
+function renderLine(el: Element, ctx: Ctx): HTMLElement {
+  const div = document.createElement('div')
+  position(div, el, ctx)
+  if (!ctx.absolute) addClass(div, 'gui-relative')
+  const direction = get(el, 'direction') || 'horizontal'
+  const thickness = get(el, 'thickness') || '1'
+  const fillStyleName = getRaw(el, 'fill-style')
+  const resolvedFill = fillStyleName ? (activeFillStyles[fillStyleName] || null) : get(el, 'fill')
+  if (direction === 'vertical') {
+    div.style.width = `${thickness}px`
+    div.style.alignSelf = 'stretch'
+  } else {
+    div.style.height = `${thickness}px`
+    div.style.alignSelf = 'stretch'
+  }
+  if (resolvedFill) div.style.background = col(resolvedFill)
+  return div
 }
 
 function renderShape(el: Element, assets: Record<string, string>, ctx: Ctx): HTMLElement {
@@ -1269,6 +1350,10 @@ function renderNode(el: Element, assets: Record<string, string>, ctx: Ctx): HTML
     case 'group': return renderGroup(el, assets, ctx)
     case 'text': return renderText(el, assets, ctx)
     case 'img': return renderImg(el, assets, ctx)
+    case 'rect': return renderRect(el, assets, ctx)
+    case 'ellipse': return renderEllipse(el, assets, ctx)
+    case 'line': return renderLine(el, ctx)
+    // legacy — kept for backward compat with pre-0.3 files
     case 'svg': return renderSvgAsset(el, assets, ctx)
     case 'shape': return renderShape(el, assets, ctx)
     case 'instance': return renderInstance(el, assets, ctx)
@@ -1496,11 +1581,6 @@ export function render(
   activeComponents = parseComponents(gui)
   const assets = assetMap || parseAssets(gui)
   injectFonts(gui)
-  const viewport = gui.getAttribute('viewport') || '390x844'
-  const [vwStr, vhStr] = viewport.split('x')
-  const vw = parseInt(vwStr) || 390
-  const vh = parseInt(vhStr) || 844
-
   const STACK_TAGS = new Set(['stack', 'row', 'col', 'grid'])
   let screenEl: Element | null = null
   for (const child of Array.from(gui.children)) {
@@ -1508,15 +1588,24 @@ export function render(
   }
   if (!screenEl) return null
 
+  // Canvas dimensions come from the root element's w/h — not a separate viewport attr.
+  // w is always explicit on root. h is explicit for fixed artboards (<frame>), absent for
+  // content-driven screens (<col>) where height is determined by content.
+  const rootWAttr = screenEl.getAttribute('w')
+  const rootHAttr = screenEl.getAttribute('h')
+  const vw = (rootWAttr && rootWAttr !== 'fill') ? (parseInt(rootWAttr) || 390) : 390
+  const fixedVh = (rootHAttr && rootHAttr !== 'fill') ? parseInt(rootHAttr) : null
+
   const screen = renderFrame(screenEl, assets, { absolute: false }, STACK_TAGS.has(screenEl.tagName))
   screen.style.width = `${vw}px`
-  screen.style.height = `${vh}px`
+  if (fixedVh !== null) screen.style.height = `${fixedVh}px`
   addClass(screen, 'gui-relative')
   screen.style.flexShrink = '0'
   screen.style.outline = '1px solid #0d99ff'
 
   const stage = document.createElement('div')
-  stage.style.cssText = `position:absolute;left:0;top:0;width:${vw}px;height:${vh}px;transform-origin:0 0;will-change:transform;`
+  const stageH = fixedVh !== null ? `height:${fixedVh}px;` : ''
+  stage.style.cssText = `position:absolute;left:0;top:0;width:${vw}px;${stageH}transform-origin:0 0;will-change:transform;`
   stage.appendChild(screen)
 
   const outer = document.createElement('div')
@@ -1524,7 +1613,13 @@ export function render(
   outer.appendChild(stage)
   container.appendChild(outer)
 
+  // For dynamic-height roots, measure actual rendered height after DOM insertion.
+  function getVh(): number {
+    return fixedVh !== null ? fixedVh : (screen.offsetHeight || screen.scrollHeight || 844)
+  }
+
   function fitZoom(): number {
+    const vh = getVh()
     return Math.min((outer.clientWidth - 48) / vw, (outer.clientHeight - 48) / vh, 1)
   }
 
@@ -1533,6 +1628,7 @@ export function render(
   // Visual center of stage lands at (vw/2 + s*x, vh/2 + s*y).
   // To center in outer: s*x = (W-vw)/2 → x = (W-vw)/(2*s).
   function centeredPan(currentScale: number): { x: number; y: number } {
+    const vh = getVh()
     return {
       x: (outer.clientWidth - vw) / (2 * currentScale),
       y: (outer.clientHeight - vh) / (2 * currentScale),
@@ -1541,6 +1637,7 @@ export function render(
 
   // Centering formula for direct matrix transform (origin 0 0, used before panzoom init).
   function centeredMatrix(currentScale: number): { x: number; y: number } {
+    const vh = getVh()
     return {
       x: (outer.clientWidth - vw * currentScale) / 2,
       y: (outer.clientHeight - vh * currentScale) / 2,
