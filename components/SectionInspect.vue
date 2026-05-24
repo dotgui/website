@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { render } from '~/lib/gui-render'
+import { render } from 'gui-render'
 
 const previewEl = ref<HTMLElement | null>(null)
 const hoveredIdx = ref(-1)
@@ -53,7 +53,7 @@ let highlightedEl: HTMLElement | null = null
 
 // ── .gui sample ──────────────────────────────────────────────────────
 
-const SAMPLE = `<gui version="1.0" viewport="260x320">
+const SAMPLE = `<gui version="0.2">
   <tokens>
     <color name="bg"      value="#0f172a" />
     <color name="surface" value="#1e293b" />
@@ -65,39 +65,38 @@ const SAMPLE = `<gui version="1.0" viewport="260x320">
     <font family="Inter" source="google" weights="400 500 700" />
   </fonts>
 
-  <stack direction="vertical" fill="$bg"
-         padding="20" gap="14" sizing-h="fill" sizing-v="fill">
+  <col fill="$bg" w="260" p="20" gap="14">
 
-    <stack direction="horizontal" fill="$surface"
-           radius="12" padding="16" gap="12" align="center">
-      <shape type="ellipse" width="44" height="44" fill="$accent" />
-      <stack direction="vertical" gap="3" sizing-h="fill">
+    <row fill="$surface" radius="12" p="16" gap="12" align="middle-left">
+      <ellipse w="44" h="44" fill="$accent" />
+      <col gap="3" w="fill">
         <text value="Alex Chen" font-family="Inter"
-              font-size="14" font-weight="700" color="$text" />
+              font-size="14" font-weight="700" fill="$text" />
         <text value="Product Designer" font-family="Inter"
-              font-size="12" color="$muted" />
-      </stack>
-    </stack>
+              font-size="12" fill="$muted" />
+      </col>
+    </row>
 
-    <stack direction="horizontal" gap="8">
-      <stack direction="vertical" fill="$surface" radius="10"
-             padding="14" gap="2" align="center" sizing-h="fill">
+    <row gap="8">
+      <col fill="$surface" radius="10" p="14" gap="2"
+           align="middle-center" w="fill">
         <text value="248" font-family="Inter"
-              font-size="18" font-weight="700" color="$text" />
-        <text value="projects" font-family="Inter" font-size="11" color="$muted" />
-      </stack>
-      <stack direction="vertical" fill="$surface" radius="10"
-             padding="14" gap="2" align="center" sizing-h="fill">
+              font-size="18" font-weight="700" fill="$text" />
+        <text value="projects" font-family="Inter"
+              font-size="11" fill="$muted" />
+      </col>
+      <col fill="$surface" radius="10" p="14" gap="2"
+           align="middle-center" w="fill">
         <text value="12k" font-family="Inter"
-              font-size="18" font-weight="700" color="$accent" />
-        <text value="followers" font-family="Inter" font-size="11" color="$muted" />
-      </stack>
-    </stack>
+              font-size="18" font-weight="700" fill="$accent" />
+        <text value="followers" font-family="Inter"
+              font-size="11" fill="$muted" />
+      </col>
+    </row>
 
-    <shape type="rect" fill="$accent"
-           radius="8" sizing-h="fill" height="36" />
+    <rect fill="$accent" radius="8" w="fill" h="36" />
 
-  </stack>
+  </col>
 </gui>`
 
 // ── XML syntax highlighter ───────────────────────────────────────────
@@ -165,7 +164,7 @@ function highlightLine(raw: string): string {
 
 // ── Line annotation ──────────────────────────────────────────────────
 
-const NODE_TAG_RE = /^<(frame|stack|group|text|img|svg|shape)\b/
+const NODE_TAG_RE = /^<(frame|stack|row|col|grid|group|text|img|rect|ellipse|line)\b/
 
 const annotatedLines = computed(() => {
   const lines = SAMPLE.split('\n')

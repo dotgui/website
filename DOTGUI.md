@@ -79,7 +79,7 @@ Each stage has a single, well-defined responsibility. The extractor doesn't opti
 ### File Structure
 
 ```xml
-<gui version="1.0" name="Checkout" viewport="390x844">
+<gui version="0.2" name="Checkout">
   <preview format="webp" src="base64:..." />
   <tokens>
     <color name="primary" value="#007AFF" />
@@ -88,14 +88,10 @@ Each stage has a single, well-defined responsibility. The extractor doesn't opti
   <fonts>
     <font family="Inter" source="google" weights="400 600 700" styles="normal" />
   </fonts>
-  <assets>
-    <image id="img-1" format="webp" src="base64:..." />
-    <image id="svg-1" format="svg" src="base64:..." />
-  </assets>
-  <stack direction="vertical" fill="#F2F2F7" gap="16" padding="24">
-    <text value="Checkout" font-family="Inter" font-size="28" font-weight="700" color="#1C1C1E" />
+  <col fill="#F2F2F7" gap="16" p="24" w="390">
+    <text value="Checkout" font-family="Inter" font-size="28" font-weight="700" fill="#1C1C1E" />
     ...
-  </stack>
+  </col>
 </gui>
 ```
 
@@ -103,9 +99,8 @@ Each stage has a single, well-defined responsibility. The extractor doesn't opti
 
 | Attr | Description |
 |---|---|
-| `version` | Spec version (`1.0`) |
+| `version` | Spec version (`0.2`) |
 | `name` | Screen or layer name |
-| `viewport` | Canvas size as `WxH` |
 
 ### Tokens
 
@@ -139,18 +134,17 @@ Font declarations for the renderer. The renderer uses these to load Google Fonts
 
 ### Assets
 
-Embedded images and vector artwork. All raster images are converted to WebP by the plugin.
+Images and vector artwork are embedded in the package under `assets/` and referenced inline — no declaration block needed.
 
 ```xml
-<assets>
-  <image id="img-1" format="webp" src="base64:..." />
-  <image id="svg-1" format="svg" src="base64:..." />
-</assets>
-```
+<!-- embedded raster — stored in assets/ inside the package -->
+<img src="assets/hero.webp" w="320" h="200" fit="cover" radius="12" />
 
-Reference with `$id`:
-```xml
-<img src="$img-1" width="320" height="200" fit="cover" />
+<!-- embedded vector icon -->
+<img src="assets/icon-close.svg" w="24" h="24" />
+
+<!-- external URL — fallback only -->
+<img src="https://example.com/photo.jpg" w="320" h="200" fit="cover" />
 ```
 
 ### Layout Tags
@@ -160,31 +154,67 @@ Reference with `$id`:
 Children are absolutely positioned. Maps to a Figma frame without auto-layout.
 
 ```xml
-<frame width="390" height="844" fill="#FFFFFF" radius="16" clip="true">
+<frame w="390" h="844" fill="#FFFFFF" radius="16" clip>
   <text x="24" y="80" value="Hello" ... />
 </frame>
 ```
 
-#### `<stack>` — Auto-layout container
+#### `<col>` / `<row>` — Auto-layout containers
 
-Children are flow-positioned. Maps to a Figma auto-layout frame.
+`<col>` stacks children vertically; `<row>` stacks them horizontally. Sugar for `<stack direction="vertical/horizontal">`.
 
 ```xml
-<stack direction="vertical" gap="16" padding="24 16"
-       align="center" justify="space-between"
-       fill="#FFFFFF" radius="12">
+<col gap="16" p="24 16" align="top-left" fill="#FFFFFF" radius="12">
   ...
-</stack>
+</col>
+
+<row gap="12" align="middle-left" p="16">
+  ...
+</row>
 ```
 
-`direction` is `horizontal`, `vertical`, or `grid`. Grid adds `columns`, `gap-x`, and `gap-y`.
+`w` and `h` are optional on auto-layout nodes — absent means hug content. `"fill"` fills the parent; a number is a fixed pixel size.
+
+Padding (`p`) accepts CSS shorthand: `p="24"` all sides, `p="24 16"` vertical/horizontal, `p="8 16 12 16"` each side. Per-side overrides: `pt`, `pr`, `pb`, `pl`.
+
+Gap: `gap="16"` fixed spacing, `gap` or `gap="auto"` space-between, `gap="16 10"` item gap + row gap for wrapping.
+
+Align is a 9-point value: `top-left`, `top-center`, `top-right`, `middle-left`, `middle-center`, `middle-right`, `bottom-left`, `bottom-center`, `bottom-right`, `stretch`, or `baseline`.
+
+#### `<stack>` — Generic auto-layout container
+
+Use `<col>` and `<row>` for new work. `<stack>` remains valid with an explicit `direction` attribute.
+
+```xml
+<stack direction="vertical" gap="16" p="24">...</stack>
+<stack direction="horizontal" gap="8" align="middle-left">...</stack>
+```
+
+#### `<grid>` — Grid container
+
+Supports track grid (explicit track sizes) and unit grid (coordinate canvas) modes.
+
+```xml
+<!-- Track grid: 3 equal columns -->
+<grid cols="3" gap="16" w="fill">
+  <col gc="1/-1" fill="#fff" p="16">...</col>
+</grid>
+
+<!-- Unit grid: coordinate canvas -->
+<grid unit="8" w="320" h="400">
+  <img gc="1/40" gr="1/14" fit="cover" src="assets/cover.webp" />
+  <col gc="2/39" gr="27/32" align="middle-center" gap="2">
+    <text value="Sarah Johnson" font-size="18" font-weight="700" fill="#111" />
+  </col>
+</grid>
+```
 
 #### `<group>` — Logical grouping
 
 No layout behavior. Children are absolutely positioned relative to the group origin.
 
 ```xml
-<group x="0" y="0" width="390" height="200" opacity="0.8">
+<group x="0" y="0" w="390" h="200" opacity="0.8">
   ...
 </group>
 ```
@@ -197,74 +227,67 @@ Single-style text is self-closing with a `value` attribute. Mixed-style text has
 
 ```xml
 <!-- Single style -->
-<text value="Welcome back" x="24" y="80" width="200" height="32"
+<text value="Welcome back" x="24" y="80" w="200" h="32"
       font-family="Inter" font-size="22" font-weight="700"
-      color="#1C1C1E" line-height="28" />
+      fill="#1C1C1E" line-height="28" />
 
 <!-- Mixed styles -->
-<text x="24" y="80" width="200" height="32">
-  <segment value="Hello " font-size="16" font-weight="400" color="#6E6E73" />
-  <segment value="World"  font-size="16" font-weight="700" color="#1C1C1E" />
+<text x="24" y="80" w="200">
+  <segment value="Pay " fill="#6E6E73" font-size="16" />
+  <segment value="$42.00" fill="#1C1C1E" font-size="16" font-weight="700" />
 </text>
 ```
 
-#### `<img>` — Raster image
+Text color is `fill`, not `color`. `w` and `h` replace the old `width` / `height`.
+
+#### `<img>` — Raster and vector image
 
 ```xml
-<img src="$img-1" x="0" y="0" width="390" height="240"
-     fit="cover" radius="12" />
+<img src="assets/hero.webp" w="390" h="240" fit="cover" radius="12" />
+<img src="assets/icon-close.svg" w="24" h="24" />
 ```
 
-`fit` is `cover`, `contain`, `crop`, or `tile`.
+`fit` is `cover`, `contain`, `fill`, or `none`. `src` is an `assets/...` path (packaged format) or an `https://` URL.
 
-#### `<svg>` — Vector artwork
+### Geometry Tags
 
-Used for complex graphic clusters — boolean operations, compound vectors, icon groups — where native shapes would lose fidelity.
-
-```xml
-<svg src="$svg-1" x="24" y="24" width="48" height="48" />
-```
-
-### Shape Tag
+Sugar tags for common decorative shapes. No layout children.
 
 ```xml
 <!-- Rectangle -->
-<shape type="rect" x="0" y="0" width="340" height="52"
-       fill="$primary" radius="12" />
+<rect fill="$primary" radius="12" w="340" h="52" />
 
-<!-- Ellipse -->
-<shape type="ellipse" x="12" y="12" width="8" height="8" fill="#FF3B30" />
+<!-- Ellipse / circle -->
+<ellipse fill="#FF3B30" w="8" h="8" />
 
-<!-- Arc / donut segment -->
-<shape type="ellipse" x="0" y="0" width="100" height="100"
-       fill="#007AFF" arc-start="0" arc-end="270" arc-inner="0.6" />
-
-<!-- Line -->
-<shape type="line" x="0" y="100" width="390"
-       stroke="#E5E5EA" stroke-width="1" />
-
-<!-- Path (vector / boolean operation / star / polygon) — filled -->
-<shape type="path" x="12" y="12" width="24" height="24" fill="#1C1C1E">
-  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-</shape>
-
-<!-- Path — stroked outline (Lucide / icon pattern) -->
-<shape type="path" x="12" y="12" width="24" height="24" fill="none" stroke="#6366F1" stroke-width="1.5">
-  <path d="M5 12h14M12 5l7 7-7 7" />
-</shape>
+<!-- Line separator -->
+<line fill="#E5E5EA" />                      <!-- horizontal, 1px, fill width -->
+<line fill="#E5E5EA" direction="vertical" /> <!-- vertical -->
 ```
 
-`type="path"` is used for VECTOR, STAR, POLYGON, and BOOLEAN_OPERATION nodes. The SVG path data is emitted as a `<path d="..." />` child element. `fill="none" stroke="..." stroke-width="..."` produces a stroked outline path — the standard pattern for stroke-only icons (Lucide, Heroicons, etc.). `stroke-position` (`center` | `inside` | `outside`) mirrors Figma's stroke alignment.
+VECTOR, STAR, POLYGON, and BOOLEAN_OPERATION nodes from Figma are exported as SVG assets and referenced via `<img src="assets/...">`.
+
+### Borders
+
+The `border` shorthand covers most cases: `"[width] [color] [style] [align]"`. Defaults: `1 solid center`.
+
+```xml
+<rect fill="#fff" border="1 #E5E5EA" radius="8" w="fill" h="52" />
+<rect fill="none" border="2 dashed $focus inside" radius="8" w="fill" h="52" />
+```
+
+Per-side borders: `border-top`, `border-right`, `border-bottom`, `border-left`. Longhands: `border-color`, `border-width`, `border-style`, `border-align`.
 
 ### Appearance Block
 
-Used when a node has multiple fills, image fills, or complex effects. A non-layout child that describes the parent's paint and effect stack.
+Used when a node has multiple fills, complex borders, or multiple effects. A non-layout child describing the parent's complete paint and effect stack.
 
 ```xml
-<frame width="320" height="180">
+<frame w="320" h="180">
   <appearance>
-    <fill type="image" src="$img-1" fit="cover" />
-    <fill type="color" value="#00000066" />
+    <fill type="image" src="assets/hero.webp" fit="crop" x="12" y="8" w="640" h="360" />
+    <fill type="linear-gradient" value="linear-gradient(180deg, #00000000 0%, #00000099 100%)" opacity="0.8" />
+    <border color="$line" w="1" align="inside" />
     <effect type="drop-shadow" x="0" y="8" radius="24" spread="0" color="#00000033" />
   </appearance>
   ...
@@ -272,7 +295,7 @@ Used when a node has multiple fills, image fills, or complex effects. A non-layo
 ```
 
 `fill` types: `color`, `linear-gradient`, `radial-gradient`, `angular-gradient`, `image`.
-`effect` types: `drop-shadow`, `inner-shadow`, `layer-blur`, `background-blur`.
+`effect` types: `drop-shadow`, `inner-shadow`, `layer-blur`, `background-blur`, `glass`.
 
 ### Fill Values
 
@@ -289,36 +312,37 @@ The `fill` attribute accepts:
 
 ### Shared Visual Attributes
 
-These apply to all layout, content, and shape nodes:
+These apply to all layout, content, and geometry nodes:
 
 | Attr | Values | Notes |
 |---|---|---|
 | `opacity` | `0`–`1` | Omitted when `1` |
 | `blend` | `multiply`, `screen`, `overlay`, `darken`, `lighten`, ... | Omitted when `normal` |
-| `mask` | `true` | Alpha mask for subsequent siblings |
+| `mask` | boolean presence | Alpha mask for subsequent siblings |
 | `rotation` | degrees | Omitted when `0` |
 | `constraint-h` | `right`, `center`, `scale`, `stretch` | `left` is default, omitted |
 | `constraint-v` | `bottom`, `center`, `scale`, `stretch` | `top` is default, omitted |
-| `sizing-h` | `hug`, `fill` | Auto-layout sizing. Omitted when fixed |
-| `sizing-v` | `hug`, `fill` | Auto-layout sizing. Omitted when fixed |
-| `layout-position` | `absolute` | Absolute child inside auto-layout |
+| `w` | number, `"fill"` | Width. Absent = hug (stack/row/col/text only). Required on frame/rect/ellipse/img/group |
+| `h` | number, `"fill"` | Height. Absent = hug (stack/row/col/text only). Required on frame/rect/ellipse/img/group |
+| `abs` | boolean presence | Absolute child inside auto-layout |
 | `min-width` / `max-width` | px | Omitted when unset |
 | `min-height` / `max-height` | px | Omitted when unset |
+| `border` | shorthand string | `"[width] [color] [style] [align]"`. Example: `"2 #333 dashed inside"` |
 
 ### Packaged Format
 
-For large exports, the plugin produces a ZIP container using the `.gui` extension:
+`.gui` is always the extension. Internally a `.gui` file is a ZIP package containing `design.guix` (the markup), `preview.webp` (thumbnail), and an `assets/` folder.
 
 ```
-checkout.gui (ZIP)
-├── index.gui         ← XML with asset paths instead of base64
-├── preview.webp
+checkout.gui  (ZIP)
+├── design.guix       ← the UI markup
+├── preview.webp      ← thumbnail shown before opening
 └── assets/
-    ├── img-1.webp
-    └── svg-1.svg
+    ├── hero.webp
+    └── logo.svg
 ```
 
-The inline and packaged formats are interchangeable from the renderer's perspective.
+A program that needs to distinguish a package from a raw markup string uses magic bytes: ZIP starts with `PK`, markup starts with `<`. The renderer handles both transparently.
 
 ---
 

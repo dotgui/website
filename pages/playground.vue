@@ -82,7 +82,7 @@ import {
 } from '@codemirror/language'
 import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap, startCompletion, type CompletionContext, type CompletionResult } from '@codemirror/autocomplete'
 import { tags } from '@lezer/highlight'
-import { normalizeBooleanAttrs, render } from '~/lib/gui-render'
+import { normalizeBooleanAttrs, render } from 'gui-render'
 import xmlFormat from 'xml-formatter'
 import { unzip } from 'fflate'
 
@@ -90,7 +90,7 @@ definePageMeta({ ssr: false })
 
 // ─── sample ───────────────────────────────────────────────────────────────────
 
-const SAMPLE = `<gui version="1.0" name="Profile" viewport="390x280">
+const SAMPLE = `<gui version="0.2" name="Profile">
   <tokens>
     <color name="bg"      value="#0f172a" />
     <color name="surface" value="#1e293b" />
@@ -105,41 +105,40 @@ const SAMPLE = `<gui version="1.0" name="Profile" viewport="390x280">
           weights="400 500 600 700" styles="normal" />
   </fonts>
 
-  <col fill="$bg" p="24" gap="20" w="fill" h="fill">
+  <col fill="$bg" p="24" gap="20" w="390">
 
     <!-- header card -->
     <row fill="$surface" radius="$r" p="20" gap="16" align="middle-left">
-      <shape type="ellipse" w="52" h="52" fill="$primary" />
+      <ellipse w="52" h="52" fill="$primary" />
       <col gap="4" w="fill">
         <text value="Alex Chen"
               font-family="Inter" font-size="16" font-weight="700"
-              color="$text" />
+              fill="$text" />
         <text value="Product Designer · San Francisco"
-              font-family="Inter" font-size="12" color="$muted" />
+              font-family="Inter" font-size="12" fill="$muted" />
       </col>
-      <shape type="rect" fill="$primary" radius="8"
-             w="72" h="32" />
+      <rect fill="$primary" radius="8" w="72" h="32" />
     </row>
 
     <!-- stats row -->
     <row gap="12">
       <col fill="$surface" radius="$r" p="16" gap="4" align="top-center" w="fill">
         <text value="248" font-family="Inter" font-size="20"
-              font-weight="700" color="$text" />
+              font-weight="700" fill="$text" />
         <text value="projects" font-family="Inter"
-              font-size="11" color="$muted" />
+              font-size="11" fill="$muted" />
       </col>
       <col fill="$surface" radius="$r" p="16" gap="4" align="top-center" w="fill">
         <text value="12k" font-family="Inter" font-size="20"
-              font-weight="700" color="$green" />
+              font-weight="700" fill="$green" />
         <text value="followers" font-family="Inter"
-              font-size="11" color="$muted" />
+              font-size="11" fill="$muted" />
       </col>
       <col fill="$surface" radius="$r" p="16" gap="4" align="top-center" w="fill">
         <text value="99%" font-family="Inter" font-size="20"
-              font-weight="700" color="$text" />
+              font-weight="700" fill="$text" />
         <text value="rating" font-family="Inter"
-              font-size="11" color="$muted" />
+              font-size="11" fill="$muted" />
       </col>
     </row>
 
@@ -163,8 +162,12 @@ const SHARED_LAYOUT = [
   { name: 'w' }, { name: 'h' }, { name: 'x' }, { name: 'y' },
   { name: 'fill' }, { name: 'fill-style' }, { name: 'effect-style' },
   { name: 'radius' }, { name: 'corner-smoothing' }, { name: 'shadow' },
-  { name: 'stroke' }, { name: 'stroke-width' },
-  { name: 'stroke-position', values: ['inside', 'outside', 'center'] },
+  { name: 'border' },
+  { name: 'border-color' }, { name: 'border-width' },
+  { name: 'border-style', values: ['solid', 'dashed', 'dotted'] },
+  { name: 'border-align', values: ['inside', 'center', 'outside'] },
+  { name: 'border-top' }, { name: 'border-right' },
+  { name: 'border-bottom' }, { name: 'border-left' },
   { name: 'clip' },
   ...SHARED_VISUAL,
 ]
@@ -187,9 +190,8 @@ const GUI_ELEMENTS = [
   {
     name: 'gui',
     attrs: [
-      { name: 'version', values: ['0.2', '1.0'] },
+      { name: 'version', values: ['0.2'] },
       { name: 'name' },
-      { name: 'viewport' },
     ],
   },
   { name: 'tokens', children: ['color', 'number', 'string'] },
@@ -288,9 +290,13 @@ const GUI_ELEMENTS = [
   {
     name: 'grid',
     attrs: [
-      { name: 'columns' }, { name: 'rows' },
+      { name: 'cols' }, { name: 'rows' },
+      { name: 'unit' },
       { name: 'gap' }, { name: 'col-gap' }, { name: 'row-gap' },
       { name: 'p' }, { name: 'pt' }, { name: 'pr' }, { name: 'pb' }, { name: 'pl' },
+      { name: 'align', values: ALIGN_VALUES },
+      { name: 'gc' }, { name: 'gr' },
+      { name: 'col-span' }, { name: 'row-span' },
       ...SHARED_LAYOUT,
     ],
   },
@@ -315,14 +321,21 @@ const GUI_ELEMENTS = [
       { name: 'value' },
       { name: 'font-family' }, { name: 'font-size' }, { name: 'font-weight' },
       { name: 'font-style', values: ['normal', 'italic'] },
-      { name: 'color' }, { name: 'line-height' }, { name: 'letter-spacing' },
+      { name: 'font-variation' }, { name: 'font-feature' },
+      { name: 'line-height' }, { name: 'letter-spacing' },
+      { name: 'baseline-shift' },
       { name: 'paragraph-spacing' }, { name: 'paragraph-indent' },
       { name: 'align', values: ['left', 'center', 'right', 'justified'] },
       { name: 'vertical-align', values: ['top', 'center', 'bottom'] },
       { name: 'decoration', values: ['underline', 'strikethrough'] },
+      { name: 'decoration-color' }, { name: 'decoration-style', values: ['solid', 'dashed', 'dotted', 'wavy', 'double'] },
+      { name: 'decoration-thickness' },
       { name: 'text-case', values: ['uppercase', 'lowercase', 'capitalize', 'small-caps', 'small-caps-forced'] },
       { name: 'leading-trim', values: ['cap-height', 'normal'] },
+      { name: 'text-resize', values: ['hug', 'hug-height', 'fixed', 'truncate'] },
       { name: 'truncate' }, { name: 'max-lines' },
+      { name: 'overflow', values: ['clip', 'ellipsis'] },
+      { name: 'list', values: ['disc', 'decimal'] }, { name: 'list-level' }, { name: 'list-marker' },
       { name: 'href' }, { name: 'text-style' }, { name: 'fill-style' },
       ...SHARED_LAYOUT,
     ],
@@ -337,19 +350,31 @@ const GUI_ELEMENTS = [
     ],
   },
   {
-    name: 'shape',
+    name: 'rect',
+    selfClosing: true,
     attrs: [
-      { name: 'type', values: ['rect', 'ellipse', 'line', 'path'] },
-      { name: 'stroke-cap', values: ['round', 'square', 'arrow-lines', 'arrow-equilateral'] },
+      { name: 'radius' },
+      ...SHARED_LAYOUT,
+    ],
+    children: ['appearance'],
+  },
+  {
+    name: 'ellipse',
+    selfClosing: true,
+    attrs: [
       { name: 'arc-start' }, { name: 'arc-end' }, { name: 'arc-inner' },
       ...SHARED_LAYOUT,
     ],
-    children: ['appearance', 'path'],
+    children: ['appearance'],
   },
   {
-    name: 'path',
+    name: 'line',
     selfClosing: true,
-    attrs: [{ name: 'd' }],
+    attrs: [
+      { name: 'direction', values: ['horizontal', 'vertical'] },
+      { name: 'thickness' },
+      ...SHARED_LAYOUT,
+    ],
   },
   {
     name: 'img',
@@ -359,10 +384,6 @@ const GUI_ELEMENTS = [
       { name: 'fit', values: ['cover', 'contain', 'fill', 'none'] },
       ...SHARED_LAYOUT,
     ],
-  },
-  {
-    name: 'svg',
-    attrs: [{ name: 'src' }, ...SHARED_LAYOUT],
   },
   {
     name: 'appearance',
@@ -375,7 +396,7 @@ const GUI_ELEMENTS = [
       { name: 'type', values: ['color', 'linear-gradient', 'radial-gradient', 'angular-gradient', 'image'] },
       { name: 'value' }, { name: 'src' },
       { name: 'fit', values: ['cover', 'contain', 'crop', 'tile'] },
-      { name: 'x' }, { name: 'y' }, { name: 'width' }, { name: 'height' },
+      { name: 'x' }, { name: 'y' }, { name: 'w' }, { name: 'h' },
       { name: 'opacity' },
     ],
   },
@@ -394,9 +415,14 @@ const GUI_ELEMENTS = [
     attrs: [
       { name: 'value' }, { name: 'font-family' }, { name: 'font-size' },
       { name: 'font-weight' }, { name: 'font-style', values: ['normal', 'italic'] },
-      { name: 'color' }, { name: 'line-height' }, { name: 'letter-spacing' },
+      { name: 'font-variation' }, { name: 'font-feature' },
+      { name: 'fill' }, { name: 'line-height' }, { name: 'letter-spacing' },
+      { name: 'baseline-shift' },
       { name: 'decoration', values: ['underline', 'strikethrough'] },
+      { name: 'decoration-color' }, { name: 'decoration-style', values: ['solid', 'dashed', 'dotted', 'wavy', 'double'] },
+      { name: 'decoration-thickness' },
       { name: 'text-case', values: ['uppercase', 'lowercase', 'capitalize', 'small-caps'] },
+      { name: 'list', values: ['disc', 'decimal'] }, { name: 'list-level' }, { name: 'list-marker' },
       { name: 'href' },
     ],
   },
@@ -570,9 +596,9 @@ for (const element of GUI_ELEMENTS) {
 }
 
 const LAYOUT_TAGS = new Set(['frame', 'stack', 'row', 'col', 'grid', 'group', 'instance'])
-const CONTENT_TAGS = new Set(['text', 'img', 'svg', 'shape'])
+const CONTENT_TAGS = new Set(['text', 'img', 'rect', 'ellipse', 'line'])
 const CHILD_TAGS = new Set([...LAYOUT_TAGS, ...CONTENT_TAGS])
-const TOKEN_REF_ATTRS = new Set(['fill', 'color', 'stroke', 'radius', 'font-family', 'font-size', 'font-weight', 'gap', 'p', 'pt', 'pr', 'pb', 'pl', 'w', 'h'])
+const TOKEN_REF_ATTRS = new Set(['fill', 'border-color', 'radius', 'font-family', 'font-size', 'font-weight', 'gap', 'p', 'pt', 'pr', 'pb', 'pl', 'w', 'h'])
 const ASSET_REF_ATTRS = new Set(['src', 'mask-src'])
 type ParsedAttr = {
   name: string
@@ -585,18 +611,15 @@ type ParsedAttr = {
 
 function collectDefinitions(code: string) {
   const tokens = new Set<string>()
-  const assets = new Set<string>()
   const tokenRe = /<(?:color|number|string)\s[^>]*name="([^"]+)"/g
   let m
   while ((m = tokenRe.exec(code)) !== null) tokens.add(m[1])
-  const assetRe = /<image\s[^>]*id="([^"]+)"/g
-  while ((m = assetRe.exec(code)) !== null) assets.add(m[1])
-  return { tokens, assets }
+  return { tokens }
 }
 
 function collectTokens(code: string): Set<string> {
   const defs = collectDefinitions(code)
-  return new Set([...defs.tokens, ...defs.assets])
+  return defs.tokens
 }
 
 function hasAttr(node: any, doc: any, name: string): boolean {
@@ -696,7 +719,9 @@ function isInsideInlineSvg(node: any, doc: any): boolean {
 function guiLintFn(view: EditorView): Diagnostic[] {
   const diagnostics: Diagnostic[] = []
   const code = view.state.doc.toString()
-  const { tokens: definedTokens, assets: definedAssets } = collectDefinitions(code)
+  const { tokens: definedTokens } = collectDefinitions(code)
+  // playground-uploaded assets are stored in assets.value as { '$img-1': blobUrl, ... }
+  const definedAssets = new Set(Object.keys(assets.value).map(id => id.replace(/^\$/, '')))
   const doc = view.state.doc
 
   syntaxTree(view.state).iterate({
@@ -771,7 +796,7 @@ function guiLintFn(view: EditorView): Diagnostic[] {
               from: attr.valueFrom,
               to: attr.valueTo,
               severity: 'warning',
-              message: `Asset "$${refName}" is not defined in <assets>.`,
+              message: `Asset "$${refName}" is not uploaded. Add it via the Assets tab.`,
             })
           } else if (expectsToken && !definedTokens.has(refName)) {
             diagnostics.push({
@@ -795,14 +820,6 @@ function guiLintFn(view: EditorView): Diagnostic[] {
             message: '<gui> is missing the required version attribute.',
           })
         }
-        if (!names.includes('viewport')) {
-          diagnostics.push({
-            from: tagNameNode.from,
-            to: tagNameNode.to,
-            severity: 'warning',
-            message: '<gui> is missing the viewport attribute (e.g. viewport="390x844").',
-          })
-        }
       }
 
       const childTags = childTagNames(node.node, doc)
@@ -817,20 +834,11 @@ function guiLintFn(view: EditorView): Diagnostic[] {
           })
         }
       } else if (tagName === 'stack' && attrValue(node.node, doc, 'direction') === 'grid') {
-        if (!hasAttr(node.node, doc, 'grid-columns')) {
-          diagnostics.push({
-            from: tagNameNode.from,
-            to: tagNameNode.to,
-            severity: 'warning',
-            message: '<stack direction="grid"> should specify grid-columns.',
-          })
-        }
-      } else if (tagName === 'grid' && !hasAttr(node.node, doc, 'columns')) {
         diagnostics.push({
           from: tagNameNode.from,
           to: tagNameNode.to,
           severity: 'warning',
-          message: '<grid> should specify columns.',
+          message: 'Prefer <grid> over <stack direction="grid"> — the <grid> tag is cleaner and supports cols/rows/unit.',
         })
       } else if (tagName === 'frame' || tagName === 'img' || tagName === 'svg' || tagName === 'group') {
         if (!hasAttr(node.node, doc, 'w')) {
@@ -867,30 +875,30 @@ function guiLintFn(view: EditorView): Diagnostic[] {
             message: '<text> must not have both a value attribute and <segment> children.',
           })
         }
-      } else if (tagName === 'shape') {
-        const shapeType = attrValue(node.node, doc, 'type') || ''
+      } else if (tagName === 'rect' || tagName === 'ellipse') {
         if (!hasAttr(node.node, doc, 'w')) {
           diagnostics.push({
             from: tagNameNode.from,
             to: tagNameNode.to,
             severity: 'warning',
-            message: '<shape> should specify w.',
+            message: '<' + tagName + '> should specify w.',
           })
         }
-        if (shapeType !== 'line' && !hasAttr(node.node, doc, 'h')) {
+        if (!hasAttr(node.node, doc, 'h')) {
           diagnostics.push({
             from: tagNameNode.from,
             to: tagNameNode.to,
             severity: 'warning',
-            message: '<shape> should specify h.',
+            message: '<' + tagName + '> should specify h.',
           })
         }
-        if (shapeType === 'path' && !childTags.includes('path')) {
+      } else if (tagName === 'line') {
+        if (!hasAttr(node.node, doc, 'fill')) {
           diagnostics.push({
             from: tagNameNode.from,
             to: tagNameNode.to,
             severity: 'warning',
-            message: '<shape type="path"> should include a <path d="..." /> child.',
+            message: '<line> should specify fill.',
           })
         }
       }
@@ -1010,7 +1018,7 @@ let highlightedEl: HTMLElement | null = null
 // attribute value content, multi-line tags, and reformatting.
 let nodePosMap: Map<number, number> = new Map()
 
-const GUI_NODE_TAGS = new Set(['frame', 'stack', 'row', 'col', 'grid', 'group', 'text', 'img', 'svg', 'shape', 'instance'])
+const GUI_NODE_TAGS = new Set(['frame', 'stack', 'row', 'col', 'grid', 'group', 'text', 'img', 'rect', 'ellipse', 'line', 'instance'])
 
 // Walk the syntax tree in document order (= DFS pre-order) and map each GUI
 // element's opening-tag start position to the index it will occupy in
@@ -1175,7 +1183,7 @@ function deleteAsset(id: string) {
 function runRender(code: string) {
   if (!previewEl.value) return
   clearInspectHighlight()
-  const result = render(code, previewEl.value, assets.value)
+  const result = render(code, previewEl.value, assets.value, { zoom: true })
   if (result) {
     setZoom = result
     zoomFactor = 1

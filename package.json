@@ -9,6 +9,7 @@
     "preview": "nuxt preview"
   },
   "dependencies": {
+    "gui-render": "file:../gui-render",
     "@codemirror/lang-xml": "^6.1.0",
     "codemirror": "^6.0.2",
     "commander": "^13.1.0",
