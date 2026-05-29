@@ -48,7 +48,7 @@
             >
               <button class="pg-asset-delete" @click="deleteAsset(String(id))" title="Remove">×</button>
               <img :src="url" class="pg-asset-thumb" @click="copyId(String(id))" :title="copiedId === id ? 'copied!' : `click to copy ${id}`" />
-              <span class="pg-asset-id">{{ copiedId === id ? 'copied!' : id }}</span>
+              <span class="pg-asset-id">{{ copiedId === id ? 'copied!' : String(id).split('/').pop() }}</span>
             </div>
           </div>
         </div>
@@ -1119,27 +1119,13 @@ function onGuiFileUpload(e: Event) {
       const code = new TextDecoder().decode(guixEntry[1])
       loadGuiCode(code)
 
-      // Parse <assets> block to get id → src path mappings
-      const doc = new DOMParser().parseFromString(normalizeBooleanAttrs(code), 'text/xml')
-      const idToPath: Record<string, string> = {}
-      for (const img of Array.from(doc.querySelectorAll('assets > image'))) {
-        const id = img.getAttribute('id')
-        const src = img.getAttribute('src')
-        if (id && src) idToPath['$' + id] = src
-      }
-
-      // Build assetMap from ZIP entries
+      // Build assetMap keyed by path — "assets/hero.webp" → blob URL (RFC 0031)
       const newAssets: Record<string, string> = {}
       for (const [name, fileBytes] of Object.entries(data)) {
-        if (name.endsWith('.guix') || name === 'preview.webp') continue
-        // Match by path or by filename
-        const assetId = Object.keys(idToPath).find(
-          id => idToPath[id] === name || idToPath[id].endsWith('/' + name.split('/').pop())
-        )
-        if (!assetId) continue
+        if (!name.startsWith('assets/')) continue
         const ext = name.split('.').pop() || 'png'
         const blob = new Blob([fileBytes], { type: mimeForExt(ext) })
-        newAssets[assetId] = URL.createObjectURL(blob)
+        newAssets[name] = URL.createObjectURL(blob)
       }
 
       if (Object.keys(newAssets).length) {

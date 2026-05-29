@@ -6,6 +6,7 @@
         <NuxtLink to="/#format">Format</NuxtLink>
         <NuxtLink to="/#render">Renderer</NuxtLink>
         <NuxtLink to="/#figma">Figma</NuxtLink>
+        <NuxtLink to="/spec">Spec</NuxtLink>
         <NuxtLink to="/playground">Playground</NuxtLink>
         <a href="https://github.com/dotgui" target="_blank" rel="noopener">GitHub</a>
       </div>
