@@ -61,6 +61,18 @@
       <div class="pg-pane pg-preview-pane" :style="{ flexBasis: (100 - splitPct) + '%' }">
         <div class="pg-pane-header">
           <span class="pg-pane-label">preview</span>
+          <div v-if="modeAxes.length" class="pg-modes">
+            <label v-for="axis in modeAxes" :key="axis.name" class="pg-mode">
+              <span class="pg-mode-name">{{ axis.name }}</span>
+              <select
+                class="pg-mode-select"
+                v-model="activeMode[axis.name]"
+                @change="rerenderCurrent"
+              >
+                <option v-for="v in axis.values" :key="v" :value="v">{{ v }}</option>
+              </select>
+            </label>
+          </div>
           <span class="pg-hint">scroll to zoom · drag to pan</span>
         </div>
         <div ref="previewEl" class="pg-preview" @wheel.prevent="onWheel" />
@@ -71,6 +83,15 @@
 </template>
 
 <script setup lang="ts">
+useSeoMeta({
+  title: '.gui Playground — write, render & preview .gui files live',
+  description: 'Edit .gui XML and see it render instantly. An interactive playground for the .gui UI format — write code, upload images, and preview the result in the browser.',
+  ogTitle: '.gui Playground',
+  ogDescription: 'Write .gui XML and see it render live in your browser.',
+  ogUrl: 'https://dotgui.org/playground',
+  twitterCard: 'summary_large_image'
+})
+
 import { EditorView, keymap, lineNumbers, drawSelection, highlightActiveLine, dropCursor } from '@codemirror/view'
 import { EditorState } from '@codemirror/state'
 import { xml, xmlLanguage } from '@codemirror/lang-xml'
@@ -82,7 +103,7 @@ import {
 } from '@codemirror/language'
 import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap, startCompletion, type CompletionContext, type CompletionResult } from '@codemirror/autocomplete'
 import { tags } from '@lezer/highlight'
-import { normalizeBooleanAttrs, render } from 'gui-render'
+import { normalizeBooleanAttrs, render } from '@dotgui/kit/render'
 import xmlFormat from 'xml-formatter'
 import { unzip } from 'fflate'
 
@@ -194,6 +215,8 @@ const GUI_ELEMENTS = [
       { name: 'name' },
     ],
   },
+  { name: 'modes', children: ['mode'] },
+  { name: 'mode', selfClosing: true, attrs: [{ name: 'name' }, { name: 'values' }, { name: 'default' }] },
   { name: 'tokens', children: ['color', 'number', 'string'] },
   { name: 'color', selfClosing: true, attrs: [{ name: 'name' }, { name: 'value' }] },
   { name: 'number', selfClosing: true, attrs: [{ name: 'name' }, { name: 'value' }] },
@@ -622,6 +645,49 @@ function collectTokens(code: string): Set<string> {
   return defs.tokens
 }
 
+// Parse <mode name="..." values="..." default="..." /> declarations (RFC-0037).
+// Handles both the bare <mode> shorthand and the <modes> wrapper — each <mode>
+// tag is matched independently, so the wrapper needs no special treatment.
+function collectModes(code: string): { name: string; values: string[]; default: string }[] {
+  const axes: { name: string; values: string[]; default: string }[] = []
+  const seen = new Set<string>()
+  const re = /<mode\s+([^>]*?)\/?>/g
+  let m
+  while ((m = re.exec(code)) !== null) {
+    const attrs = m[1]
+    const nameM = /\bname\s*=\s*"([^"]+)"/.exec(attrs)
+    const valuesM = /\bvalues\s*=\s*"([^"]+)"/.exec(attrs)
+    if (!nameM || !valuesM) continue
+    const name = nameM[1]
+    if (seen.has(name)) continue
+    const values = valuesM[1].trim().split(/\s+/).filter(Boolean)
+    if (!values.length) continue
+    const defM = /\bdefault\s*=\s*"([^"]+)"/.exec(attrs)
+    const def = defM && values.indexOf(defM[1]) !== -1 ? defM[1] : values[0]
+    seen.add(name)
+    axes.push({ name, values, default: def })
+  }
+  return axes
+}
+
+// RFC-0037: recognise the declaration-driven attributes the static schema can't
+// enumerate — `mode-{axis}` (mode application on any layer) and `{axis}-{value}`
+// (per-mode token values on a token def). Returns true when the attr is a valid
+// mode attribute given the axes declared in the document.
+function isModeAttr(tagName: string, attrName: string, axes: { name: string; values: string[] }[]): boolean {
+  if (attrName.indexOf('mode-') === 0) {
+    const axis = attrName.slice(5)
+    return axes.some(a => a.name === axis)
+  }
+  if (tagName === 'color' || tagName === 'number' || tagName === 'string') {
+    for (const a of axes) {
+      const prefix = a.name + '-'
+      if (attrName.indexOf(prefix) === 0 && a.values.indexOf(attrName.slice(prefix.length)) !== -1) return true
+    }
+  }
+  return false
+}
+
 function hasAttr(node: any, doc: any, name: string): boolean {
   return parseTagAttrs(node, doc).some(attr => attr.name === name)
 }
@@ -720,6 +786,7 @@ function guiLintFn(view: EditorView): Diagnostic[] {
   const diagnostics: Diagnostic[] = []
   const code = view.state.doc.toString()
   const { tokens: definedTokens } = collectDefinitions(code)
+  const modeAxesDecl = collectModes(code)
   // playground-uploaded assets are stored in assets.value as { '$img-1': blobUrl, ... }
   const definedAssets = new Set(Object.keys(assets.value).map(id => id.replace(/^\$/, '')))
   const doc = view.state.doc
@@ -752,7 +819,7 @@ function guiLintFn(view: EditorView): Diagnostic[] {
       for (const attr of parseTagAttrs(node.node, doc)) {
         const attrName = attr.name
 
-        if (allowedAttrs && !allowedAttrs.has(attrName) && tagName !== 'instance' && tagName !== 'variant') {
+        if (allowedAttrs && !allowedAttrs.has(attrName) && tagName !== 'instance' && tagName !== 'variant' && !isModeAttr(tagName, attrName, modeAxesDecl)) {
           diagnostics.push({
             from: attr.nameFrom,
             to: attr.nameTo,
@@ -1002,6 +1069,13 @@ const guiFileInputEl = ref<HTMLInputElement | null>(null)
 const parseError = ref('')
 const assets = ref<Record<string, string>>({})
 const copiedId = ref('')
+
+// ─── token modes (RFC-0037) ───────────────────────────────────────────────────
+// Declared mode axes found in the current code, plus the active value per axis.
+// Drives the mode-switcher controls in the preview header.
+type ModeAxis = { name: string; values: string[]; default: string }
+const modeAxes = ref<ModeAxis[]>([])
+const activeMode = ref<Record<string, string>>({})
 let assetCounter = 0
 let setZoom: ((f: number, ax?: number, ay?: number) => void) | null = null
 let zoomFactor = 1
@@ -1166,10 +1240,33 @@ function deleteAsset(id: string) {
   assets.value = map
 }
 
+// Reconcile the mode-switcher state with the axes declared in `code`. Keeps any
+// still-valid selection, otherwise falls back to the axis default. Mutates the
+// activeMode object in place so it stays a stable reactive reference (avoiding a
+// re-render loop with runRender).
+function syncModes(code: string) {
+  const axes = collectModes(code)
+  modeAxes.value = axes
+  const valid = new Set(axes.map(a => a.name))
+  for (const key of Object.keys(activeMode.value)) {
+    if (!valid.has(key)) delete activeMode.value[key]
+  }
+  for (const axis of axes) {
+    const prev = activeMode.value[axis.name]
+    if (!prev || axis.values.indexOf(prev) === -1) activeMode.value[axis.name] = axis.default
+  }
+}
+
+function rerenderCurrent() {
+  runRender(editorView?.state.doc.toString() ?? '')
+}
+
 function runRender(code: string) {
   if (!previewEl.value) return
   clearInspectHighlight()
-  const result = render(code, previewEl.value, assets.value, { zoom: true })
+  syncModes(code)
+  const mode = { ...activeMode.value }
+  const result = render(code, previewEl.value, assets.value, { zoom: true, mode })
   if (result) {
     setZoom = result
     zoomFactor = 1
@@ -1431,6 +1528,43 @@ function onWheel(e: WheelEvent) {
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+/* ─── token-mode switcher ─── */
+.pg-modes {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pg-mode {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pg-mode-name {
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pg-mode-select {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: border-color 150ms ease;
+}
+
+.pg-mode-select:hover {
+  border-color: var(--text-dim);
 }
 
 /* ─── tab content ─── */

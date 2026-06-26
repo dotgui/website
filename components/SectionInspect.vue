@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { render } from 'gui-render'
+import { render } from '@dotgui/kit/render'
 
 const previewEl = ref<HTMLElement | null>(null)
 const hoveredIdx = ref(-1)
