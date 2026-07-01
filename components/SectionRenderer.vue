@@ -2,7 +2,7 @@
   <section id="render">
     <div data-reveal>
       <div class="section-label">Renderer</div>
-      <h2>dotgui-render</h2>
+      <h2>@dotgui/kit/render</h2>
       <p>
         A standalone TypeScript library that takes a <code>.gui</code> document string and renders it
         into a live container element. It handles layout, fonts, images, shapes, gradients, effects —
@@ -11,7 +11,7 @@
     </div>
 
     <CodeBlock filename="app.ts" lang="TypeScript"><span class="tok-comment">// render a .gui document into any container</span>
-<span class="tok-tag">import</span> <span class="tok-punct">{</span> render <span class="tok-punct">}</span> <span class="tok-attr">from</span> <span class="tok-str">'dotgui-render'</span>
+<span class="tok-tag">import</span> <span class="tok-punct">{</span> render <span class="tok-punct">}</span> <span class="tok-attr">from</span> <span class="tok-str">'@dotgui/kit/render'</span>
 
 <span class="tok-tag">const</span> setZoom <span class="tok-punct">=</span> render<span class="tok-punct">(</span>guiCode<span class="tok-punct">,</span> containerEl<span class="tok-punct">)</span>
 

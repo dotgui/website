@@ -41,7 +41,7 @@
         <div class="step-content">
           <h3>Render or process</h3>
           <p>
-            Pass the file to <code>dotgui-render</code> for a live preview,
+            Pass the file to <code>@dotgui/kit/render</code> for a live preview,
             or feed it directly to an AI agent as structured context.
           </p>
         </div>

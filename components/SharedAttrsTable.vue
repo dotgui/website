@@ -3,23 +3,22 @@
     <p class="shared-section-title">Inherited properties</p>
     <table class="attr-table">
       <thead>
-        <tr><th>Attr</th><th>Values</th><th>Notes</th></tr>
+        <tr><th>Attr</th><th>Type / values</th><th>Notes</th></tr>
       </thead>
       <tbody>
-        <tr><td>opacity</td><td>0–1</td><td>Omitted when 1</td></tr>
-        <tr><td>blend</td><td>multiply, screen, overlay, …</td><td>Omitted when normal</td></tr>
-        <tr><td>mask</td><td>boolean presence</td><td>Alpha mask for subsequent siblings</td></tr>
-        <tr><td>rotation</td><td>degrees</td><td>Omitted when 0</td></tr>
-        <tr><td>constraint-h / constraint-v</td><td>right, center, scale, stretch</td><td>left / top is default</td></tr>
-        <tr><td>abs</td><td>boolean presence</td><td>Absolute child inside auto-layout parent</td></tr>
-        <tr><td>min-width / max-width</td><td>px</td><td>Omitted when unset</td></tr>
-        <tr><td>min-height / max-height</td><td>px</td><td>Omitted when unset</td></tr>
-        <tr><td>border</td><td>"[w] [color] [style] [align]"</td><td>Shorthand — e.g. "2 #333 dashed inside"</td></tr>
-        <tr><td>border-top / right / bottom / left</td><td>"[w] [color] [style]"</td><td>Per-side, always inside-aligned</td></tr>
+        <tr v-for="a in sharedAttributes" :key="a.name">
+          <td>{{ a.name }}</td>
+          <td>{{ value(a) }}</td>
+          <td>{{ a.description }}</td>
+        </tr>
       </tbody>
     </table>
   </div>
 </template>
+
+<script setup lang="ts">
+import { sharedAttributes, sharedAttrValue as value } from '~/lib/spec-data'
+</script>
 
 <style scoped>
 .shared-section {

@@ -61,11 +61,11 @@ dotgui-figma (Figma plugin)
      ↓
 raw.gui
      ↓
-gui-optimizer
+gui-optimizer (unpublished — optional)
      ↓
 optimized.gui
      ↓
-dotgui-render   /   AI Agent   /   Code Generator
+@dotgui/kit/render   /   AI Agent   /   Code Generator
 ```
 
 Each stage has a single, well-defined responsibility. The extractor doesn't optimize. The optimizer doesn't render. The renderer doesn't modify the document. They compose cleanly because they stay in their lane.
@@ -364,6 +364,8 @@ The extractor is deterministic. Given the same Figma layer, it always produces t
 
 ### gui-optimizer
 
+> **Note:** not published to npm — this is an optional, opt-in package (`kit`'s `optionalDependencies`). Treat this section as describing the intended design, not a shipped feature.
+
 A post-processing pipeline that converts raw extractor output into a cleaner, smaller, more semantically rich `.gui` file.
 
 The optimizer is also deterministic, non-AI, and rule-based. It does not invent meaning. Every transformation either provably preserves the visual render or is skipped and logged.
@@ -407,12 +409,12 @@ Each rule lives in its own TypeScript file under `gui-optimizer/src/rules/`. The
 
 Adding, removing, or reordering rules is a one-line change in `index.ts`.
 
-### dotgui-render
+### @dotgui/kit/render
 
-A standalone TypeScript library with zero dependencies. Takes a `.gui` document string and renders it into a live DOM container.
+A TypeScript render function, published as a subpath export of `@dotgui/kit`. Takes a `.gui` document string and renders it into a live DOM container.
 
 ```typescript
-import { render } from 'dotgui-render'
+import { render } from '@dotgui/kit/render'
 
 const setZoom = render(guiCode, containerEl)
 setZoom?.(1)   // fit to container
@@ -473,8 +475,8 @@ The optimizer's job is structural cleanup, not interpretation. Interpretation is
 
 - `.gui` format spec with full Figma layer coverage
 - Figma plugin for export
-- `dotgui-render` renderer (TypeScript, zero deps)
-- `gui-optimizer` with 21 rules across 8 passes
+- `@dotgui/kit/render` renderer (TypeScript)
+- `gui-optimizer` with 21 rules across 8 passes (unpublished — optional)
 - Inline and packaged export formats
 - Asset deduplication and WebP conversion
 - `<component>`, `<component-set>`, and `<instance>` — component definitions and reuse with declared props and ad-hoc overrides

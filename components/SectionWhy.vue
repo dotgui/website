@@ -23,7 +23,7 @@
       <div class="feature">
         <div class="feature-label">02</div>
         <div class="feature-title">Renderable</div>
-        <p class="feature-body">Drop in <code>dotgui-render</code> to turn any <code>.gui</code> string into live DOM with one function call. Zero dependencies.</p>
+        <p class="feature-body">Drop in <code>@dotgui/kit/render</code> to turn any <code>.gui</code> string into live DOM with one function call.</p>
       </div>
       <div class="feature">
         <div class="feature-label">03</div>

@@ -11,6 +11,14 @@
 
       <SpecEntry :entry="entry" name-tag="h1" />
 
+      <section v-if="entry.faq.length" class="faq">
+        <h2 class="faq-label">Frequently asked</h2>
+        <div v-for="(f, i) in entry.faq" :key="i" class="faq-item">
+          <p class="faq-q">{{ f.q }}</p>
+          <p class="faq-a">{{ f.a }}</p>
+        </div>
+      </section>
+
       <section v-if="relatedEntries.length" class="related">
         <p class="related-label">Related</p>
         <div class="related-links">
@@ -59,34 +67,52 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
+const ldScripts = [
+  {
+    type: 'application/ld+json',
+    innerHTML: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'TechArticle',
+      headline: `${cleanTitle} — .gui Spec Reference`,
+      description: entry.seoDescription,
+      url: pageUrl,
+      about: { '@type': 'Thing', name: specDisplayName(entry.name) },
+      isPartOf: { '@type': 'TechArticle', name: '.gui Spec Reference', url: 'https://dotgui.org/spec' },
+      author: { '@type': 'Organization', name: '.gui', url: 'https://dotgui.org' }
+    })
+  },
+  {
+    type: 'application/ld+json',
+    innerHTML: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Spec Reference', item: 'https://dotgui.org/spec' },
+        { '@type': 'ListItem', position: 2, name: specDisplayName(entry.name), item: pageUrl }
+      ]
+    })
+  }
+]
+
+// FAQPage schema — strongest GEO signal; only when the entry has FAQs.
+if (entry.faq.length) {
+  ldScripts.push({
+    type: 'application/ld+json',
+    innerHTML: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: entry.faq.map(f => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a }
+      }))
+    })
+  })
+}
+
 useHead({
   link: [{ rel: 'canonical', href: pageUrl }],
-  script: [
-    {
-      type: 'application/ld+json',
-      innerHTML: JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'TechArticle',
-        headline: `${cleanTitle} — .gui Spec Reference`,
-        description: entry.seoDescription,
-        url: pageUrl,
-        about: { '@type': 'Thing', name: specDisplayName(entry.name) },
-        isPartOf: { '@type': 'TechArticle', name: '.gui Spec Reference', url: 'https://dotgui.org/spec' },
-        author: { '@type': 'Organization', name: '.gui', url: 'https://dotgui.org' }
-      })
-    },
-    {
-      type: 'application/ld+json',
-      innerHTML: JSON.stringify({
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Spec Reference', item: 'https://dotgui.org/spec' },
-          { '@type': 'ListItem', position: 2, name: specDisplayName(entry.name), item: pageUrl }
-        ]
-      })
-    }
-  ]
+  script: ldScripts
 })
 </script>
 
@@ -114,6 +140,41 @@ useHead({
   max-width: 680px;
   padding: 18px 40px 24px;
   margin: 0;
+}
+
+.faq {
+  padding: 32px 40px 0;
+}
+
+.faq-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+.faq-item {
+  padding: 0 0 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.faq-item:last-child { border-bottom: none; margin-bottom: 0; }
+
+.faq-q {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+.faq-a {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 680px;
 }
 
 .related {
@@ -160,6 +221,7 @@ useHead({
 @media (max-width: 900px) {
   .breadcrumb { padding: 20px 20px 0; }
   .leaf-lead { padding: 16px 20px 20px; }
+  .faq { padding: 28px 20px 0; }
   .related { padding: 28px 20px 0; }
 }
 </style>

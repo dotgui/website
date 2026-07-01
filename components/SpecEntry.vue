@@ -8,7 +8,7 @@
     </div>
     <div class="entry-body">
       <div class="entry-desc">
-        <p v-for="(para, i) in entry.desc" :key="i" v-html="para"></p>
+        <p v-for="(para, i) in entry.desc" :key="i">{{ para }}</p>
         <table v-if="entry.table" class="attr-table">
           <thead><tr><th v-for="h in entry.table.head" :key="h">{{ h }}</th></tr></thead>
           <tbody>
@@ -17,7 +17,7 @@
             </tr>
           </tbody>
         </table>
-        <p v-if="entry.note" class="note" v-html="entry.note"></p>
+        <p v-if="entry.note" class="note">{{ entry.note }}</p>
         <SharedAttrsTable v-if="entry.sharedAttrs" />
       </div>
       <div class="entry-example">

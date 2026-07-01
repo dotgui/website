@@ -6,9 +6,12 @@
     "dev": "nuxt dev",
     "build": "nuxt build",
     "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "preview": "nuxt preview",
+    "sync:spec": "cp ../core/spec/spec.json lib/spec.json",
+    "sync:spec:check": "cp ../core/spec/spec.json lib/spec.json && git diff --exit-code lib/spec.json"
   },
   "dependencies": {
+    "@dotgui/kit": "^0.2.0",
     "@codemirror/lang-xml": "^6.1.0",
     "codemirror": "^6.0.2",
     "commander": "^13.1.0",

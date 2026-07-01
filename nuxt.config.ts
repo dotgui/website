@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'node:url'
 import { specSlugs } from './lib/spec-data'
 
 const SITE_URL = 'https://dotgui.org'
@@ -29,15 +28,6 @@ export default defineNuxtConfig({
     '/playground': { ssr: false }
   },
   site: { url: SITE_URL },
-  vite: {
-    resolve: {
-      alias: {
-        // Reuse the kit's prebuilt render bundle (parser inlined), rebuilt via
-        // `bun run build:render` in ../kit.
-        '@dotgui/kit/render': fileURLToPath(new URL('../kit/dist/render.js', import.meta.url)),
-      },
-    },
-  },
   css: ['~/assets/css/main.css'],
   app: {
     head: {

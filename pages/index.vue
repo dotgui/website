@@ -82,7 +82,7 @@ useHead({
             name: 'How do I render a .gui file?',
             acceptedAnswer: {
               '@type': 'Answer',
-              text: 'Drop in the dotgui-render library to turn any .gui string into live DOM with a single function call, with zero dependencies.'
+              text: 'Drop in @dotgui/kit/render to turn any .gui string into live DOM with a single function call.'
             }
           }
         ]
