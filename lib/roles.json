@@ -1,0 +1,850 @@
+{
+  "count": 53,
+  "roles": [
+    {
+      "role": "accordion",
+      "reach": "1",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Accordion",
+      "description": "Vertically stacked sections, each with a header that reveals or hides content below it.",
+      "aka": [
+        "disclosure",
+        "collapsible",
+        "expandable",
+        "expansion-panel"
+      ]
+    },
+    {
+      "role": "action-sheet",
+      "reach": "full",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "title": "Action Sheet",
+      "description": "Modal sheet sliding up from the bottom presenting a list of contextual actions.",
+      "aka": [
+        "bottom-sheet",
+        "action-menu"
+      ]
+    },
+    {
+      "role": "alert",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Alert",
+      "description": "Inline message communicating a status — informational, success, warning, or error.",
+      "aka": [
+        "warning",
+        "error-message",
+        "info-message"
+      ]
+    },
+    {
+      "role": "avatar",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Avatar",
+      "description": "Circular or rounded image representing a person or entity.",
+      "aka": [
+        "profile-image",
+        "user-photo",
+        "profile-picture"
+      ]
+    },
+    {
+      "role": "badge",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Badge",
+      "description": "Small count or status label overlaid on or beside another element.",
+      "aka": [
+        "counter-badge",
+        "notification-badge",
+        "pip"
+      ]
+    },
+    {
+      "role": "banner",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Banner",
+      "description": "Prominent strip promoting content, a sale, or an announcement.",
+      "aka": [
+        "promo-banner",
+        "announcement-banner",
+        "info-banner"
+      ]
+    },
+    {
+      "role": "breadcrumb",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "android"
+      ],
+      "title": "Breadcrumb",
+      "description": "Horizontal trail showing the current page's location in the site or app hierarchy.",
+      "aka": [
+        "path-navigation",
+        "crumbs",
+        "page-path"
+      ]
+    },
+    {
+      "role": "button",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Button",
+      "description": "Tappable element that triggers an action.",
+      "aka": [
+        "primary-button",
+        "secondary-button",
+        "cta",
+        "action-button"
+      ]
+    },
+    {
+      "role": "card",
+      "reach": "1",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Card",
+      "description": "Contained surface grouping related content and optional actions.",
+      "aka": [
+        "content-card",
+        "panel",
+        "tile"
+      ]
+    },
+    {
+      "role": "carousel",
+      "reach": "2",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Carousel",
+      "description": "Horizontally scrollable series of cards or images, showing one or a few items at a time.",
+      "aka": [
+        "media-carousel",
+        "slider-gallery",
+        "slideshow"
+      ]
+    },
+    {
+      "role": "checkbox",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Checkbox",
+      "description": "Binary selection control for toggling an option on or off.",
+      "aka": [
+        "checklist-item",
+        "tick-box"
+      ]
+    },
+    {
+      "role": "chip",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Chip",
+      "description": "Compact tag used for filtering, selection, or labelling.",
+      "aka": [
+        "filter-chip",
+        "suggestion-chip",
+        "tag",
+        "label"
+      ]
+    },
+    {
+      "role": "color-picker",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Color Picker",
+      "description": "Control for selecting a color from a palette or spectrum.",
+      "aka": [
+        "color-selector",
+        "color-swatch"
+      ]
+    },
+    {
+      "role": "combobox",
+      "reach": "full",
+      "platforms": [
+        "web"
+      ],
+      "title": "Combobox",
+      "description": "Text input combined with a filterable dropdown list of suggestions.",
+      "aka": [
+        "autocomplete",
+        "searchable-select",
+        "typeahead"
+      ]
+    },
+    {
+      "role": "command-palette",
+      "reach": "1",
+      "platforms": [
+        "web"
+      ],
+      "title": "Command Palette",
+      "description": "Full-screen overlay with a search input for quickly finding and triggering commands or navigation.",
+      "aka": [
+        "command-menu",
+        "quick-actions",
+        "spotlight"
+      ]
+    },
+    {
+      "role": "context-menu",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Context Menu",
+      "description": "Floating list of actions anchored to a specific element or tap position.",
+      "aka": [
+        "right-click-menu",
+        "overflow-menu",
+        "action-menu"
+      ]
+    },
+    {
+      "role": "date-picker",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Date Picker",
+      "description": "Control for selecting a date, or date range, from a calendar view.",
+      "aka": [
+        "calendar-picker",
+        "date-input",
+        "date-selector"
+      ]
+    },
+    {
+      "role": "dialog",
+      "reach": "1",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Dialog",
+      "description": "Modal overlay requiring user interaction before returning to the main flow.",
+      "aka": [
+        "modal",
+        "popup",
+        "confirmation-dialog"
+      ]
+    },
+    {
+      "role": "divider",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Divider",
+      "description": "Horizontal or vertical line used to separate sections of content.",
+      "aka": [
+        "separator",
+        "rule",
+        "hr"
+      ]
+    },
+    {
+      "role": "drawer",
+      "reach": "1",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Drawer",
+      "description": "Panel that slides in from a screen edge, overlaying content without replacing it.",
+      "aka": [
+        "side-sheet",
+        "bottom-sheet",
+        "slide-over",
+        "panel"
+      ]
+    },
+    {
+      "role": "dropdown-menu",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Dropdown Menu",
+      "description": "Floating list of options anchored to a trigger, for navigation or actions.",
+      "aka": [
+        "menu",
+        "pulldown-menu",
+        "select-menu"
+      ]
+    },
+    {
+      "role": "empty-state",
+      "reach": "1",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Empty State",
+      "description": "Placeholder shown when a list or view has no content, guiding the user to an action.",
+      "aka": [
+        "zero-state",
+        "blank-state",
+        "no-results"
+      ]
+    },
+    {
+      "role": "file-uploader",
+      "reach": "full",
+      "platforms": [
+        "web"
+      ],
+      "title": "File Uploader",
+      "description": "Area for selecting or dropping files for upload.",
+      "aka": [
+        "dropzone",
+        "file-input",
+        "drag-and-drop-upload"
+      ]
+    },
+    {
+      "role": "floating-action-button",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Floating Action Button",
+      "description": "Circular button fixed above content, representing the primary action on a screen.",
+      "aka": [
+        "FAB",
+        "primary-action-button"
+      ]
+    },
+    {
+      "role": "full-screen-overlay",
+      "reach": "1",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Full Screen Overlay",
+      "description": "A view that occupies the entire screen, typically presented modally over another screen.",
+      "aka": [
+        "immersive-modal",
+        "full-screen-modal",
+        "sheet"
+      ]
+    },
+    {
+      "role": "gallery",
+      "reach": "2",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Gallery",
+      "description": "Grid of images or media thumbnails displayed in a uniform tiled layout.",
+      "aka": [
+        "media-grid",
+        "image-grid",
+        "photo-grid",
+        "mosaic"
+      ]
+    },
+    {
+      "role": "hyperlink",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Hyperlink",
+      "description": "Inline text that navigates to another location when activated.",
+      "aka": [
+        "link",
+        "anchor",
+        "text-link"
+      ]
+    },
+    {
+      "role": "item-indicator",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Item Indicator",
+      "description": "Row of dots or marks showing position within an ordered set of items — slides, steps, pages, or images.",
+      "aka": [
+        "page-control",
+        "dot-indicator",
+        "step-indicator",
+        "carousel-indicator",
+        "slider-dots"
+      ]
+    },
+    {
+      "role": "launch-screen",
+      "reach": "full",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "title": "Launch Screen",
+      "description": "Full-screen view shown while an app is loading, typically displaying a logo or brand mark.",
+      "aka": [
+        "splash-screen",
+        "loading-screen",
+        "intro-screen"
+      ]
+    },
+    {
+      "role": "loading-indicator",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Loading Indicator",
+      "description": "Visual cue that an operation is in progress.",
+      "aka": [
+        "spinner",
+        "loader",
+        "activity-indicator",
+        "progress-spinner"
+      ]
+    },
+    {
+      "role": "navigation-menu",
+      "reach": "2",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Navigation Menu",
+      "description": "A set of links or destinations used to move between sections of an app or site.",
+      "aka": [
+        "nav-menu",
+        "site-nav",
+        "side-nav",
+        "navigation-drawer"
+      ]
+    },
+    {
+      "role": "pagination",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "android"
+      ],
+      "title": "Pagination",
+      "description": "Numbered page controls for navigating through a multi-page dataset.",
+      "aka": [
+        "pager",
+        "page-navigator",
+        "page-controls"
+      ]
+    },
+    {
+      "role": "popover",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Popover",
+      "description": "Small floating panel anchored to a trigger element, for supplementary information or a compact form.",
+      "aka": [
+        "popup",
+        "flyout",
+        "floating-panel"
+      ]
+    },
+    {
+      "role": "progress-indicator",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Progress Indicator",
+      "description": "Bar or ring showing how much of a process has completed.",
+      "aka": [
+        "progress-bar",
+        "progress-ring",
+        "determinate-progress"
+      ]
+    },
+    {
+      "role": "radio-button",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Radio Button",
+      "description": "Single-selection control where only one option from a group can be chosen.",
+      "aka": [
+        "radio",
+        "radio-option",
+        "radio-group"
+      ]
+    },
+    {
+      "role": "search-bar",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Search Bar",
+      "description": "Input field dedicated to searching or filtering content.",
+      "aka": [
+        "search-field",
+        "search-input",
+        "search-box"
+      ]
+    },
+    {
+      "role": "segmented-control",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Segmented Control",
+      "description": "A set of mutually exclusive options displayed as connected segments, one selected at a time.",
+      "aka": [
+        "segmented-button-group",
+        "button-group",
+        "tab-toggle"
+      ]
+    },
+    {
+      "role": "select",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Select",
+      "description": "A control that shows a single chosen value and opens a list for changing it.",
+      "aka": [
+        "dropdown",
+        "dropdown-select",
+        "picker"
+      ]
+    },
+    {
+      "role": "sidebar",
+      "reach": "2",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Sidebar",
+      "description": "Persistent vertical panel on the side of the screen containing navigation or contextual tools.",
+      "aka": [
+        "navigation-rail",
+        "side-navigation",
+        "left-nav",
+        "side-panel"
+      ]
+    },
+    {
+      "role": "skeleton",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Skeleton",
+      "description": "Placeholder shapes shown while content is loading, matching the rough layout of the expected content.",
+      "aka": [
+        "content-placeholder",
+        "loading-skeleton",
+        "ghost",
+        "shimmer"
+      ]
+    },
+    {
+      "role": "slider",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Slider",
+      "description": "A track with a draggable thumb for selecting a value within a continuous range.",
+      "aka": [
+        "range-slider",
+        "scrubber",
+        "input-range"
+      ]
+    },
+    {
+      "role": "stepper",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Stepper",
+      "description": "A control with increment and decrement buttons for adjusting a numeric value.",
+      "aka": [
+        "quantity-stepper",
+        "number-stepper",
+        "increment-decrement",
+        "counter"
+      ]
+    },
+    {
+      "role": "switch",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Switch",
+      "description": "Toggle control that switches a setting between on and off.",
+      "aka": [
+        "toggle",
+        "toggle-switch"
+      ]
+    },
+    {
+      "role": "tab-bar",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Tab Bar",
+      "description": "Row of tabs for switching between top-level sections of an app.",
+      "aka": [
+        "tabs",
+        "bottom-navigation",
+        "bottom-tab-bar",
+        "tab-strip"
+      ]
+    },
+    {
+      "role": "table",
+      "reach": "2",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Table",
+      "description": "Grid of rows and columns presenting structured data.",
+      "aka": [
+        "data-table",
+        "data-grid"
+      ]
+    },
+    {
+      "role": "text-area",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Text Area",
+      "description": "Multi-line text input for longer freeform content.",
+      "aka": [
+        "multiline-input",
+        "multi-line-text-field",
+        "textarea"
+      ]
+    },
+    {
+      "role": "text-field",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Text Field",
+      "description": "Single-line input for entering short text values.",
+      "aka": [
+        "input-field",
+        "text-input",
+        "form-field"
+      ]
+    },
+    {
+      "role": "time-picker",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Time Picker",
+      "description": "Control for selecting a time value.",
+      "aka": [
+        "time-selector",
+        "clock-picker",
+        "time-input"
+      ]
+    },
+    {
+      "role": "toast",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Toast",
+      "description": "Brief notification that appears temporarily, typically at the bottom of the screen.",
+      "aka": [
+        "snackbar",
+        "notification-toast",
+        "flash-message"
+      ]
+    },
+    {
+      "role": "toolbar",
+      "reach": "1",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Toolbar",
+      "description": "A horizontal row of action controls contextually relevant to selected content or the current view.",
+      "aka": [
+        "app-bar",
+        "command-bar",
+        "action-bar",
+        "formatting-bar"
+      ]
+    },
+    {
+      "role": "tooltip",
+      "reach": "full",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Tooltip",
+      "description": "Small label that appears on hover or long-press to explain a control or provide context.",
+      "aka": [
+        "hint",
+        "info-tip",
+        "hover-label"
+      ]
+    },
+    {
+      "role": "top-navigation-bar",
+      "reach": "1",
+      "platforms": [
+        "web",
+        "ios",
+        "android"
+      ],
+      "title": "Top Navigation Bar",
+      "description": "Persistent bar at the top of a screen showing the title and primary actions.",
+      "aka": [
+        "nav-bar",
+        "app-bar",
+        "header",
+        "header-bar"
+      ]
+    },
+    {
+      "role": "tree",
+      "reach": "2",
+      "platforms": [
+        "web"
+      ],
+      "title": "Tree",
+      "description": "Hierarchical list of expandable and collapsible nodes representing nested content.",
+      "aka": [
+        "tree-view",
+        "hierarchy-view",
+        "folder-tree"
+      ]
+    }
+  ]
+}

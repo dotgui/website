@@ -19,6 +19,11 @@
                 :class="{ active: activeSlug === item.slug }"
               >{{ displayName(item.navLabel || item.name) }}</NuxtLink>
             </div>
+            <div class="nav-group">
+              <p class="nav-group-label">Semantics</p>
+              <NuxtLink to="/spec/roles" class="nav-link" :class="{ active: route.path === '/spec/roles' }">Roles</NuxtLink>
+              <NuxtLink to="/spec/quality" class="nav-link" :class="{ active: route.path === '/spec/quality' }">Quality</NuxtLink>
+            </div>
           </nav>
         </div>
       </aside>
@@ -98,7 +103,7 @@ const navGroups = specCategoryOrder.map(category => ({
   font-size: 12.5px;
   color: var(--text-muted);
   text-decoration: none;
-  font-family: var(--mono);
+  font-family: var(--sans);
   transition: color 120ms var(--ease-out);
   white-space: nowrap;
   overflow: hidden;

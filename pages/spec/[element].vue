@@ -120,7 +120,7 @@ useHead({
 .leaf { padding-bottom: 64px; }
 
 .breadcrumb {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 12px;
   color: var(--text-dim);
   padding: 24px 40px 0;
@@ -199,13 +199,14 @@ useHead({
   display: flex;
   flex-direction: column;
   gap: 3px;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  padding: 13px 15px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
+  background: var(--surface-card);
   text-decoration: none;
-  transition: border-color 120ms var(--ease-out);
+  transition: border-color 140ms var(--ease-out), transform 140ms var(--ease-out);
 }
-.related-link:hover { border-color: var(--text-dim); }
+.related-link:hover { border-color: var(--muted-soft); transform: translateY(-2px); }
 
 .related-name {
   font-family: var(--mono);

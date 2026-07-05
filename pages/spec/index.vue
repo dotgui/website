@@ -3,7 +3,7 @@
     <header class="spec-header">
       <p class="spec-header-eyebrow">dotgui v0.2</p>
       <h1 class="spec-header-title">Spec Reference</h1>
-      <p class="spec-header-desc">Every tag, property, and convention in the dotgui format. Pick an item from the sidebar — or a card below — to open its full reference.</p>
+      <p class="spec-header-desc">Every tag, property, and convention in the dotgui format. Pick an item from the sidebar — or a card below — to open its full reference. Beyond the elements, the spec also defines the <NuxtLink to="/spec/roles">role vocabulary</NuxtLink> (53 recognized UI structures that make files self-describing) and the <NuxtLink to="/spec/quality">CCAC quality model</NuxtLink>.</p>
     </header>
 
     <section v-for="group in groups" :key="group.label" class="cat">
@@ -39,13 +39,33 @@ const groups = specCategoryOrder.map(category => ({
   items: indexEntries.filter(e => e.category === category)
 }))
 
-useSeoMeta({
+usePageSeo({
+  path: '/spec',
   title: '.gui Spec Reference — elements, attributes & tokens',
-  description: 'The complete .gui format specification: package structure, the gui root, layout elements (col, row, frame, grid), text, shapes, images, design tokens, fonts, and appearance attributes.',
+  description: 'The complete .gui format specification: package structure, the gui root, layout elements (col, row, frame, grid), text, shapes, images, design tokens, fonts, appearance attributes, the role vocabulary, and the CCAC quality model.',
   ogTitle: '.gui Spec Reference',
-  ogDescription: 'The complete reference for the .gui UI format — elements, attributes, tokens, and fonts.',
-  ogUrl: 'https://dotgui.org/spec',
-  twitterCard: 'summary_large_image'
+  ogDescription: 'The complete reference for the .gui UI format — elements, attributes, tokens, roles, and quality.'
+})
+
+useHead({
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: '.gui Spec Reference',
+        description: 'The complete specification of the .gui file format — every element, attribute, token type, the role vocabulary, and the CCAC quality model.',
+        url: 'https://dotgui.org/spec',
+        isPartOf: { '@type': 'WebSite', name: '.gui (dotgui)', url: 'https://dotgui.org' },
+        hasPart: specEntries.filter(e => !e.hubHidden).map(e => ({
+          '@type': 'TechArticle',
+          name: specDisplayName(e.name),
+          url: `https://dotgui.org/spec/${e.slug}`
+        }))
+      })
+    }
+  ]
 })
 </script>
 
@@ -60,15 +80,17 @@ useSeoMeta({
   text-transform: uppercase;
   color: var(--text-dim);
   margin-bottom: 12px;
-  font-family: var(--mono);
+  font-family: var(--sans);
 }
 
 .spec-header-title {
-  font-size: 30px;
+  font-family: var(--display);
+  font-size: 36px;
   font-weight: 600;
   letter-spacing: -0.03em;
-  color: var(--text);
-  margin-bottom: 10px;
+  line-height: 1.05;
+  color: var(--ink);
+  margin-bottom: 12px;
 }
 
 .spec-header-desc {
@@ -82,6 +104,7 @@ useSeoMeta({
 
 .cat {
   padding: 32px 40px 0;
+  border-top: none;
 }
 
 .cat-label {
@@ -89,11 +112,9 @@ useSeoMeta({
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-dim);
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-weight: 500;
   margin-bottom: 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border);
 }
 
 .cat-grid {
@@ -105,16 +126,17 @@ useSeoMeta({
 .card {
   display: flex;
   flex-direction: column;
-  padding: 16px 18px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  padding: 18px 20px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-md);
   text-decoration: none;
-  background: var(--surface);
-  transition: border-color 140ms var(--ease-out), transform 140ms var(--ease-out);
+  background: var(--surface-card);
+  transition: border-color 140ms var(--ease-out), transform 140ms var(--ease-out), box-shadow 140ms var(--ease-out);
 }
 .card:hover {
-  border-color: var(--text-dim);
-  transform: translateY(-1px);
+  border-color: var(--muted-soft);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -18px rgba(16,16,16,.28);
 }
 
 .card-head {
@@ -132,18 +154,18 @@ useSeoMeta({
 }
 
 .kind-badge {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 9.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 2px 6px;
-  border-radius: 4px;
-  border: 1px solid var(--border);
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
   line-height: 1;
 }
-.kind-tag      { color: #6ea8fe; border-color: #2a3a5a; }
-.kind-property { color: #a8d8a8; border-color: #2c3f2c; }
-.kind-concept  { color: var(--text-muted); }
+.kind-tag      { color: var(--blue);   background: rgba(43,107,228,.1);  border-color: rgba(43,107,228,.22); }
+.kind-property { color: var(--purple); background: rgba(157,91,234,.1);  border-color: rgba(157,91,234,.22); }
+.kind-concept  { color: var(--muted);  background: var(--surface-strong); border-color: var(--hairline); }
 
 .card-desc {
   font-family: var(--sans);
