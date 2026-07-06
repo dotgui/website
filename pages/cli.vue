@@ -59,11 +59,12 @@
       <h2 class="cat-label">For agents</h2>
       <p class="cat-lead">A machine-friendly contract.</p>
       <p class="cat-note">
-        Agents are a first-class audience: <code>--json</code> switches every command to
-        machine-readable output and errors. Exit codes are stable — <code>0</code> success,
-        <code>1</code> lint/validation error, <code>2</code> bad input, <code>3</code>
-        cancelled. All package operations run in an ephemeral shadow directory that is
-        created and deleted within each command, so nothing is left on disk.
+        Agents are a first-class audience: <code>read</code>, <code>write</code>,
+        <code>lint</code>, and <code>info</code> accept <code>--json</code> for
+        machine-readable output and errors. Commands exit <code>0</code> on success and
+        non-zero on failure — a lint or validation error exits <code>1</code> and writes
+        nothing. All package operations run in an ephemeral shadow directory that is created
+        and deleted within each command, so nothing is left on disk.
       </p>
     </section>
 
@@ -91,10 +92,12 @@ const commands = [
   { id: 'lint', cmd: 'gui lint home.gui', nav: 'gui lint', desc: 'Validate; <code>--fix</code> applies deterministic autofix and writes back.' },
   { id: 'render', cmd: 'gui render home.gui -o out.png', nav: 'gui render', desc: 'Rasterize to PNG/WEBP/JPEG using a Chromium already on your machine.' },
   { id: 'assets', cmd: 'gui add · gui rm', nav: 'gui add / rm', desc: 'Add or remove an asset inside the package — no manual unzipping, ever.' },
+  { id: 'setpreview', cmd: 'gui set-preview home.gui shot.webp', nav: 'gui set-preview', desc: 'Replace the embedded <code>preview.webp</code> with your own image.' },
   { id: 'open', cmd: 'gui open home.gui', nav: 'gui open', desc: 'Open the file in the dotgui viewer.' },
-  { id: 'info', cmd: 'gui info home.gui', nav: 'gui info', desc: 'Name, platform, dimensions, asset list.' },
+  { id: 'info', cmd: 'gui info home.gui', nav: 'gui info', desc: 'Name, root canvas, asset list, preview.' },
   { id: 'pack', cmd: 'gui pack · gui unpack', nav: 'gui pack / unpack', desc: 'Folder ⇄ <code>.gui</code> conversion for hand-editing.' },
-  { id: 'setup', cmd: 'gui setup', nav: 'gui setup', desc: 'Install the dotgui skill into detected agents and allowlist <code>gui</code>.' }
+  { id: 'setup', cmd: 'gui setup', nav: 'gui setup', desc: 'Install the dotgui skill into detected agents and allowlist <code>gui</code>.' },
+  { id: 'skill', cmd: 'gui skill where · update', nav: 'gui skill', desc: 'Manage the installed dotgui skill — print its location, or update it.' }
 ]
 
 const navGroups = [

@@ -102,5 +102,5 @@ export function hlTs(code: string): string {
 
 // Pick the highlighter by language.
 export function hlCode(code: string, lang?: string): string {
-  return lang === 'gui' || lang === 'xml' ? hl(code) : hlTs(code)
+  return lang === 'gui' || lang === 'xml' || lang === 'html' ? hl(code) : hlTs(code)
 }
