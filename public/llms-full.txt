@@ -1,0 +1,3254 @@
+# .gui (dotgui) — full documentation
+
+> This file concatenates the canonical .gui docs for AI consumption.
+> Index: https://dotgui.org/llms.txt · Site: https://dotgui.org
+
+
+---
+
+<!-- section: What is .gui -->
+
+# dotgui core
+
+The canonical specification and type definitions for the `.gui` format.
+
+---
+
+## What is `.gui`?
+
+`.gui` is a file format for user interfaces — think of it the way you think of `.jpg` or `.png` for images, or `.svg` for vector graphics. Except instead of pixels or paths, it describes *UI*.
+
+Like `.svg`, a `.gui` file is human-readable XML you can open in any text editor. Like `.svg`, it is portable — it doesn't belong to any one tool. Unlike `.svg`, it is built specifically for UI: layouts, components, tokens, screens. Not shapes.
+
+A `.gui` file is a **package** (a zip with a manifest), not a bare XML file. This is a deliberate decision: real UIs have assets — images, fonts, icons. Encoding those as base64 inside the XML would be a token-killer for AI pipelines and a readability nightmare for humans. The package format keeps assets separate and the markup clean.
+
+---
+
+## The problem it solves
+
+HTML is great for prototyping UI. The tooling is everywhere, the rendering is instant, and every AI model can write it. But HTML carries enormous friction at the *source* level: you need a package manager, a bundler, a dev server, an understanding of the DOM, a reason to have Node installed. The pressure is on whoever is creating the source.
+
+Design tools like Figma flip this. Authoring is smooth — drag, style, done. But the output is **vendor-locked**. Your designs live inside Figma. You can export images or a static link, but the source of truth is proprietary. When you want to ideate with an AI, move to a different tool, or open it in a renderer, you are translating through lossy formats every time. The patterns and decisions embedded in your designs don't travel — they stay in the platform as pixels.
+
+`.gui` moves the friction to the **render** side, not the source side.
+
+- Anyone can create a `.gui` file with a text editor and zip utility. No install required.
+- Any renderer — a browser, a design tool, a code generator — can consume it.
+- AI models can read and write it natively, without extra scaffolding.
+
+---
+
+## Inspiration
+
+`.svg` proved that a text-based, open, portable format can become the universal interchange for an entire visual medium. That is the model.
+
+But SVG was designed for graphics, not interfaces. It has no concept of layout, tokens, components, or screens. Building a UI in SVG means fighting the format.
+
+We wanted something that felt more like writing HTML — semantic, composable, readable — but without the div soup, the implicit inheritance, and the browser-specific rendering quirks. Platform-agnostic. Not "a web technology". A format any renderer can implement.
+
+---
+
+## Why now
+
+The ways of working are changing.
+
+Software development has become increasingly open: open-source tools, open models, open pipelines. Design has not kept up. Designers are largely locked into one or two commercial platforms, and the artefacts they produce are not portable in any meaningful sense.
+
+There is another asymmetry worth naming. The web has an enormous body of text-based knowledge — documentation, tutorials, Stack Overflow, open-source code. AI models get better at web development almost automatically because the knowledge is already in a format they can consume.
+
+Design is not like this. Design knowledge lives in images: screenshots on Dribbble, PDFs with annotated mockups, Figma community files, platform guidelines illustrated with pixels. When a new visual trend emerges, or Apple ships a new design language, the patterns exist — but they exist as images, locked inside closed platforms or buried in documentation that is hard to parse programmatically.
+
+`.gui` changes this. A new design pattern is a `.gui` snippet. A new component style is a `.gui` file. iOS 26 shipping a new interaction model means someone can write it down as structured text — and every model, every tool, every developer gets access to it immediately. No image training required. No vision model needed. Text is the design knowledge here.
+
+This is the same reason HTML documentation made web development so learnable. The format being text meant the patterns were inherently shareable. We want that for UI design.
+
+At the same time, AI-assisted design is becoming real. Models can generate UI from a prompt, iterate on a layout, reason about component hierarchies. But they need a format they can work with — one that is text-based, structured, and round-trippable.
+
+`.gui` is the interchange format that makes this loop possible:
+
+- Ideate in any tool (a coding assistant, a chat interface, a design plugin)
+- Iterate using the latest models
+- Return to your favourite design tool to refine
+- Come back to the AI, push to a renderer, open in another tool — the file stays yours
+
+The goal is not to pick a winner. The goal is to make the medium portable.
+
+---
+
+## What we are not trying to be
+
+We are not building another Figma. We are not building another design tool. We are not trying to replace the tools people love.
+
+We are building the format that lets those tools talk to each other — and to AI — without losing fidelity. An enhancement layer, not a replacement.
+
+---
+
+## The ecosystem
+
+| Tool | Repo | What it does |
+|---|---|---|
+| **dotgui-core** | this folder | Format spec, principles, RFCs, roles — the authority |
+| **@dotgui/kit** | `kit/` | The implementation: parser, **validator**, types, renderer, scorer |
+| **dotgui-figma** | `dotgui/figma` | Figma plugin — exports screens as `.gui` |
+| **gui-optimizer** | `dotgui/optimizer` | Cleans and optimizes raw `.gui` output |
+| **dotgui-landing** | `dotgui/web` | Website |
+
+The goal is to grow this — more entry points, more design software integrations, more renderers, more AI-native tooling. A small, well-specified format with many readers and many writers.
+
+---
+
+## What's in this repo
+
+| Path | Purpose |
+|---|---|
+| [`PRINCIPLES.md`](PRINCIPLES.md) | The constitution — durable design tenets every RFC must satisfy |
+| [`GOVERNANCE.md`](GOVERNANCE.md) | How an accepted RFC becomes the spec and propagates to the docs, kit, and website |
+| [`spec/DOTGUI.md`](spec/DOTGUI.md) | Full format specification — every tag, attribute, and rule (prose, hand-authored) |
+| [`spec/REFERENCE.md`](spec/REFERENCE.md) | Generated element/attribute reference — always in sync with the types (`bun run gen:docs`) |
+| [`rfcs/`](rfcs/) | Every design decision, debated and recorded |
+| [`roles/`](roles/) | The `role=` controlled vocabulary — one file per recognized UI role |
+| [`spec/QUALITY.md`](spec/QUALITY.md) | The CCAC quality model — the authority the scorer implements |
+| [`examples/`](examples/) | Reference `.gui` files that conform to the spec |
+
+The **types and validator** are not here — they are the implementation, and live in
+[`@dotgui/kit`](../kit/src/schema/) (`kit/src/schema/types.ts`, `kit/src/schema/validate.ts`),
+the single package that also owns the parser, renderer, and scorer. This folder is the
+**spec/authority**; the kit is the **implementation**, so the two cannot drift.
+
+---
+
+## How RFCs work
+
+Every non-trivial decision about the format lives in [`rfcs/`](rfcs/) as a numbered document. RFCs cover the rationale, the alternatives considered, and the final decision. If you want to know *why* the format works the way it does — why it is XML and not JSON, why the package format, why layout works the way it does — the RFCs are where to look.
+
+The spec in [`spec/DOTGUI.md`](spec/DOTGUI.md) is the normative reference. RFCs are the reasoning behind it. And [`PRINCIPLES.md`](PRINCIPLES.md) is the constitution every RFC is judged against — a proposal cannot contradict a principle without explicitly amending it.
+
+---
+
+## Quick look
+
+```xml
+<gui version="0.2" name="Profile">
+  <tokens>
+    <color name="primary" value="#007AFF" />
+    <number name="radius-card" value="12" />
+  </tokens>
+  <col fill="#F2F2F7" gap="16" p="24">
+    <row gap="12" fill="#FFFFFF" radius="$radius-card" p="16">
+      <img src="$avatar" w="48" h="48" radius="24" fit="cover" />
+      <col gap="4">
+        <text value="Jane Smith" font-family="Inter" font-size="17" font-weight="600" color="#1C1C1E" />
+        <text value="@janesmith" font-family="Inter" font-size="14" font-weight="400" color="#6E6E73" />
+      </col>
+    </row>
+  </col>
+</gui>
+```
+
+---
+
+## Format version
+
+Every `.gui` file declares which version of the spec it targets:
+
+```xml
+<gui version="0.2" name="Checkout">
+  ...
+</gui>
+```
+
+`version="0.2"` is the current working version. v1.0 is the planned first public stable release.
+
+| Version | Status | Notes |
+|---|---|---|
+| `0.1` | Stable | Initial format design. XML over JSON, package format, token system, layout sugar tags, component/instance system. |
+| `0.2` | Current (in progress) | Layout API overhaul: unified sizing, 9-point align, gap/padding model, absolute children, complete paint and stroke model, text fidelity, effects, vector shapes, assets, grid system, component prop types. |
+| `1.0` | Planned | First public stable release. Full Figma layer coverage. Semver applies from this point. |
+| `2.0` | Future | Scroll, overlays, semantic roles, interactions. |
+
+---
+
+## Using the validator
+
+The validator ships in [`@dotgui/kit`](../kit), not this folder:
+
+```typescript
+import { validate } from '@dotgui/kit/validate'
+
+const result = validate(guiString)
+
+if (!result.valid) {
+  console.error(result.errors)
+}
+```
+
+
+---
+
+<!-- section: The .gui format specification -->
+
+# dotgui
+
+**UI as text.**
+
+dotgui is an open format for describing user interfaces as plain, portable markup. Export any Figma screen to a `.gui` file. Render it in a browser. Feed it to an AI agent. Build with it programmatically.
+
+> This document is the **prose specification** — the format's intent, rationale, and semantics. For the exhaustive, always-in-sync **element & attribute reference** (generated from the canonical types), see [REFERENCE.md](REFERENCE.md).
+
+No proprietary decoder. No binary blob. No context lost in translation.
+
+---
+
+## Why it exists
+
+Design tools store UI as proprietary formats — binary APIs, closed schemas, data you can only access through vendor SDKs. That works fine for designers. It breaks down the moment you want code or AI to reason about a screen.
+
+Screenshots are imprecise. SVG exports are layout-blind. JSON from the Figma API is verbose, deeply nested, and saturated with authoring noise that has nothing to do with how the screen actually looks.
+
+**dotgui exists because there should be one format that works equally well for a human reading it, a renderer drawing it, and an AI agent reasoning about it.**
+
+That format is text. Structured, readable, self-contained text.
+
+---
+
+## Ethos
+
+### Text is the interface
+
+A `.gui` file is plain markup — XML-inspired, human-readable, purpose-built for UI. You can open it in any editor, diff it in git, pipe it through a shell script, paste it into a prompt. No tooling required to read it. The format is the documentation.
+
+### One package, complete picture
+
+A `.gui` file is a ZIP package. Structure, styles, design tokens, font declarations, binary assets (images, vector artwork), and a preview thumbnail all live in one place. You hand someone a `.gui` file and they have everything — including a visual preview before they open anything.
+
+### Fidelity to source
+
+The format maps 1-1 to Figma's layer model. Auto-layout, fills, gradients, effects, constraints, mixed-style text, image crops, blend modes — everything is preserved exactly. Nothing is approximated, summarized, or dropped because it was inconvenient to encode. If it's on screen, it's in the file.
+
+### Readable by machines and humans
+
+Attributes are named for what they mean, not what the internal data model calls them. `font-weight="700"` not `fontWeight: [700, 700]`. `direction="horizontal"` not `layoutMode: "HORIZONTAL"`. A file that reads naturally is also a file an LLM can reason about without a translation layer.
+
+### No AI in the format pipeline
+
+The Figma plugin that produces `.gui` is deterministic and rule-based. The optimizer that cleans it up is deterministic and rule-based. Neither invents meaning, infers intent, or guesses at what the designer meant. The format carries what the design contains — nothing more.
+
+### Visual impact is zero
+
+The optimizer is explicitly forbidden from making changes that alter visual output. Every transformation either provably preserves the render or is skipped and logged. Structural cleanup is not an excuse to silently change what the user sees.
+
+### Platform-agnostic
+
+`.gui` makes no assumptions about the target platform. It describes visual structure and properties — not React components, not CSS classes, not SwiftUI views. What you build from it is your decision.
+
+---
+
+## The Pipeline
+
+```
+Figma Design
+     ↓
+dotgui-figma (Figma plugin)
+     ↓
+raw.gui  (package: design.guix + preview.webp + assets/)
+     ↓
+gui-optimizer
+     ↓
+optimized.gui
+     ↓
+dotgui-render   /   AI Agent   /   Code Generator
+```
+
+Each stage has a single, well-defined responsibility. The extractor doesn't optimize. The optimizer doesn't render. The renderer doesn't modify the document. They compose cleanly because they stay in their lane.
+
+---
+
+## The Format
+
+### The .gui package
+
+`.gui` is the format. Always. To the designer, the tool, the renderer, and the AI — the file is `.gui`.
+
+Internally, a `.gui` file is a ZIP package. The markup lives inside as `design.guix` — but that is an implementation detail, never surfaced to the outside. A program that needs to distinguish a package from a raw markup string uses magic bytes: ZIP starts with `PK`, markup starts with `<`.
+
+### Package Structure
+
+```
+checkout.gui  (ZIP)
+├── design.guix       ← the UI markup
+├── preview.webp      ← thumbnail for verification and previewing
+└── assets/
+    ├── img-1.webp
+    └── svg-1.svg
+```
+
+The `preview.webp` is not decoration — it is the face of the file. Before any tool opens or parses the markup, the preview can be shown. It is the visual verification that the export captured what the designer intended.
+
+### design.guix structure
+
+The root element is `<gui>`. Everything else is a child.
+
+```xml
+<gui version="0.2" name="Checkout">
+  <tokens>
+    <color name="primary" value="#007AFF" />
+    <number name="space-md" value="16" />
+  </tokens>
+  <fonts>
+    <font family="Inter" source="google" weights="400 600 700" styles="normal" />
+  </fonts>
+  <col w="390" fill="#F2F2F7" gap="16" p="24">
+    <text value="Checkout" font-family="Inter" font-size="28" font-weight="700" fill="#1C1C1E" />
+    ...
+  </col>
+</gui>
+```
+
+### Root Element
+
+`<gui>` is a document envelope — never rendered. Direct children are metadata blocks or exactly one root layout node. Metadata always precedes the layout root.
+
+| Attr | Description |
+|---|---|
+| `version` | Spec version (`0.2`) |
+| `name` | Screen or layer name |
+
+### Root Canvas
+
+The first layout tag under `<gui>` defines the canvas. Two patterns:
+
+| Root | When | `h` |
+|---|---|---|
+| `<col w="390">` | Content-driven screen, AI-authored | absent — hugs children |
+| `<frame w="390" h="844">` | Fixed artboard, Figma export | required |
+
+`<frame>` children are absolutely positioned. `<col>` children flow vertically. Default to `<col>` — it cannot clip content.
+
+### Tokens
+
+Design system primitives. Referenced anywhere in the tree with `$name`.
+
+```xml
+<tokens>
+  <color name="primary" value="#007AFF" />
+  <number name="radius-card" value="12" />
+  <string name="font-base" value="Inter" />
+</tokens>
+```
+
+```xml
+<rect fill="$primary" radius="$radius-card" />
+```
+
+### Token Modes
+
+A token may hold more than one value — one per **mode**. Light/dark is the
+common case; brand and density are others. The mechanism is generic: a *mode* is
+any dimension along which a design's values change. (RFC-0037.)
+
+**Scope:** modes apply to the scalar token types only — `color`, `number`,
+`string`. They swap *values*; they never restructure the tree.
+
+#### 1. Declare the axes
+
+A mode **axis** is document-level metadata, sibling to `<tokens>` / `<fonts>`,
+never rendered. The axis is named: `name` is its identity, `values` enumerates
+its modes, `default` picks the one used when none is active.
+
+One axis uses the bare, self-closing `<mode>`:
+
+```xml
+<mode name="theme" values="light dark" default="light" />
+```
+
+Two or more axes wrap each `<mode>` in a `<modes>` container:
+
+```xml
+<modes>
+  <mode name="theme"   values="light dark"          default="light" />
+  <mode name="density" values="comfortable compact" default="comfortable" />
+</modes>
+```
+
+| Attr | Description |
+|---|---|
+| `name` | Axis identity, author-chosen (`theme`, `brand`, `density`, …) |
+| `values` | Space-separated list of the axis's mode values |
+| `default` | Value used when no mode is active; must be one of `values` (falls back to the first value if omitted) |
+
+#### 2. Give a token per-mode values
+
+A token varies by mode with `{axis}-{value}` attributes. A token with a plain
+`value` (and no axis-prefixed attributes) is **constant across all modes** — the
+single-value form is unchanged.
+
+```xml
+<tokens>
+  <color  name="bg"          theme-light="#FFFFFF" theme-dark="#000000" />
+  <color  name="primary"     theme-light="#007AFF" theme-dark="#0A84FF" />
+  <string name="cta"         theme-light="Get started" theme-dark="Start now" />
+  <number name="radius-card" value="12" />                  <!-- constant -->
+</tokens>
+```
+
+A token that omits one of an axis's values falls back to that axis's `default`
+at resolution time.
+
+#### 3. Apply a mode — root or any layer
+
+A mode is made active with a `mode-{axis}` attribute on the root node or any
+layout node. It applies to that node and everything beneath it, until a
+descendant overrides it (nearest ancestor wins — exactly Figma's per-frame mode).
+Axes are independent attributes and compose.
+
+```xml
+<col mode-theme="dark" mode-density="compact">   <!-- dark + compact subtree -->
+  <text fill="$primary" value="…" />
+  <col mode-theme="light">                       <!-- override: this card is light -->
+    <text fill="$primary" value="…" />
+  </col>
+</col>
+```
+
+**The file declares the mode; the renderer resolves the value.** The tree stores
+`$token` references plus which mode is active where — never a resolved color. The
+resolution cascade for an axis at a node, in order:
+
+1. the nearest ancestor-or-self `mode-{axis}` attribute, else
+2. the active mode supplied by the consumer at render time (optional), else
+3. that axis's `default`, else
+4. the token's constant value.
+
+Because of step 2, a file that pins no mode is fully consumer-controllable — a
+renderer or playground can flip it to dark at render time. A subtree that pins
+`mode-{axis}` keeps its mode regardless (a deliberate design choice, like a light
+hero on a dark page). Two sibling subtrees with different pins render both
+appearances side by side in one pass.
+
+**To make a value themeable, it must be a token.** Per-mode values live only on
+token definitions in `<tokens>`; an inline literal is static across modes — the
+same rule as Figma, where only variable-bound properties change between modes.
+
+### Styles
+
+Named text styles from the design system. Each `<text-style>` captures a full typography definition. Text nodes reference a style by name — individual font attrs are omitted when a style is applied.
+
+```xml
+<styles>
+  <text-style name="Heading/H1" font-family="Inter" font-size="32" font-weight="700" line-height="40" />
+  <text-style name="Body/Regular" font-family="Inter" font-size="16" font-weight="400" line-height="24" />
+</styles>
+```
+
+```xml
+<text text-style="Heading/H1" value="Welcome" x="24" y="80" fill="#1C1C1E" />
+```
+
+Color and layout attrs are always inlined — they are not part of the text style definition. Only styles used in the exported tree are emitted.
+
+### Fonts
+
+Font declarations for the renderer. The renderer uses these to load Google Fonts or fall back gracefully.
+
+```xml
+<fonts>
+  <font family="Inter" source="google" category="sans-serif"
+        weights="400 600 700" styles="normal italic" />
+  <font family="SF Pro" source="system" weights="400 600" styles="normal" />
+</fonts>
+```
+
+`source` is one of `google`, `system`, or `unresolved`. Text nodes still carry their own `font-family` and `font-weight` — the fonts block makes those families resolvable.
+
+### Assets
+
+Images and vector artwork are embedded in the package under `assets/` and referenced inline — no declaration block, no `$id` indirection.
+
+```xml
+<!-- embedded raster — stored in assets/ inside the package -->
+<img src="assets/hero.webp" w="320" h="200" fit="cover" />
+
+<!-- embedded vector -->
+<img src="assets/logo.svg" w="120" h="32" />
+
+<!-- external URL — fallback only when embedding is not possible -->
+<img src="https://example.com/photo.jpg" w="320" h="200" fit="cover" />
+```
+
+All raster images are converted to WebP by the plugin (0.85 quality). The renderer loads `assets/...` paths from the package and `https://` URLs from the network. If a URL reference fails to load, the renderer shows an `asset not loaded` error state — no silent failure.
+
+### Components & Instances
+
+Reusable UI building blocks. A `<components>` block at the top of the document holds all component definitions. Each component declares its overridable surface via a `<props>` block. Instances reference a component by id and pass prop values as flat attributes.
+
+#### Structure
+
+```xml
+<components>
+  <component name="Button" id="comp-button">
+    <props>
+      <prop name="label" type="string" target="label" />
+      <prop name="show-icon" type="boolean" target="icon" />
+      <prop name="bg" type="color" target="surface" />
+    </props>
+    <row id="surface" gap="8" p="12 24" fill="$primary" radius="8">
+      <svg id="icon" src="$svg-arrow" w="16" h="16" />
+      <text id="label" value="Button" font-size="16" font-weight="600" fill="#fff" />
+    </row>
+  </component>
+</components>
+
+<instance component="comp-button" x="24" y="48"
+  label="Get Started"
+  show-icon="false"
+  bg="#FF3B30" />
+```
+
+---
+
+#### Prop types
+
+Every `<prop>` has a data type that determines how the value is applied to the target layer when an instance passes it.
+
+| type | Applied as | `bind` required |
+|---|---|---|
+| `string` | `value` attr on the target `<text>` layer | no |
+| `boolean` | Removes target layer from render when `"false"` | no |
+| `color` | `fill` attr on the target layer | no |
+| `image` | `src` attr on the target `<img>` layer | no |
+| `component` | `component` attr on a target `<instance>` — swaps the nested instance | no |
+| `number` | The layout or visual property named by `bind` | **yes** |
+
+`bind` accepts: `radius`, `opacity`, `gap`, `font-size`, `stroke-width`, `font-weight`, `letter-spacing`, `line-height`, `padding`, `pt`, `pr`, `pb`, `pl`.
+
+---
+
+#### `target` — binding a prop to layers
+
+`target` is the `id` of the layer this prop applies to.
+
+**Optional for `string`** when the component body has exactly one `<text>` layer:
+
+```xml
+<!-- implicit — only one text layer -->
+<prop name="label" type="string" />
+
+<!-- explicit — multiple text layers require disambiguation -->
+<prop name="title"    type="string" target="card-title" />
+<prop name="subtitle" type="string" target="card-subtitle" />
+```
+
+**Space-separated list** to apply one value to multiple layers at once:
+
+```xml
+<!-- accent color drives icon, label, and indicator together -->
+<prop name="accent" type="color" target="icon label indicator" />
+```
+
+Works for all prop types. A `boolean` prop can show/hide multiple layers; a `number` with `bind="opacity"` can fade multiple layers together.
+
+---
+
+#### 1. String — text content
+
+```xml
+<props>
+  <prop name="title"    type="string" target="card-title" />
+  <prop name="subtitle" type="string" target="card-subtitle" />
+</props>
+
+<instance component="comp-card" title="Hello" subtitle="World" />
+```
+
+---
+
+#### 2. Boolean — show / hide a layer
+
+The component body defines the default state. Passing `"false"` removes the layer from render.
+
+```xml
+<props>
+  <prop name="show-icon" type="boolean" target="icon" />
+</props>
+
+<!-- icon visible (default) -->
+<instance component="comp-button" label="Continue" />
+
+<!-- icon hidden -->
+<instance component="comp-button" label="Skip" show-icon="false" />
+```
+
+---
+
+#### 3. Color — fill override
+
+```xml
+<props>
+  <prop name="bg"    type="color" target="surface" />
+  <prop name="color" type="color" target="label" />
+</props>
+
+<instance component="comp-badge" label="Live"  bg="#FF3B30"  color="#fff" />
+<instance component="comp-badge" label="Draft" bg="$gray-200" color="$gray-800" />
+```
+
+Token references (`$name`) work the same as hex values.
+
+---
+
+#### 4. Image — asset swap
+
+```xml
+<props>
+  <prop name="photo" type="image" target="photo" />
+</props>
+
+<instance component="comp-avatar" photo="$img-user-1" />
+<instance component="comp-avatar" photo="$img-user-2" />
+```
+
+---
+
+#### 5. Component — nested instance swap
+
+Replaces a nested `<instance>` inside the component body with a different component. The value is the replacement component's id.
+
+```xml
+<props>
+  <prop name="leading-icon" type="component" target="leading-icon" />
+</props>
+
+<instance component="comp-list-item" label="Notifications" leading-icon="comp-icon-bell" />
+<instance component="comp-list-item" label="Settings"      leading-icon="comp-icon-gear" />
+```
+
+---
+
+#### 6. Number — numeric property override
+
+Overrides any numeric layout or visual property. The `bind` attr names the property.
+
+```xml
+<props>
+  <prop name="radius"  type="number" target="surface" bind="radius" />
+  <prop name="opacity" type="number" target="surface" bind="opacity" />
+  <prop name="gap"     type="number" target="body"    bind="gap" />
+</props>
+
+<instance component="comp-card" title="Pill" radius="99" />
+<instance component="comp-card" title="Faded" opacity="0.4" />
+```
+
+---
+
+#### Component sets (variants)
+
+A `<component-set>` groups related variants. Each `<variant>` has key-value attrs identifying it and its own `<props>` block. Instances always reference a specific variant id — not the component-set id.
+
+```xml
+<components>
+  <component-set name="Button" id="compset-button">
+    <variant id="comp-button-primary" style="primary">
+      <props>
+        <prop name="label"     type="string"  target="label" />
+        <prop name="show-icon" type="boolean" target="icon" />
+        <prop name="bg"        type="color"   target="surface" />
+      </props>
+      <row id="surface" gap="8" p="12 24" fill="$primary" radius="8">
+        <svg id="icon" src="$svg-arrow" w="16" h="16" />
+        <text id="label" value="Button" font-size="16" font-weight="600" fill="#fff" />
+      </row>
+    </variant>
+    <variant id="comp-button-secondary" style="secondary">
+      <props>
+        <prop name="label" type="string" target="label" />
+      </props>
+      <row gap="8" p="12 24" border="1.5 $primary" radius="8">
+        <text id="label" value="Button" font-size="16" font-weight="600" fill="$primary" />
+      </row>
+    </variant>
+  </component-set>
+</components>
+
+<instance component="comp-button-primary"   label="Continue" />
+<instance component="comp-button-secondary" label="Cancel" />
+<instance component="comp-button-primary"   label="Buy Now" show-icon="false" bg="#FF3B30" />
+```
+
+---
+
+#### Detached instances
+
+When an instance overrides more than 75% of the component body's layers (minimum 4 layers), it is considered structurally diverged. It is emitted as an inline node tree rather than an `<instance>` reference. A `component` attr is preserved as origin metadata — it is informational only and carries no rendering semantics.
+
+```xml
+<!-- detached — too many overrides, emitted as inline tree -->
+<col component="comp-card" gap="16" p="16" fill="#FF3B30" radius="12">
+  <text value="Custom title" font-size="18" font-weight="700" fill="#fff" />
+  <img src="$img-custom" w="fill" h="120" fit="cover" radius="8" />
+</col>
+```
+
+---
+
+#### Id generation
+
+Every node inside a component body gets `id` = its layer name sanitized to lowercase kebab-case (`"Button Label"` → `id="button-label"`). Duplicates are suffixed: first `"Icon"` → `id="icon"`, second → `id="icon-2"`, and so on.
+
+`target` on a `<prop>` is a direct id reference — find the layer with that id in the component body and apply the prop value to it.
+
+### Layout Tags
+
+#### `<frame>` — Fixed container
+
+Children are absolutely positioned. Maps to a Figma frame without auto-layout.
+
+```xml
+<frame w="390" h="844" fill="#FFFFFF" radius="16" clip>
+  <text x="24" y="80" value="Hello" ... />
+</frame>
+```
+
+#### `<stack>` — Auto-layout container
+
+Children are flow-positioned. Maps to a Figma auto-layout frame.
+
+```xml
+<stack direction="vertical" gap="16" p="24 16"
+       align="top-center"
+       fill="#FFFFFF" radius="12">
+  ...
+</stack>
+```
+
+`direction` is `horizontal`, `vertical`, or `grid`. The `grid` direction is legacy — use the `<grid>` tag (RFC 032) for new work. Legacy grid adds `columns` (uniform column count), `gap`, and `align`.
+
+**Sizing (`w` / `h`)**
+
+On stack nodes, `w` and `h` are optional. Absent = hug content. Use `"fill"` to fill the parent, or a number for a fixed pixel size.
+
+On `frame`, `shape`, `img`, and `svg` nodes, explicit `w` and `h` are normally required. **Exception:** a `frame` (or any node) that is a direct child of a `<grid>` with a `gc`/`gr` range does not need `w`/`h` — the range drives fill sizing instead.
+
+**Padding (`p` / `pt` `pr` `pb` `pl`)**
+
+`p` accepts CSS shorthand notation: `p="24"` sets all four sides; `p="24 16"` sets top/bottom + left/right; `p="8 16 12 16"` sets each side individually. Per-side attrs (`pt`, `pr`, `pb`, `pl`) override the shorthand when mixed.
+
+**Gap**
+
+`gap="16"` — fixed item spacing. `gap="auto"` (or bare `gap`) — space-between. Two-value `gap="16 10"` sets item gap + row gap (for `wrap` or `grid`).
+
+**Align (9-point)**
+
+`align` is a single 9-point position: `top-left`, `top-center`, `top-right`, `middle-left`, `middle-center`, `middle-right`, `bottom-left`, `bottom-center`, `bottom-right`. Also `stretch` and `baseline`. Replaces the old `align` + `justify` pair.
+
+| Attr | Values | Default |
+|---|---|---|
+| `direction` | `horizontal`, `vertical`, `grid` | — |
+| `gap` | `auto`, number, `"N N"` (item + row) | — |
+| `align` | 9-point value (see above), `stretch`, `baseline` | `top-left` |
+| `p` | CSS shorthand | — |
+| `pt` `pr` `pb` `pl` | px | — |
+| `wrap` | boolean presence | — |
+| `columns` | number (legacy grid only — use `<grid cols="N">` instead) | — |
+
+#### `<grid>` — Grid container (RFC 032)
+
+The `<grid>` tag supports three modes determined by which attributes are present.
+
+| Attrs present | Mode |
+|---|---|
+| `cols` and/or `rows` | Track grid — explicit track sizes, children placed by `gc`/`gr` |
+| `unit` | Unit grid — fixed coordinate canvas, children placed by `gc`/`gr` |
+| `cols`/`rows` + `unit` | ❌ Validation error — pick one |
+| neither (legacy) | Auto-flow — `columns="N"` produces `repeat(N, 1fr)` |
+
+**Sizing contract — universal across all modes**
+
+`w` and `h` are always pixels. The fill-vs-hug decision on a grid child comes from whether `gc`/`gr` carries a range:
+
+| `gc` / `gr` | `w` / `h` | Sizing |
+|---|---|---|
+| `"2/5"` (range) | absent | fills the spanned columns/rows (`100%`) |
+| `"2/5"` (range) | `"80"` | 80 px fixed, anchored at the range start |
+| `"2"` (start only) | absent | hugs content |
+| `"2"` (start only) | `"80"` | 80 px fixed |
+
+##### Mode 1 — Track Grid
+
+Parent declares track sizes. Children declare which track they occupy via `gc`/`gr`.
+
+**`<grid>` attrs — track mode**
+
+| Attr | Example | Meaning |
+|---|---|---|
+| `cols` | `"3"` | 3 equal columns → `repeat(3, 1fr)` |
+| | `"240 1fr"` | Mixed tracks — bare integer = px, explicit unit for `fr`/`auto`/`%` |
+| | `"fill 200"` | Responsive — `repeat(auto-fill, minmax(200px, 1fr))` |
+| `rows` | same rules | Row track sizes |
+| `gap` | `"16"` / `"16 8"` | Column gap / row gap in px |
+| `w`, `h` | existing | `fill` or fixed px |
+
+Track template rules:
+```
+cols="3"        →  repeat(3, 1fr)
+cols="240 1fr"  →  240px 1fr
+cols="1fr 2fr"  →  1fr 2fr
+cols="auto 1fr" →  auto 1fr
+cols="fill 200" →  repeat(auto-fill, minmax(200px, 1fr))
+```
+
+**Child placement attrs — track mode**
+
+| Attr | Example | Meaning |
+|---|---|---|
+| `gc` | `"1"` | Sit in column 1, hug content width |
+| | `"2/5"` | Columns 2 through 5 inclusive — fills if no `w` |
+| | `"1/-1"` | First to last column — spans all columns |
+| `gr` | same rules | Row position |
+| `col-span` | `"2"` / `"all"` | Span N columns from current position |
+| `row-span` | `"2"` | Span N rows |
+
+Range end is **inclusive** — `gc="2/5"` occupies columns 2, 3, 4, and 5 (CSS `grid-column: 2 / 6`). The `-1` sentinel is passed through as-is for full-span shorthand.
+
+Children without `gc`/`gr` auto-flow into the next available cell.
+
+```xml
+<grid cols="200 1fr" rows="56 1fr" gap="0" w="fill" h="fill">
+
+  <!-- gc range 1/-1 fills all columns; h="fill" added explicitly since gr has no range -->
+  <row gc="1/-1" gr="1" h="fill" fill="#fff" p="0 20" align="middle-left" gap>
+    <text value="Dashboard" font-size="17" font-weight="600" />
+    <img w="28" h="28" radius="14" src="$avatar" />
+  </row>
+
+  <!-- gc="1" gr="2" — no range on either, no w/h → hugs; use fill on children instead -->
+  <col gc="1" gr="2" fill="#f7f7f7" p="12" gap="2">
+    <row w="fill" p="10 12" radius="8" fill="#007aff" align="middle-left">
+      <text value="Home" fill="#fff" font-size="14" font-weight="500" />
+    </row>
+  </col>
+
+  <col gc="2" gr="2" p="32" gap="16">
+    <text value="Overview" font-size="22" font-weight="700" />
+  </col>
+
+</grid>
+```
+
+##### Mode 2 — Unit Grid
+
+For floating, non-structured interfaces — overlapping cards, canvas-style components, dashboard widgets. Elements sit at intentional positions in a snapped coordinate space. Replaces `<frame>` + `abs` at component level.
+
+**`<grid>` attrs — unit mode**
+
+| Attr | Example | Meaning |
+|---|---|---|
+| `unit` | `"8"` | Each grid square = 8 px. Presence activates unit mode |
+| `w` | `"320"` | Total canvas width in px |
+| `h` | `"400"` | Total canvas height in px |
+
+`w ÷ unit` and `h ÷ unit` give the column and row count of the coordinate space.
+
+**Child placement attrs — unit mode**
+
+| Attr | Example | Meaning |
+|---|---|---|
+| `gc` | `"5"` | Start at unit column 5, hug content width |
+| | `"5/20"` | Unit columns 5 through 20 inclusive — fills if no `w` |
+| `gr` | same rules | Unit row position |
+| `w` | `"128"` | 128 px fixed width, positioned at `gc` start |
+| `h` | `"48"` | 48 px fixed height, positioned at `gr` start |
+
+`w` and `h` are always pixels. Use a `gc`/`gr` range for fill sizing, explicit `w`/`h` for fixed pixel sizing.
+
+Children at overlapping coordinates stack in document order — first child is behind, last child is in front.
+
+```xml
+<grid unit="8" w="320" h="400" fill="#fff" radius="16">
+
+  <!-- Cover: fills full width (cols 1–40) and 112px tall (rows 1–14) -->
+  <img gc="1/40" gr="1/14" fit="cover" src="$cover" />
+
+  <!-- Avatar: 128×128px fixed, positioned at col 13 row 9 -->
+  <img gc="13" gr="9" w="128" h="128" fit="cover" radius="64" border="4 #fff" src="$avatar" />
+
+  <!-- Online dot: 32×32px fixed -->
+  <col gc="26" gr="21" w="32" h="32" fill="#34c759" radius="4" border="2 #fff" />
+
+  <!-- Name + handle: fills cols 2–39, rows 27–32 -->
+  <col gc="2/39" gr="27/32" align="middle-center" gap="2">
+    <text value="Sarah Johnson" font-size="18" font-weight="700" fill="#111" />
+    <text value="@sarahj" font-size="13" fill="#888" />
+  </col>
+
+  <!-- Stats: fills cols 2–39, rows 34–41 -->
+  <row gc="2/39" gr="34/41" gap align="middle-center">
+    <col w="fill" align="middle-center" gap="2">
+      <text value="248" font-size="17" font-weight="700" />
+      <text value="Posts" font-size="12" fill="#888" />
+    </col>
+    <col w="fill" align="middle-center" gap="2">
+      <text value="12.4k" font-size="17" font-weight="700" />
+      <text value="Followers" font-size="12" fill="#888" />
+    </col>
+  </row>
+
+  <!-- Follow: 128×48px fixed -->
+  <row gc="3" gr="44" w="128" h="48" fill="#007aff" radius="8" align="middle-center">
+    <text value="Follow" fill="#fff" font-size="14" font-weight="600" />
+  </row>
+
+  <!-- Message: 128×48px fixed -->
+  <row gc="22" gr="44" w="128" h="48" fill="#f0f0f0" radius="8" align="middle-center">
+    <text value="Message" font-size="14" font-weight="600" fill="#111" />
+  </row>
+
+</grid>
+```
+
+##### `gc` / `gr` naming
+
+`gc` = grid-column, `gr` = grid-row. Named to avoid collision with the `<col>` and `<row>` tag names:
+
+```xml
+<col gc="1" gr="2">      ← unambiguous
+<row gc="1/-1" gr="1">   ← unambiguous
+```
+
+#### `<group>` — Logical grouping
+
+No layout behavior. Children are absolutely positioned relative to the group origin.
+
+```xml
+<group x="0" y="0" w="390" h="200" opacity="0.8">
+  ...
+</group>
+```
+
+When the first child of a Figma group is a mask node, the plugin extracts the mask shape as an SVG asset and hoists it onto the `<group>` tag as `mask-src` / `mask-x` / `mask-y` / `mask-width` / `mask-height`. The mask child is excluded from the rendered children.
+
+```xml
+<group x="0" y="0" w="390" h="200"
+       mask-src="assets/mask-2.svg" mask-x="0" mask-y="0" mask-width="390" mask-height="200">
+  ...
+</group>
+```
+
+| Attr | Notes |
+|---|---|
+| `mask-src` | Asset path (`assets/...`) for the SVG mask shape |
+| `mask-x` / `mask-y` | Position of the mask relative to the group origin |
+| `mask-width` / `mask-height` | Dimensions of the mask |
+
+### Content Tags
+
+#### `<text>` — Text node
+
+Single-style text is self-closing with a `value` attribute. Mixed-style text has `<segment>` children.
+
+```xml
+<!-- Single style -->
+<text value="Welcome back" x="24" y="80" w="200" h="32"
+      font-family="Inter" font-postscript="Inter-Bold" font-size="22" font-weight="700"
+      fill="#1C1C1E" line-height="28" />
+
+<!-- Mixed styles -->
+<text x="24" y="80" w="200">
+  <segment value="Pay " fill="#6E6E73" font-size="16" />
+  <segment value="$42.00" fill="#1C1C1E" font-size="16" font-weight="700" />
+</text>
+
+<!-- Variable font with OpenType features -->
+<text value="Dashboard" font-family="Inter" font-size="28" font-weight="700"
+      font-variation='"wght" 700, "opsz" 28'
+      font-feature='"tnum", "ss01"'
+      fill="#1C1C1E" />
+
+<!-- Decorated text with color and style -->
+<text value="On sale" font-family="Inter" font-size="16"
+      decoration="underline" decoration-color="#FF3B30"
+      decoration-style="wavy" decoration-thickness="2"
+      fill="#1C1C1E" />
+
+<!-- List item -->
+<text value="First item" font-family="Inter" font-size="16"
+      list="disc" list-level="0" fill="#1C1C1E" />
+```
+
+**Text attributes**
+
+| Attr | Values | Notes |
+|---|---|---|
+| `value` | string | Text content. Present on single-style; absent on mixed-style |
+| `font-family` | string | Font family name, e.g. `"Inter"` |
+| `font-postscript` | string | PostScript name, e.g. `"Inter-Bold"` (best-effort) |
+| `font-style-name` | string | Original style name from the font, e.g. `"Bold Italic"` |
+| `font-size` | number | Font size in px |
+| `font-weight` | `100`–`900` | Numeric weight |
+| `font-style` | `"italic"` | Omitted when normal |
+| `font-variation` | string | CSS `font-variation-settings` value, e.g. `'"wght" 600, "wdth" 75'` |
+| `font-feature` | string | CSS `font-feature-settings` value, e.g. `'"tnum", "ss01"'` |
+| `line-height` | number or `"n%"` | px or percent. Omitted when auto |
+| `letter-spacing` | number or `"n%"` | px or percent. Omitted when 0 |
+| `baseline-shift` | number | Baseline offset in px. Positive = up |
+| `paragraph-spacing` | number | Space after each paragraph in px |
+| `paragraph-indent` | number | First-line indent in px |
+| `align` | `"left"`, `"center"`, `"right"`, `"justified"` | Horizontal alignment. Default `left` |
+| `vertical-align` | `"top"`, `"center"`, `"bottom"` | Vertical alignment within fixed-height box |
+| `text-style` | string | Named text style reference (omits individual font attrs) |
+| `fill` | hex, gradient, token | Text color |
+| `fill-style` | string | Named fill style reference |
+| `decoration` | `"underline"`, `"strikethrough"` | Text decoration line |
+| `decoration-color` | hex | Color of the decoration line |
+| `decoration-style` | `"solid"`, `"dashed"`, `"dotted"`, `"wavy"`, `"double"` | Decoration line style |
+| `decoration-thickness` | number | Decoration line thickness in px |
+| `text-case` | `"uppercase"`, `"lowercase"`, `"capitalize"`, `"small-caps"` | Text transform |
+| `leading-trim` | `"cap-height"` | Trims leading to cap height |
+| `text-resize` | `"hug"`, `"hug-height"`, `"fixed"`, `"truncate"` | Sizing mode from the source tool |
+| `truncate` | boolean presence | Clip text with ellipsis when it overflows |
+| `max-lines` | number | Maximum lines before clipping |
+| `overflow` | `"clip"`, `"ellipsis"` | Explicit overflow behavior |
+| `list` | `"disc"`, `"decimal"` | List marker type |
+| `list-level` | number | List nesting depth (0-based) |
+| `list-marker` | string | Custom marker string |
+| `href` | URL | Wraps text in a hyperlink |
+
+All segment-level attrs override text-level attrs for that segment. Segment attrs are a subset: `value`, `font-family`, `font-postscript`, `font-style-name`, `font-size`, `font-weight`, `font-style`, `font-variation`, `font-feature`, `line-height`, `letter-spacing`, `baseline-shift`, `fill`, `decoration`, `decoration-color`, `decoration-style`, `decoration-thickness`, `text-case`, `list`, `list-level`, `href`.
+
+#### `<img>` — Image and vector asset
+
+`<img>` handles both raster and vector assets. The renderer detects format from the file extension at render time — the author only writes `src`, `w`, and `h`.
+
+```xml
+<!-- raster — embedded in package -->
+<img name="Hero Image" src="assets/hero.webp" x="0" y="0" w="390" h="240"
+     fit="cover" radius="12" />
+
+<!-- vector icon — embedded in package -->
+<img src="assets/icon-close.svg" w="24" h="24" />
+
+<!-- external URL — fallback only -->
+<img src="https://example.com/photo.jpg" w="390" h="240" fit="cover" />
+```
+
+`fit` is `cover`, `contain`, `fill`, or `none`. The `name` attr carries the Figma layer name.
+
+### Geometry Tags
+
+#### `<rect>` — Rectangular box
+
+Sugar for a childless `<frame>`. Signals decorative intent — no layout children. `w` and `h` are required.
+
+```xml
+<rect fill="$primary" w="340" h="52" />
+<rect fill="$surface" w="320" h="64" radius="12" border="$line" />
+<rect fill="none" border="2 dashed $focus inside" w="320" h="64" radius="8" />
+```
+
+Supports all visual attributes: `fill`, `border`, `radius`, `opacity`, `blend`, `rotation`, `appearance`. Does not accept layout attributes (`direction`, `gap`, `p`, `align`).
+
+#### `<ellipse>` — Oval or circle
+
+Sugar for `<frame radius="9999">`. Full-radius rendering is the contract — `radius` is not an attribute on `<ellipse>`. Equal dimensions produce a circle.
+
+```xml
+<ellipse fill="#FF3B30" w="8" h="8" />      <!-- circle -->
+<ellipse fill="$blue" w="80" h="40" />      <!-- oval -->
+<ellipse fill="none" border="2 $ink" w="48" h="48" />
+```
+
+Arc and donut shapes (progress rings, pie segments) are SVG assets referenced via `<img>`.
+
+#### `<line>` — Separator
+
+Sugar for a thin frame used as a visual divider. Default: horizontal, `thickness="1"`, `w="fill"`.
+
+```xml
+<line fill="$border" />                        <!-- horizontal, 1px, fill width -->
+<line fill="$border" direction="vertical" />   <!-- vertical, 1px, fill height -->
+<line fill="$gold" thickness="2" />            <!-- custom thickness -->
+```
+
+### Appearance Block
+
+Used when a node has multiple fills, complex borders, or multiple effects. A non-layout child that describes the parent's complete paint and effect stack.
+
+```xml
+<frame w="320" h="180">
+  <appearance>
+    <fill type="image" src="assets/hero.webp" fit="crop" x="12" y="8" w="640" h="360" />
+    <fill type="linear-gradient" value="linear-gradient(180deg, #00000000 0%, #00000099 100%)" blend="multiply" opacity="0.8" />
+    <border color="$line" w="1" align="inside" />
+    <effect type="drop-shadow" x="0" y="8" radius="24" spread="0" color="#00000033" />
+  </appearance>
+  ...
+</frame>
+```
+
+All three stacks — fills, borders, effects — are ordered in document order. Simple single-paint cases use `fill="..."` directly on the element; simple single-border cases use the `border="..."` shorthand. Use `<appearance>` only when multiple layers, border stacks, or paint-level metadata (opacity, blend, transform) are needed.
+
+`fill` types: `color`, `linear-gradient`, `radial-gradient`, `angular-gradient`, `image`.
+
+`fill` attributes:
+
+| Attr | Description | Notes |
+|---|---|---|
+| `type` | `color`, `linear-gradient`, `radial-gradient`, `angular-gradient`, `image` | Required |
+| `value` | Hex color or gradient CSS string | For color and gradient fills |
+| `src` | Asset path (`assets/img.webp`) | For image fills |
+| `fit` | `cover`, `contain`, `crop`, `tile`, `fill`, `none` | Image scaling mode |
+| `opacity` | `0`–`1` | Paint-level opacity; omitted when `1` |
+| `blend` | `multiply`, `screen`, `overlay`, `darken`, `lighten`, ... | Paint-level blend mode; omitted when `normal` |
+| `visible` | `false` | Emitted only for hidden paints that must be preserved |
+| `x` / `y` | number | Crop offset in pixels (when `fit="crop"`) |
+| `w` / `h` | number | Crop image dimensions in pixels (when `fit="crop"`) |
+| `transform` | string | Compact transform matrix for exact gradient/image mapping |
+
+`border` attributes (inside `<appearance>`):
+
+| Attr | Description | Notes |
+|---|---|---|
+| `color` | Solid color or token ref | |
+| `paint` | Gradient value for gradient borders | DOM renderer uses first solid stop as fallback |
+| `w` | Stroke width in px | |
+| `align` | `inside`, `center` (default), `outside` | |
+| `style` | `solid` (default), `dashed`, `dotted` | |
+| `dash` | Explicit dash pattern, e.g. `4 2` | SVG renderers only |
+| `cap` | `butt`, `round`, `square`, `arrow-lines`, `arrow-equilateral` | SVG renderers only |
+| `join` | `miter`, `round`, `bevel` | SVG renderers only |
+| `opacity` | Border-level opacity | |
+| `blend` | Border-level blend mode | |
+| `visible` | `false` | Preserve hidden borders without rendering |
+
+When `<appearance>` contains at least one `<border>`, the `border` shorthand on the parent element is ignored — the appearance stack owns all border rendering.
+
+`effect` types:
+
+| Type | Attrs | Notes |
+|---|---|---|
+| `drop-shadow` | `x y radius spread color blend` | |
+| `inner-shadow` | `x y radius spread color blend` | |
+| `layer-blur` | `radius` | Normal Figma layer blur |
+| `background-blur` | `radius` | Figma background blur |
+| `glass` | `radius saturation` | Figma glass/frosted effect. `saturation` is a percentage (e.g. `180` = 180%). |
+
+### Fill Values
+
+The `fill` attribute accepts:
+
+| Value | Example |
+|---|---|
+| Hex opaque | `#1C1C1E` |
+| Hex with alpha | `#1C1C1ECC` (last byte is alpha) |
+| Linear gradient | `linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%)` |
+| Radial gradient | `radial-gradient(circle at 50% 30%, #FFF 0%, #000 100%)` |
+| Angular gradient | `conic-gradient(from 0deg at 50% 50%, #F00 0deg, #00F 360deg)` |
+| Token | `$primary` |
+
+### Shared Visual Attributes
+
+These apply to all layout, content, and geometry nodes:
+
+| Attr | Values | Notes |
+|---|---|---|
+| `name` | string | Figma layer name |
+| `opacity` | `0`–`1` | Omitted when `1` |
+| `blend` | `multiply`, `screen`, `overlay`, `darken`, `lighten`, `linear-burn`, `linear-dodge`, ... | Omitted when `normal` or `pass-through` |
+| `mask` | boolean presence | Alpha mask for subsequent siblings |
+| `rotation` | degrees | Omitted when `0` |
+| `constraint-h` | `right`, `center`, `scale`, `stretch` | `left` is default, omitted |
+| `constraint-v` | `bottom`, `center`, `scale`, `stretch` | `top` is default, omitted |
+| `w` | number, `"fill"` | Width. On stack/row/col: absent = hug. On frame/rect/ellipse/img/group: required |
+| `h` | number, `"fill"` | Height. On stack/row/col: absent = hug. On frame/rect/ellipse/img/group: required |
+| `abs` | boolean presence | Absolute child inside an auto-layout parent |
+| `min-width` / `max-width` | px | Omitted when unset |
+| `min-height` / `max-height` | px | Omitted when unset |
+| `border` | shorthand string | Outline — `"[width] [color] [style] [align]"`. Defaults: `1 solid center`. Example: `"2 #333 dashed inside"` |
+| `border-color` | color | Longhand — border color only |
+| `border-width` | px | Longhand — border width only |
+| `border-style` | `solid`, `dashed`, `dotted` | Longhand — border style only |
+| `border-align` | `inside`, `center`, `outside` | Longhand — border alignment only |
+| `border-top` | shorthand | Top edge only — `"[width] [color] [style]"`. Always inside-aligned |
+| `border-right` | shorthand | Right edge only |
+| `border-bottom` | shorthand | Bottom edge only |
+| `border-left` | shorthand | Left edge only |
+
+**`w` / `h` sizing rules**
+
+| Node type | Absent means | `"fill"` | number |
+|---|---|---|---|
+| `stack`, `row`, `col` | hug content | fill parent | fixed px |
+| `text` | hug content | fill parent | fixed px |
+| `frame`, `rect`, `ellipse`, `img`, `group` | **required — must provide a value** | fill parent | fixed px |
+| `line` | `w` defaults to `fill`, `h` defaults to `thickness` | — | fixed px |
+
+**Boolean presence convention**
+
+Bare attributes without a value are treated as `true`. `<frame clip>` = `<frame clip="true">`. Applies to: `clip`, `mask`, `wrap`, `abs`, `truncate`, `reverse-z`.
+
+
+---
+
+## The Toolchain
+
+### dotgui-figma
+
+The Figma plugin. Select any visible layer — frame, component, group, shape, text, or vector — and export it as `.gui`. The plugin:
+
+- Traverses the Figma layer tree and maps each node to its `.gui` equivalent
+- Extracts and encodes all image fills as WebP (0.85 quality) via the Canvas API
+- Emits RECTANGLE nodes as `<rect>`, ELLIPSE (no arc) as `<ellipse>`, LINE as `<line>`
+- Exports VECTOR, STAR, POLYGON, BOOLEAN_OPERATION, and arc/donut ELLIPSE nodes as SVG assets stored in `assets/` and referenced via `<img src="assets/...">`
+- Exports complex multi-layer graphic clusters (groups of graphic-only leaves) as SVG assets in `assets/`
+- Resolves Figma Variables to `<tokens>` entries and emits `$token-name` references inline
+- Resolves Figma Styles (text, fill, effect) to `<styles>` entries and emits `text-style`/`fill-style`/`effect-style` refs
+- Handles mask groups: extracts the mask shape as an SVG asset, hoists it to `mask-src` on `<group>`
+- Computes gradient angles and positions from Figma's transform matrices
+- Collects font usage and validates families against the Google Fonts catalog
+- Generates a PNG preview thumbnail
+
+The extractor is deterministic. Given the same Figma layer, it always produces the same output. It does not guess, summarize, or interpret.
+
+### gui-optimizer
+
+A post-processing pipeline that converts raw extractor output into a cleaner, smaller, more semantically rich `.gui` file.
+
+The optimizer is also deterministic, non-AI, and rule-based. It does not invent meaning. Every transformation either provably preserves the visual render or is skipped and logged.
+
+**The one rule above all: visual impact must be zero.**
+
+#### Pass Order
+
+Rules run in eight passes, each operating on the output of the previous:
+
+| Pass | Responsibility | Rules |
+|---|---|---|
+| 1 | Remove invisible and empty nodes | Remove nodes with `visible=false`, `opacity=0`, zero dimensions, or empty text content |
+| 2 | Remove no-op effects | Drop effects below perceptibility thresholds (shadow opacity `< 0.05`, blur `< 0.5px`, border width `< 0.5px`) |
+| 3 | Normalize values | Uniform color format, collapsed corner radius, rounded floating-point coordinates |
+| 4 | Flatten structure | Remove single-child wrapper frames with no visual role; collapse parents and children with identical bounds |
+| 5 | Infer layout | Detect vertical/horizontal stacks from child positions (±2px tolerance); detect grid patterns; extract padding |
+| 6 | Deduplicate | Remove identical image/SVG assets, remap references to the canonical copy |
+| 7 | Final reduction | Re-run flatten pass after layout normalization catches newly eligible nodes |
+| 8 | Attach metadata | Add optimizer version, stats, and timing to the output document |
+
+#### Skip Behavior
+
+When a rule cannot be safely applied — ambiguous z-order, uncertain bounds, a protected node — it skips the node, logs the reason, and moves on. The optimizer always produces a valid output file. A skipped rule never causes a failure.
+
+#### Guard Rules
+
+Certain rules are permanent constraints enforced across all passes:
+
+- **Preserve masks** — Never flatten or remove nodes responsible for clipping or masking
+- **Preserve z-order** — No transformation may alter visual stacking order
+- **Preserve responsive metadata** — Constraints, auto-layout settings, and breakpoints are never stripped
+- **Preserve component instances** — Component instance references, IDs, and variant properties are never altered
+
+#### Rule Files
+
+Each rule lives in its own TypeScript file under `gui-optimizer/src/rules/`. The `rules/index.ts` exports two arrays:
+
+- `ALL_RULES` — every rule including guards, for documentation and tooling
+- `PIPELINE` — the active execution order, guards excluded
+
+Adding, removing, or reordering rules is a one-line change in `index.ts`.
+
+### dotgui-render
+
+A standalone TypeScript library with zero dependencies. Takes a `.gui` document string and renders it into a live DOM container.
+
+```typescript
+import { render } from 'dotgui-render'
+
+const setZoom = render(guiCode, containerEl)
+setZoom?.(1)   // fit to container
+setZoom?.(2)   // 2× zoom
+```
+
+With a pre-built asset map (package caller resolves `assets/` paths to data URLs before passing in):
+
+```typescript
+const assetMap = {
+  'assets/hero.webp': 'data:image/webp;base64,...',
+  'assets/logo.svg': 'data:image/svg+xml;base64,...',
+}
+render(guiCode, containerEl, assetMap)
+```
+
+The renderer handles: auto-layout (flex and grid), absolute positioning, gradients, shadows, blur effects, blend modes, image fills with crop/fit modes, raster and SVG assets via `<img>`, `<rect>` / `<ellipse>` / `<line>` geometry tags, ordered border stacks (including per-side borders), mixed-style text, font loading (Google Fonts), and zoom via CSS `zoom`. Text rendering includes variable font axes (`font-variation-settings`), OpenType features (`font-feature-settings`), baseline shift, decoration color/style/thickness, list markers, and overflow control.
+
+Returns a zoom setter or `null` if parsing fails.
+
+---
+
+## Design Decisions
+
+### Why XML, not JSON?
+
+XML has one property JSON does not: **the tag name carries semantic meaning separate from the data**. `<stack direction="horizontal">` reads as a horizontal stack. The equivalent JSON — `{ "type": "stack", "direction": "horizontal" }` — reads as a database record. The `"type"` key is a workaround for something XML gets for free.
+
+XML also has a natural hierarchy that matches UI trees. Nesting communicates containment. Attributes communicate properties. Children communicate children. This is the same instinct behind SVG, JSX, and HTML — tag-based syntax is how UI structure is naturally described.
+
+For AI consumption specifically, this matters even more. Models are trained on enormous amounts of tag-based markup. Asking an LLM to write a `.gui` layout is like asking it to write JSX — it already knows the pattern cold.
+
+Attribute values follow two conventions: **literals** (`color="#1C1C1E"`, `gap="16"`) and **functions** (`fill="linear-gradient(135deg, #FF6B6B, #4ECDC4)"`). Function syntax is borrowed directly from CSS — no new vocabulary to learn.
+
+### Why not SVG?
+
+SVG is a drawing format. It has no concept of layout, no auto-layout, no semantic text nodes, no design tokens, and no structured component hierarchy. It cannot distinguish between a button and a decorative rectangle. An AI reading SVG sees shapes. An AI reading `.gui` sees structure.
+
+### Why not keep Figma's own data model?
+
+Figma's API returns raw authoring state — a 1:1 snapshot of every property in the editor, including defaults, overrides, legacy values, and implementation details of Figma's rendering engine. It's designed for Figma plugins to read, not for downstream tools to consume.
+
+`.gui` is an export format. It carries what matters for rendering and reasoning, stripped of authoring noise, using names that mean what they say.
+
+### Why is the optimizer separate from the extractor?
+
+The extractor runs inside the Figma plugin sandbox, which has strict browser constraints and no filesystem access. It has one job: faithfully capture the design as structured text, as fast as possible.
+
+The optimizer runs after extraction, in any environment, on any input — whether it came from the Figma plugin, a hand-written `.gui` file, or a code generator. The separation makes both tools simpler and makes the pipeline tool-agnostic. Any extractor can produce `raw.gui`. The optimizer does not care where it came from.
+
+### Why no AI in the pipeline?
+
+Consistency. A deterministic pipeline always produces the same output for the same input. It can be tested, diffed, and trusted. An AI step introduces variability — the output might change between runs, between model versions, or with different prompts.
+
+The optimizer's job is structural cleanup, not interpretation. Interpretation is the AI agent's job, downstream.
+
+---
+
+## What's in v1.0
+
+- `.gui` format spec with full Figma layer coverage
+- Figma plugin for export
+- `dotgui-render` renderer (TypeScript, zero deps)
+- `gui-optimizer` with 21 rules across 8 passes
+- Inline and packaged export formats
+- Asset deduplication and WebP conversion
+- `<component>`, `<component-set>`, and `<instance>` — component definitions and reuse
+
+## Deferred to v2
+
+- `<scroll>` — scrollable containers
+- `<overlay>` / `<sheet>` — modal and bottom sheet layers
+- Semantic roles — `role="button|input|nav"`
+- ~~Named text style tokens~~ *(shipped in v1)*
+- Interactions and prototyping metadata
+- Platform and theme variants on root
+- W3C composite token types — `shadow`, `typography`, `border`
+- `gui-optimizer` style token resolution in the renderer (rule-08)
+
+
+---
+
+<!-- section: Element and attribute reference (generated) -->
+
+<!-- GENERATED by scripts/gen-docs.ts — DO NOT EDIT. Source: kit spec.json. -->
+
+# .gui Element Reference
+
+Format version `0.2`. This reference is generated from the canonical spec — every element, attribute, type, and constraint is extracted from `kit/src/schema/types.ts`. For rationale and design philosophy, see [DOTGUI.md](DOTGUI.md).
+
+## Contents
+
+- **Format** — [.gui package](#package), [gui](#gui), [Root Canvas](#root-canvas)
+- **Metadata** — [tokens](#tokens), [styles](#styles), [fonts](#fonts), [Assets](#assets), [components](#components)
+- **Layout** — [frame](#frame), [stack](#stack), [row](#row), [col](#col), [grid](#grid), [group](#group)
+- **Content** — [text](#text), [img](#img)
+- **Geometry** — [rect](#rect), [ellipse](#ellipse), [line](#line)
+- **Appearance** — [appearance](#appearance), [Fill Values](#fill-values), [Shared Attrs](#shared-attrs)
+
+## Shared attributes
+
+Available on all layout, content, and geometry nodes.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `opacity` | `number` | Layer opacity, 0–1. Omitted when 1. |
+| `blend` | `normal` `multiply` `screen` `overlay` `darken` `lighten` `color-dodge` `color-burn` `hard-light` `soft-light` `difference` `exclusion` `hue` `saturation` `color` `luminosity` `linear-burn` `linear-dodge` | Blend mode against layers below. Omitted when normal. |
+| `mask` | `boolean` | Presence = true. Acts as an alpha mask for subsequent siblings. |
+| `rotation` | `number` | Rotation in degrees. Omitted when 0. |
+| `constraint-h` | `left` `right` `center` `scale` `stretch` | Horizontal pin/resize behavior. Default left (omitted). |
+| `constraint-v` | `center` `scale` `stretch` `top` `bottom` | Vertical pin/resize behavior. Default top (omitted). |
+| `abs` | `boolean` | Absolute child inside auto-layout. Presence = true. Replaces layout-position="absolute". |
+| `min-width` | `number` | Minimum width in px. Omitted when unset. |
+| `max-width` | `number` | Maximum width in px. Omitted when unset. |
+| `min-height` | `number` | Minimum height in px. Omitted when unset. |
+| `max-height` | `number` | Maximum height in px. Omitted when unset. |
+| `flip` | `h` `v` `both` | Mirror transform — 'h', 'v', or 'both'. |
+| `filter` | `string` | CSS filter string, e.g. "brightness(1.2) contrast(0.9)". |
+| `isolation` | `boolean` | Presence = true. New stacking context for blend modes (isolation: isolate). |
+| `transform-origin` | `string` | Transform origin, e.g. "top-left", "center", "0% 0%". |
+| `scale-x` | `number` | CSS scaleX, e.g. 1.5. |
+| `scale-y` | `number` | CSS scaleY, e.g. 0.8. |
+| `skew-x` | `number` | Horizontal skew in degrees. |
+| `skew-y` | `number` | Vertical skew in degrees. |
+| `aspect-ratio` | `string` | Aspect ratio, e.g. "16/9", "1/1". |
+| `z-index` | `number` | Explicit CSS z-index. |
+| `visible` | `boolean` | false = visibility:hidden (preserved in file, skipped in render). |
+
+## Format
+
+<a id="package"></a>
+### .gui package <sup>concept</sup>
+
+*file format*
+
+A .gui file is a ZIP package. The markup, design tokens, font declarations, binary assets, and a preview thumbnail all live in one self-contained file.
+
+Internally, the markup lives as design.guix — an implementation detail never surfaced to the outside. A program distinguishing a package from a raw markup string uses magic bytes: ZIP starts with PK, markup starts with <.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `design.guix` | `entry` | The UI markup — always this name inside the package. |
+| `preview.webp` | `entry` | Thumbnail for visual verification before opening. |
+| `assets/` | `entry` | Embedded WebP images and SVG vectors. |
+
+**Package structure**
+
+```xml
+checkout.gui  (ZIP)
+├── design.guix
+├── preview.webp
+└── assets/
+    ├── hero.webp
+    └── icon-close.svg
+```
+
+**Is a .gui file just XML?**
+
+No — a .gui file is a ZIP package whose markup (design.guix) is XML, alongside a preview thumbnail and an assets/ folder. A raw XML string is also valid input; tools tell them apart by magic bytes (ZIP starts with PK, markup with <).
+
+*Related: [gui](#gui), [assets](#assets), [fonts](#fonts)*
+
+<a id="gui"></a>
+### gui <sup>tag</sup>
+
+*document root*
+
+The root element is a document envelope — never rendered. Direct children are metadata blocks or exactly one root layout node. Metadata always precedes the layout root.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `version` **(required)** | `string` | Spec version. Current: 0.2. |
+| `name` | `string` | Screen or layer name from the source design. |
+
+**Example**
+
+```xml
+<gui version="0.2" name="Checkout">
+  <tokens>
+    <color name="primary" value="#007AFF" />
+  </tokens>
+  <fonts>
+    <font family="Inter" source="google" weights="400 700" />
+  </fonts>
+  <col w="390" fill="#F2F2F7" gap="16" p="24">
+    <text value="Checkout"
+          font-family="Inter" font-size="28"
+          font-weight="700" fill="#1C1C1E" />
+  </col>
+</gui>
+```
+
+*Related: [package](#package), [root-canvas](#root-canvas), [tokens](#tokens)*
+
+<a id="root-canvas"></a>
+### Root Canvas <sup>concept</sup>
+
+*canvas patterns*
+
+The first layout tag under <gui> defines the canvas. Two patterns cover all cases.
+
+> Default to <col> — it cannot clip content. <frame> children are absolutely positioned. <col> children flow vertically.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `<col w="390">` | `pattern` | Content-driven screen, AI-authored. h absent — hugs children. |
+| `<frame w="390" h="844">` | `pattern` | Fixed artboard, Figma export. h required. |
+
+**Both patterns**
+
+```xml
+<!-- content-driven: h absent, hugs children -->
+<gui version="0.2" name="Feed">
+  <col w="390" fill="#fff" gap="0">
+    ...
+  </col>
+</gui>
+
+<!-- fixed artboard: h required, children absolute -->
+<gui version="0.2" name="Splash">
+  <frame w="390" h="844" fill="#000">
+    <img x="0" y="0" src="assets/bg.webp" w="390" h="844" fit="cover" />
+    <text x="24" y="720" value="Welcome" font-size="32"
+          font-weight="700" fill="#fff" />
+  </frame>
+</gui>
+```
+
+*Related: [gui](#gui), [col](#col), [frame](#frame)*
+
+## Metadata
+
+<a id="tokens"></a>
+### tokens <sup>tag</sup>
+
+*design primitives*
+
+Design system primitives. Referenced anywhere in the tree with $name. Figma Variables resolve to <tokens> entries. Only tokens used in the exported tree are emitted.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `<color>` | `token` | Hex color, e.g. #007AFF. |
+| `<number>` | `token` | Numeric value, e.g. 12. |
+| `<string>` | `token` | String value, e.g. Inter. |
+
+**Example**
+
+```xml
+<tokens>
+  <color name="primary"     value="#007AFF" />
+  <number name="radius-card" value="12" />
+  <string name="font-base"  value="Inter" />
+</tokens>
+
+<col fill="$surface" p="$space-md" gap="12">
+  <rect fill="$primary" radius="$radius-card" w="fill" h="52" />
+</col>
+```
+
+*Related: [styles](#styles), [fonts](#fonts), [fill-values](#fill-values)*
+
+<a id="styles"></a>
+### styles <sup>tag</sup>
+
+*text styles*
+
+Named text styles from the design system. Each <text-style> captures a full typography definition. Text nodes reference a style by name — individual font attrs are omitted when a style is applied.
+
+Color and layout attrs are always inlined — they are not part of the text style definition. Only styles used in the exported tree are emitted.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `name` | `string` | Style name, e.g. Heading/H1. |
+| `font-family` | `string` | Font family name. |
+| `font-size` | `number` | Size in px. |
+| `font-weight` | `number` | Numeric weight (100–900). |
+| `line-height` | `number | string` | px or percent. |
+
+**Example**
+
+```xml
+<styles>
+  <text-style name="Heading/H1"
+              font-family="Inter" font-size="32"
+              font-weight="700" line-height="40" />
+</styles>
+
+<text text-style="Heading/H1" value="Welcome" fill="#1C1C1E" />
+```
+
+*Related: [text](#text), [tokens](#tokens), [fonts](#fonts)*
+
+<a id="fonts"></a>
+### fonts <sup>tag</sup>
+
+*font declarations*
+
+Font declarations for the renderer to load Google Fonts or fall back gracefully. Text nodes still carry their own font-family and font-weight — the fonts block makes those families resolvable.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `family` | `string` | Font family name. |
+| `source` | `google | system | unresolved` | Where the font is resolved from. |
+| `category` | `string` | e.g. sans-serif, serif, monospace. |
+| `weights` | `string` | Space-separated numeric weights, e.g. 400 600 700. |
+| `styles` | `string` | normal italic. |
+
+**Example**
+
+```xml
+<fonts>
+  <font family="Inter" source="google"
+        category="sans-serif"
+        weights="400 500 600 700" styles="normal italic" />
+</fonts>
+```
+
+*Related: [text](#text), [styles](#styles), [tokens](#tokens)*
+
+<a id="assets"></a>
+### Assets <sup>concept</sup>
+
+*images & vectors*
+
+Images and vector artwork are embedded in assets/ and referenced inline via src — no declaration block, no $id indirection.
+
+All raster images are converted to WebP at 0.85 quality by the Figma plugin. External URLs are a fallback only. If a URL reference fails to load, the renderer shows an asset not loaded error state — no silent failure.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `assets/img.webp` | `pattern` | Embedded raster (default for all exports). |
+| `assets/icon.svg` | `pattern` | Embedded vector artwork. |
+| `https://…` | `pattern` | External URL — fallback only. |
+
+**Example**
+
+```xml
+<img src="assets/hero.webp" w="390" h="240" fit="cover" />
+<img src="assets/icon-close.svg" w="24" h="24" />
+<img src="https://example.com/photo.jpg" w="390" h="240" fit="cover" />
+```
+
+*Related: [img](#img), [package](#package), [gui](#gui)*
+
+<a id="components"></a>
+### components <sup>tag</sup>
+
+*component system*
+
+A <components> block at the top of the document holds all component definitions. Instances reference a component by id and pass prop overrides as attributes.
+
+<component> defines a single reusable component. <component-set> groups related variants. Each <variant> is a member of the set.
+
+Declared props use a <props> block with <prop> entries. Ad-hoc overrides skip the props block and match by sanitized layer name.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `text` | `prop type` | Overrides value attr of the target layer. |
+| `visible` | `prop type` | Hides target when set to "false". |
+
+**Component + instance**
+
+```xml
+<components>
+  <component name="Card/Product" id="comp-card">
+    <props>
+      <prop name="title" type="text" target="title" />
+    </props>
+    <col w="320" radius="12" fill="#fff" p="16" gap="8">
+      <text id="title" value="Product Name" font-size="16" font-weight="600" />
+    </col>
+  </component>
+</components>
+
+<instance component="comp-card" title="Nike Air Max 90" x="24" y="120" />
+```
+
+*Related: [gui](#gui), [col](#col), [text](#text)*
+
+## Layout
+
+<a id="frame"></a>
+### frame <sup>tag</sup>
+
+*fixed container*
+
+Fixed container. Children are absolutely positioned with x and y attributes. Maps to a Figma frame without auto-layout.
+
+w and h are required. clip (boolean presence) clips content to bounds.
+
+**Maps to Figma:** Frame (auto-layout off)
+
+| Attribute | Type | Description |
+|---|---|---|
+| `name` | `string` |  |
+| `x` | `number` |  |
+| `y` | `number` |  |
+| `w` **(required)** | `number | 'fill'` | Required on frame |
+| `h` **(required)** | `number | 'fill'` | Required on frame |
+| `fill` | `fill` |  |
+| `fill-style` | `string` |  |
+| `effect-style` | `string` |  |
+| `radius` | `number | string` |  |
+| `corner-smoothing` | `number` |  |
+| `border` | `string` |  |
+| `border-color` | `color | token` |  |
+| `border-width` | `number` |  |
+| `border-style` | `solid` `dashed` `dotted` |  |
+| `border-align` | `center` `inside` `outside` |  |
+| `shadow` | `string` |  |
+| `clip` | `boolean` |  |
+| `clip-path` | `string` |  |
+| `overflow-x` | `hidden` `visible` `scroll` `auto` |  |
+| `overflow-y` | `hidden` `visible` `scroll` `auto` |  |
+| `border-image` | `string` |  |
+| `outline` | `string` |  |
+| `outline-offset` | `number` |  |
+
+Also accepts all [shared attributes](#shared-attributes).
+
+**Example**
+
+```xml
+<frame w="390" h="844" fill="#FFFFFF" clip>
+  <img x="0" y="0" src="assets/bg.webp" w="390" h="240" fit="cover" />
+  <text x="24" y="260" value="Good morning"
+        font-size="28" font-weight="700" fill="#1C1C1E" />
+</frame>
+```
+
+**What's the difference between frame and col?**
+
+A frame positions its children absolutely with x/y and maps to a Figma frame with auto-layout off; a col flows its children vertically with auto-layout. Use frame for fixed artboards, col for content-driven screens.
+
+*Related: [col](#col), [group](#group), [rect](#rect)*
+
+<a id="stack"></a>
+### stack <sup>tag</sup>
+
+*auto-layout*
+
+<row> is horizontal, <col> is vertical. <stack> requires an explicit direction. Children are flow-positioned.
+
+w / h absent = hug content; "fill" = fill parent; number = fixed px. p accepts CSS shorthand (1–4 values). gap="auto" distributes space evenly.
+
+**Maps to Figma:** Frame (auto-layout on)
+
+| Attribute | Type | Description |
+|---|---|---|
+| `name` | `string` |  |
+| `direction` **(required)** | `horizontal` `vertical` `grid` |  |
+| `x` | `number` |  |
+| `y` | `number` |  |
+| `w` | `number | 'fill'` | Absent = hug children |
+| `h` | `number | 'fill'` | Absent = hug children |
+| `gap` | `gap` | Gap between items and (when wrapping) between rows. "16"      fixed 16px "auto"    space-between (bare attribute = auto) "16 10"   16px items, 10px rows "16 auto" 16px items, rows distributed |
+| `reverse-z` | `boolean` | Reverse z-order of children. Presence = true. |
+| `wrap` | `boolean` | Enable wrapping. Presence = true. |
+| `grid-columns` | `number` |  |
+| `grid-rows` | `number` |  |
+| `grid-col-gap` | `number | string` |  |
+| `grid-row-gap` | `number | string` |  |
+| `p` | `string | number` | Padding shorthand. Single value, "v h", or "top right bottom left". Alias: padding |
+| `pt` | `number` | Top padding override |
+| `pr` | `number` | Right padding override |
+| `pb` | `number` | Bottom padding override |
+| `pl` | `number` | Left padding override |
+| `align` | `stretch` `top-left` `top-center` `top-right` `middle-left` `middle-center` `middle-right` `bottom-left` `bottom-center` `bottom-right` `baseline` | 9-point alignment — direction-independent. Replaces justify + align. Special values: stretch, baseline. Default: top-left. |
+| `fill` | `fill` |  |
+| `fill-style` | `string` |  |
+| `effect-style` | `string` |  |
+| `radius` | `number | string` |  |
+| `corner-smoothing` | `number` |  |
+| `border` | `string` |  |
+| `border-color` | `color | token` |  |
+| `border-width` | `number` |  |
+| `border-style` | `solid` `dashed` `dotted` |  |
+| `border-align` | `center` `inside` `outside` |  |
+| `shadow` | `string` |  |
+| `clip` | `boolean` |  |
+| `clip-path` | `string` |  |
+| `overflow-x` | `hidden` `visible` `scroll` `auto` |  |
+| `overflow-y` | `hidden` `visible` `scroll` `auto` |  |
+| `border-image` | `string` |  |
+| `outline` | `string` |  |
+| `outline-offset` | `number` |  |
+
+Also accepts all [shared attributes](#shared-attributes).
+
+**Example**
+
+```xml
+<col w="fill" gap="12" p="16" fill="#fff" radius="12">
+  <text value="Settings" font-size="17" font-weight="600" fill="#1C1C1E" />
+  <line fill="#E5E5EA" />
+  <row w="fill" gap="auto" align="middle-left">
+    <text value="Notifications" font-size="15" fill="#1C1C1E" />
+    <text value="On" font-size="15" fill="#8E8E93" />
+  </row>
+</col>
+```
+
+*Related: [row](#row), [col](#col), [grid](#grid)*
+
+<a id="row"></a>
+### row <sup>tag</sup>
+
+*horizontal auto-layout*
+
+<row> is a horizontal auto-layout container — children flow left to right. It is shorthand for <stack direction="horizontal">.
+
+w / h absent = hug content; "fill" = fill parent; number = fixed px. gap="auto" distributes space evenly.
+
+**Maps to Figma:** Frame (horizontal auto-layout)
+
+| Attribute | Type | Description |
+|---|---|---|
+| `h` | `number | 'fill'` | Absent = hug children |
+| `fill` | `fill` |  |
+| `name` | `string` |  |
+| `x` | `number` |  |
+| `y` | `number` |  |
+| `w` | `number | 'fill'` | Absent = hug children |
+| `gap` | `gap` | Gap between items and (when wrapping) between rows. "16"      fixed 16px "auto"    space-between (bare attribute = auto) "16 10"   16px items, 10px rows "16 auto" 16px items, rows distributed |
+| `reverse-z` | `boolean` | Reverse z-order of children. Presence = true. |
+| `wrap` | `boolean` | Enable wrapping. Presence = true. |
+| `p` | `string | number` | Padding shorthand. Single value, "v h", or "top right bottom left". Alias: padding |
+| `pt` | `number` | Top padding override |
+| `pr` | `number` | Right padding override |
+| `pb` | `number` | Bottom padding override |
+| `pl` | `number` | Left padding override |
+| `align` | `stretch` `top-left` `top-center` `top-right` `middle-left` `middle-center` `middle-right` `bottom-left` `bottom-center` `bottom-right` `baseline` | 9-point alignment — direction-independent. Replaces justify + align. Special values: stretch, baseline. Default: top-left. |
+| `fill-style` | `string` |  |
+| `effect-style` | `string` |  |
+| `radius` | `number | string` |  |
+| `corner-smoothing` | `number` |  |
+| `border` | `string` |  |
+| `border-color` | `color | token` |  |
+| `border-width` | `number` |  |
+| `border-style` | `solid` `dashed` `dotted` |  |
+| `border-align` | `center` `inside` `outside` |  |
+| `shadow` | `string` |  |
+| `clip` | `boolean` |  |
+| `clip-path` | `string` |  |
+| `overflow-x` | `hidden` `visible` `scroll` `auto` |  |
+| `overflow-y` | `hidden` `visible` `scroll` `auto` |  |
+| `border-image` | `string` |  |
+| `outline` | `string` |  |
+| `outline-offset` | `number` |  |
+
+Also accepts all [shared attributes](#shared-attributes).
+
+**Example**
+
+```xml
+<row w="390" h="56" p="0 16" gap="auto" align="middle-left" fill="#fff">
+  <text value=".gui" font-size="17" font-weight="600" fill="#1C1C1E" />
+  <img src="assets/avatar.webp" w="32" h="32" radius="16" fit="cover" />
+</row>
+```
+
+*Related: [col](#col), [stack](#stack), [grid](#grid)*
+
+<a id="col"></a>
+### col <sup>tag</sup>
+
+*vertical auto-layout*
+
+<col> is a vertical auto-layout container — children flow top to bottom. It is shorthand for <stack direction="vertical"> and the recommended default screen root.
+
+w / h absent = hug content; "fill" = fill parent; number = fixed px. gap="auto" distributes space evenly.
+
+**Maps to Figma:** Frame (vertical auto-layout)
+
+| Attribute | Type | Description |
+|---|---|---|
+| `h` | `number | 'fill'` | Absent = hug children |
+| `fill` | `fill` |  |
+| `name` | `string` |  |
+| `x` | `number` |  |
+| `y` | `number` |  |
+| `w` | `number | 'fill'` | Absent = hug children |
+| `gap` | `gap` | Gap between items and (when wrapping) between rows. "16"      fixed 16px "auto"    space-between (bare attribute = auto) "16 10"   16px items, 10px rows "16 auto" 16px items, rows distributed |
+| `reverse-z` | `boolean` | Reverse z-order of children. Presence = true. |
+| `wrap` | `boolean` | Enable wrapping. Presence = true. |
+| `p` | `string | number` | Padding shorthand. Single value, "v h", or "top right bottom left". Alias: padding |
+| `pt` | `number` | Top padding override |
+| `pr` | `number` | Right padding override |
+| `pb` | `number` | Bottom padding override |
+| `pl` | `number` | Left padding override |
+| `align` | `stretch` `top-left` `top-center` `top-right` `middle-left` `middle-center` `middle-right` `bottom-left` `bottom-center` `bottom-right` `baseline` | 9-point alignment — direction-independent. Replaces justify + align. Special values: stretch, baseline. Default: top-left. |
+| `fill-style` | `string` |  |
+| `effect-style` | `string` |  |
+| `radius` | `number | string` |  |
+| `corner-smoothing` | `number` |  |
+| `border` | `string` |  |
+| `border-color` | `color | token` |  |
+| `border-width` | `number` |  |
+| `border-style` | `solid` `dashed` `dotted` |  |
+| `border-align` | `center` `inside` `outside` |  |
+| `shadow` | `string` |  |
+| `clip` | `boolean` |  |
+| `clip-path` | `string` |  |
+| `overflow-x` | `hidden` `visible` `scroll` `auto` |  |
+| `overflow-y` | `hidden` `visible` `scroll` `auto` |  |
+| `border-image` | `string` |  |
+| `outline` | `string` |  |
+| `outline-offset` | `number` |  |
+
+Also accepts all [shared attributes](#shared-attributes).
+
+**Example**
+
+```xml
+<col w="fill" gap="12" p="16" fill="#fff" radius="12">
+  <text value="Title" font-size="17" font-weight="600" fill="#1C1C1E" />
+  <text value="Subtitle" font-size="14" fill="#8E8E93" />
+</col>
+```
+
+*Related: [row](#row), [stack](#stack), [frame](#frame)*
+
+<a id="grid"></a>
+### grid <sup>tag</sup>
+
+*track & unit grid*
+
+Two modes determined by which attrs are present. Track grid (columns/rows): parent declares track sizes, children place themselves. Unit grid: fixed coordinate canvas.
+
+A grid range fills the spanned tracks (no w/h needed). A single value hugs content.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `columns` | `number` |  |
+| `rows` | `number` |  |
+| `col-gap` | `number | string` |  |
+| `row-gap` | `number | string` |  |
+| `h` | `number | 'fill'` | Absent = hug children |
+| `fill` | `fill` |  |
+| `name` | `string` |  |
+| `x` | `number` |  |
+| `y` | `number` |  |
+| `w` | `number | 'fill'` | Absent = hug children |
+| `p` | `string | number` | Padding shorthand. Single value, "v h", or "top right bottom left". Alias: padding |
+| `pt` | `number` | Top padding override |
+| `pr` | `number` | Right padding override |
+| `pb` | `number` | Bottom padding override |
+| `pl` | `number` | Left padding override |
+| `fill-style` | `string` |  |
+| `effect-style` | `string` |  |
+| `radius` | `number | string` |  |
+| `corner-smoothing` | `number` |  |
+| `border` | `string` |  |
+| `border-color` | `color | token` |  |
+| `border-width` | `number` |  |
+| `border-style` | `solid` `dashed` `dotted` |  |
+| `border-align` | `center` `inside` `outside` |  |
+| `shadow` | `string` |  |
+| `clip` | `boolean` |  |
+| `clip-path` | `string` |  |
+| `overflow-x` | `hidden` `visible` `scroll` `auto` |  |
+| `overflow-y` | `hidden` `visible` `scroll` `auto` |  |
+| `border-image` | `string` |  |
+| `outline` | `string` |  |
+| `outline-offset` | `number` |  |
+
+Also accepts all [shared attributes](#shared-attributes).
+
+**Track grid — dashboard layout**
+
+```xml
+<grid columns="200 1fr" rows="56 1fr" gap="0" w="fill" h="fill">
+  <row gc="1/-1" gr="1" fill="#fff" p="0 20" align="middle-left">
+    <text value="Dashboard" font-size="17" font-weight="600" />
+  </row>
+  <col gc="1" gr="2" fill="#f7f7f7" p="12" gap="4">...</col>
+  <col gc="2" gr="2" p="32" gap="16">...</col>
+</grid>
+```
+
+*Related: [stack](#stack), [frame](#frame), [col](#col)*
+
+<a id="group"></a>
+### group <sup>tag</sup>
+
+*logical grouping*
+
+No layout behavior. Children are absolutely positioned relative to the group origin. Maps to a Figma group node.
+
+When the first child of a Figma group is a mask node, the mask shape is extracted as an SVG asset and hoisted onto the <group> as mask-src attrs.
+
+**Maps to Figma:** Group
+
+| Attribute | Type | Description |
+|---|---|---|
+| `name` | `string` |  |
+| `x` | `number` |  |
+| `y` | `number` |  |
+| `w` **(required)** | `number` | Required on group — no content to derive size from |
+| `h` **(required)** | `number` | Required on group — no content to derive size from |
+| `mask-src` | `asset` |  |
+| `mask-x` | `number` |  |
+| `mask-y` | `number` |  |
+| `mask-width` | `number` |  |
+| `mask-height` | `number` |  |
+| `mask-mode` | `alpha` `luminance` |  |
+| `mask-composite` | `add` `subtract` `intersect` `exclude` |  |
+
+Also accepts all [shared attributes](#shared-attributes).
+
+**Group with mask**
+
+```xml
+<group x="0" y="0" w="390" h="200"
+       mask-src="assets/mask-1.svg"
+       mask-x="0" mask-y="0" mask-width="390" mask-height="200">
+  <img x="0" y="0" src="assets/texture.webp" w="390" h="200" fit="cover" />
+</group>
+```
+
+*Related: [frame](#frame), [img](#img), [appearance](#appearance)*
+
+## Content
+
+<a id="text"></a>
+### text <sup>tag</sup>
+
+*text node*
+
+Single-style text is self-closing with a value attribute. Mixed-style text has <segment> children — each segment overrides font attrs for its run.
+
+text-style references a named style; individual font attrs are omitted when a style is referenced. Variable fonts use font-variation; OpenType features use font-feature.
+
+**Maps to Figma:** Text
+
+| Attribute | Type | Description |
+|---|---|---|
+| `name` | `string` |  |
+| `value` **(required)** | `string` |  |
+| `x` | `number` |  |
+| `y` | `number` |  |
+| `w` | `number | 'fill'` | w absent = hug text content |
+| `h` | `number | 'fill'` | h absent = hug text content |
+| `text-style` | `string` |  |
+| `fill-style` | `string` |  |
+| `font-family` | `string` |  |
+| `font-postscript` | `string` |  |
+| `font-style-name` | `string` |  |
+| `font-size` | `number` |  |
+| `font-weight` | `number` |  |
+| `font-style` | `normal` `italic` |  |
+| `font-variation` | `string` |  |
+| `font-feature` | `string` |  |
+| `fill` | `color | token` |  |
+| `line-height` | `number | string` |  |
+| `letter-spacing` | `number | string` |  |
+| `baseline-shift` | `number` |  |
+| `paragraph-spacing` | `number` |  |
+| `paragraph-indent` | `number` |  |
+| `align` | `left` `right` `center` `justified` |  |
+| `vertical-align` | `center` `top` `bottom` |  |
+| `decoration` | `underline` `strikethrough` |  |
+| `decoration-color` | `color` |  |
+| `decoration-style` | `solid` `dashed` `dotted` `wavy` `double` |  |
+| `decoration-thickness` | `number` |  |
+| `text-case` | `uppercase` `lowercase` `capitalize` `small-caps` `small-caps-forced` |  |
+| `leading-trim` | `normal` `cap-height` |  |
+| `text-resize` | `hug` `hug-height` `fixed` `truncate` |  |
+| `truncate` | `boolean` |  |
+| `max-lines` | `number` |  |
+| `overflow` | `clip` `ellipsis` |  |
+| `list` | `disc` `decimal` `none` |  |
+| `list-level` | `number` |  |
+| `list-marker` | `string` |  |
+| `href` | `string` |  |
+| `font-stretch` | `normal` `ultra-condensed` `extra-condensed` `condensed` `semi-condensed` `semi-expanded` `expanded` `extra-expanded` `ultra-expanded` |  |
+| `direction` | `ltr` `rtl` |  |
+| `writing-mode` | `horizontal-tb` `vertical-rl` `vertical-lr` |  |
+| `white-space` | `normal` `nowrap` `pre` `pre-wrap` `pre-line` |  |
+| `word-break` | `normal` `break-all` `keep-all` `break-word` |  |
+| `word-spacing` | `number` |  |
+| `text-underline-offset` | `number` |  |
+| `text-decoration-skip-ink` | `boolean` |  |
+| `text-wrap` | `wrap` `nowrap` `balance` `pretty` `stable` |  |
+| `font-optical-sizing` | `auto` `none` |  |
+| `font-smoothing` | `auto` `none` `antialiased` `subpixel-antialiased` |  |
+| `text-rendering` | `auto` `optimizeSpeed` `optimizeLegibility` `geometricPrecision` |  |
+
+Also accepts all [shared attributes](#shared-attributes).
+
+**Single, mixed, decorated**
+
+```xml
+<text value="Welcome back"
+      font-family="Inter" font-size="22"
+      font-weight="700" fill="#1C1C1E" />
+
+<text x="24" y="80" w="300">
+  <segment value="Pay " fill="#6E6E73" font-size="16" />
+  <segment value="$42.00" fill="#1C1C1E" font-size="16" font-weight="700" />
+</text>
+```
+
+*Related: [styles](#styles), [fonts](#fonts), [fill-values](#fill-values)*
+
+<a id="img"></a>
+### img <sup>tag</sup>
+
+*image & vector*
+
+Handles both raster and vector assets. The renderer detects format from the file extension at render time — the author only writes src, w, and h.
+
+The name attribute carries the Figma layer name. fit controls image scaling within the bounding box.
+
+**Maps to Figma:** Rectangle with image fill / vector
+
+| Attribute | Type | Description |
+|---|---|---|
+| `name` | `string` |  |
+| `src` **(required)** | `asset` |  |
+| `x` | `number` |  |
+| `y` | `number` |  |
+| `w` **(required)** | `number | 'fill'` | Required on img — no content to derive size from |
+| `h` **(required)** | `number | 'fill'` | Required on img — no content to derive size from |
+| `fit` | `fill` `none` `cover` `contain` |  |
+| `radius` | `number | string` |  |
+| `corner-smoothing` | `number` |  |
+| `border` | `string` |  |
+| `border-color` | `color | token` |  |
+| `border-width` | `number` |  |
+| `border-style` | `solid` `dashed` `dotted` |  |
+| `border-align` | `center` `inside` `outside` |  |
+| `object-position` | `string` |  |
+| `image-rendering` | `auto` `pixelated` `crisp-edges` |  |
+
+Also accepts all [shared attributes](#shared-attributes).
+
+**Example**
+
+```xml
+<img name="Hero Image" src="assets/hero.webp" w="390" h="240" fit="cover" />
+<img src="assets/avatar.webp" w="48" h="48" radius="24" fit="cover" />
+<img src="assets/icon-check.svg" w="20" h="20" />
+```
+
+*Related: [assets](#assets), [rect](#rect), [frame](#frame)*
+
+## Geometry
+
+<a id="rect"></a>
+### rect <sup>tag</sup>
+
+*rectangle*
+
+Sugar for a childless <frame>. Signals decorative intent — no layout children. w and h are required.
+
+Supports all visual attributes: fill, border, radius, opacity, blend, rotation, appearance. Does not accept layout attributes.
+
+Border shorthand: "[width] [color] [style] [align]". Defaults: 1px solid center.
+
+**Maps to Figma:** Rectangle
+
+| Attribute | Type | Description |
+|---|---|---|
+| `name` | `string` |  |
+| `x` | `number` |  |
+| `y` | `number` |  |
+| `w` **(required)** | `number | 'fill'` | Unified width. Replaces width + sizing-h. Absent = hug (valid on row/col/stack/text/instance only). "fill" = grow to fill parent. number = fixed px. String forms: '50%' (of parent), '1.5rem', '100vw', 'calc(100% - 16px)' Not valid on frame/img/svg — those require explicit values. |
+| `h` **(required)** | `number | 'fill'` | Unified height. Replaces height + sizing-v. Absent = hug (valid on row/col/stack/text/instance only). "fill" = grow to fill parent. number = fixed px. String forms: '50%' (of parent), '1.5rem', '100vh', 'calc(100% - 16px)' Not valid on frame/img/svg — those require explicit values. |
+| `fill` | `fill` |  |
+| `fill-style` | `string` |  |
+| `effect-style` | `string` |  |
+| `radius` | `number | string` |  |
+| `corner-smoothing` | `number` |  |
+| `border` | `string` |  |
+| `border-color` | `color | token` |  |
+| `border-width` | `number` |  |
+| `border-style` | `solid` `dashed` `dotted` |  |
+| `border-align` | `center` `inside` `outside` |  |
+| `shadow` | `string` |  |
+| `fill-rule` | `nonzero` `evenodd` |  |
+
+Also accepts all [shared attributes](#shared-attributes).
+
+**Example**
+
+```xml
+<rect fill="$primary" w="342" h="52" radius="12" />
+<rect fill="$surface" w="320" h="80" radius="12" border="1 #E5E5EA" />
+<rect fill="linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%)" w="fill" h="160" radius="16" />
+```
+
+*Related: [ellipse](#ellipse), [line](#line), [frame](#frame)*
+
+<a id="ellipse"></a>
+### ellipse <sup>tag</sup>
+
+*oval & circle*
+
+Sugar for <frame radius="9999">. Full-radius rendering is the contract — radius is not an attribute on <ellipse>. Equal dimensions produce a circle.
+
+Arc and donut shapes (progress rings, pie segments) are SVG assets referenced via <img>.
+
+**Maps to Figma:** Ellipse
+
+| Attribute | Type | Description |
+|---|---|---|
+| `name` | `string` |  |
+| `x` | `number` |  |
+| `y` | `number` |  |
+| `w` **(required)** | `number | 'fill'` | Unified width. Replaces width + sizing-h. Absent = hug (valid on row/col/stack/text/instance only). "fill" = grow to fill parent. number = fixed px. String forms: '50%' (of parent), '1.5rem', '100vw', 'calc(100% - 16px)' Not valid on frame/img/svg — those require explicit values. |
+| `h` **(required)** | `number | 'fill'` | Unified height. Replaces height + sizing-v. Absent = hug (valid on row/col/stack/text/instance only). "fill" = grow to fill parent. number = fixed px. String forms: '50%' (of parent), '1.5rem', '100vh', 'calc(100% - 16px)' Not valid on frame/img/svg — those require explicit values. |
+| `fill` | `fill` |  |
+| `fill-style` | `string` |  |
+| `effect-style` | `string` |  |
+| `border` | `string` |  |
+| `border-color` | `color | token` |  |
+| `border-width` | `number` |  |
+| `border-style` | `solid` `dashed` `dotted` |  |
+| `border-align` | `center` `inside` `outside` |  |
+| `shadow` | `string` |  |
+| `fill-rule` | `nonzero` `evenodd` |  |
+
+Also accepts all [shared attributes](#shared-attributes).
+
+**Example**
+
+```xml
+<ellipse fill="#FF3B30" w="8" h="8" />
+<ellipse fill="#E5E5EA" w="48" h="48" />
+<ellipse fill="none" border="2 $primary" w="48" h="48" />
+```
+
+*Related: [rect](#rect), [line](#line), [img](#img)*
+
+<a id="line"></a>
+### line <sup>tag</sup>
+
+*separator*
+
+Sugar for a thin frame used as a visual divider. Default: horizontal, thickness="1", w="fill".
+
+**Maps to Figma:** Line
+
+| Attribute | Type | Description |
+|---|---|---|
+| `name` | `string` |  |
+| `x` | `number` |  |
+| `y` | `number` |  |
+| `w` | `number | 'fill'` | Unified width. Replaces width + sizing-h. Absent = hug (valid on row/col/stack/text/instance only). "fill" = grow to fill parent. number = fixed px. String forms: '50%' (of parent), '1.5rem', '100vw', 'calc(100% - 16px)' Not valid on frame/img/svg — those require explicit values. |
+| `direction` | `horizontal` `vertical` |  |
+| `thickness` | `number` | Line thickness in px. Default: 1 |
+| `fill` | `color | token` |  |
+| `fill-style` | `string` |  |
+| `opacity` | `number` | Layer opacity, 0–1. Omitted when 1. |
+
+Also accepts all [shared attributes](#shared-attributes).
+
+**Example**
+
+```xml
+<line fill="#E5E5EA" />
+<line fill="#007AFF" thickness="2" />
+<line fill="#E5E5EA" direction="vertical" />
+```
+
+*Related: [rect](#rect), [ellipse](#ellipse), [stack](#stack)*
+
+## Appearance
+
+<a id="appearance"></a>
+### appearance <sup>tag</sup>
+
+*paint & effects stack*
+
+A non-layout child that describes the parent's complete paint and effect stack. Used when a node has multiple fills, complex borders, or multiple effects.
+
+All three stacks — fills, borders, effects — are ordered in document order. When <appearance> contains at least one <border>, the border shorthand on the parent is ignored.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `<fill>` | `child` | color, linear-gradient, radial-gradient, angular-gradient, image. |
+| `<border>` | `child` | color, w, align (inside/center/outside), style, dash, cap, join. |
+| `<effect>` | `child` | drop-shadow, inner-shadow, layer-blur, background-blur, glass. |
+
+**Multi-fill + shadow**
+
+```xml
+<frame w="320" h="180" radius="16">
+  <appearance>
+    <fill type="image" src="assets/hero.webp" fit="cover" />
+    <fill type="linear-gradient" value="linear-gradient(180deg, #00000000 0%, #000000CC 100%)" />
+    <effect type="drop-shadow" x="0" y="8" radius="24" color="#00000033" />
+  </appearance>
+</frame>
+```
+
+*Related: [fill-values](#fill-values), [shared-attrs](#shared-attrs), [frame](#frame)*
+
+<a id="fill-values"></a>
+### Fill Values <sup>property</sup>
+
+*fill attribute formats*
+
+The fill attribute accepts hex colors, gradient functions, and token references. Alpha is encoded as the last byte of an 8-digit hex: #1C1C1ECC.
+
+Gradient syntax mirrors CSS — linear-gradient(), radial-gradient(), conic-gradient(). Token references use $name syntax.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `Hex opaque` | `format` | #1C1C1E. |
+| `Hex + alpha` | `format` | #1C1C1ECC (last byte = alpha). |
+| `Linear gradient` | `format` | linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%). |
+| `Radial gradient` | `format` | radial-gradient(circle at 50% 30%, #FFF 0%, #000 100%). |
+| `Angular gradient` | `format` | conic-gradient(from 0deg at 50% 50%, #F00 0deg, #00F 360deg). |
+| `Token` | `format` | $primary. |
+
+**Fill values in use**
+
+```xml
+<rect fill="#1C1C1ECC" w="100" h="100" />
+<rect fill="linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%)" w="fill" h="160" />
+<rect fill="$primary" w="fill" h="52" radius="12" />
+```
+
+*Related: [tokens](#tokens), [appearance](#appearance), [rect](#rect)*
+
+<a id="shared-attrs"></a>
+### Shared Attrs <sup>property</sup>
+
+*all nodes*
+
+Visual attributes available on all layout, content, and geometry nodes.
+
+Boolean presence convention: bare attributes without a value are treated as true. <frame clip> = <frame clip="true">. Applies to: clip, mask, wrap, abs, truncate, reverse-z.
+
+| Attribute | Type | Description |
+|---|---|---|
+| `opacity` | `number` | Layer opacity, 0–1. Omitted when 1. |
+| `blend` | `normal` `multiply` `screen` `overlay` `darken` `lighten` `color-dodge` `color-burn` `hard-light` `soft-light` `difference` `exclusion` `hue` `saturation` `color` `luminosity` `linear-burn` `linear-dodge` | Blend mode against layers below. Omitted when normal. |
+| `mask` | `boolean` | Presence = true. Acts as an alpha mask for subsequent siblings. |
+| `rotation` | `number` | Rotation in degrees. Omitted when 0. |
+| `constraint-h` | `left` `right` `center` `scale` `stretch` | Horizontal pin/resize behavior. Default left (omitted). |
+| `constraint-v` | `center` `scale` `stretch` `top` `bottom` | Vertical pin/resize behavior. Default top (omitted). |
+| `abs` | `boolean` | Absolute child inside auto-layout. Presence = true. Replaces layout-position="absolute". |
+| `min-width` | `number` | Minimum width in px. Omitted when unset. |
+| `max-width` | `number` | Maximum width in px. Omitted when unset. |
+| `min-height` | `number` | Minimum height in px. Omitted when unset. |
+| `max-height` | `number` | Maximum height in px. Omitted when unset. |
+| `flip` | `h` `v` `both` | Mirror transform — 'h', 'v', or 'both'. |
+| `filter` | `string` | CSS filter string, e.g. "brightness(1.2) contrast(0.9)". |
+| `isolation` | `boolean` | Presence = true. New stacking context for blend modes (isolation: isolate). |
+| `transform-origin` | `string` | Transform origin, e.g. "top-left", "center", "0% 0%". |
+| `scale-x` | `number` | CSS scaleX, e.g. 1.5. |
+| `scale-y` | `number` | CSS scaleY, e.g. 0.8. |
+| `skew-x` | `number` | Horizontal skew in degrees. |
+| `skew-y` | `number` | Vertical skew in degrees. |
+| `aspect-ratio` | `string` | Aspect ratio, e.g. "16/9", "1/1". |
+| `z-index` | `number` | Explicit CSS z-index. |
+| `visible` | `boolean` | false = visibility:hidden (preserved in file, skipped in render). |
+
+**Shared attrs in use**
+
+```xml
+<img src="assets/overlay.webp" w="390" h="240" opacity="0.6" blend="multiply" />
+<rect fill="#FF3B30" w="40" h="40" radius="4" rotation="45" />
+<rect fill="$primary" w="fill" h="52" constraint-v="bottom" />
+```
+
+*Related: [appearance](#appearance), [fill-values](#fill-values), [frame](#frame)*
+
+
+---
+
+<!-- section: The role vocabulary -->
+
+# dotgui Role Catalog
+
+The controlled vocabulary for the `role=` attribute. Each file in this folder defines one recognized UI role.
+
+## Why this exists
+
+A `role` makes a `.gui` file **self-describing**. It is the `<nav>`-vs-`<div>` distinction: tagging a `<row>` as `role="nav-bar"` does not change a single pixel — it tells any machine, AI, or tool reading the file *what the node is*, without guessing. That is good *practice*, not good *taste*. It does not make a design better-looking; it makes the file **portable and AI-ready** — something an agent can re-emit correctly into SwiftUI, HTML (with the right ARIA), another design tool, or a search index.
+
+This catalog also backs the **Comprehensible** level of the quality score ([RFC-0040](../rfcs/0040-quality-scoring-model.md), [QUALITY.md](../spec/QUALITY.md)) — a measure of how AI-ready a file is *as semantics*. That level is computed **fully locally**: it reads the `role=` anchors the file declares (taken at face value), and each role documents its subtree as far as its **`reach`** allows (see below). Comprehensible is the fraction of nodes that fall within some role's reach — no AI, no network, no inference of untagged nodes.
+
+**What `role` means:** *this node is a canonical instance of a recognized UI structure.*
+**What `role` does not mean:** that using this structure is good design, or that a file lacking it is bad. An unconventional, convention-breaking design can be a perfectly good *file* — Comprehensible measures whether the file *labels* what it contains so an agent can translate it, never whether what it contains is fashionable. Judging design quality is not this catalog's job, and not the score's. (See [RFC-0041](../rfcs/0041-role-attribute.md) for the attribute; `role` is a structural classification, not an ARIA role or any runtime/accessibility claim.)
+
+**To add a role** — create a new `.md` file using the template below, fill in the frontmatter, and add a row to the index table.
+
+**To remove a role** — delete the file and remove its row from the index table. If the role was in a shipped version of the spec, note the removal in an RFC.
+
+---
+
+## Qualification
+
+A role earns a file here by appearing in at least one of three platform reference systems:
+
+| Platform | Reference |
+|---|---|
+| **Web** | [Component Gallery](https://component.gallery/) — covers Ant, Carbon, Fluent, GOV.UK, Primer, Spectrum, Material, and more |
+| **iOS** | Apple Human Interface Guidelines |
+| **Android** | Material Design Guidelines |
+
+**Naming reference (not a qualification gate):** [Mobbin glossary](https://mobbin.com/glossary) — used for AKA names only.
+
+Coverage sets scope:
+- All three → **Universal**
+- Two → **Cross-platform** (web+ios, web+android, mobile)
+- One → **Platform-scoped** (web, ios, android)
+
+Excluded regardless of coverage: rendered content with no UI structure role (`map`, `map-pin`).
+
+Deferred (no reference system coverage yet): `stacked-list`, `status-dot`, `table-of-contents`, `tile`.
+
+---
+
+## Reach
+
+Every role declares a **`reach`** — how far *down its own subtree* the role's meaning documents the content, used by the **Comprehensible** quality level ([RFC-0040](../rfcs/0040-quality-scoring-model.md)). It answers one question: *would you ever tag a separate component **inside** this one?*
+
+| `reach` | meaning | when |
+|---|---|---|
+| `full` | the whole subtree is the role's own anatomy | self-contained widgets — nothing inside ever gets its own role (button, every input, every menu, controls, indicators) |
+| `2` | a two-level internal grammar (group→item, row→cell), then content self-labels | structural hosts: table, tree, navigation-menu, carousel, gallery, sidebar |
+| `1` | one chrome level, then the payload carries its own roles | host surfaces: card, dialog, drawer, accordion, toolbar, top-navigation-bar, … |
+
+The scorer never *assumes* a reach — it reads this value from the catalog. A node counts as **documented** if it sits within its nearest roled ancestor's `reach`; Comprehensible is the documented-node ratio. See [RFC-0040](../rfcs/0040-quality-scoring-model.md) for the scoring.
+
+---
+
+## File template
+
+```markdown
+---
+role: kebab-case-name
+reach: full | 2 | 1          ← how deep this role documents its subtree (see Reach)
+scope: universal | mobile | ios | android | web+android | web+ios | web
+platforms: web, ios, android   ← list only the ones that apply
+---
+
+# Title Case Name
+
+**AKA:** comma-separated alternative names
+
+## Signature
+The structural shape of this role in .gui markup — required nodes, optional nodes, their relationships.
+
+## Context
+Where in the layout tree this role typically appears.
+
+## Disqualifying shapes
+Shapes that look like this role but are not it.
+```
+
+---
+
+## Index
+
+| Role | Reach | Scope | Platforms | AKA |
+|---|---|---|---|---|
+| [accordion](accordion.md) | 1 | Web | web | disclosure, collapsible, expandable |
+| [action-sheet](action-sheet.md) | full | iOS | ios | bottom-sheet, action-menu |
+| [alert](alert.md) | full | Universal | web, ios, android | warning, error-message, info-message |
+| [avatar](avatar.md) | full | Universal | web, ios, android | profile-image, user-photo, profile-picture |
+| [badge](badge.md) | full | Universal | web, ios, android | counter-badge, notification-badge, pip |
+| [banner](banner.md) | full | Universal | web, ios, android | promo-banner, announcement-banner, info-banner |
+| [breadcrumb](breadcrumb.md) | full | Web + Android | web, android | path-navigation, crumbs, page-path |
+| [button](button.md) | full | Universal | web, ios, android | primary-button, secondary-button, cta, action-button |
+| [card](card.md) | 1 | Universal | web, ios, android | content-card, panel, tile |
+| [carousel](carousel.md) | 2 | Web + Android | web, android | media-carousel, slider-gallery, slideshow |
+| [checkbox](checkbox.md) | full | Universal | web, ios, android | checklist-item, tick-box |
+| [chip](chip.md) | full | Web + Android | web, android | filter-chip, suggestion-chip, tag, label |
+| [color-picker](color-picker.md) | full | Universal | web, ios, android | color-selector, color-swatch |
+| [combobox](combobox.md) | full | Web | web | autocomplete, searchable-select, typeahead |
+| [command-palette](command-palette.md) | 1 | Web | web | command-menu, quick-actions, spotlight |
+| [context-menu](context-menu.md) | full | Universal | web, ios, android | right-click-menu, overflow-menu, action-menu |
+| [date-picker](date-picker.md) | full | Universal | web, ios, android | calendar-picker, date-selector |
+| [dialog](dialog.md) | 1 | Universal | web, ios, android | modal, alert-dialog, modal-dialog |
+| [divider](divider.md) | full | Universal | web, ios, android | separator, rule, horizontal-rule |
+| [drawer](drawer.md) | 1 | Web + Android | web, android | side-panel, slide-panel, navigation-drawer |
+| [dropdown-menu](dropdown-menu.md) | full | Universal | web, ios, android | overflow-menu, action-menu, kebab-menu |
+| [empty-state](empty-state.md) | 1 | Universal | web, ios, android | zero-state, blank-state, no-results, no-data |
+| [file-uploader](file-uploader.md) | full | Web | web | upload-zone, dropzone, file-input |
+| [floating-action-button](floating-action-button.md) | full | Android | android | FAB, floating-button |
+| [full-screen-overlay](full-screen-overlay.md) | 1 | Mobile | ios, android | immersive-modal, overlay, full-screen-modal |
+| [gallery](gallery.md) | 2 | Web + iOS | web, ios | media-grid, image-grid, photo-gallery |
+| [hyperlink](hyperlink.md) | full | Universal | web, ios, android | link, anchor, text-link |
+| [item-indicator](item-indicator.md) | full | Universal | web, ios, android | page-control, dot-indicator, step-indicator, carousel-indicator, slider-dots |
+| [launch-screen](launch-screen.md) | full | iOS | ios | splash-screen, loading-screen |
+| [loading-indicator](loading-indicator.md) | full | Universal | web, ios, android | spinner, loader, activity-indicator |
+| [navigation-menu](navigation-menu.md) | 2 | Universal | web, ios, android | nav-menu, navigation-drawer, side-nav |
+| [pagination](pagination.md) | full | Web + Android | web, android | pager, page-navigator |
+| [popover](popover.md) | full | Universal | web, ios, android | popup, flyout, floating-panel |
+| [progress-indicator](progress-indicator.md) | full | Universal | web, ios, android | progress-bar, circular-progress, determinate-progress |
+| [radio-button](radio-button.md) | full | Universal | web, ios, android | radio, radio-option |
+| [search-bar](search-bar.md) | full | Universal | web, ios, android | search-field, search-input, search-box |
+| [segmented-control](segmented-control.md) | full | Universal | web, ios, android | segmented-button-group, button-group |
+| [select](select.md) | full | Universal | web, ios, android | dropdown, dropdown-select, picker |
+| [sidebar](sidebar.md) | 2 | Universal | web, ios, android | navigation-rail, side-navigation, left-nav |
+| [skeleton](skeleton.md) | full | Web + Android | web, android | content-placeholder, loading-skeleton, ghost |
+| [slider](slider.md) | full | Universal | web, ios, android | range-slider, scrubber, input-range |
+| [stepper](stepper.md) | full | Universal | web, ios, android | quantity-stepper, number-stepper, increment-decrement |
+| [switch](switch.md) | full | Universal | web, ios, android | toggle, toggle-switch |
+| [tab-bar](tab-bar.md) | full | Universal | web, ios, android | tabs, bottom-navigation, bottom-tab-bar |
+| [table](table.md) | 2 | Web + iOS | web, ios | data-table, data-grid |
+| [text-area](text-area.md) | full | Universal | web, ios, android | multiline-input, multi-line-text-field |
+| [text-field](text-field.md) | full | Universal | web, ios, android | input-field, text-input, form-field |
+| [time-picker](time-picker.md) | full | Universal | web, ios, android | time-selector, clock-picker |
+| [toast](toast.md) | full | Web + Android | web, android | snackbar, notification-toast, flash-message |
+| [toolbar](toolbar.md) | 1 | Universal | web, ios, android | app-bar, command-bar, action-bar |
+| [tooltip](tooltip.md) | full | Web + Android | web, android | hover-card, hint, info-tip |
+| [top-navigation-bar](top-navigation-bar.md) | 1 | Universal | web, ios, android | nav-bar, app-bar, header, header-bar |
+| [tree](tree.md) | 2 | Web | web | tree-view, hierarchy-view, folder-tree |
+
+
+---
+
+<!-- section: The CCAC quality model -->
+
+# dotgui Quality
+
+**What a good `.gui` file looks like.**
+
+This document is the authority on quality for the dotgui format. It is the output of [RFC-0040](../rfcs/0040-quality-scoring-model.md). `gui-score` is the reference implementation — but any tool, in any language, on any platform, can implement against this spec.
+
+The order of authority is:
+
+```
+PRINCIPLES.md   →  what the format must always be
+DOTGUI.md       →  the format as it stands today
+QUALITY.md      →  what a good file looks like       (this document)
+gui-score       →  the reference implementation
+```
+
+---
+
+## What this measures — and what it does not
+
+**The score measures the file, not the design.**
+
+This is the founding distinction, and getting it right is the whole point of this document. An HTML validator does not tell you whether a web page is a good-looking website — it tells you whether the HTML is well-built: valid, semantic, no dead markup, readable. dotgui scoring is the same kind of tool. It answers *"is this a good `.gui` file?"* — never *"is this a good design?"*
+
+These are different questions with different owners:
+
+- **Is this a good file?** Objective, stable, true for everyone, forever. Clean structure, self-agreement, physical legibility, self-description. → **This document.**
+- **Is this good design?** Subjective, plural, ever-evolving. Beauty, composition, hierarchy, taste, what is current. → **Not scored.** That belongs to human judgement and to gui.farm's library of good examples.
+
+The test for whether something belongs in the score:
+
+> **Would another designer disagree? Would I disagree next year?**
+> If yes, it is design taste — it is out. If it is true for everyone, always, it is a file property — it can be scored.
+
+Every level below passes that test. Two consequences follow, and both are non-negotiable:
+
+- **Zero-AI.** Pure rule evaluation over the parsed tree and fixed, declared vocabularies. Same input → same output. The same trustworthiness standard as the producing pipeline (P14, RFC-0010).
+- **Fully local and offline.** No external service, no network, no corpus. The score is a self-contained package that runs with a file and nothing else. **gui.farm is not part of scoring** — it is a separate service for *creating* interfaces (ideation, examples, discovery), and it has no role in measuring file quality.
+
+---
+
+## The Gate
+
+Before quality is measured, two conditions must hold. Both are binary — pass or fail, no score.
+
+**Valid** — the file conforms to the dotgui spec. `core/schema/validate.ts` is the authority. A file that fails here is not a `.gui` file. It is not scored. It is rejected.
+
+**Intact** — every reference in the file resolves:
+- `$token` names exist in the `<tokens>` block
+- Asset `src` values point to real files inside the package
+- `component` ids on `<instance>` nodes match a declared `<component>`
+- `detached-from` origins are traceable
+
+A file can be syntactically valid and still be silently broken. Intact catches the breakage before scoring begins.
+
+If either condition fails, return an error. There is no report.
+
+---
+
+## CCAC — The Four Levels
+
+Quality is scored across four levels. **All four are local, deterministic, and zero-AI** — they run on the parsed tree and fixed vocabularies, with no external service.
+
+```
+C — Clean         is the file built without waste?
+C — Consistent    does the file agree with itself?
+A — Accessible    is the file physically legible?     (WCAG 2.2 visual criteria)
+C — Comprehensible how AI-ready is the file as semantics? (core/roles vocabulary)
+```
+
+Every level emits the same output envelope:
+
+```json
+{ "score": 0–100, "audits": [...] }
+```
+
+What lives inside `audits` differs per level. The envelope never changes.
+
+---
+
+### C — Clean
+
+**The question:** how much unnecessary work does the file contain?
+
+A clean file earns every node. Layout is expressed as auto-layout, not absolute coordinates. Assets are deduplicated. Tokens are referenced, not inlined. No designer defends dead nodes or spacer hacks — this is a file property, not a taste call.
+
+**How it is measured:**
+
+Clean analyses the parsed tree directly. (It does not run the optimizer — the optimizer is the separate tool that can later *apply* the fixes Clean marks safe.) A node counts as **dead weight** only if it passes a **two-gate** test:
+
+1. **Renders nothing** — no paint, or `visible=false` / `opacity=0` / zero-size / empty text.
+2. **Removal is safe** — breaks no instance/component/mask contract, and does not move its siblings.
+
+Gate 2 is **parent-aware**: under an auto-layout parent an `opacity=0` node still holds its slot, so removing it collapses the layout. That node is not dead weight — it is a **spacer hack** (use `gap`/padding), flagged but never silently deleted.
+
+Buckets scored: **A** dead weight · **B** redundant wrappers · **C** hard-way layout (absolute positioning + spacer hacks). Each finding is a named audit with a severity, a path, a reason, and an autofix flag. Autofixable audits delegate to the optimizer.
+
+**Audit shape:**
+```json
+{
+  "rule": "redundant-wrapper",
+  "severity": "warn",
+  "path": "gui > col[0] > row[2]",
+  "why": "wrapper adds nesting with no layout or visual purpose",
+  "autofixable": true
+}
+```
+
+---
+
+### C — Consistent
+
+**The question:** does the file agree with itself?
+
+A consistent file uses the same spacing, the same type scale, the same color palette — and expresses them through tokens, not repeated inline literals. Its token system is coherent: tokens are defined, used, used correctly, and named with intent. Every check here is self-referential — the file judged against its own declared intent, no external standard.
+
+**How it is measured — value entropy:**
+
+Count distinct spacing values, font sizes, color values, border radii across the file. Cluster near-duplicates — a lone `13` among `8 / 16 / 24` is a smell. Flag outliers.
+
+Token coverage: what fraction of visual properties (`fill`, `gap`, `font-size`, `radius`) reference `$tokens` vs. inline literals.
+
+Instance reuse: how many visually-identical subtrees exist as duplicated nodes vs. `<instance>` references.
+
+**How it is measured — three token audits:**
+
+**Token-usage coherence** — does the file use its own tokens?
+- Token defined but never referenced → dead token
+- Inline value that exactly matches a defined token → missed reference
+- Inline value that almost matches a token but differs slightly → silent drift
+
+**Token semantic misuse** — is each token used for what its name declares?
+
+The token's name is its type declaration. Using it on the wrong property is a misuse:
+- `$radius-corner-sm` on `font-size` → wrong category
+- `$color-border-primary` on `fill` → border token on a fill property
+- `$spacing-gap-md` on `border-width` → wrong category
+
+This check is best-effort until the format formally adopts token categories. Once token types are declared in the spec, the check becomes exact: token category vs. property category, mismatch = audit.
+
+**Token naming coherence** — do token names carry semantic intent?
+
+A name should declare what the token *means*, not what it *is*. Well-structured names follow `category-property-variant`:
+
+| Name | Verdict |
+|---|---|
+| `abc`, `hello-buddy`, `red`, `16px` | Fail — meaningless or appearance-based |
+| `color-1`, `space-2`, `text-3` | Fail — enumerated, not semantic |
+| `color`, `spacing`, `radius` | Weak — category only, no variant |
+| `color-background-primary` | Pass |
+| `spacing-gap-md` | Pass |
+| `radius-corner-sm` | Pass |
+
+**Audit shape:**
+```json
+{
+  "check": "token-semantic-misuse",
+  "severity": "error",
+  "path": "gui > tokens > $radius-corner-sm",
+  "why": "token defined as radius category, used on font-size",
+  "token": "$radius-corner-sm",
+  "defined-as": "radius",
+  "used-on": "font-size",
+  "autofixable": false
+}
+```
+
+---
+
+### A — Accessible
+
+**The question:** can a human physically read this design?
+
+Accessibility here means visual and physical readability — contrast, legibility, reachability. It does not mean document or interaction accessibility (ARIA, keyboard navigation, focus management, screen reader support). Those are out of scope per P5: `.gui` is a visual surface, not a document.
+
+This is the one level anchored to an *external* standard rather than the file itself. But the standard is not taste: no designer argues that 2:1 contrast becomes readable next year. WCAG thresholds are physical facts, so this level still passes the test.
+
+**Standard:** WCAG 2.2 visual criteria only.
+
+| Check | WCAG ref | Threshold |
+|---|---|---|
+| Text contrast (normal) | 1.4.3 | 4.5:1 minimum, 7:1 enhanced |
+| Text contrast (large, ≥18pt or ≥14pt bold) | 1.4.3 | 3:1 minimum, 4.5:1 enhanced |
+| Non-text contrast | 1.4.11 | 3:1 |
+| Text spacing | 1.4.12 | line-height ≥ 1.5× font-size |
+| Touch target size | 2.5.5 | 44×44pt minimum (iOS / Android files) |
+
+**How it is measured — all from markup, no rendering required:**
+
+- **Contrast** — compute luminance from `color` and `fill` on `<text>` nodes and apply the WCAG ratio formula. Flag `<text>` on gradient or image fills as uncertain — contrast cannot be guaranteed and is reported as such, not silently passed.
+- **Font size** — `font-size` below 12 on any `<text>` node is flagged. Below 11 is a hard fail.
+- **Touch targets** — on `platform="ios"` or `platform="android"` files, button-shaped or icon-only nodes with `w` or `h` below 44 fail 2.5.5.
+
+APCA (Accessible Perceptual Contrast Algorithm) is noted as the modern alternative to WCAG's ratio formula and may replace it in a future version of this spec.
+
+**Audit shape:**
+```json
+{
+  "criterion": "contrast-ratio",
+  "wcag-ref": "1.4.3",
+  "severity": "error",
+  "path": "gui > col[0] > text[3]",
+  "why": "text contrast ratio is below the 4.5:1 minimum",
+  "computed": "3.1:1",
+  "required": "4.5:1",
+  "autofixable": false
+}
+```
+
+---
+
+### C — Comprehensible
+
+**The question:** how AI-ready is the file *as semantics* — how much meaning does it carry that an agent can translate into dev-ready code, with context?
+
+The carrier of that meaning is the `role=` attribute ([RFC-0041](../rfcs/0041-role-attribute.md)). A role names what a structure *is* — nav-bar, tab-bar, card — the way `<nav>` does in HTML. An agent reading `role="tab-bar"` knows what it is looking at and can re-emit it into SwiftUI, into HTML with the right ARIA, into another tool. An anonymous `<row>` of boxes forces every consumer to guess.
+
+**This is not a design judgement.** Comprehensible does *not* ask "is using a nav bar good design?" — an unconventional, convention-breaking design can be an excellent, highly-comprehensible *file*. It asks the **semantic-markup** question: *does the file say what it is?* Using `<nav>` does not make a page prettier; it makes the file **self-describing** — good practice, not good taste, and it does not change with fashion. (Renamed from *Conventional*, which wrongly implied "follows conventions"; the property is self-description / AI-readiness.)
+
+**How it is measured — reach-coverage.**
+
+The score is the fraction of the tree a declared role *documents*, where each role reaches only as far down its subtree as its **`reach`** allows. That bound is what makes coverage honest instead of gameable, and it keeps the score zero-AI: it is computed from two facts — *is there a role* and *how far is its reach* — never from a guess about which untagged node "should" have one.
+
+Every role in `core/roles/` declares a `reach`:
+
+| `reach` | covers | roles |
+|---|---|---|
+| `full` | the whole subtree (it's all the widget's anatomy) | every input, every menu, button, switch, slider, tab-bar, indicators… |
+| `2` | a two-level grammar (group→item, row→cell) | table, tree, navigation-menu, carousel, gallery, sidebar |
+| `1` | one chrome level; payload self-labels | card, dialog, drawer, accordion, toolbar, top-navigation-bar |
+
+A node is **documented** if it has a role, or sits within the `reach` of some roled ancestor. **Comprehensible = documented ÷ content nodes** (the root canvas wrapper is excluded as scaffolding). Roles are read at **face value** — like SEO trusting a `<nav>`, the score does not check whether the structure "really looks like" its role.
+
+Two failures of naive coverage are closed by `reach`: a lazy `role="card"` on the whole screen no longer claims 100% (it reaches one level); and a plain node lowers the score not because we *decided* it should be tagged, but because it factually sits beyond any declared role's reach. A wall of anonymous boxes scores low — a true statement about its translatability. (A page of `<div>` is valid but not self-described — which costs AI-readiness the way all-`<div>` markup costs SEO.)
+
+There is **no inference of undeclared roles.** Suggesting a role for untagged structure belongs at *creation time* — the optimizer's opt-in `--annotate-roles` pass ([RFC-0041](../rfcs/0041-role-attribute.md)) — never in the score.
+
+**Audit shape** — a plain inventory fact, one per declared role:
+```json
+{
+  "role": "tab-bar",
+  "path": "gui > col[0] > row[3]"
+}
+```
+
+---
+
+## Output
+
+A passing gate followed by a full CCAC report:
+
+```json
+{
+  "clean": {
+    "score": 74,
+    "audits": [
+      { "rule": "redundant-wrapper", "severity": "warn", "path": "gui > col[0] > row[2]", "why": "...", "autofixable": true }
+    ]
+  },
+  "consistent": {
+    "score": 88,
+    "audits": [
+      { "check": "token-semantic-misuse", "severity": "error", "token": "$radius-corner-sm", "defined-as": "radius", "used-on": "font-size", "autofixable": false }
+    ]
+  },
+  "accessible": {
+    "score": 91,
+    "audits": [
+      { "criterion": "contrast-ratio", "wcag-ref": "1.4.3", "severity": "warn", "computed": "3.8:1", "required": "4.5:1", "autofixable": false }
+    ]
+  },
+  "comprehensible": {
+    "score": 78,
+    "audits": [
+      { "role": "top-navigation-bar", "path": "gui > col[0] > row[0]" },
+      { "role": "card",               "path": "gui > col[0] > col[1]" },
+      { "role": "tab-bar",            "path": "gui > col[0] > row[2]" }
+    ]
+  }
+}
+```
+
+A gate failure returns an error — no report:
+
+```json
+{
+  "error": "intact",
+  "details": [
+    { "ref": "$color-brand-primary", "type": "token", "path": "gui > col[0] > text[1]", "reason": "token not declared in <tokens> block" }
+  ]
+}
+```
+
+---
+
+## What This Document Is Not
+
+- **Not a design critic.** It measures the file, not the design. Beauty, composition, hierarchy, taste, and whether a design is *current* are out of scope — they are subjective, plural, and ever-evolving. That judgement belongs to humans and to gui.farm's library of good examples, never to this score.
+- **Not a style guide.** It defines measurable file quality, not aesthetic preference.
+- **Not a validator.** Conformance to the spec is the gate — `validate.ts` is the authority there.
+- **Not a complete accessibility standard.** Only WCAG 2.2 visual criteria are in scope. Interaction and document accessibility are out of scope per P5.
+- **Not dependent on gui.farm or any service.** All four levels run locally and offline. gui.farm helps people *create* interfaces; it plays no part in measuring quality.
+
+---
+
+## Versioning
+
+This document tracks the format version. Breaking changes to scoring criteria — new levels, removed audits, changed thresholds — are proposed as RFCs and reflected here.
+
+Current version: `0.2` (CCAC model, RFC-0040). The earlier CCACT model included a fifth level, **Trend**, which scored a design's fashion-alignment against a temporal corpus. Trend was removed (RFC-0040, 2026-06-17): fashion is not a file property, it changes year to year, and optimizing for it homogenizes the ecosystem. Style fingerprinting survives only as a gui.farm discovery facet, never as a score.
+
+
+---
+
+<!-- section: @dotgui/kit — the reference engine -->
+
+# @dotgui/kit
+
+**The dotgui engine in one package.** Everything required to take a `.gui` file
+through its entire life — parse, validate, render, score — lives here, behind one
+version and one install.
+
+```bash
+bun add @dotgui/kit
+```
+
+---
+
+## What it is
+
+A `.gui` file is markup. On its own it's inert: bytes that mean nothing until
+something can read them, check them, draw them, and judge them. `@dotgui/kit` is
+that something — the **reference engine** for the format.
+
+It is a **pure, deterministic library**. Same input → same output, every time.
+There is **zero AI in this package.** The kit doesn't generate designs, guess
+intent, or call a model. It executes the format's rules and nothing else. That
+separation is deliberate (see *Where the AI lives* below).
+
+If the format's *meaning* depends on it, it's in the kit. If it's a product built
+*on top* of the format (exporters, hosted services, editors), it isn't.
+
+---
+
+## The lifecycle of a `.gui` file
+
+The kit is organized around the life of a single file. Two paths:
+
+### Write path — creating a file
+
+```mermaid
+flowchart TD
+    A(["✍️ Author markup"]) --> V{"Validate · <code>/validate</code><br/><b>the only required step</b>"}
+    V -->|"broken / illegal"| A
+    V -->|"valid"| W["Write → .gui<br/><i>zip markup + assets</i>"]
+    W --> Z(["📦 .gui package"])
+
+    V -.->|"optional"| R["Render · <code>/render</code><br/><i>see it · or make preview.webp</i>"]
+    R -.->|"optional preview"| W
+    Z -.->|"optional · advisory · consumer decides policy"| S["Score · <code>/score</code><br/><i>quality report — kit takes no action.<br/>A low score is still a valid file.</i>"]
+
+    style R stroke-dasharray: 5 5
+    style S stroke-dasharray: 5 5
+```
+
+**Only validate is required.** Everything else is à la carte — a tool that just
+needs to produce a `.gui` pulls `validate`, then writes valid markup (+ assets) to
+a zip. Render and score are capabilities you reach for *if you need them*, not
+gates you must pass through.
+
+1. **Validate** — *is this broken?* The one hard check. Illegal/unparseable markup
+   can't be saved as a real `.gui` — fix it and retry. The format's equivalent of
+   a browser rejecting malformed code.
+2. **Write / pack** — bundle valid markup (+ assets) into a `.gui`. Minimal output
+   needs nothing but valid markup. *(This package I/O — read/write/pack/unpack,
+   asset add/rm, set-preview — is the kit's `package` surface: deterministic file
+   operations every tool reuses. It currently lives in the CLI and is the next
+   consolidation target; see ARCHITECTURE.md.)*
+3. **Render** *(optional)* — *what does it look like?* The HTML render is the
+   format's reference output. Also feeds the `preview.webp`; the kit rasterizes
+   via `puppeteer-core` by default (opt into full `puppeteer` for a bundled
+   Chromium), falling back to a placeholder preview if no browser is found. See
+   [rasterize](src/rasterize/README.md).
+
+**Score is not a mandatory step in packing.** Packing a valid file never requires
+a score. Score is a separate, read-only quality lens you can run on any valid file
+— it returns a CCAC report (Clean · Consistent · Accessible · Comprehensible; all
+local and zero-AI; Comprehensible scores how AI-ready the file is as semantics by
+reach-coverage over its declared `role=` anchors) and **the kit itself takes no
+action on it.**
+A low score is still a valid, packable file. Think HTML *best-practice standards*
+— advisory, not a parser error.
+
+**What happens with the score is entirely the author's call.** The kit only
+produces the number; the consuming tool decides the policy. A CLI might fail a
+build below a threshold; the app might show a warning badge; a batch job might
+auto-discard known-bad output; another tool might just log it and move on. The kit
+hands you a measurement and stays out of the way — it never imposes a gate of its
+own.
+
+### Read path — consuming a file
+
+```
+.gui bytes  →  parse  →  render
+               ─────     ──────
+               /parser   /render
+```
+
+Parse resolves tokens, styles, and modes into a normalized model; render turns
+that model into HTML. That's the whole round trip.
+
+---
+
+## What's inside (subpath exports)
+
+The root exports only the canonical **types**. Behaviour lives in subpaths, so a
+consumer only bundles what it imports — import the parser and you don't pull in
+the renderer.
+
+Each module has its own README with the full API, examples, and use cases —
+linked below.
+
+| Import | What it does | Docs |
+|---|---|---|
+| `@dotgui/kit` | canonical types for the format | [types](src/schema/README.md) |
+| `@dotgui/kit/validate` | `validate(markup)` → schema errors, or clean | [validate](src/schema/README.md) |
+| `@dotgui/kit/parser` | `parseXml(markup)` → resolved model (tokens/styles/modes resolved) | [parser](src/parser/README.md) |
+| `@dotgui/kit/render` | `render(...)`, `renderToHTML(...)` → HTML (browser-clean) | [render](src/render/README.md) |
+| `@dotgui/kit/score` | `score(...)`, `scorePackage(...)` → CCAC report | [score](src/score/README.md) |
+| `@dotgui/kit/package` | `unpack`/`pack` + read/edit a `.gui` in memory | [package](src/package/README.md) |
+| `@dotgui/kit/lint` | `lintMarkup(...)` → idiom + content findings | [lint](src/lint/README.md) |
+| `@dotgui/kit/autofix` | `autofixMarkup(...)` → deterministic repair | [autofix](src/autofix/README.md) |
+| `@dotgui/kit/rasterize` | `rasterize`/`renderPreview` → image / `preview.webp` | [rasterize](src/rasterize/README.md) |
+
+### Examples
+
+```ts
+import { validate } from '@dotgui/kit/validate'
+import { renderToHTML } from '@dotgui/kit/render'
+import { score } from '@dotgui/kit/score'
+
+const result = validate(markup)        // legal?
+const html   = renderToHTML(model)     // what does it look like?
+const report = score(markup)           // how good is it?
+```
+
+---
+
+## Optimizer (injected) & rasterizer (default in-kit)
+
+- **`optimize`** (Clean's diff signal) — **injected**. The optimizer is a
+  separate, not-yet-stable package, so the kit doesn't depend on it. Pass it into
+  `score`:
+
+  ```ts
+  import { optimize } from 'gui-optimizer'
+  score(markup, { optimize })   // Clean scored fully
+  score(markup)                 // Clean reported NA — absent with a reason, never faked
+  ```
+
+- **rasterizer** (`render` → `preview.webp`) — **shipped, with a default**. The
+  kit rasterizes via `puppeteer-core` (a *light* install — no bundled Chromium —
+  that drives a system browser). Opt into full `puppeteer` with
+  `DOTGUI_PUPPETEER=full` for a self-contained Chromium. No browser found →
+  placeholder `preview.webp` + a console error, never a hard failure. Full design
+  and limitations: [rasterize](src/rasterize/README.md).
+
+The kit stays pure and light; heavy or
+volatile machinery is the consumer's choice.
+
+---
+
+## Where the AI lives (spoiler: not here)
+
+AI — when it's involved at all — lives at **one place only: authoring the
+markup.** And authoring is author-agnostic: the `.gui` can be written by an AI
+agent *or* by a human using tools (the CLI, the app, an editor). The kit sits
+entirely downstream and never knows, or cares, which one produced the file.
+
+```mermaid
+flowchart LR
+    AI(["🤖 AI agent<br/>(host + skill)"]) --> M["✍️ .gui markup"]
+    H(["🧑 Human<br/>(CLI / app / editor)"]) --> M
+    M --> K["@dotgui/kit<br/><i>deterministic · no AI</i><br/>validate → render → pack"]
+    K -.->|"advisory"| S["score · quality report"]
+```
+
+Everything to the right of the markup is pure and deterministic. Keeping the kit
+AI-free means its behaviour is reproducible and testable, and the quality report
+means the same thing no matter who — or what — wrote the file. The agent (or
+person) generates; the kit just runs the rules.
+
+---
+
+## Who consumes it
+
+Everything that touches `.gui` files is a thin consumer of this one engine:
+
+| Consumer | Uses | Role |
+|---|---|---|
+| `@dotgui/cli` | parser · validate · render · score · package · lint · autofix · rasterize | command-line workflow; the AI-free deterministic toolchain |
+| `gui-app` | render · validate · package · lint · autofix | the standalone app — authoring + the preview grid |
+| `gui-figma` | parser · render | Figma plugin (import/round-trip) |
+| `gui-landing` | render | marketing site live previews |
+| `dotgui-vscode` | (planned) validate · render | editor diagnostics + preview |
+| `gui-tools` *(future)* | render → PNG/JPG/PDF/SVG | export platform; more output formats on the same engine |
+
+Each one imports the kit and stops reimplementing the engine. A fix to the parser
+or renderer ships once, atomically, to all of them — no version cascade.
+
+---
+
+## Design principles
+
+- **One package, one version.** The engine pieces are tightly coupled and move
+  together. No internal version drift.
+- **Subpath exports + tree-shaking.** Use one slice, ship one slice.
+- **Sensible defaults, swappable.** The rasterizer ships a `puppeteer-core`
+  default (light install) you can upgrade to full `puppeteer` or override; the
+  optimizer (unstable) is injected. Defaults work out of the box; nothing heavy is
+  forced.
+- **HTML is the reference output.** Other formats are derived, and live outside
+  the kit.
+
+See [`../ARCHITECTURE.md`](../ARCHITECTURE.md) for the full consolidation decision
+and rationale.
+
+
+---
+
+<!-- section: @dotgui/cli — the command-line toolchain -->
+
+# @dotgui/cli
+
+The command-line toolchain for the dotgui format. `gui` reads, edits, validates, renders, and packages `.gui` files — and installs the dotgui **skill** into the AI tools you already use.
+
+```
+npm i -g @dotgui/cli
+gui setup
+```
+
+---
+
+## Mental model
+
+**`gui` does not contain an AI.** It is a fast, deterministic tool for working with `.gui` files: lint, autofix, render, package. That's it.
+
+The *design generation* happens in **your own agent** — Claude Code, Gemini CLI, Cursor, Codex, whatever you already use. `gui setup` installs the dotgui skill into those tools, so when you ask one to "make a stocks app in gui," it knows the format, writes the markup, and calls `gui` to validate and package the result.
+
+Why this split: a real agent — warm session, your best model, full tool-calling and vision — produces better UIs than anything a CLI could wrap around a model. So the CLI doesn't try. It owns the one thing only it can do perfectly: keep `.gui` files **valid**.
+
+```
+You ──ask──▶ your agent ──uses──▶ dotgui skill ──calls──▶ gui (this tool)
+                                                            └─ lint · autofix · render · package
+```
+
+---
+
+## What a `.gui` is
+
+A `.gui` is a **zip package**:
+
+```
+home.gui
+├── design.guix     # the markup (XML)
+├── assets/         # images, SVGs
+└── preview.webp    # rendered thumbnail
+```
+
+You never unzip it by hand. `gui` treats a `.gui` like a folder — read the markup, list assets, add or remove an asset — and does the unzip/rezip for you in an **ephemeral shadow directory** that is created and deleted within each command. Nothing is left on disk.
+
+---
+
+## Commands
+
+### Edit the markup
+
+```bash
+gui read  home.gui            # print the markup
+gui write home.gui            # read markup from stdin → lint → repack → regenerate preview
+```
+
+`gui write` is the save step: it lints, **exits non-zero with the errors** if the markup is invalid (nothing is written), and on success repacks the zip and regenerates `preview.webp` so it always matches. Pass `--no-preview` to skip the render for speed.
+
+### Assets & preview (folder-like)
+
+```bash
+gui read home.gui --assets            # list asset names + sizes
+gui read home.gui --preview           # extract preview, print a viewable path
+gui read home.gui --asset hero.webp   # extract one asset, print a viewable path
+gui add home.gui logo.png [as brand.png]
+gui rm  home.gui assets/old.webp
+gui set-preview home.gui shot.webp
+```
+
+`--preview` and `--asset` return a **file path** (in the shadow cache) so your agent can open the image with its own vision. Lists are printed as text.
+
+### Check
+
+```bash
+gui lint home.gui            # validate only
+gui lint home.gui --fix      # apply deterministic autofix, write back
+```
+
+### View
+
+```bash
+gui render home.gui -o out.png   # rasterize to an image (PNG/WEBP/JPEG by extension)
+gui open   home.gui              # open in the dotgui viewer
+```
+
+`render` (and the preview that `gui write` regenerates) drives a **Chromium-based
+browser already installed** on your machine — Chrome, Edge, Brave, or Chromium —
+via puppeteer-core (no bundled browser). Set `PUPPETEER_EXECUTABLE_PATH` to force a
+specific one. If none is found, `render` fails with guidance and `gui write` simply
+skips the preview rather than blocking the save.
+
+### Inspect
+
+```bash
+gui info home.gui            # name, platform, asset list, dimensions
+```
+
+### Packaging (for humans — agents never need these)
+
+```bash
+gui pack   ./my-design home.gui   # a markup+assets folder → .gui
+gui unpack home.gui ./my-design   # .gui → a real folder you can edit
+```
+
+### Setup
+
+```bash
+gui setup                   # install the skill into detected agents + allowlist `gui`
+gui skill where             # show where the skill is installed
+gui skill update            # refresh the skill after an upgrade
+gui --version
+gui help
+```
+
+---
+
+## `gui setup`
+
+Run once after install. It:
+
+1. Detects installed agents (Claude Code, Gemini CLI / Antigravity, …).
+2. Installs the dotgui skill into each one's discovery location (e.g. `~/.claude/skills/dotgui/`, the global Gemini skills dir).
+3. Allowlists the `gui` command so the agent runs it **without permission prompts**.
+
+It asks for one confirmation; it does not write anything silently. For agents without a skill model, it prints the snippet to add manually.
+
+After setup, ask any of those tools for a UI "in gui" and it builds it — picking the skill automatically.
+
+---
+
+## Behaviors
+
+- **Ephemeral shadow dir** — every asset/markup command unzips → changes → rezips → **deletes** the working dir before exiting. No leftover folders.
+- **Self-cleaning** — the shadow dir lives in one fixed cache (`~/.cache/dotgui/`); on startup `gui` sweeps any stray dir older than a few hours, so a crashed command can't litter your filesystem.
+- **Lint gates everything** — `write`, `add`, `set-preview`, and `pack` all lint before committing. Invalid markup never gets packaged; the command exits non-zero with structured errors.
+- **Preview stays in sync** — `gui write` regenerates `preview.webp` on every successful save.
+
+---
+
+## Conventions
+
+| Flag | Meaning |
+|------|---------|
+| `--json` | machine-readable output and errors (for agents) |
+| `--fix` | apply deterministic autofix and write back |
+| `-o, --out <path>` | output path |
+| `--no-preview` | skip preview regeneration on write |
+| `--quiet` | suppress non-essential output |
+
+**Exit codes:** `0` success · `1` lint/validation error · `2` bad input or missing file · `3` user cancelled.
+
+---
+
+## Roadmap
+
+- `gui mount home.gui` — a live folder that auto-syncs back into the zip (the only persistent mode; cleans up on unmount).
+- `gui diff a.gui b.gui` — structural diff.
+- `gui pull <figma-url>` / `gui push home.gui <figma-url>` — Figma round-trip.
+
+
+---
+
+<!-- section: @dotgui/embed — render .gui in the browser -->
+
+# @dotgui/embed
+
+Render `.gui` files anywhere in the browser. A thin layer over [`@dotgui/kit`](../kit)'s
+renderer — one CDN script, **zero dependencies** for the consumer.
+
+```html
+<script src="https://unpkg.com/@dotgui/embed"></script>
+```
+
+One element does everything: **`<gui-embed>`**. It's the explicit "render a gui here"
+declaration. The file comes from an inner `<script type="application/gui">` (inline)
+or a `src` (external). No chrome by default; add booleans for the widget.
+
+## Render a file
+
+```html
+<!-- inline content — parser-safe carrier -->
+<gui-embed>
+  <script type="application/gui">
+    <gui> … </gui>
+  </script>
+</gui-embed>
+
+<!-- external file -->
+<gui-embed src="hero.gui"></gui-embed>
+```
+
+Inline content lives in a `<script type="application/gui">` because script content is
+raw text the HTML parser never touches — so a full `.gui` survives verbatim, including
+tags that collide with HTML void elements (`<col>`, `<img>`). The script is also the
+source of truth: edit it, re-render; copy/download emits it unchanged.
+
+`src` is fetched, unzipped, assets resolved to `blob:` URLs, and rendered — never shown
+raw.
+
+## Standalone vs widget — same tag, just attributes
+
+```html
+<!-- standalone preview: no chrome, sizes to the file's native size -->
+<gui-embed> <script type="application/gui">…</script> </gui-embed>
+
+<!-- widget: fixed canvas, controls, dot grid -->
+<gui-embed src="hero.gui" style="width:360px;height:460px"
+           zoom download copy mode-switch grid></gui-embed>
+```
+
+**Sizing (CSS):**
+- No CSS → sizes to the file's native dimensions, like an inline SVG.
+- Width only → height follows the file's aspect ratio.
+- Width + height → fixed canvas; the file is placed center-center, scaled to fit.
+
+**Controls (individual booleans — present = on):**
+
+| attr | default | effect |
+|---|---|---|
+| `zoom` | on | scroll/pinch-zoom + drag-pan, and a "Fit" reset button |
+| `grid` | on | dot-grid canvas background (the dotgui surface) |
+| `download` | off | download the `.gui` file |
+| `copy` | off | copy the `.guix` markup to the clipboard |
+| `mode-switch` | off | mode dropdown — only when the file declares >1 mode |
+
+Default render mode comes from the file (RFC-0037 `<modes>`). Theme the grid with
+`--gui-embed-bg`, `--gui-embed-dot`, `--gui-embed-dot-gap`.
+
+## Programmatic use
+
+The CDN build self-installs. As a module:
+
+```js
+import { install } from '@dotgui/embed'
+install() // registers <gui-embed>
+```
+
+## Build
+
+```sh
+bun run build       # → dist/gui-embed.js (IIFE, CDN) + dist/gui-embed.esm.js
+bun run typecheck
+```
+
+Everything (`@dotgui/kit` render + parser + package, panzoom, fflate) is bundled into
+one self-contained file. Demo: `embed/demo/index.html`.

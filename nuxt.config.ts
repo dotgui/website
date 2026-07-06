@@ -17,13 +17,18 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
-      routes: ['/', '/spec', ...specRoutes]
+      routes: ['/', '/spec', '/spec/roles', '/spec/quality', '/cli', '/kit', '/embed', '/figma', '/faq', ...specRoutes]
     }
   },
   routeRules: {
     '/': { prerender: true },
     '/spec': { prerender: true },
     '/spec/**': { prerender: true },
+    '/cli': { prerender: true },
+    '/kit': { prerender: true },
+    '/embed': { prerender: true },
+    '/figma': { prerender: true },
+    '/faq': { prerender: true },
     // CodeMirror + panzoom editor — no SEO value, keep it a client-only SPA.
     '/playground': { ssr: false }
   },
@@ -33,8 +38,13 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'en' },
       title: '.gui — A text-based UI format for AI agents & Figma export',
+      // NOTE: no global canonical here — each page sets its own via
+      // usePageSeo(); a site-wide canonical made every route claim to be
+      // the homepage, which tells Google to deindex the spec pages.
       link: [
-        { rel: 'canonical', href: SITE_URL }
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap' }
       ],
       meta: [
         { charset: 'utf-8' },

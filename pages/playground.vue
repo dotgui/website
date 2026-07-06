@@ -83,13 +83,12 @@
 </template>
 
 <script setup lang="ts">
-useSeoMeta({
+usePageSeo({
+  path: '/playground',
   title: '.gui Playground — write, render & preview .gui files live',
   description: 'Edit .gui XML and see it render instantly. An interactive playground for the .gui UI format — write code, upload images, and preview the result in the browser.',
   ogTitle: '.gui Playground',
-  ogDescription: 'Write .gui XML and see it render live in your browser.',
-  ogUrl: 'https://dotgui.org/playground',
-  twitterCard: 'summary_large_image'
+  ogDescription: 'Write .gui XML and see it render live in your browser.'
 })
 
 import { EditorView, keymap, lineNumbers, drawSelection, highlightActiveLine, dropCursor } from '@codemirror/view'
@@ -977,22 +976,23 @@ function guiLintFn(view: EditorView): Diagnostic[] {
 
 // ─── CodeMirror theme ─────────────────────────────────────────────────────────
 
+// Legible on the light cream surface — matches the spec/inspector token palette.
 const guiHighlight = HighlightStyle.define([
-  { tag: tags.tagName, color: '#6ea8fe' },
-  { tag: tags.attributeName, color: '#79c0ff' },
-  { tag: tags.attributeValue, color: '#a5d6ff' },
-  { tag: tags.string, color: '#a8d8a8' },
-  { tag: tags.comment, color: '#484f58', fontStyle: 'italic' },
-  { tag: tags.angleBracket, color: '#4a4a5a' },
-  { tag: tags.operator, color: '#4a4a5a' },
-  { tag: tags.punctuation, color: '#4a4a5a' },
-  { tag: tags.meta, color: '#666' },
+  { tag: tags.tagName, color: '#2b6be4' },
+  { tag: tags.attributeName, color: '#b7471d' },
+  { tag: tags.attributeValue, color: '#1f7a43' },
+  { tag: tags.string, color: '#1f7a43' },
+  { tag: tags.comment, color: '#98978a', fontStyle: 'italic' },
+  { tag: tags.angleBracket, color: '#9a988e' },
+  { tag: tags.operator, color: '#9a988e' },
+  { tag: tags.punctuation, color: '#9a988e' },
+  { tag: tags.meta, color: '#98978a' },
 ])
 
 const guiTheme = EditorView.theme({
   '&': {
     background: 'var(--bg)',
-    color: '#aaa',
+    color: '#55534c',
     height: '100%',
     fontSize: '12.5px',
   },
@@ -1008,8 +1008,8 @@ const guiTheme = EditorView.theme({
   '.cm-cursor, .cm-dropCursor': { borderLeftColor: '#6366f1', borderLeftWidth: '2px' },
   '.cm-selectionBackground': { background: 'rgba(99,102,241,0.18)' },
   '&.cm-focused .cm-selectionBackground': { background: 'rgba(99,102,241,0.25)' },
-  '.cm-activeLine': { background: 'rgba(255,255,255,0.025)' },
-  '.cm-activeLineGutter': { background: 'rgba(255,255,255,0.025)' },
+  '.cm-activeLine': { background: 'rgba(16,16,16,0.035)' },
+  '.cm-activeLineGutter': { background: 'rgba(16,16,16,0.035)' },
   '.cm-gutters': {
     background: 'var(--bg)',
     borderRight: '1px solid var(--border-subtle)',
@@ -1034,19 +1034,19 @@ const guiTheme = EditorView.theme({
     background: 'var(--surface)',
     border: '1px solid var(--border)',
     borderRadius: '6px',
-    boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+    boxShadow: '0 8px 24px rgba(16,16,16,0.12)',
   },
   '.cm-tooltip-autocomplete > ul': { fontFamily: '"Berkeley Mono", ui-monospace, monospace', fontSize: '12px' },
-  '.cm-tooltip-autocomplete > ul > li': { padding: '4px 12px', color: '#aaa' },
-  '.cm-tooltip-autocomplete > ul > li[aria-selected]': { background: '#1e1e2e', color: '#e8e8e8' },
-  '.cm-completionLabel': { color: '#79c0ff' },
-  '.cm-completionDetail': { color: '#484f58', fontStyle: 'italic', marginLeft: '8px' },
+  '.cm-tooltip-autocomplete > ul > li': { padding: '4px 12px', color: '#55534c' },
+  '.cm-tooltip-autocomplete > ul > li[aria-selected]': { background: 'var(--surface-strong)', color: 'var(--ink)' },
+  '.cm-completionLabel': { color: '#2b6be4' },
+  '.cm-completionDetail': { color: '#98978a', fontStyle: 'italic', marginLeft: '8px' },
 
   // lint panel
   '.cm-diagnostic': { padding: '4px 8px', fontSize: '12px', fontFamily: 'var(--sans)', lineHeight: '1.5' },
   '.cm-diagnostic-error': { borderLeft: '2px solid #f87171' },
   '.cm-diagnostic-warning': { borderLeft: '2px solid #fb923c' },
-  '.cm-diagnosticText': { color: '#e8e8e8' },
+  '.cm-diagnosticText': { color: 'var(--ink)' },
 
   // fold placeholder
   '.cm-foldPlaceholder': {
@@ -1056,7 +1056,7 @@ const guiTheme = EditorView.theme({
     color: 'var(--text-dim)',
     padding: '0 6px',
   },
-}, { dark: true })
+}, { dark: false })
 
 // ─── editor setup ─────────────────────────────────────────────────────────────
 

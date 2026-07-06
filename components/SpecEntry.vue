@@ -59,7 +59,6 @@ const rendered = computed(() =>
 
 .entry-head {
   padding: 16px 40px;
-  border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: baseline;
   gap: 12px;
@@ -75,18 +74,18 @@ const rendered = computed(() =>
 }
 
 .kind-badge {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 9.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 2px 6px;
-  border-radius: 4px;
-  border: 1px solid var(--border);
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  border: 1px solid transparent;
   line-height: 1;
 }
-.kind-tag      { color: #6ea8fe; border-color: #2a3a5a; }
-.kind-property { color: #a8d8a8; border-color: #2c3f2c; }
-.kind-concept  { color: var(--text-muted); }
+.kind-tag      { color: var(--blue);   background: rgba(43,107,228,.1);  border-color: rgba(43,107,228,.22); }
+.kind-property { color: var(--purple); background: rgba(157,91,234,.1);  border-color: rgba(157,91,234,.22); }
+.kind-concept  { color: var(--muted);  background: var(--surface-strong); border-color: var(--hairline); }
 
 .entry-sub {
   font-size: 11px;
@@ -113,7 +112,6 @@ const rendered = computed(() =>
 
 .entry-desc {
   padding: 28px 36px 32px 40px;
-  border-right: 1px solid var(--border);
 }
 
 .entry-desc p {
@@ -190,18 +188,19 @@ const rendered = computed(() =>
   font-family: var(--mono);
   font-size: 11.5px;
   line-height: 1.7;
-  color: #888;
+  color: #55534c;
   overflow-x: auto;
   white-space: pre;
   margin: 0;
   flex: 1;
 }
 
-:deep(.tok-tag)     { color: #6ea8fe; }
-:deep(.tok-attr)    { color: #79c0ff; }
-:deep(.tok-val)     { color: #a5d6ff; }
-:deep(.tok-punct)   { color: #555; }
-:deep(.tok-comment) { color: #484f58; font-style: italic; }
+/* legible on the light cream surface */
+:deep(.tok-tag)     { color: #2b6be4; }
+:deep(.tok-attr)    { color: #b7471d; }
+:deep(.tok-val)     { color: #1f7a43; }
+:deep(.tok-punct)   { color: #9a988e; }
+:deep(.tok-comment) { color: #98978a; font-style: italic; }
 
 @media (max-width: 900px) {
   .entry-head { padding: 14px 20px; }

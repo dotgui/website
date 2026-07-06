@@ -273,6 +273,13 @@ onMounted(() => {
   background: var(--surface);
 }
 
+/* legible on the light cream surface */
+.inspect-lines :deep(.tok-tag)     { color: #2b6be4; }
+.inspect-lines :deep(.tok-attr)    { color: #b7471d; }
+.inspect-lines :deep(.tok-val)     { color: #1f7a43; }
+.inspect-lines :deep(.tok-punct)   { color: #9a988e; }
+.inspect-lines :deep(.tok-comment) { color: #98978a; font-style: italic; }
+
 .inspect-line {
   display: flex;
   align-items: baseline;

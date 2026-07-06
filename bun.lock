@@ -6,7 +6,7 @@
       "name": "gui-landing",
       "dependencies": {
         "@codemirror/lang-xml": "^6.1.0",
-        "@dotgui/kit": "^0.2.0",
+        "@dotgui/kit": "^0.2.1",
         "@panzoom/panzoom": "^4.6.2",
         "codemirror": "^6.0.2",
         "commander": "^13.1.0",
@@ -97,7 +97,7 @@
 
     "@colordx/core": ["@colordx/core@5.4.3", "", {}, "sha512-kIxYSfA5T8HXjav55UaaH/o/cKivF6jCCGIb8eqtcsfI46wsvlSiT8jMDyrl779qLec3c2c2oHBZo4oAhvbjrQ=="],
 
-    "@dotgui/kit": ["@dotgui/kit@0.2.0", "", { "dependencies": { "@panzoom/panzoom": "^4.6.2", "@xmldom/xmldom": "^0.9.10", "fflate": "^0.8.3", "happy-dom": "^20.10.3", "puppeteer-core": "^25.1.0" }, "optionalDependencies": { "gui-optimizer": "*" }, "bin": { "gui-score": "src/score/cli.ts" } }, "sha512-idEu9Mdq2Kax9UUGFbkwwBJChUlgG8e7LgKw4vC0AlApp/8B/Tjw746Znb6XV4SrsFXoxh1lVYHIkifgvYpa3g=="],
+    "@dotgui/kit": ["@dotgui/kit@0.2.1", "", { "dependencies": { "@panzoom/panzoom": "^4.6.2", "@xmldom/xmldom": "^0.9.10", "fflate": "^0.8.3", "happy-dom": "^20.10.3", "puppeteer-core": "^25.1.0" }, "optionalDependencies": { "gui-optimizer": "*" }, "bin": { "gui-score": "src/score/cli.ts" } }, "sha512-HxzJiFzSlzz1AQY85nSuAbCAEZFMIalPZUM6f7w5Ov8MXS43Nhq3AYtSLEwdnwUPYcummzS9cmkE2wWrjye8ZA=="],
 
     "@dxup/nuxt": ["@dxup/nuxt@0.4.1", "", { "dependencies": { "@dxup/unimport": "^0.1.2", "@nuxt/kit": "^4.4.2", "chokidar": "^5.0.0", "pathe": "^2.0.3", "tinyglobby": "^0.2.16" }, "peerDependencies": { "typescript": "*" }, "optionalPeers": ["typescript"] }, "sha512-gtYffW6OfWNvoLW+XD3Mx/K8uUq08PMGLYJoDxc92EzZAWqR0FhcR5iaLm5r/OxyGTKz+P5f5Y7Aoir9+SjYaw=="],
 

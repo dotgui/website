@@ -4,19 +4,22 @@
   "type": "module",
   "scripts": {
     "dev": "nuxt dev",
-    "build": "nuxt build",
-    "generate": "nuxt generate",
+    "build": "bun run sync:all && nuxt build",
+    "generate": "bun run sync:all && nuxt generate",
     "preview": "nuxt preview",
+    "sync:all": "bun run sync:spec && bun run sync:roles && bun run gen:llms",
+    "sync:roles": "bun scripts/sync-roles.ts",
+    "gen:llms": "bun scripts/gen-llms.ts",
     "sync:spec": "cp ../core/spec/spec.json lib/spec.json",
     "sync:spec:check": "cp ../core/spec/spec.json lib/spec.json && git diff --exit-code lib/spec.json"
   },
   "dependencies": {
-    "@dotgui/kit": "^0.2.0",
     "@codemirror/lang-xml": "^6.1.0",
+    "@dotgui/kit": "^0.2.1",
+    "@panzoom/panzoom": "^4.6.2",
     "codemirror": "^6.0.2",
     "commander": "^13.1.0",
     "fflate": "^0.8.3",
-    "@panzoom/panzoom": "^4.6.2",
     "xml-formatter": "^3.7.0"
   },
   "devDependencies": {
