@@ -1,9 +1,11 @@
 # The synced files (lib/spec.json, lib/roles.json, public/llms*.txt) are committed,
 # so CI must NOT run `sync:all` — that copies from a sibling ../core repo which
 # only exists in the monorepo, not in Netlify's single-repo checkout.
+# On Netlify, Nitro auto-detects the `netlify` preset and writes the static
+# site to `dist/` (+ server functions to `.netlify/`), so publish = "dist".
 [build]
-  command = "npm run build:ci"
-  publish = ".output/public"
+  command = "npm run build:ci"   # nuxt build (no sync — see below)
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "22"

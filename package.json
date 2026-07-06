@@ -6,7 +6,7 @@
     "dev": "nuxt dev",
     "build": "bun run sync:all && nuxt build",
     "generate": "bun run sync:all && nuxt generate",
-    "build:ci": "nuxt generate",
+    "build:ci": "nuxt build",
     "preview": "nuxt preview",
     "sync:all": "bun run sync:spec && bun run sync:roles && bun run gen:llms",
     "sync:roles": "bun scripts/sync-roles.ts",
