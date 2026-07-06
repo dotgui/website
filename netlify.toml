@@ -1,0 +1,9 @@
+# The synced files (lib/spec.json, lib/roles.json, public/llms*.txt) are committed,
+# so CI must NOT run `sync:all` — that copies from a sibling ../core repo which
+# only exists in the monorepo, not in Netlify's single-repo checkout.
+[build]
+  command = "npm run build:ci"
+  publish = ".output/public"
+
+[build.environment]
+  NODE_VERSION = "22"
