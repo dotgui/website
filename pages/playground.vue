@@ -74,12 +74,12 @@
               </select>
             </label>
           </div>
-          <span class="pg-hint">scroll to zoom · drag to pan</span>
+          <span class="pg-hint">scroll to pan · ⌘/ctrl-scroll to zoom</span>
         </div>
         <div v-if="kitCapabilityError" class="pg-kit-error">
           {{ kitCapabilityError }}
         </div>
-        <div ref="previewEl" class="pg-preview" @wheel.prevent="onWheel" />
+        <div ref="previewEl" class="pg-preview" />
       </div>
 
     </div>
@@ -375,6 +375,10 @@ const GUI_ELEMENTS = [
       { name: 'overflow', values: ['clip', 'ellipsis'] },
       { name: 'list', values: ['disc', 'decimal'] }, { name: 'list-level' }, { name: 'list-marker' },
       { name: 'href' }, { name: 'text-style' }, { name: 'fill-style' },
+      // Legacy alias: render.ts falls back to `color` when `fill` is absent on
+      // <text>/<segment> (applyTextStyle). Not in the canonical spec — `fill` is
+      // the documented attribute — but recognized here so it doesn't false-warn.
+      { name: 'color' },
       ...SHARED_LAYOUT,
     ],
   },
@@ -454,7 +458,7 @@ const GUI_ELEMENTS = [
       { name: 'value' }, { name: 'font-family' }, { name: 'font-size' },
       { name: 'font-weight' }, { name: 'font-style', values: ['normal', 'italic'] },
       { name: 'font-variation' }, { name: 'font-feature' },
-      { name: 'fill' }, { name: 'line-height' }, { name: 'letter-spacing' },
+      { name: 'fill' }, { name: 'color' }, { name: 'line-height' }, { name: 'letter-spacing' },
       { name: 'baseline-shift' },
       { name: 'decoration', values: ['underline', 'strikethrough'] },
       { name: 'decoration-color' }, { name: 'decoration-style', values: ['solid', 'dashed', 'dotted', 'wavy', 'double'] },
@@ -636,7 +640,7 @@ for (const element of GUI_ELEMENTS) {
 const LAYOUT_TAGS = new Set(['frame', 'stack', 'row', 'col', 'grid', 'group', 'instance'])
 const CONTENT_TAGS = new Set(['text', 'img', 'rect', 'ellipse', 'line'])
 const CHILD_TAGS = new Set([...LAYOUT_TAGS, ...CONTENT_TAGS])
-const TOKEN_REF_ATTRS = new Set(['fill', 'border-color', 'radius', 'font-family', 'font-size', 'font-weight', 'gap', 'p', 'pt', 'pr', 'pb', 'pl', 'w', 'h'])
+const TOKEN_REF_ATTRS = new Set(['fill', 'color', 'border-color', 'radius', 'font-family', 'font-size', 'font-weight', 'gap', 'p', 'pt', 'pr', 'pb', 'pl', 'w', 'h'])
 const ASSET_REF_ATTRS = new Set(['src', 'mask-src'])
 type ParsedAttr = {
   name: string
@@ -1094,8 +1098,17 @@ type ModeAxis = { name: string; values: string[]; default: string }
 const modeAxes = ref<ModeAxis[]>([])
 const activeMode = ref<Record<string, string>>({})
 let assetCounter = 0
-let setZoom: ((f: number, ax?: number, ay?: number) => void) | null = null
-let zoomFactor = 1
+// kit's render(..., { zoom: true }) wires its own wheel-driven pan/zoom (Panzoom)
+// directly onto previewEl internally  scroll pans, ctrl/cmd-scroll zooms to the
+// cursor (see @dotgui/kit render.ts and how @dotgui/embed's <gui-embed> defers to
+// it). We only keep the returned setter for the resize-refit below; we must NOT
+// also drive zoom from our own wheel handler; a second handler fighting the
+// internal one on every tick is what made zoom "messed up" here previously.
+let zoomCtl: ((f: number, ax?: number, ay?: number) => void) | null = null
+// True once the user has scrolled/panned the preview  same guard @dotgui/embed
+// uses to stop an auto-refit from snapping their view back mid-interaction.
+let userZoomed = false
+let resizeObserver: ResizeObserver | null = null
 let editorView: EditorView | null = null
 let lastAttrValFrom = -1
 
@@ -1318,10 +1331,11 @@ function runRender(code: string) {
     return
   }
   if (result) {
-    setZoom = result
-    zoomFactor = 1
+    zoomCtl = result
+    userZoomed = false
     parseError.value = ''
   } else {
+    zoomCtl = null
     parseError.value = 'parse error'
   }
   previewNodes = Array.from(previewEl.value.querySelectorAll('.gui-node')) as HTMLElement[]
@@ -1460,19 +1474,28 @@ onMounted(() => {
   })
 
   runRender(SAMPLE)
+
+  // The split-pane divider (startDrag) resizes previewEl without a page reflow
+  // event the internal Panzoom instance would otherwise pick up on its own, so
+  // its fit-to-container scale goes stale as soon as the pane is dragged. Refit
+  // on every resize  unless the user has taken over the viewport themselves,
+  // mirroring @dotgui/embed's <gui-embed> auto-refit behavior.
+  if (previewEl.value) {
+    const markUserZoomed = () => { userZoomed = true }
+    previewEl.value.addEventListener('wheel', markUserZoomed, { passive: true })
+    previewEl.value.addEventListener('pointerdown', markUserZoomed)
+    resizeObserver = new ResizeObserver(() => {
+      if (!userZoomed) zoomCtl?.(1)
+    })
+    resizeObserver.observe(previewEl.value)
+  }
 })
 
 onBeforeUnmount(() => {
   editorView?.destroy()
+  resizeObserver?.disconnect()
+  resizeObserver = null
 })
-
-function onWheel(e: WheelEvent) {
-  if (!setZoom || !previewEl.value) return
-  const delta = e.deltaY > 0 ? -0.15 : 0.15
-  zoomFactor = Math.max(0.25, Math.min(4, zoomFactor + delta))
-  const rect = previewEl.value.getBoundingClientRect()
-  setZoom(zoomFactor, e.clientX - rect.left, e.clientY - rect.top)
-}
 </script>
 
 <style scoped>
