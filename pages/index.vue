@@ -426,20 +426,15 @@ useHead({
         softwareVersion: '0.2.1',
         applicationCategory: 'DeveloperApplication',
         operatingSystem: 'Web, macOS, Linux, Windows, any platform',
-        description: '.gui is an open, text-based file format for user interfaces. A .gui file is a zip packageXML markup plus assets and a previewthat AI agents can read and write, a deterministic toolchain validates, and any browser or design tool renders. Supports 50+ semantic roles, auto-layout stacks, design tokens, and light/dark modes.',
+        description: '.gui is an open, text-based file format for user interfaces. A .gui file is a zip package — XML markup plus assets and a preview — that AI agents can read and write, a deterministic toolchain validates, and any browser or design tool renders. Supports 53 semantic roles, auto-layout stacks, design tokens, and light/dark modes.',
         url: SITE_URL,
         downloadUrl: 'https://www.npmjs.com/package/@dotgui/cli',
         codeRepository: 'https://github.com/dotgui/core',
         releaseNotes: 'Open source file format with validator, renderer, Figma exporter, and browser embed library.',
         isAccessibleForFree: true,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: '5.0',
-          ratingCount: '1',
-          bestRating: '5',
-          worstRating: '1'
-        },
+        datePublished: '2025-05-15',
+        dateModified: LAST_UPDATED,
         author: { '@type': 'Organization', name: '.gui (dotgui)', url: SITE_URL }
       })
     },

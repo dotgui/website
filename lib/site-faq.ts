@@ -24,7 +24,7 @@ export const siteFaq: SiteFaq[] = [
   },
   {
     q: 'Can AI agents read and write .gui files?',
-    a: 'Yes:the format is designed for it. A .gui file is compact, human-readable XML that fits in a context window, so an LLM can read exactly what is on screen:layout, text values, colors, spacing, font weights:without screenshots or visual reasoning. A closed 52-role vocabulary (role="button", role="nav-bar", …) makes files self-describing, and agents can write .gui that renders correctly.'
+    a: 'Yes:the format is designed for it. A .gui file is compact, human-readable XML that fits in a context window, so an LLM can read exactly what is on screen:layout, text values, colors, spacing, font weights:without screenshots or visual reasoning. A closed 53-role vocabulary (role="button", role="nav-bar", …) makes files self-describing, and agents can write .gui that renders correctly.'
   },
   {
     q: 'How do I create a .gui file?',

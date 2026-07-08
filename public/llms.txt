@@ -27,6 +27,10 @@ Key facts:
 - [@dotgui/embed](https://dotgui.org/embed): render .gui files on any website with one CDN script
 - [Figma plugin](https://dotgui.org/figma): export any Figma layer as a .gui file
 
+## Pricing
+
+- [Pricing](https://dotgui.org/pricing.md): free and open source — no paid tiers, no usage limits, no account required
+
 ## Optional
 
 - [Playground](https://dotgui.org/playground): write .gui XML and see it render live
