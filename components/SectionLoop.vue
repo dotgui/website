@@ -4,29 +4,29 @@
       <div class="section-label">How it works</div>
       <h2>Author. Check. Ship.</h2>
       <p>
-        The toolchain splits cleanly in two: <strong>your own AI agent does the designing</strong> —
-        Claude Code, Gemini CLI, Cursor — and a <strong>100% deterministic, zero-AI engine</strong>
+        The toolchain splits cleanly in two: <strong>your own AI agent does the designing</strong> 
+        Claude Code, Gemini CLI, Cursor  and a <strong>100% deterministic, zero-AI engine</strong>
         does everything else. The format stays open in the middle; the file stays yours.
       </p>
     </div>
 
     <div class="loop-grid" data-reveal="stagger">
       <NuxtLink to="/cli" class="loop-card">
-        <div class="loop-step">01 — Author</div>
+        <div class="loop-step">01  Author</div>
         <h3>Your agent writes the file</h3>
         <p>
           <code>gui setup</code> installs the dotgui skill into the coding agents you
-          already use. Ask for a design “in gui” — the agent knows the format, writes
+          already use. Ask for a design “in gui”  the agent knows the format, writes
           the markup, and calls the <code>gui</code> CLI to save it.
         </p>
         <span class="loop-cta">@dotgui/cli →</span>
       </NuxtLink>
 
       <NuxtLink to="/kit" class="loop-card">
-        <div class="loop-step">02 — Check</div>
+        <div class="loop-step">02  Check</div>
         <h3>The engine keeps it valid</h3>
         <p>
-          <code>@dotgui/kit</code> validates, lints, autofixes, and scores every file —
+          <code>@dotgui/kit</code> validates, lints, autofixes, and scores every file 
           pure rules, same input, same output. Broken markup never becomes a
           <code>.gui</code>; quality is measured on the CCAC scale.
         </p>
@@ -34,7 +34,7 @@
       </NuxtLink>
 
       <NuxtLink to="/embed" class="loop-card">
-        <div class="loop-step">03 — Ship</div>
+        <div class="loop-step">03  Ship</div>
         <h3>Render it anywhere</h3>
         <p>
           One CDN script embeds the file on any website. The kit renders it to DOM or

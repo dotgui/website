@@ -38,7 +38,7 @@
         <div class="pg-tab-content pg-assets-panel" :class="{ hidden: activeTab !== 'assets' }">
           <div class="pg-assets-list">
             <div v-if="!Object.keys(assets).length" class="pg-assets-empty">
-              upload an image — reference it as <code>$img-1</code> in your code
+              upload an image  reference it as <code>$img-1</code> in your code
             </div>
             <div
               v-for="(url, id) in assets"
@@ -85,8 +85,8 @@
 <script setup lang="ts">
 usePageSeo({
   path: '/playground',
-  title: '.gui Playground — write, render & preview .gui files live',
-  description: 'Edit .gui XML and see it render instantly. An interactive playground for the .gui UI format — write code, upload images, and preview the result in the browser.',
+  title: '.gui Playground  write, render & preview .gui files live',
+  description: 'Edit .gui XML and see it render instantly. An interactive playground for the .gui UI format  write code, upload images, and preview the result in the browser.',
   ogTitle: '.gui Playground',
   ogDescription: 'Write .gui XML and see it render live in your browser.'
 })
@@ -645,7 +645,7 @@ function collectTokens(code: string): Set<string> {
 }
 
 // Parse <mode name="..." values="..." default="..." /> declarations (RFC-0037).
-// Handles both the bare <mode> shorthand and the <modes> wrapper — each <mode>
+// Handles both the bare <mode> shorthand and the <modes> wrapper  each <mode>
 // tag is matched independently, so the wrapper needs no special treatment.
 function collectModes(code: string): { name: string; values: string[]; default: string }[] {
   const axes: { name: string; values: string[]; default: string }[] = []
@@ -670,7 +670,7 @@ function collectModes(code: string): { name: string; values: string[]; default: 
 }
 
 // RFC-0037: recognise the declaration-driven attributes the static schema can't
-// enumerate — `mode-{axis}` (mode application on any layer) and `{axis}-{value}`
+// enumerate  `mode-{axis}` (mode application on any layer) and `{axis}-{value}`
 // (per-mode token values on a token def). Returns true when the attr is a valid
 // mode attribute given the axes declared in the document.
 function isModeAttr(tagName: string, attrName: string, axes: { name: string; values: string[] }[]): boolean {
@@ -904,7 +904,7 @@ function guiLintFn(view: EditorView): Diagnostic[] {
           from: tagNameNode.from,
           to: tagNameNode.to,
           severity: 'warning',
-          message: 'Prefer <grid> over <stack direction="grid"> — the <grid> tag is cleaner and supports cols/rows/unit.',
+          message: 'Prefer <grid> over <stack direction="grid">  the <grid> tag is cleaner and supports cols/rows/unit.',
         })
       } else if (tagName === 'frame' || tagName === 'img' || tagName === 'svg' || tagName === 'group') {
         if (!hasAttr(node.node, doc, 'w')) {
@@ -976,7 +976,7 @@ function guiLintFn(view: EditorView): Diagnostic[] {
 
 // ─── CodeMirror theme ─────────────────────────────────────────────────────────
 
-// Legible on the light cream surface — matches the spec/inspector token palette.
+// Legible on the light cream surface  matches the spec/inspector token palette.
 const guiHighlight = HighlightStyle.define([
   { tag: tags.tagName, color: '#2b6be4' },
   { tag: tags.attributeName, color: '#b7471d' },
@@ -1178,12 +1178,12 @@ function onGuiFileUpload(e: Event) {
     const isZip = bytes[0] === 0x50 && bytes[1] === 0x4b
 
     if (!isZip) {
-      // Plain .guix — read as text
+      // Plain .guix  read as text
       loadGuiCode(new TextDecoder().decode(bytes))
       return
     }
 
-    // .gui package — unzip and extract design.guix + assets
+    // .gui package  unzip and extract design.guix + assets
     unzip(bytes, (err, data) => {
       if (err) return
 
@@ -1193,7 +1193,7 @@ function onGuiFileUpload(e: Event) {
       const code = new TextDecoder().decode(guixEntry[1])
       loadGuiCode(code)
 
-      // Build assetMap keyed by path — "assets/hero.webp" → blob URL (RFC 0031)
+      // Build assetMap keyed by path  "assets/hero.webp" → blob URL (RFC 0031)
       const newAssets: Record<string, string> = {}
       for (const [name, fileBytes] of Object.entries(data)) {
         if (!name.startsWith('assets/')) continue
@@ -1372,7 +1372,7 @@ onMounted(() => {
           while (node && node.name !== 'AttributeValue') node = node.parent!
           const currentFrom = node?.name === 'AttributeValue' ? node.from : -1
 
-          // "" or '' — the value content is empty (node is just the two quote chars)
+          // "" or ''  the value content is empty (node is just the two quote chars)
           const isEmpty = node?.name === 'AttributeValue' && (node.to - node.from) <= 2
 
           if (currentFrom !== -1) {

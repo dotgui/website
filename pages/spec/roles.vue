@@ -11,15 +11,15 @@
         <h1>The role vocabulary</h1>
         <p class="roles-lead">
           <code>role=</code> is a closed, controlled vocabulary of {{ count }} recognized UI
-          structures — button, nav-bar, card, dialog, and friends. Tagging a node with a
+          structures  button, nav-bar, card, dialog, and friends. Tagging a node with a
           role changes no pixels; it makes the file <strong>self-describing</strong>, the
           <code>&lt;nav&gt;</code>-vs-<code>&lt;div&gt;</code> distinction for .gui. Any
           machine, AI, or tool reading the file knows <em>what a node is</em> without
-          guessing — which is what the <NuxtLink to="/spec/quality">Comprehensible
+          guessing  which is what the <NuxtLink to="/spec/quality">Comprehensible
           quality level</NuxtLink> measures.
         </p>
         <p class="roles-lead">
-          A role qualifies by appearing in at least one platform reference system — the
+          A role qualifies by appearing in at least one platform reference system  the
           Component Gallery for web, Apple's Human Interface Guidelines for iOS, Material
           Design for Android. Each role declares a <strong>reach</strong>: how far down
           its subtree its meaning documents the content (<code>full</code> = the whole
@@ -58,7 +58,7 @@ const pageUrl = 'https://dotgui.org/spec/roles'
 
 usePageSeo({
   path: '/spec/roles',
-  title: `The .gui role vocabulary — ${count} recognized UI roles`,
+  title: `The .gui role vocabulary  ${count} recognized UI roles`,
   description: `The complete role= catalog for the .gui format: ${count} recognized UI structures (button, nav-bar, card, dialog, …) that make files self-describing and AI-ready. Each role lists its reach, platforms, and alternate names.`
 })
 
@@ -69,7 +69,7 @@ useHead({
       innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'TechArticle',
-        headline: `The .gui role vocabulary — ${count} recognized UI roles`,
+        headline: `The .gui role vocabulary  ${count} recognized UI roles`,
         description: `The closed role= catalog of the .gui format: ${count} UI structures with reach and platform coverage.`,
         url: pageUrl,
         isPartOf: { '@type': 'TechArticle', name: '.gui Spec Reference', url: 'https://dotgui.org/spec' },

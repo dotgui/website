@@ -12,7 +12,7 @@
       <p class="stage-eyebrow">The open file format for user interfaces</p>
       <h1>Design, written down.</h1>
       <p class="hero-desc">
-        <strong>.gui</strong> is an open, text-based file format for user interfaces —
+        <strong>.gui</strong> is an open, text-based file format for user interfaces 
         what <code>.svg</code> is to graphics, <code>.gui</code> is to UI.
         Your AI agent writes it, a deterministic toolchain keeps it valid,
         and any browser, tool, or design app renders it.
@@ -43,7 +43,7 @@
       </div>
 
       <p class="stage-label">
-        John Frederick Kensett, <em>Lake George</em>, 1869 — The Met, public domain.
+        John Frederick Kensett, <em>Lake George</em>, 1869  The Met, public domain.
         Design used to live in paintings. Now it's a file you can read.
       </p>
     </div>

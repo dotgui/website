@@ -4,11 +4,11 @@
       <div class="section-label">What it is</div>
       <h2>A UI file that tools can read</h2>
       <p>
-        Most design formats are binary blobs — opaque to code, invisible to AI. <strong>.gui</strong> is different:
+        Most design formats are binary blobs  opaque to code, invisible to AI. <strong>.gui</strong> is different:
         it's plain XML that carries your complete screen exactly as Figma drew it, in a format any tool can parse.
       </p>
       <p>
-        Frames, stacks, text, images, shapes, tokens, fonts, effects — everything is in one file,
+        Frames, stacks, text, images, shapes, tokens, fonts, effects  everything is in one file,
         with attributes you can read without a schema decoder.
       </p>
     </div>

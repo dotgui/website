@@ -1,6 +1,6 @@
 # .gui (dotgui)
 
-> .gui is an open, text-based file format for user interfaces — what .svg is to
+> .gui is an open, text-based file format for user interfaces  what .svg is to
 > graphics, .gui is to UI. A .gui file is a zip package: design.guix (plain XML
 > markup carrying frames, stacks, text, images, shapes, design tokens, fonts,
 > and effects), an assets/ folder, and a preview.webp thumbnail. AI agents can
@@ -10,7 +10,7 @@
 Key facts:
 - Only validation is required to produce a file; render and score are optional.
 - A closed 53-role vocabulary (role="button", role="nav-bar", …) makes files self-describing.
-- Quality is scored on CCAC (Clean, Consistent, Accessible, Comprehensible) — local, offline, zero-AI.
+- Quality is scored on CCAC (Clean, Consistent, Accessible, Comprehensible)  local, offline, zero-AI.
 - The format, engine, CLI, and embed library are open source and free.
 
 ## Documentation
@@ -23,7 +23,7 @@ Key facts:
 ## Toolchain
 
 - [gui CLI](https://dotgui.org/cli): read, write, lint, render, and package .gui files; `gui setup` installs the dotgui skill into AI agents
-- [@dotgui/kit](https://dotgui.org/kit): the reference engine — parser, validator, renderer, scorer in one deterministic package
+- [@dotgui/kit](https://dotgui.org/kit): the reference engine  parser, validator, renderer, scorer in one deterministic package
 - [@dotgui/embed](https://dotgui.org/embed): render .gui files on any website with one CDN script
 - [Figma plugin](https://dotgui.org/figma): export any Figma layer as a .gui file
 

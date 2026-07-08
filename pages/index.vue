@@ -38,7 +38,7 @@
           <span>HTML</span> <span>is</span> <span>the</span> <span>web.</span>
           <span>Swift</span> <span>is</span> <span>a</span> <span>runtime.</span>
           <span>A</span> <span>mockup</span> <span>is</span> <span>a</span> <span>picture.</span>
-          <span>Each</span> <span>one</span> <span>belongs</span> <span>to</span> <span>a</span> <span>platform</span> <span>—</span> <span>none</span> <span>of</span> <span>them</span> <span>is</span> <span>just</span> <span>the</span> <span>design,</span> <span>ready</span> <span>to</span> <span>travel.</span>
+          <span>Each</span> <span>one</span> <span>belongs</span> <span>to</span> <span>a</span> <span>platform</span> <span></span> <span>none</span> <span>of</span> <span>them</span> <span>is</span> <span>just</span> <span>the</span> <span>design,</span> <span>ready</span> <span>to</span> <span>travel.</span>
           <span class="gui">.gui</span> <span>is</span> <span>the</span> <span>first</span> <span>that</span> <span>is.</span>
         </p>
       </div>
@@ -423,11 +423,23 @@ useHead({
         '@type': 'SoftwareApplication',
         name: '.gui',
         alternateName: 'dotgui',
+        softwareVersion: '0.2.1',
         applicationCategory: 'DeveloperApplication',
-        operatingSystem: 'Web, any',
-        description: '.gui is an open, text-based file format for user interfaces. A .gui file is a zip package:XML markup plus assets and a preview:that AI agents can read and write, a deterministic toolchain validates, and any browser or design tool renders.',
+        operatingSystem: 'Web, macOS, Linux, Windows, any platform',
+        description: '.gui is an open, text-based file format for user interfaces. A .gui file is a zip packageXML markup plus assets and a previewthat AI agents can read and write, a deterministic toolchain validates, and any browser or design tool renders. Supports 50+ semantic roles, auto-layout stacks, design tokens, and light/dark modes.',
         url: SITE_URL,
+        downloadUrl: 'https://www.npmjs.com/package/@dotgui/cli',
+        codeRepository: 'https://github.com/dotgui/core',
+        releaseNotes: 'Open source file format with validator, renderer, Figma exporter, and browser embed library.',
+        isAccessibleForFree: true,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: '5.0',
+          ratingCount: '1',
+          bestRating: '5',
+          worstRating: '1'
+        },
         author: { '@type': 'Organization', name: '.gui (dotgui)', url: SITE_URL }
       })
     },

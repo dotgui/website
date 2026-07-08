@@ -1,4 +1,4 @@
-# .gui (dotgui) — full documentation
+# .gui (dotgui)  full documentation
 
 > This file concatenates the canonical .gui docs for AI consumption.
 > Index: https://dotgui.org/llms.txt · Site: https://dotgui.org
@@ -2794,7 +2794,7 @@ Current version: `0.2` (CCAC model, RFC-0040). The earlier CCACT model included 
 
 ---
 
-<!-- section: @dotgui/kit — the reference engine -->
+<!-- section: @dotgui/kit  the reference engine -->
 
 # @dotgui/kit
 
@@ -3010,7 +3010,7 @@ and rationale.
 
 ---
 
-<!-- section: @dotgui/cli — the command-line toolchain -->
+<!-- section: @dotgui/cli  the command-line toolchain -->
 
 # @dotgui/cli
 
@@ -3168,7 +3168,7 @@ After setup, ask any of those tools for a UI "in gui" and it builds it — picki
 
 ---
 
-<!-- section: @dotgui/embed — render .gui in the browser -->
+<!-- section: @dotgui/embed  render .gui in the browser -->
 
 # @dotgui/embed
 

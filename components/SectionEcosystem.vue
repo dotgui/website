@@ -5,7 +5,7 @@
       <h2>A small format with many readers and writers</h2>
       <p>
         The spec is the authority; everything else is a consumer. Five tools cover the
-        whole lifecycle of a <code>.gui</code> file today — and the format is open, so
+        whole lifecycle of a <code>.gui</code> file today  and the format is open, so
         the sixth can be yours.
       </p>
     </div>
@@ -29,7 +29,7 @@ const items = [
     to: '/cli',
     name: '@dotgui/cli',
     badge: 'toolchain',
-    desc: 'The gui command — read, write, lint, render, and package .gui files. Installs the dotgui skill into your AI agents with one command.',
+    desc: 'The gui command  read, write, lint, render, and package .gui files. Installs the dotgui skill into your AI agents with one command.',
     cta: 'Set up the CLI'
   },
   {
@@ -50,14 +50,14 @@ const items = [
     to: '/figma',
     name: 'Figma plugin',
     badge: 'design tool',
-    desc: 'Export any Figma layer as a .gui file — a 1:1 mapping of the layer model. Auto-layout, fills, gradients, effects, and tokens preserved.',
+    desc: 'Export any Figma layer as a .gui file  a 1:1 mapping of the layer model. Auto-layout, fills, gradients, effects, and tokens preserved.',
     cta: 'Export from Figma'
   },
   {
     to: '/spec',
     name: 'The spec',
     badge: 'authority',
-    desc: 'Every element, attribute, token type, and convention — plus the design principles, RFCs, and the 53-role vocabulary behind them.',
+    desc: 'Every element, attribute, token type, and convention  plus the design principles, RFCs, and the 53-role vocabulary behind them.',
     cta: 'Read the spec'
   }
 ]

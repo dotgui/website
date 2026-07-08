@@ -1,10 +1,10 @@
 /**
  * Adapter over the generated spec.
  *
- * The content here is NOT hand-authored — it is read from `spec.json`, which is
+ * The content here is NOT hand-authored  it is read from `spec.json`, which is
  * generated in dotgui-core from `core/schema/types.ts` (structure) + `spec.content.ts`
  * (prose). Run `bun run sync:spec` to refresh `lib/spec.json` from core after the
- * format changes. Canonical source: ../core/ — see core/GOVERNANCE.md.
+ * format changes. Canonical source: ../core/  see core/GOVERNANCE.md.
  *
  * This file only maps the generated spec into the view-model the spec pages expect.
  */
@@ -64,7 +64,7 @@ const spec = specJson as unknown as RawSpec
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const code = (s: string) => `<code>${esc(s)}</code>`
 
-/** Type/values cell — prefer enum values, fall back to the type string. */
+/** Type/values cell  prefer enum values, fall back to the type string. */
 function valueCell(a: RawAttr): string {
   return a.enum && a.enum.length ? a.enum.map(code).join(' ') : code(a.type)
 }
@@ -129,7 +129,7 @@ export function specDisplayName(name: string): string {
   return name.replace(/[<>]/g, '')
 }
 
-/** tag / property / concept — now carried in the data. */
+/** tag / property / concept  now carried in the data. */
 export function specKind(entry: SpecEntry): SpecKind {
   return entry.kind
 }

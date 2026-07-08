@@ -4,7 +4,7 @@
       <p class="doc-eyebrow">@dotgui/cli · toolchain</p>
       <h1 class="doc-title">The command-line toolchain for .gui files</h1>
       <p class="doc-desc">
-        <strong>gui</strong> reads, writes, lints, renders, and packages <code>.gui</code> files —
+        <strong>gui</strong> reads, writes, lints, renders, and packages <code>.gui</code> files 
         and installs the dotgui skill into the AI agents you already use. The CLI itself
         contains <strong>no AI</strong>: it is a fast, deterministic tool, and the design
         generation happens in your own agent.
@@ -14,15 +14,15 @@
     <section id="install" class="cat">
       <h2 class="cat-label">Install</h2>
       <p class="cat-lead">
-        Two commands to a working setup — install the CLI, then point it at your agents.
+        Two commands to a working setup  install the CLI, then point it at your agents.
       </p>
       <InstallCmd pkg="@dotgui/cli" global />
       <div class="after-install">
         <DocCode label="Then set up your agents" :code="setupCode" lang="sh" />
       </div>
       <p class="cat-note">
-        <code>gui setup</code> detects your installed agents — Claude Code, Gemini CLI, and
-        others — installs the dotgui skill into each one, and allowlists the
+        <code>gui setup</code> detects your installed agents  Claude Code, Gemini CLI, and
+        others  installs the dotgui skill into each one, and allowlists the
         <code>gui</code> command so agents run it without permission prompts. After that,
         asking any of those tools for a UI “in gui” just works.
       </p>
@@ -33,17 +33,17 @@
       <p class="cat-lead">Your agent designs. <code>gui</code> keeps it valid.</p>
       <DocCode :code="modelCode" lang="txt" />
       <p class="cat-note">
-        A real agent — warm session, your best model, full tool-calling and vision — produces
+        A real agent  warm session, your best model, full tool-calling and vision  produces
         better UIs than anything a CLI could wrap around a model. So the CLI doesn't try. It
         owns the one thing only it can do perfectly: keeping every <code>.gui</code> file
-        <strong>valid</strong>. Invalid markup never gets packaged — <code>gui write</code>
+        <strong>valid</strong>. Invalid markup never gets packaged  <code>gui write</code>
         lints first and exits non-zero with structured errors.
       </p>
     </section>
 
     <section id="commands" class="cat">
       <h2 class="cat-label">Commands</h2>
-      <p class="cat-lead">The full surface — every command is deterministic and package-aware.</p>
+      <p class="cat-lead">The full surface  every command is deterministic and package-aware.</p>
       <table class="doc-table">
         <thead><tr><th>Command</th><th>What it does</th></tr></thead>
         <tbody>
@@ -62,7 +62,7 @@
         Agents are a first-class audience: <code>read</code>, <code>write</code>,
         <code>lint</code>, and <code>info</code> accept <code>--json</code> for
         machine-readable output and errors. Commands exit <code>0</code> on success and
-        non-zero on failure — a lint or validation error exits <code>1</code> and writes
+        non-zero on failure  a lint or validation error exits <code>1</code> and writes
         nothing. All package operations run in an ephemeral shadow directory that is created
         and deleted within each command, so nothing is left on disk.
       </p>
@@ -91,13 +91,13 @@ const commands = [
   { id: 'write', cmd: 'gui write home.gui', nav: 'gui write', desc: 'Save from stdin: lint → repack → regenerate <code>preview.webp</code>. Nothing is written if the markup is invalid.' },
   { id: 'lint', cmd: 'gui lint home.gui', nav: 'gui lint', desc: 'Validate; <code>--fix</code> applies deterministic autofix and writes back.' },
   { id: 'render', cmd: 'gui render home.gui -o out.png', nav: 'gui render', desc: 'Rasterize to PNG/WEBP/JPEG using a Chromium already on your machine.' },
-  { id: 'assets', cmd: 'gui add · gui rm', nav: 'gui add / rm', desc: 'Add or remove an asset inside the package — no manual unzipping, ever.' },
+  { id: 'assets', cmd: 'gui add · gui rm', nav: 'gui add / rm', desc: 'Add or remove an asset inside the package  no manual unzipping, ever.' },
   { id: 'setpreview', cmd: 'gui set-preview home.gui shot.webp', nav: 'gui set-preview', desc: 'Replace the embedded <code>preview.webp</code> with your own image.' },
   { id: 'open', cmd: 'gui open home.gui', nav: 'gui open', desc: 'Open the file in the dotgui viewer.' },
   { id: 'info', cmd: 'gui info home.gui', nav: 'gui info', desc: 'Name, root canvas, asset list, preview.' },
   { id: 'pack', cmd: 'gui pack · gui unpack', nav: 'gui pack / unpack', desc: 'Folder ⇄ <code>.gui</code> conversion for hand-editing.' },
   { id: 'setup', cmd: 'gui setup', nav: 'gui setup', desc: 'Install the dotgui skill into detected agents and allowlist <code>gui</code>.' },
-  { id: 'skill', cmd: 'gui skill where · update', nav: 'gui skill', desc: 'Manage the installed dotgui skill — print its location, or update it.' }
+  { id: 'skill', cmd: 'gui skill where · update', nav: 'gui skill', desc: 'Manage the installed dotgui skill  print its location, or update it.' }
 ]
 
 const navGroups = [
@@ -119,25 +119,25 @@ const navGroups = [
 const faq = [
   {
     q: 'Does the gui CLI generate designs?',
-    a: 'No. The CLI contains zero AI — it lints, autofixes, renders, and packages. Design generation happens in your own agent (Claude Code, Gemini CLI, Cursor), which gui setup teaches the format via the dotgui skill.'
+    a: 'No. The CLI contains zero AI  it lints, autofixes, renders, and packages. Design generation happens in your own agent (Claude Code, Gemini CLI, Cursor), which gui setup teaches the format via the dotgui skill.'
   },
   {
     q: 'What happens if my agent writes invalid markup?',
-    a: 'gui write refuses to save it. The command lints first, exits non-zero with structured errors, and writes nothing — so a broken file can never become a .gui package. With --fix, deterministic autofix repairs common issues.'
+    a: 'gui write refuses to save it. The command lints first, exits non-zero with structured errors, and writes nothing  so a broken file can never become a .gui package. With --fix, deterministic autofix repairs common issues.'
   },
   {
     q: 'Does gui render need a bundled browser?',
-    a: 'No download is bundled. Rendering drives a Chromium-based browser already installed on your machine — Chrome, Edge, Brave, or Chromium — via puppeteer-core. If none is found, gui write simply skips the preview instead of blocking the save.'
+    a: 'No download is bundled. Rendering drives a Chromium-based browser already installed on your machine  Chrome, Edge, Brave, or Chromium  via puppeteer-core. If none is found, gui write simply skips the preview instead of blocking the save.'
   },
   {
     q: 'Do I need to unzip .gui files to edit them?',
-    a: 'Never. gui treats the package like a folder — read markup, list assets, add or remove files — and does the unzip/rezip in an ephemeral cache that cleans itself up.'
+    a: 'Never. gui treats the package like a folder  read markup, list assets, add or remove files  and does the unzip/rezip in an ephemeral cache that cleans itself up.'
   }
 ]
 
 usePageSeo({
   path: '/cli',
-  title: 'gui CLI — the command-line toolchain for .gui files',
+  title: 'gui CLI  the command-line toolchain for .gui files',
   description: '@dotgui/cli reads, writes, lints, renders, and packages .gui files, and installs the dotgui skill into AI agents like Claude Code and Gemini CLI. Deterministic, zero-AI, agent-friendly with --json output and stable exit codes.'
 })
 
