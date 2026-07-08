@@ -67,15 +67,19 @@
               <select
                 class="pg-mode-select"
                 v-model="activeMode[axis.name]"
+                :disabled="!!kitCapabilityError"
                 @change="rerenderCurrent"
               >
                 <option v-for="v in axis.values" :key="v" :value="v">{{ v }}</option>
               </select>
             </label>
           </div>
-          <span class="pg-hint">scroll to zoom · drag to pan</span>
+          <span class="pg-hint">scroll to pan · ⌘/ctrl-scroll to zoom</span>
         </div>
-        <div ref="previewEl" class="pg-preview" @wheel.prevent="onWheel" />
+        <div v-if="kitCapabilityError" class="pg-kit-error">
+          {{ kitCapabilityError }}
+        </div>
+        <div ref="previewEl" class="pg-preview" />
       </div>
 
     </div>
@@ -103,6 +107,8 @@ import {
 import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap, startCompletion, type CompletionContext, type CompletionResult } from '@codemirror/autocomplete'
 import { tags } from '@lezer/highlight'
 import { normalizeBooleanAttrs, render } from '@dotgui/kit/render'
+import { parseXml } from '@dotgui/kit/parser'
+import rolesData from '~/lib/roles.json'
 import xmlFormat from 'xml-formatter'
 import { unzip } from 'fflate'
 
@@ -206,6 +212,12 @@ const STACK_LAYOUT_ATTRS = [
   { name: 'reverse-z' },
 ]
 
+// RFC-0041: canonical UI role vocabulary, valid on layout nodes only (row/col/frame/grid).
+// Sourced from lib/roles.json (generated from ../core/roles via `bun run sync:roles`) so the
+// editor's schema tracks the canonical catalog instead of drifting from a hand-copied list.
+const ROLE_VALUES = rolesData.roles.map(r => r.role)
+const ROLE_ATTR = { name: 'role', values: ROLE_VALUES }
+
 const GUI_ELEMENTS = [
   {
     name: 'gui',
@@ -288,6 +300,7 @@ const GUI_ELEMENTS = [
   {
     name: 'stack',
     attrs: [
+      ROLE_ATTR,
       { name: 'direction', values: ['horizontal', 'vertical', 'grid'] },
       ...STACK_LAYOUT_ATTRS,
       { name: 'grid-columns' }, { name: 'grid-rows' },
@@ -298,6 +311,7 @@ const GUI_ELEMENTS = [
   {
     name: 'row',
     attrs: [
+      ROLE_ATTR,
       ...STACK_LAYOUT_ATTRS,
       ...SHARED_LAYOUT,
     ],
@@ -305,6 +319,7 @@ const GUI_ELEMENTS = [
   {
     name: 'col',
     attrs: [
+      ROLE_ATTR,
       ...STACK_LAYOUT_ATTRS,
       ...SHARED_LAYOUT,
     ],
@@ -312,6 +327,7 @@ const GUI_ELEMENTS = [
   {
     name: 'grid',
     attrs: [
+      ROLE_ATTR,
       { name: 'cols' }, { name: 'rows' },
       { name: 'unit' },
       { name: 'gap' }, { name: 'col-gap' }, { name: 'row-gap' },
@@ -324,7 +340,7 @@ const GUI_ELEMENTS = [
   },
   {
     name: 'frame',
-    attrs: [...SHARED_LAYOUT],
+    attrs: [ROLE_ATTR, ...SHARED_LAYOUT],
   },
   {
     name: 'group',
@@ -359,6 +375,10 @@ const GUI_ELEMENTS = [
       { name: 'overflow', values: ['clip', 'ellipsis'] },
       { name: 'list', values: ['disc', 'decimal'] }, { name: 'list-level' }, { name: 'list-marker' },
       { name: 'href' }, { name: 'text-style' }, { name: 'fill-style' },
+      // Legacy alias: render.ts falls back to `color` when `fill` is absent on
+      // <text>/<segment> (applyTextStyle). Not in the canonical spec — `fill` is
+      // the documented attribute — but recognized here so it doesn't false-warn.
+      { name: 'color' },
       ...SHARED_LAYOUT,
     ],
   },
@@ -438,7 +458,7 @@ const GUI_ELEMENTS = [
       { name: 'value' }, { name: 'font-family' }, { name: 'font-size' },
       { name: 'font-weight' }, { name: 'font-style', values: ['normal', 'italic'] },
       { name: 'font-variation' }, { name: 'font-feature' },
-      { name: 'fill' }, { name: 'line-height' }, { name: 'letter-spacing' },
+      { name: 'fill' }, { name: 'color' }, { name: 'line-height' }, { name: 'letter-spacing' },
       { name: 'baseline-shift' },
       { name: 'decoration', values: ['underline', 'strikethrough'] },
       { name: 'decoration-color' }, { name: 'decoration-style', values: ['solid', 'dashed', 'dotted', 'wavy', 'double'] },
@@ -620,7 +640,7 @@ for (const element of GUI_ELEMENTS) {
 const LAYOUT_TAGS = new Set(['frame', 'stack', 'row', 'col', 'grid', 'group', 'instance'])
 const CONTENT_TAGS = new Set(['text', 'img', 'rect', 'ellipse', 'line'])
 const CHILD_TAGS = new Set([...LAYOUT_TAGS, ...CONTENT_TAGS])
-const TOKEN_REF_ATTRS = new Set(['fill', 'border-color', 'radius', 'font-family', 'font-size', 'font-weight', 'gap', 'p', 'pt', 'pr', 'pb', 'pl', 'w', 'h'])
+const TOKEN_REF_ATTRS = new Set(['fill', 'color', 'border-color', 'radius', 'font-family', 'font-size', 'font-weight', 'gap', 'p', 'pt', 'pr', 'pb', 'pl', 'w', 'h'])
 const ASSET_REF_ATTRS = new Set(['src', 'mask-src'])
 type ParsedAttr = {
   name: string
@@ -1069,6 +1089,7 @@ const guiFileInputEl = ref<HTMLInputElement | null>(null)
 const parseError = ref('')
 const assets = ref<Record<string, string>>({})
 const copiedId = ref('')
+const kitCapabilityError = ref('')
 
 // ─── token modes (RFC-0037) ───────────────────────────────────────────────────
 // Declared mode axes found in the current code, plus the active value per axis.
@@ -1077,8 +1098,17 @@ type ModeAxis = { name: string; values: string[]; default: string }
 const modeAxes = ref<ModeAxis[]>([])
 const activeMode = ref<Record<string, string>>({})
 let assetCounter = 0
-let setZoom: ((f: number, ax?: number, ay?: number) => void) | null = null
-let zoomFactor = 1
+// kit's render(..., { zoom: true }) wires its own wheel-driven pan/zoom (Panzoom)
+// directly onto previewEl internally  scroll pans, ctrl/cmd-scroll zooms to the
+// cursor (see @dotgui/kit render.ts and how @dotgui/embed's <gui-embed> defers to
+// it). We only keep the returned setter for the resize-refit below; we must NOT
+// also drive zoom from our own wheel handler; a second handler fighting the
+// internal one on every tick is what made zoom "messed up" here previously.
+let zoomCtl: ((f: number, ax?: number, ay?: number) => void) | null = null
+// True once the user has scrolled/panned the preview  same guard @dotgui/embed
+// uses to stop an auto-refit from snapping their view back mid-interaction.
+let userZoomed = false
+let resizeObserver: ResizeObserver | null = null
 let editorView: EditorView | null = null
 let lastAttrValFrom = -1
 
@@ -1261,17 +1291,51 @@ function rerenderCurrent() {
   runRender(editorView?.state.doc.toString() ?? '')
 }
 
+// The playground pins @dotgui/kit as a regular dependency, so a stale lockfile
+// or an npm dedupe can quietly leave an older kit build installed  one whose
+// parser/render don't understand RFC-0037 token modes yet. Rather than let that
+// fail silently (modes just never switching, with no clue why), probe the
+// installed kit's actual shape once at startup and fail loud if it's missing
+// APIs this page depends on.
+function checkKitCapabilities(): string | null {
+  if (typeof render !== 'function') {
+    return '@dotgui/kit/render does not export render() — kit API not supported by this build.'
+  }
+  if (typeof parseXml !== 'function') {
+    return '@dotgui/kit/parser does not export parseXml() — kit API not supported by this build.'
+  }
+  const probe = parseXml(
+    `<gui version="0.2"><modes><mode name="theme" values="light dark" default="light" /></modes><col w="10" h="10" /></gui>`,
+  )
+  if (!probe || typeof probe.modes !== 'object') {
+    return 'Installed @dotgui/kit does not support token modes (RFC-0037). Upgrade @dotgui/kit.'
+  }
+  if (!probe.modes.theme || !Array.isArray(probe.modes.theme.values)) {
+    return 'Installed @dotgui/kit does not resolve <mode> declarations. Upgrade @dotgui/kit.'
+  }
+  return null
+}
+
 function runRender(code: string) {
   if (!previewEl.value) return
+  if (kitCapabilityError.value) return
   clearInspectHighlight()
   syncModes(code)
   const mode = { ...activeMode.value }
-  const result = render(code, previewEl.value, assets.value, { zoom: true, mode })
+  let result: ReturnType<typeof render> = null
+  try {
+    result = render(code, previewEl.value, assets.value, { zoom: true, mode })
+  } catch (err) {
+    console.error('[playground] @dotgui/kit render() threw  kit API not supported by this build:', err)
+    parseError.value = 'render error: kit API not supported'
+    return
+  }
   if (result) {
-    setZoom = result
-    zoomFactor = 1
+    zoomCtl = result
+    userZoomed = false
     parseError.value = ''
   } else {
+    zoomCtl = null
     parseError.value = 'parse error'
   }
   previewNodes = Array.from(previewEl.value.querySelectorAll('.gui-node')) as HTMLElement[]
@@ -1307,6 +1371,12 @@ function formatCode() {
 
 onMounted(() => {
   if (!editorEl.value) return
+
+  const capabilityError = checkKitCapabilities()
+  if (capabilityError) {
+    kitCapabilityError.value = capabilityError
+    console.error(`[playground] ${capabilityError}`)
+  }
 
   editorView = new EditorView({
     state: EditorState.create({
@@ -1404,19 +1474,28 @@ onMounted(() => {
   })
 
   runRender(SAMPLE)
+
+  // The split-pane divider (startDrag) resizes previewEl without a page reflow
+  // event the internal Panzoom instance would otherwise pick up on its own, so
+  // its fit-to-container scale goes stale as soon as the pane is dragged. Refit
+  // on every resize  unless the user has taken over the viewport themselves,
+  // mirroring @dotgui/embed's <gui-embed> auto-refit behavior.
+  if (previewEl.value) {
+    const markUserZoomed = () => { userZoomed = true }
+    previewEl.value.addEventListener('wheel', markUserZoomed, { passive: true })
+    previewEl.value.addEventListener('pointerdown', markUserZoomed)
+    resizeObserver = new ResizeObserver(() => {
+      if (!userZoomed) zoomCtl?.(1)
+    })
+    resizeObserver.observe(previewEl.value)
+  }
 })
 
 onBeforeUnmount(() => {
   editorView?.destroy()
+  resizeObserver?.disconnect()
+  resizeObserver = null
 })
-
-function onWheel(e: WheelEvent) {
-  if (!setZoom || !previewEl.value) return
-  const delta = e.deltaY > 0 ? -0.15 : 0.15
-  zoomFactor = Math.max(0.25, Math.min(4, zoomFactor + delta))
-  const rect = previewEl.value.getBoundingClientRect()
-  setZoom(zoomFactor, e.clientX - rect.left, e.clientY - rect.top)
-}
 </script>
 
 <style scoped>
@@ -1627,9 +1706,20 @@ function onWheel(e: WheelEvent) {
   flex: 1;
   position: relative;
   overflow: hidden;
-  background: #0c0c0c;
-  background-image: radial-gradient(circle, #1a1a1a 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-color: var(--bg);
+  background-image: radial-gradient(rgba(16, 16, 16, 0.14) 1px, transparent 1.4px);
+  background-size: 18px 18px;
+  background-position: center;
+}
+
+.pg-kit-error {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.08);
+  border-bottom: 1px solid rgba(248, 113, 113, 0.3);
 }
 
 /* ─── assets panel ─── */
