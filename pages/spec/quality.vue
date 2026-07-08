@@ -8,10 +8,10 @@
       </nav>
 
       <div class="q-body">
-        <h1>The quality model — CCAC</h1>
+        <h1>The quality model  CCAC</h1>
         <p class="q-lead">
           The .gui quality score measures <strong>the file, not the design</strong>. Like
-          an HTML validator, it answers “is this a well-built file?” — never “is this a
+          an HTML validator, it answers “is this a well-built file?”  never “is this a
           good-looking design?” The score is <strong>100% local, offline, deterministic,
           and zero-AI</strong>: pure rule evaluation over the parsed tree and fixed
           vocabularies, so the same file scores the same everywhere, forever.
@@ -19,9 +19,9 @@
 
         <h2>The gate</h2>
         <p>
-          Before quality is measured, two binary conditions must hold. <strong>Valid</strong> —
+          Before quality is measured, two binary conditions must hold. <strong>Valid</strong> 
           the file conforms to the spec; a file that fails is not a .gui file and is not
-          scored. <strong>Intact</strong> — every reference resolves: <code>$token</code>
+          scored. <strong>Intact</strong>  every reference resolves: <code>$token</code>
           names exist, asset <code>src</code> values point to real files in the package,
           component ids match declared components. A file can be syntactically valid and
           silently broken; intact catches that. Fail either and there is no report.
@@ -41,7 +41,7 @@
             </tr>
             <tr>
               <td><code>A</code> Accessible</td>
-              <td>Is the file physically legible? WCAG 2.2 visual criteria — contrast, tap-target sizes, text sizes.</td>
+              <td>Is the file physically legible? WCAG 2.2 visual criteria  contrast, tap-target sizes, text sizes.</td>
             </tr>
             <tr>
               <td><code>C</code> Comprehensible</td>
@@ -51,14 +51,14 @@
           </tbody>
         </table>
         <p>
-          Every level emits the same envelope — <code>{ "score": 0–100, "audits": [...] }</code> —
+          Every level emits the same envelope  <code>{ "score": 0–100, "audits": [...] }</code> 
           and the reference implementation is <NuxtLink to="/kit">@dotgui/kit/score</NuxtLink>.
         </p>
 
         <h2>Advisory, never a gate</h2>
         <p>
           A low score is still a valid, packable file. The kit produces the measurement
-          and takes no action; what happens next is the consuming tool's policy — a CI
+          and takes no action; what happens next is the consuming tool's policy  a CI
           job might fail below a threshold, an app might show a badge, a batch pipeline
           might auto-discard. The test for what belongs in the score: <em>would another
           designer disagree? Would I disagree next year?</em> If yes, it's design taste
@@ -76,7 +76,7 @@ const pageUrl = 'https://dotgui.org/spec/quality'
 const faq = [
   {
     q: 'Does the .gui quality score judge how good a design looks?',
-    a: 'No — it measures the file, not the design. Like an HTML validator, it checks whether the file is well-built: clean structure, self-agreement, physical legibility, and self-describing semantics. Beauty and taste are deliberately out of scope.'
+    a: 'No  it measures the file, not the design. Like an HTML validator, it checks whether the file is well-built: clean structure, self-agreement, physical legibility, and self-describing semantics. Beauty and taste are deliberately out of scope.'
   },
   {
     q: 'Does scoring require an AI model or a network connection?',
@@ -84,14 +84,14 @@ const faq = [
   },
   {
     q: 'Can a low-scoring .gui file still be used?',
-    a: 'Yes. A low score is still a valid, packable file. The score is advisory — the kit reports a number and takes no action; any gate or threshold is the consuming tool\'s policy.'
+    a: 'Yes. A low score is still a valid, packable file. The score is advisory  the kit reports a number and takes no action; any gate or threshold is the consuming tool\'s policy.'
   }
 ]
 
 usePageSeo({
   path: '/spec/quality',
-  title: 'CCAC — the .gui quality model (Clean, Consistent, Accessible, Comprehensible)',
-  description: 'How .gui files are scored: four local, zero-AI levels — Clean, Consistent, Accessible (WCAG 2.2 visual criteria), and Comprehensible (AI-readiness via the role vocabulary). The score measures the file, never the design.'
+  title: 'CCAC  the .gui quality model (Clean, Consistent, Accessible, Comprehensible)',
+  description: 'How .gui files are scored: four local, zero-AI levels  Clean, Consistent, Accessible (WCAG 2.2 visual criteria), and Comprehensible (AI-readiness via the role vocabulary). The score measures the file, never the design.'
 })
 
 useHead({
@@ -101,7 +101,7 @@ useHead({
       innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'TechArticle',
-        headline: 'CCAC — the .gui quality model',
+        headline: 'CCAC  the .gui quality model',
         description: 'The quality specification for .gui files: a deterministic, zero-AI, fully local score across Clean, Consistent, Accessible, and Comprehensible levels.',
         url: pageUrl,
         isPartOf: { '@type': 'TechArticle', name: '.gui Spec Reference', url: 'https://dotgui.org/spec' },

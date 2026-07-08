@@ -1,4 +1,4 @@
-# .gui (dotgui) — full documentation
+# .gui (dotgui)  full documentation
 
 > This file concatenates the canonical .gui docs for AI consumption.
 > Index: https://dotgui.org/llms.txt · Site: https://dotgui.org
@@ -2794,7 +2794,7 @@ Current version: `0.2` (CCAC model, RFC-0040). The earlier CCACT model included 
 
 ---
 
-<!-- section: @dotgui/kit — the reference engine -->
+<!-- section: @dotgui/kit  the reference engine -->
 
 # @dotgui/kit
 
@@ -3010,7 +3010,7 @@ and rationale.
 
 ---
 
-<!-- section: @dotgui/cli — the command-line toolchain -->
+<!-- section: @dotgui/cli  the command-line toolchain -->
 
 # @dotgui/cli
 
@@ -3043,7 +3043,7 @@ You ──ask──▶ your agent ──uses──▶ dotgui skill ──calls�
 A `.gui` is a **zip package**:
 
 ```
-home.gui
+app.gui
 ├── design.guix     # the markup (XML)
 ├── assets/         # images, SVGs
 └── preview.webp    # rendered thumbnail
@@ -3058,8 +3058,8 @@ You never unzip it by hand. `gui` treats a `.gui` like a folder — read the mar
 ### Edit the markup
 
 ```bash
-gui read  home.gui            # print the markup
-gui write home.gui            # read markup from stdin → lint → repack → regenerate preview
+gui read  app.gui            # print the markup
+gui write app.gui            # read markup from stdin → lint → repack → regenerate preview
 ```
 
 `gui write` is the save step: it lints, **exits non-zero with the errors** if the markup is invalid (nothing is written), and on success repacks the zip and regenerates `preview.webp` so it always matches. Pass `--no-preview` to skip the render for speed.
@@ -3067,12 +3067,12 @@ gui write home.gui            # read markup from stdin → lint → repack → r
 ### Assets & preview (folder-like)
 
 ```bash
-gui read home.gui --assets            # list asset names + sizes
-gui read home.gui --preview           # extract preview, print a viewable path
-gui read home.gui --asset hero.webp   # extract one asset, print a viewable path
-gui add home.gui logo.png [as brand.png]
-gui rm  home.gui assets/old.webp
-gui set-preview home.gui shot.webp
+gui read app.gui --assets            # list asset names + sizes
+gui read app.gui --preview           # extract preview, print a viewable path
+gui read app.gui --asset hero.webp   # extract one asset, print a viewable path
+gui add app.gui logo.png [as brand.png]
+gui rm  app.gui assets/old.webp
+gui set-preview app.gui shot.webp
 ```
 
 `--preview` and `--asset` return a **file path** (in the shadow cache) so your agent can open the image with its own vision. Lists are printed as text.
@@ -3080,15 +3080,15 @@ gui set-preview home.gui shot.webp
 ### Check
 
 ```bash
-gui lint home.gui            # validate only
-gui lint home.gui --fix      # apply deterministic autofix, write back
+gui lint app.gui            # validate only
+gui lint app.gui --fix      # apply deterministic autofix, write back
 ```
 
 ### View
 
 ```bash
-gui render home.gui -o out.png   # rasterize to an image (PNG/WEBP/JPEG by extension)
-gui open   home.gui              # open in the dotgui viewer
+gui render app.gui -o out.png   # rasterize to an image (PNG/WEBP/JPEG by extension)
+gui open   app.gui              # open in the dotgui viewer
 ```
 
 `render` (and the preview that `gui write` regenerates) drives a **Chromium-based
@@ -3100,14 +3100,14 @@ skips the preview rather than blocking the save.
 ### Inspect
 
 ```bash
-gui info home.gui            # name, platform, asset list, dimensions
+gui info app.gui            # name, platform, asset list, dimensions
 ```
 
 ### Packaging (for humans — agents never need these)
 
 ```bash
-gui pack   ./my-design home.gui   # a markup+assets folder → .gui
-gui unpack home.gui ./my-design   # .gui → a real folder you can edit
+gui pack   ./my-design app.gui   # a markup+assets folder → .gui
+gui unpack app.gui ./my-design   # .gui → a real folder you can edit
 ```
 
 ### Setup
@@ -3161,14 +3161,14 @@ After setup, ask any of those tools for a UI "in gui" and it builds it — picki
 
 ## Roadmap
 
-- `gui mount home.gui` — a live folder that auto-syncs back into the zip (the only persistent mode; cleans up on unmount).
+- `gui mount app.gui` — a live folder that auto-syncs back into the zip (the only persistent mode; cleans up on unmount).
 - `gui diff a.gui b.gui` — structural diff.
-- `gui pull <figma-url>` / `gui push home.gui <figma-url>` — Figma round-trip.
+- `gui pull <figma-url>` / `gui push app.gui <figma-url>` — Figma round-trip.
 
 
 ---
 
-<!-- section: @dotgui/embed — render .gui in the browser -->
+<!-- section: @dotgui/embed  render .gui in the browser -->
 
 # @dotgui/embed
 

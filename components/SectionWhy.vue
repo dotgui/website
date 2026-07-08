@@ -4,12 +4,12 @@
       <div class="section-label">Why it exists</div>
       <h2>Designed for AI agents</h2>
       <p>
-        When an AI agent needs to understand or reproduce a UI, it needs text. Figma's native format is a binary API — not something you paste into a prompt.
+        When an AI agent needs to understand or reproduce a UI, it needs text. Figma's native format is a binary API  not something you paste into a prompt.
         <strong>.gui</strong> bridges that gap: it's compact, human-readable XML that fits in a context window.
       </p>
       <p>
-        An agent can read a <code>.gui</code> file and know exactly what's on screen —
-        the layout structure, every text value, colors, spacing, font weights — without screenshots or visual reasoning.
+        An agent can read a <code>.gui</code> file and know exactly what's on screen 
+        the layout structure, every text value, colors, spacing, font weights  without screenshots or visual reasoning.
         It can also <em>write</em> <code>.gui</code> to produce screens that render correctly.
       </p>
     </div>
@@ -28,7 +28,7 @@
       <div class="feature">
         <div class="feature-label">03</div>
         <div class="feature-title">Figma-accurate</div>
-        <p class="feature-body">1-1 mapping to Figma's layer model. Auto-layout, fills, gradients, effects, tokens — nothing is approximated.</p>
+        <p class="feature-body">1-1 mapping to Figma's layer model. Auto-layout, fills, gradients, effects, tokens  nothing is approximated.</p>
       </div>
       <div class="feature">
         <div class="feature-label">04</div>

@@ -4,8 +4,8 @@
       <p class="kit-eyebrow">@dotgui/kit · engine</p>
       <h1 class="kit-title">The reference engine for the .gui format</h1>
       <p class="kit-desc">
-        <strong>@dotgui/kit</strong> takes a <code>.gui</code> file through its entire life —
-        parse, validate, render, score — in one package, behind one version. It is a pure,
+        <strong>@dotgui/kit</strong> takes a <code>.gui</code> file through its entire life 
+        parse, validate, render, score  in one package, behind one version. It is a pure,
         deterministic library: same input, same output, <strong>zero AI</strong>. If the
         format's meaning depends on it, it lives here.
       </p>
@@ -19,9 +19,9 @@
       <h2 class="cat-label">Lifecycle</h2>
       <p class="cat-lead">
         The write path is <em>author → validate → pack</em>. Validation is the one hard
-        check — illegal markup can't be saved as a real <code>.gui</code>. Everything else
+        check  illegal markup can't be saved as a real <code>.gui</code>. Everything else
         is à la carte: render when you want pixels, score when you want a quality report.
-        The read path is just as short — <em>parse → render</em>.
+        The read path is just as short  <em>parse → render</em>.
       </p>
       <DocCode :code="lifecycleCode" lang="ts" />
     </section>
@@ -30,7 +30,7 @@
       <h2 class="cat-label">Modules</h2>
       <p class="cat-lead">
         The root export is just the canonical types. Behaviour lives in subpath exports, so a
-        consumer only bundles what it imports — pull the parser without the renderer. Open any
+        consumer only bundles what it imports  pull the parser without the renderer. Open any
         module for its API and examples.
       </p>
       <div class="cat-grid">
@@ -39,12 +39,12 @@
             <span class="card-name">{{ m.name }}</span>
             <span class="kind-badge" :class="`kind-${m.kind}`">{{ m.tag }}</span>
           </div>
-          <p class="card-desc">{{ m.sub }} — {{ m.desc[0] }}</p>
+          <p class="card-desc">{{ m.sub }}  {{ m.desc[0] }}</p>
           <span class="card-cta">Open module →</span>
         </NuxtLink>
       </div>
       <p class="cat-note">
-        The <strong>optimizer</strong> (Clean's diff signal) is injected — pass it into
+        The <strong>optimizer</strong> (Clean's diff signal) is injected  pass it into
         <code>score</code> or Clean reports NA, never faked. The <strong>rasterizer</strong>
         ships a light <code>puppeteer-core</code> default; opt into full
         <code>puppeteer</code> for a bundled Chromium.
@@ -55,11 +55,11 @@
       <h2 class="cat-label">Quality</h2>
       <p class="cat-lead">
         The scorer measures whether a file is <em>well-built</em>, never whether the design
-        is fashionable — the way an HTML validator judges markup, not websites. Four levels:
+        is fashionable  the way an HTML validator judges markup, not websites. Four levels:
         <strong>Clean</strong>, <strong>Consistent</strong>, <strong>Accessible</strong>
         (WCAG 2.2 visual criteria), and <strong>Comprehensible</strong> (AI-ready semantics via
         the 53-role vocabulary). All four run locally, offline, with zero AI. A low score is
-        still a valid file — the kit reports and takes no action.
+        still a valid file  the kit reports and takes no action.
       </p>
       <p><NuxtLink to="/spec/quality" class="cat-link">Read the full quality model →</NuxtLink></p>
     </section>
@@ -94,11 +94,11 @@ if (!errors.length) {
 const faq = [
   {
     q: 'Does @dotgui/kit use AI?',
-    a: 'No — zero AI, by design. The kit executes the format\'s rules and nothing else: pure rule evaluation with deterministic output. AI-assisted authoring lives in agents and skills outside the kit, so the engine stays trustworthy and reproducible.'
+    a: 'No  zero AI, by design. The kit executes the format\'s rules and nothing else: pure rule evaluation with deterministic output. AI-assisted authoring lives in agents and skills outside the kit, so the engine stays trustworthy and reproducible.'
   },
   {
     q: 'Is validation required to create a .gui file?',
-    a: 'Yes — and it is the only required step. The minimal path is valid markup → zip. Render, lint, score, and preview are optional capabilities, not gates.'
+    a: 'Yes  and it is the only required step. The minimal path is valid markup → zip. Render, lint, score, and preview are optional capabilities, not gates.'
   },
   {
     q: 'Can I use just the parser or just the renderer?',
@@ -106,21 +106,21 @@ const faq = [
   },
   {
     q: 'How is the preview.webp thumbnail generated?',
-    a: 'pack() renders the file to HTML and rasterizes it with puppeteer-core driving a system Chromium — a light install with no bundled browser. If no browser is found, packing still succeeds with a placeholder preview and a console error explaining the fix.'
+    a: 'pack() renders the file to HTML and rasterizes it with puppeteer-core driving a system Chromium  a light install with no bundled browser. If no browser is found, packing still succeeds with a placeholder preview and a console error explaining the fix.'
   }
 ]
 
 usePageSeo({
   path: '/kit',
-  title: '@dotgui/kit — the reference engine for the .gui format',
-  description: '@dotgui/kit is the deterministic engine for .gui files: parser, validator, HTML renderer, CCAC scorer, linter, autofix, packager, and rasterizer — 9 modules in one package, zero AI, tree-shakeable subpath exports.'
+  title: '@dotgui/kit  the reference engine for the .gui format',
+  description: '@dotgui/kit is the deterministic engine for .gui files: parser, validator, HTML renderer, CCAC scorer, linter, autofix, packager, and rasterizer  9 modules in one package, zero AI, tree-shakeable subpath exports.'
 })
 
 useProductSchema({
   path: '/kit',
   name: '@dotgui/kit',
   crumb: 'kit',
-  description: 'The reference engine for the .gui format — parse, validate, render, lint, score, and package .gui files with one deterministic, zero-AI library.',
+  description: 'The reference engine for the .gui format  parse, validate, render, lint, score, and package .gui files with one deterministic, zero-AI library.',
   faq
 })
 </script>

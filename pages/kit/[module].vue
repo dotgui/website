@@ -86,9 +86,9 @@ const pageUrl = `https://dotgui.org/kit/${mod.slug}`
 const importPath = mod.slug === 'types' ? '@dotgui/kit' : `@dotgui/kit${mod.name}`
 
 useSeoMeta({
-  title: `${importPath} — @dotgui/kit`,
+  title: `${importPath}  @dotgui/kit`,
   description: mod.seo,
-  ogTitle: `${importPath} — @dotgui/kit`,
+  ogTitle: `${importPath}  @dotgui/kit`,
   ogDescription: mod.seo,
   ogUrl: pageUrl,
   ogImage: 'https://dotgui.org/og.png',
@@ -103,7 +103,7 @@ useHead({
       innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'TechArticle',
-        headline: `${importPath} — @dotgui/kit`,
+        headline: `${importPath}  @dotgui/kit`,
         description: mod.seo,
         url: pageUrl,
         isPartOf: { '@type': 'TechArticle', name: '@dotgui/kit', url: 'https://dotgui.org/kit' },
@@ -191,7 +191,7 @@ useHead({
   align-items: start;
 }
 
-/* center — explanation + API */
+/* center  explanation + API */
 .entry-desc { padding: 12px 36px 40px 40px; }
 .entry-desc p {
   font-size: 14px;
@@ -246,7 +246,7 @@ useHead({
   background: var(--muted-soft);
 }
 
-/* right — examples */
+/* right  examples */
 .entry-example {
   padding: 16px 24px 24px;
   background: var(--surface);

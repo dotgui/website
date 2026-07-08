@@ -1,6 +1,6 @@
 /**
  * Generate lib/roles.json from the canonical role catalog in ../core/roles.
- * Mirrors the sync:spec pattern — core stays the authority, the site ships a
+ * Mirrors the sync:spec pattern  core stays the authority, the site ships a
  * generated snapshot. Run: bun run sync:roles
  */
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'

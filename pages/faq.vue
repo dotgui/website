@@ -60,13 +60,13 @@ const navGroups = [
 
 usePageSeo({
   path: '/faq',
-  title: '.gui FAQ — questions about the UI file format',
+  title: '.gui FAQ  questions about the UI file format',
   description: 'Answers to common questions about .gui: what the file format is, how it differs from HTML and SVG, whether AI agents can read and write it, and how to create, render, and export .gui files.',
-  ogTitle: '.gui — Frequently asked questions',
+  ogTitle: '.gui  Frequently asked questions',
   ogDescription: 'What a .gui file is, how it compares to HTML and SVG, and how to author, render, and export one.'
 })
 
-// FAQPage JSON-LD — mirrors the visible General list. Strongest GEO signal, so the
+// FAQPage JSON-LD  mirrors the visible General list. Strongest GEO signal, so the
 // answers on screen and in the schema must stay identical. Per-product FAQs carry
 // their own FAQPage schema on their own pages; they are not duplicated here.
 useHead({
@@ -135,7 +135,7 @@ useHead({
   margin: 0 0 18px;
 }
 
-/* General FAQ — two columns like a reference sheet */
+/* General FAQ  two columns like a reference sheet */
 .faq {
   display: grid;
   grid-template-columns: 1fr 1fr;

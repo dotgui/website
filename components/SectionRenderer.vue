@@ -5,7 +5,7 @@
       <h2>@dotgui/kit/render</h2>
       <p>
         A standalone TypeScript library that takes a <code>.gui</code> document string and renders it
-        into a live container element. It handles layout, fonts, images, shapes, gradients, effects —
+        into a live container element. It handles layout, fonts, images, shapes, gradients, effects 
         everything the format describes.
       </p>
     </div>
@@ -20,7 +20,7 @@ setZoom<span class="tok-punct">?.(</span><span class="tok-val">2</span><span cla
 
     <div data-reveal>
       <p>
-        The renderer also accepts a pre-built <strong>asset map</strong> — useful when you want to
+        The renderer also accepts a pre-built <strong>asset map</strong>  useful when you want to
         avoid re-parsing large base64 image blobs on each render update.
       </p>
     </div>

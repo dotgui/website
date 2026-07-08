@@ -49,7 +49,7 @@ export function plain(code: string): string {
   return code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
-// TypeScript / JS / bash highlighter — same tok-* palette as the XML one, so the
+// TypeScript / JS / bash highlighter  same tok-* palette as the XML one, so the
 // spec and kit pages share one light-surface code look.
 const TS_KEYWORDS = new Set([
   'import', 'from', 'export', 'default', 'const', 'let', 'var', 'function', 'return',

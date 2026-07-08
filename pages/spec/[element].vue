@@ -58,9 +58,9 @@ const cleanTitle = specDisplayName(entry.title)
 const pageUrl = `https://dotgui.org/spec/${entry.slug}`
 
 useSeoMeta({
-  title: `${cleanTitle} — .gui Spec Reference`,
+  title: `${cleanTitle}  .gui Spec Reference`,
   description: entry.seoDescription,
-  ogTitle: `${cleanTitle} — .gui`,
+  ogTitle: `${cleanTitle}  .gui`,
   ogDescription: entry.seoDescription,
   ogUrl: pageUrl,
   ogImage: 'https://dotgui.org/og.png',
@@ -73,7 +73,7 @@ const ldScripts = [
     innerHTML: JSON.stringify({
       '@context': 'https://schema.org',
       '@type': 'TechArticle',
-      headline: `${cleanTitle} — .gui Spec Reference`,
+      headline: `${cleanTitle}  .gui Spec Reference`,
       description: entry.seoDescription,
       url: pageUrl,
       about: { '@type': 'Thing', name: specDisplayName(entry.name) },
@@ -94,7 +94,7 @@ const ldScripts = [
   }
 ]
 
-// FAQPage schema — strongest GEO signal; only when the entry has FAQs.
+// FAQPage schema  strongest GEO signal; only when the entry has FAQs.
 if (entry.faq.length) {
   ldScripts.push({
     type: 'application/ld+json',

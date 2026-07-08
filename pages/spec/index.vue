@@ -3,7 +3,7 @@
     <header class="spec-header">
       <p class="spec-header-eyebrow">dotgui v0.2</p>
       <h1 class="spec-header-title">Spec Reference</h1>
-      <p class="spec-header-desc">Every tag, property, and convention in the dotgui format. Pick an item from the sidebar — or a card below — to open its full reference. Beyond the elements, the spec also defines the <NuxtLink to="/spec/roles">role vocabulary</NuxtLink> (53 recognized UI structures that make files self-describing) and the <NuxtLink to="/spec/quality">CCAC quality model</NuxtLink>.</p>
+      <p class="spec-header-desc">Every tag, property, and convention in the dotgui format. Pick an item from the sidebar  or a card below  to open its full reference. Beyond the elements, the spec also defines the <NuxtLink to="/spec/roles">role vocabulary</NuxtLink> (53 recognized UI structures that make files self-describing) and the <NuxtLink to="/spec/quality">CCAC quality model</NuxtLink>.</p>
     </header>
 
     <section v-for="group in groups" :key="group.label" class="cat">
@@ -41,10 +41,10 @@ const groups = specCategoryOrder.map(category => ({
 
 usePageSeo({
   path: '/spec',
-  title: '.gui Spec Reference — elements, attributes & tokens',
+  title: '.gui Spec Reference  elements, attributes & tokens',
   description: 'The complete .gui format specification: package structure, the gui root, layout elements (col, row, frame, grid), text, shapes, images, design tokens, fonts, appearance attributes, the role vocabulary, and the CCAC quality model.',
   ogTitle: '.gui Spec Reference',
-  ogDescription: 'The complete reference for the .gui UI format — elements, attributes, tokens, roles, and quality.'
+  ogDescription: 'The complete reference for the .gui UI format  elements, attributes, tokens, roles, and quality.'
 })
 
 useHead({
@@ -55,7 +55,7 @@ useHead({
         '@context': 'https://schema.org',
         '@type': 'CollectionPage',
         name: '.gui Spec Reference',
-        description: 'The complete specification of the .gui file format — every element, attribute, token type, the role vocabulary, and the CCAC quality model.',
+        description: 'The complete specification of the .gui file format  every element, attribute, token type, the role vocabulary, and the CCAC quality model.',
         url: 'https://dotgui.org/spec',
         isPartOf: { '@type': 'WebSite', name: '.gui (dotgui)', url: 'https://dotgui.org' },
         hasPart: specEntries.filter(e => !e.hubHidden).map(e => ({

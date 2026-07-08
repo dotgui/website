@@ -4,7 +4,7 @@
       <div class="section-label">Inspect</div>
       <h2>Code meets canvas</h2>
       <p>
-        Hover any element tag in the source — watch it light up in the preview.
+        Hover any element tag in the source  watch it light up in the preview.
         The same connection browser DevTools gives you between the DOM panel and the page.
       </p>
     </div>

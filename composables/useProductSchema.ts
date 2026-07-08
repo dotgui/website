@@ -3,7 +3,7 @@ const SITE_URL = 'https://dotgui.org'
 /**
  * JSON-LD for the product pages: SoftwareApplication + BreadcrumbList,
  * plus FAQPage when the page renders a FAQ (schema must mirror visible
- * content — pass the same array the template renders).
+ * content  pass the same array the template renders).
  */
 export function useProductSchema(opts: {
   path: string

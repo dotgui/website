@@ -4,7 +4,7 @@
       <div class="section-label">Export</div>
       <h2>Export from Figma</h2>
       <p>
-        Select any layer — a frame, a component, a group, or even a single shape — and export it as <code>.gui</code>
+        Select any layer  a frame, a component, a group, or even a single shape  and export it as <code>.gui</code>
         with the Figma plugin. The plugin handles everything: token extraction, font mapping, image
         encoding, gradient computation.
       </p>
@@ -22,7 +22,7 @@
         <span class="step-num">02</span>
         <div class="step-content">
           <h3>Select a layer</h3>
-          <p>Any visible layer works — frames, components, groups, or individual shapes.</p>
+          <p>Any visible layer works  frames, components, groups, or individual shapes.</p>
         </div>
       </div>
       <div class="step">

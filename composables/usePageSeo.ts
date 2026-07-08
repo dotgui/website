@@ -2,7 +2,7 @@ const SITE_URL = 'https://dotgui.org'
 
 /**
  * Per-page SEO: title/description/OG + a per-page canonical.
- * Every prerendered route must call this — the global canonical was removed
+ * Every prerendered route must call this  the global canonical was removed
  * from nuxt.config so pages don't all canonicalize to the homepage.
  */
 export function usePageSeo(opts: {

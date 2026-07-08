@@ -2,7 +2,7 @@
   <footer>
     <div class="wrap footer-grid">
       <div class="footer-brand">
-        <span class="footer-logo">.gui — v{{ formatVersion }}</span>
+        <span class="footer-logo">.gui  v{{ formatVersion }}</span>
         <span class="footer-note">The open file format for user interfaces</span>
       </div>
       <div class="footer-cols">

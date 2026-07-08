@@ -1,8 +1,8 @@
 /**
  * Generate public/llms.txt and public/llms-full.txt.
  *
- * llms.txt      — the index AI crawlers read first (llmstxt.org convention).
- * llms-full.txt — the whole spec + toolchain docs as one markdown file, so an
+ * llms.txt       the index AI crawlers read first (llmstxt.org convention).
+ * llms-full.txt  the whole spec + toolchain docs as one markdown file, so an
  *                 agent that ingests it can read and write .gui immediately.
  *
  * Sources are the canonical docs in the monorepo (core/, kit/, cli/, embed/).
@@ -17,10 +17,10 @@ const root = join(here, '../..')
 const out = (f: string) => join(here, '../public', f)
 const read = (p: string) => readFileSync(join(root, p), 'utf8').trim()
 
-// ── llms.txt — the index ────────────────────────────────────────────────────
+// ── llms.txt  the index ────────────────────────────────────────────────────
 const llms = `# .gui (dotgui)
 
-> .gui is an open, text-based file format for user interfaces — what .svg is to
+> .gui is an open, text-based file format for user interfaces  what .svg is to
 > graphics, .gui is to UI. A .gui file is a zip package: design.guix (plain XML
 > markup carrying frames, stacks, text, images, shapes, design tokens, fonts,
 > and effects), an assets/ folder, and a preview.webp thumbnail. AI agents can
@@ -30,7 +30,7 @@ const llms = `# .gui (dotgui)
 Key facts:
 - Only validation is required to produce a file; render and score are optional.
 - A closed 53-role vocabulary (role="button", role="nav-bar", …) makes files self-describing.
-- Quality is scored on CCAC (Clean, Consistent, Accessible, Comprehensible) — local, offline, zero-AI.
+- Quality is scored on CCAC (Clean, Consistent, Accessible, Comprehensible)  local, offline, zero-AI.
 - The format, engine, CLI, and embed library are open source and free.
 
 ## Documentation
@@ -43,7 +43,7 @@ Key facts:
 ## Toolchain
 
 - [gui CLI](https://dotgui.org/cli): read, write, lint, render, and package .gui files; \`gui setup\` installs the dotgui skill into AI agents
-- [@dotgui/kit](https://dotgui.org/kit): the reference engine — parser, validator, renderer, scorer in one deterministic package
+- [@dotgui/kit](https://dotgui.org/kit): the reference engine  parser, validator, renderer, scorer in one deterministic package
 - [@dotgui/embed](https://dotgui.org/embed): render .gui files on any website with one CDN script
 - [Figma plugin](https://dotgui.org/figma): export any Figma layer as a .gui file
 
@@ -52,20 +52,20 @@ Key facts:
 - [Playground](https://dotgui.org/playground): write .gui XML and see it render live
 `
 
-// ── llms-full.txt — the whole corpus ────────────────────────────────────────
+// ── llms-full.txt  the whole corpus ────────────────────────────────────────
 const sections: [string, string][] = [
   ['What is .gui', read('core/README.md')],
   ['The .gui format specification', read('core/spec/DOTGUI.md')],
   ['Element and attribute reference (generated)', read('core/spec/REFERENCE.md')],
   ['The role vocabulary', read('core/roles/README.md')],
   ['The CCAC quality model', read('core/spec/QUALITY.md')],
-  ['@dotgui/kit — the reference engine', read('kit/README.md')],
-  ['@dotgui/cli — the command-line toolchain', read('cli/README.md')],
-  ['@dotgui/embed — render .gui in the browser', read('embed/README.md')]
+  ['@dotgui/kit  the reference engine', read('kit/README.md')],
+  ['@dotgui/cli  the command-line toolchain', read('cli/README.md')],
+  ['@dotgui/embed  render .gui in the browser', read('embed/README.md')]
 ]
 
 const full = [
-  '# .gui (dotgui) — full documentation',
+  '# .gui (dotgui)  full documentation',
   '',
   '> This file concatenates the canonical .gui docs for AI consumption.',
   '> Index: https://dotgui.org/llms.txt · Site: https://dotgui.org',
