@@ -35,8 +35,8 @@ export const siteFaq: SiteFaq[] = [
     a: 'Add one CDN script — @dotgui/embed — and drop a <gui-embed> element pointing at your file. It renders the design in place with zero dependencies, with optional zoom, download, copy, and light/dark mode controls. In an application, call @dotgui/kit/render to turn any .gui string into live DOM with one function call.'
   },
   {
-    q: ‘How do I export a Figma design to .gui?’,
-    a: ‘Use the dotgui Figma plugin. Select any layer — frame, component, group, or shape — and export it as a .gui file. The plugin provides high-fidelity export (~95% coverage) of Figma’s layer model: auto-layout, fills, gradients, effects, and tokens are preserved. Known limitations: gradient strokes are not emitted, some effect types are documented as comments, and heavily overridden instances (≥75%) are detached to inline trees.’
+    q: "How do I export a Figma design to .gui?",
+    a: "Use the dotgui Figma plugin. Select any layer — frame, component, group, or shape — and export it as a .gui file. The plugin provides high-fidelity export (~95% coverage) of Figma’s layer model: auto-layout, fills, gradients, effects, and tokens are preserved. Known limitations: gradient strokes are not emitted, some effect types are documented as comments, and heavily overridden instances (≥75%) are detached to inline trees."
   },
   {
     q: 'Is .gui free and open?',
