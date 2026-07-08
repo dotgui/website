@@ -1706,9 +1706,10 @@ onBeforeUnmount(() => {
   flex: 1;
   position: relative;
   overflow: hidden;
-  background: #0c0c0c;
-  background-image: radial-gradient(circle, #1a1a1a 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-color: var(--bg);
+  background-image: radial-gradient(rgba(16, 16, 16, 0.14) 1px, transparent 1.4px);
+  background-size: 18px 18px;
+  background-position: center;
 }
 
 .pg-kit-error {
