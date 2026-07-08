@@ -181,8 +181,8 @@
           </div>
 
           <div class="hub-node r" style="top:68px"><span class="nd" style="background:var(--blue)"></span>HTML<span class="verb">renders</span></div>
-          <div class="hub-node r" style="top:168px"><span class="nd" style="background:var(--purple)"></span>SwiftUI<span class="verb">translates</span></div>
-          <div class="hub-node r" style="top:268px"><span class="nd" style="background:var(--green)"></span>Compose<span class="verb">translates</span></div>
+          <div class="hub-node r" style="top:168px"><span class="nd" style="background:var(--purple)"></span>SwiftUI<span class="verb">community</span></div>
+          <div class="hub-node r" style="top:268px"><span class="nd" style="background:var(--green)"></span>Compose<span class="verb">community</span></div>
           <div class="hub-node r" style="top:368px"><span class="nd" style="background:var(--muted)"></span>Any renderer<span class="verb">reads</span></div>
         </div>
       </div>

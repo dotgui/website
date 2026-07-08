@@ -5,9 +5,9 @@
       <h1 class="doc-title">Export any Figma screen as a .gui file</h1>
       <p class="doc-desc">
         The dotgui Figma plugin exports any layer — a frame, component, group, or single
-        shape — as a <code>.gui</code> file. The export is a <strong>1:1 mapping of
-        Figma's layer model</strong>: auto-layout, fills, gradients, effects, and tokens
-        are preserved exactly, not approximated.
+        shape — as a <code>.gui</code> file. The export provides <strong>high-fidelity coverage (~95%)</strong> of
+        Figma's layer model: auto-layout, fills, gradients, effects, and tokens
+        are preserved with documented limitations (gradient strokes, some effect types, heavily overridden instances).
       </p>
     </header>
 
@@ -92,7 +92,7 @@ const faq = [
   },
   {
     q: 'How accurate is the export?',
-    a: 'It is a 1:1 mapping of Figma\'s layer model. Auto-layout becomes .gui stacks, and fills, gradients, effects, corner radii, and design tokens carry over exactly — nothing is rasterized or approximated.'
+    a: 'The plugin provides ~95% fidelity of Figma\'s layer model. Auto-layout becomes .gui stacks, and fills, gradients, effects, corner radii, and design tokens carry over. Known limitations: gradient strokes are not emitted (solid strokes work), some effect types are documented in comments, and instances with ≥75% overrides are detached to inline trees.'
   },
   {
     q: 'Where do images and other assets go?',
