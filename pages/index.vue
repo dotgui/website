@@ -234,7 +234,7 @@
           <NuxtLink class="prod reveal" to="/cli" style="background:var(--blue);color:#fff">
             <div class="top"><span class="pkg" style="color:#b9cdf5">@dotgui/cli</span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
             <h3>Your agent writes the file</h3>
-            <p style="color:#dce7fb">gui setup teaches your agents the format. The CLI lints, packs, previews. Zero AI inside the tool itself.</p>
+            <p style="color:#dce7fb">gui setup installs the .gui skill into the coding agents you already use — it adds a skill, not an agent. The CLI itself lints, packs, previews. Zero AI inside the tool.</p>
           </NuxtLink>
           <NuxtLink class="prod reveal" to="/kit" style="background:var(--yellow);color:var(--ink)">
             <div class="top"><span class="pkg" style="color:#8a6a00">@dotgui/kit</span><svg viewBox="0 0 24 24" fill="none" stroke="#101010" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
@@ -291,6 +291,73 @@
       </div>
     </section>
 
+    <section class="aeo hairtop">
+      <div class="wrap">
+        <p class="kicker reveal">HOW .GUI COMPARES · AS OF 2026</p>
+        <h2 class="reveal">Where .gui fits, next to the formats you know</h2>
+        <p class="lede reveal">As of 2026, most teams still ship interfaces as one of four things: HTML, an SVG, a Figma file, or a flat screenshot. Each is great at one job and wrong for the others. The table below lines them up on the traits that matter when a design has to travel between a designer, a developer, and an AI agent in the same day.</p>
+
+        <div class="aeo-table-wrap reveal">
+          <table class="aeo-table">
+            <caption class="sr-only">Comparison of .gui with HTML, SVG, Figma files, and screenshots across five traits, as of 2026.</caption>
+            <thead>
+              <tr>
+                <th scope="col">Format</th>
+                <th scope="col">What it is</th>
+                <th scope="col">Plain text?</th>
+                <th scope="col">Has a layout system?</th>
+                <th scope="col">AI can read &amp; write it?</th>
+                <th scope="col">Renders to pixels?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="is-gui">
+                <th scope="row">.gui</th>
+                <td>A portable UI design file</td>
+                <td>Yes — readable XML</td>
+                <td>Yes — stacks, grids, tokens</td>
+                <td>Yes — by design</td>
+                <td>Yes — via the renderer</td>
+              </tr>
+              <tr>
+                <th scope="row">HTML</th>
+                <td>A web application runtime</td>
+                <td>Yes</td>
+                <td>Partial — needs CSS + a toolchain</td>
+                <td>Partial — verbose, framework-bound</td>
+                <td>Yes — in a browser</td>
+              </tr>
+              <tr>
+                <th scope="row">SVG</th>
+                <td>A vector graphics format</td>
+                <td>Yes</td>
+                <td>No — paths and shapes only</td>
+                <td>Partial — no UI semantics</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <th scope="row">Figma file</th>
+                <td>A design-tool document</td>
+                <td>No — binary API</td>
+                <td>Yes — inside Figma only</td>
+                <td>No — not text</td>
+                <td>Yes — in Figma</td>
+              </tr>
+              <tr>
+                <th scope="row">Screenshot</th>
+                <td>A flat raster image</td>
+                <td>No</td>
+                <td>No</td>
+                <td>No — needs vision guessing</td>
+                <td>It is pixels</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="aeo-note reveal">The pattern is the same one SVG followed for graphics: as of 2026, making interfaces text is what lets them move between tools without a rewrite at each step. <NuxtLink to="/faq">Common questions →</NuxtLink> · Updated {{ lastUpdatedLabel }}</p>
+      </div>
+    </section>
+
     <div class="closing">
       <div class="wrap">
         <h2 class="reveal">Design, written down.</h2>
@@ -322,6 +389,11 @@
 
 <script setup lang="ts">
 const SITE_URL = 'https://dotgui.org'
+
+// Single source of truth for the freshness signal — used in the visible
+// "Updated" line under the comparison table and the Article dateModified.
+const LAST_UPDATED = '2026-07-07'
+const lastUpdatedLabel = 'July 2026'
 
 usePageSeo({
   path: '/',
@@ -357,6 +429,28 @@ useHead({
         url: SITE_URL,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         author: { '@type': 'Organization', name: '.gui (dotgui)', url: SITE_URL }
+      })
+    },
+    {
+      // Article schema carries the freshness signal (dateModified) that answer
+      // engines weight heavily, plus authorship and a canonical mainEntityOfPage.
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: '.gui — the open file format for user interfaces',
+        description: '.gui is an open, text-based file format for user interfaces. AI agents write it, a deterministic toolchain validates it, and any browser, tool, or design app renders it.',
+        datePublished: '2025-05-15',
+        dateModified: LAST_UPDATED,
+        inLanguage: 'en',
+        mainEntityOfPage: { '@type': 'WebPage', '@id': SITE_URL },
+        author: { '@type': 'Organization', name: '.gui (dotgui)', url: SITE_URL },
+        publisher: {
+          '@type': 'Organization',
+          name: '.gui (dotgui)',
+          url: SITE_URL,
+          logo: { '@type': 'ImageObject', url: `${SITE_URL}/og.png` }
+        }
       })
     }
   ]
@@ -934,4 +1028,23 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
   .hub-node, .hub-center { position: static; width: 100%; transform: none; margin-bottom: 10px; box-shadow: none; }
   .hub-center { margin: 16px 0; }
 }
+</style>
+
+<style scoped>
+/* ── AEO content sections: comparison table, listicle, quotes, FAQ ── */
+.home-v3 .aeo .lede { margin-top: 16px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* comparison table */
+.aeo-table-wrap { margin-top: 40px; overflow-x: auto; border: 1px solid var(--hairline); border-radius: 16px; background: var(--card); }
+.aeo-table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 13.5px; min-width: 760px; }
+.aeo-table th, .aeo-table td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+.aeo-table thead th { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--canvas); }
+.aeo-table tbody th[scope="row"] { font-family: var(--mono); font-weight: 600; color: var(--ink); white-space: nowrap; }
+.aeo-table td { color: var(--body); }
+.aeo-table tbody tr:last-child th, .aeo-table tbody tr:last-child td { border-bottom: none; }
+.aeo-table tr.is-gui { background: color-mix(in srgb, var(--blue) 7%, transparent); }
+.aeo-table tr.is-gui th[scope="row"] { color: var(--blue); }
+.aeo-note { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 20px; max-width: 760px; line-height: 1.7; }
+.aeo-note a { color: var(--blue); text-decoration: none; }
 </style>
