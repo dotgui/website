@@ -67,6 +67,7 @@
               <select
                 class="pg-mode-select"
                 v-model="activeMode[axis.name]"
+                :disabled="!!kitCapabilityError"
                 @change="rerenderCurrent"
               >
                 <option v-for="v in axis.values" :key="v" :value="v">{{ v }}</option>
@@ -74,6 +75,9 @@
             </label>
           </div>
           <span class="pg-hint">scroll to zoom · drag to pan</span>
+        </div>
+        <div v-if="kitCapabilityError" class="pg-kit-error">
+          {{ kitCapabilityError }}
         </div>
         <div ref="previewEl" class="pg-preview" @wheel.prevent="onWheel" />
       </div>
@@ -103,6 +107,8 @@ import {
 import { autocompletion, completionKeymap, closeBrackets, closeBracketsKeymap, startCompletion, type CompletionContext, type CompletionResult } from '@codemirror/autocomplete'
 import { tags } from '@lezer/highlight'
 import { normalizeBooleanAttrs, render } from '@dotgui/kit/render'
+import { parseXml } from '@dotgui/kit/parser'
+import rolesData from '~/lib/roles.json'
 import xmlFormat from 'xml-formatter'
 import { unzip } from 'fflate'
 
@@ -206,6 +212,12 @@ const STACK_LAYOUT_ATTRS = [
   { name: 'reverse-z' },
 ]
 
+// RFC-0041: canonical UI role vocabulary, valid on layout nodes only (row/col/frame/grid).
+// Sourced from lib/roles.json (generated from ../core/roles via `bun run sync:roles`) so the
+// editor's schema tracks the canonical catalog instead of drifting from a hand-copied list.
+const ROLE_VALUES = rolesData.roles.map(r => r.role)
+const ROLE_ATTR = { name: 'role', values: ROLE_VALUES }
+
 const GUI_ELEMENTS = [
   {
     name: 'gui',
@@ -288,6 +300,7 @@ const GUI_ELEMENTS = [
   {
     name: 'stack',
     attrs: [
+      ROLE_ATTR,
       { name: 'direction', values: ['horizontal', 'vertical', 'grid'] },
       ...STACK_LAYOUT_ATTRS,
       { name: 'grid-columns' }, { name: 'grid-rows' },
@@ -298,6 +311,7 @@ const GUI_ELEMENTS = [
   {
     name: 'row',
     attrs: [
+      ROLE_ATTR,
       ...STACK_LAYOUT_ATTRS,
       ...SHARED_LAYOUT,
     ],
@@ -305,6 +319,7 @@ const GUI_ELEMENTS = [
   {
     name: 'col',
     attrs: [
+      ROLE_ATTR,
       ...STACK_LAYOUT_ATTRS,
       ...SHARED_LAYOUT,
     ],
@@ -312,6 +327,7 @@ const GUI_ELEMENTS = [
   {
     name: 'grid',
     attrs: [
+      ROLE_ATTR,
       { name: 'cols' }, { name: 'rows' },
       { name: 'unit' },
       { name: 'gap' }, { name: 'col-gap' }, { name: 'row-gap' },
@@ -324,7 +340,7 @@ const GUI_ELEMENTS = [
   },
   {
     name: 'frame',
-    attrs: [...SHARED_LAYOUT],
+    attrs: [ROLE_ATTR, ...SHARED_LAYOUT],
   },
   {
     name: 'group',
@@ -1069,6 +1085,7 @@ const guiFileInputEl = ref<HTMLInputElement | null>(null)
 const parseError = ref('')
 const assets = ref<Record<string, string>>({})
 const copiedId = ref('')
+const kitCapabilityError = ref('')
 
 // ─── token modes (RFC-0037) ───────────────────────────────────────────────────
 // Declared mode axes found in the current code, plus the active value per axis.
@@ -1261,12 +1278,45 @@ function rerenderCurrent() {
   runRender(editorView?.state.doc.toString() ?? '')
 }
 
+// The playground pins @dotgui/kit as a regular dependency, so a stale lockfile
+// or an npm dedupe can quietly leave an older kit build installed  one whose
+// parser/render don't understand RFC-0037 token modes yet. Rather than let that
+// fail silently (modes just never switching, with no clue why), probe the
+// installed kit's actual shape once at startup and fail loud if it's missing
+// APIs this page depends on.
+function checkKitCapabilities(): string | null {
+  if (typeof render !== 'function') {
+    return '@dotgui/kit/render does not export render() — kit API not supported by this build.'
+  }
+  if (typeof parseXml !== 'function') {
+    return '@dotgui/kit/parser does not export parseXml() — kit API not supported by this build.'
+  }
+  const probe = parseXml(
+    `<gui version="0.2"><modes><mode name="theme" values="light dark" default="light" /></modes><col w="10" h="10" /></gui>`,
+  )
+  if (!probe || typeof probe.modes !== 'object') {
+    return 'Installed @dotgui/kit does not support token modes (RFC-0037). Upgrade @dotgui/kit.'
+  }
+  if (!probe.modes.theme || !Array.isArray(probe.modes.theme.values)) {
+    return 'Installed @dotgui/kit does not resolve <mode> declarations. Upgrade @dotgui/kit.'
+  }
+  return null
+}
+
 function runRender(code: string) {
   if (!previewEl.value) return
+  if (kitCapabilityError.value) return
   clearInspectHighlight()
   syncModes(code)
   const mode = { ...activeMode.value }
-  const result = render(code, previewEl.value, assets.value, { zoom: true, mode })
+  let result: ReturnType<typeof render> = null
+  try {
+    result = render(code, previewEl.value, assets.value, { zoom: true, mode })
+  } catch (err) {
+    console.error('[playground] @dotgui/kit render() threw  kit API not supported by this build:', err)
+    parseError.value = 'render error: kit API not supported'
+    return
+  }
   if (result) {
     setZoom = result
     zoomFactor = 1
@@ -1307,6 +1357,12 @@ function formatCode() {
 
 onMounted(() => {
   if (!editorEl.value) return
+
+  const capabilityError = checkKitCapabilities()
+  if (capabilityError) {
+    kitCapabilityError.value = capabilityError
+    console.error(`[playground] ${capabilityError}`)
+  }
 
   editorView = new EditorView({
     state: EditorState.create({
@@ -1630,6 +1686,16 @@ function onWheel(e: WheelEvent) {
   background: #0c0c0c;
   background-image: radial-gradient(circle, #1a1a1a 1px, transparent 1px);
   background-size: 20px 20px;
+}
+
+.pg-kit-error {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.08);
+  border-bottom: 1px solid rgba(248, 113, 113, 0.3);
 }
 
 /* ─── assets panel ─── */
