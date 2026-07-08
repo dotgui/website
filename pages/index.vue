@@ -5,7 +5,7 @@
     <header class="hero wrap">
       <p class="eyebrow reveal">THE OPEN FILE FORMAT FOR USER INTERFACES</p>
       <h1 class="reveal">The interface,<br>finally a file.</h1>
-      <p class="sub reveal"><b>.gui</b> is an open file format for user interfaces. Text you can read, a file you can send, a design that stays a design — whoever, or whatever, made it.</p>
+      <p class="sub reveal"><b>.gui</b> is an open file format for user interfaces. Text you can read, a file you can send, a design that stays a design:whoever, or whatever, made it.</p>
       <div class="cta-row reveal">
         <a class="btn-install" href="https://github.com/dotgui/core" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.62-2.81 5.64-5.49 5.94.43.37.81 1.1.81 2.22 0 1.6-.01 2.89-.01 3.28 0 .32.22.7.83.58A12 12 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/></svg>
@@ -28,7 +28,7 @@
         <span class="hf-tag code">reads like code</span>
         <span class="hf-tag pix">renders like a picture</span>
       </div>
-      <p class="fmt-cap reveal">the same file — drag to skim between its markup and the pixels it renders. the way SVG made graphics text, .gui makes interfaces text.</p>
+      <p class="fmt-cap reveal">the same file:drag to skim between its markup and the pixels it renders. the way SVG made graphics text, .gui makes interfaces text.</p>
     </header>
 
     <section class="statement">
@@ -92,7 +92,7 @@
         <div class="head">
           <p class="kicker reveal">THE LOOP</p>
           <h2 class="reveal">The same file, tool to tool.</h2>
-          <p class="lede reveal">Ask an agent for a screen and it writes the file. Open it in a browser. Drop it into Figma, nudge a color, send it back. Every tool reads and writes the one <b>home.gui</b> — the design moves as data, not as a fresh screenshot or rewrite at each step.</p>
+          <p class="lede reveal">Ask an agent for a screen and it writes the file. Open it in a browser. Drop it into Figma, nudge a color, send it back. Every tool reads and writes the one <b>home.gui</b>:the design moves as data, not as a fresh screenshot or rewrite at each step.</p>
         </div>
 
         <div class="stage reveal">
@@ -144,7 +144,7 @@
 
           </div>
         </div>
-        <p class="loop-caption reveal">one shared file — read and written by every tool, not re-created at each step</p>
+        <p class="loop-caption reveal">one shared file:read and written by every tool, not re-created at each step</p>
       </div>
     </section>
 
@@ -152,7 +152,7 @@
       <div class="wrap">
         <p class="kicker reveal">ONE FILE IN THE MIDDLE</p>
         <h2 class="reveal">Written by anything. <em>Rendered anywhere.</em></h2>
-        <p class="lede reveal">The .gui file sits in the middle. Any tool or agent can author it; any platform can render or translate it. Open on both sides — nothing locked coming in, nothing rewritten going out.</p>
+        <p class="lede reveal">The .gui file sits in the middle. Any tool or agent can author it; any platform can render or translate it. Open on both sides:nothing locked coming in, nothing rewritten going out.</p>
 
         <div class="hub reveal">
           <svg class="hub-lines" viewBox="0 0 1136 480" preserveAspectRatio="none" aria-hidden="true">
@@ -192,27 +192,27 @@
       <div class="wrap">
         <p class="kicker reveal" style="color:#6e6a5e">WHY TEXT, NOW</p>
         <h2 class="reveal" style="color:#fafaf7">Pixels can't keep up. Text can.</h2>
-        <p class="lede reveal">An interface isn't timeless like a painting — it shifts with every OS, pattern, and framework. A picture can't follow that. A text file can, and so can the models working on it.</p>
+        <p class="lede reveal">An interface isn't timeless like a painting:it shifts with every OS, pattern, and framework. A picture can't follow that. A text file can, and so can the models working on it.</p>
         <div class="why-grid reveal">
           <div class="why-card">
             <div class="wn">01</div>
             <h3>Change it by asking</h3>
-            <p>Editing a .gui is editing text — precise and instant. No waiting for an agent to re-render a whole screen as a pixel-perfect image and hoping the rest survived.</p>
+            <p>Editing a .gui is editing text:precise and instant. No waiting for an agent to re-render a whole screen as a pixel-perfect image and hoping the rest survived.</p>
           </div>
           <div class="why-card">
             <div class="wn">02</div>
             <h3>No model to wait for</h3>
-            <p>You're not stuck until the next image model ships. Hand an agent a few .gui examples and it matches your style today — no retraining, no fine-tune.</p>
+            <p>You're not stuck until the next image model ships. Hand an agent a few .gui examples and it matches your style today:no retraining, no fine-tune.</p>
           </div>
           <div class="why-card">
             <div class="wn">03</div>
             <h3>New frameworks, same file</h3>
-            <p>When a platform ships a new look, a new pattern is a new .gui snippet — written down in an afternoon, not waited on through a retrained vision model.</p>
+            <p>When a platform ships a new look, a new pattern is a new .gui snippet:written down in an afternoon, not waited on through a retrained vision model.</p>
           </div>
           <div class="why-card">
             <div class="wn">04</div>
             <h3>Every file is design knowledge</h3>
-            <p>A readable corpus of real interfaces — the craft once locked inside pixels, now text a model, or a teammate, can actually learn from.</p>
+            <p>A readable corpus of real interfaces:the craft once locked inside pixels, now text a model, or a teammate, can actually learn from.</p>
           </div>
         </div>
       </div>
@@ -234,12 +234,12 @@
           <NuxtLink class="prod reveal" to="/cli" style="background:var(--blue);color:#fff">
             <div class="top"><span class="pkg" style="color:#b9cdf5">@dotgui/cli</span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
             <h3>Your agent writes the file</h3>
-            <p style="color:#dce7fb">gui setup installs the .gui skill into the coding agents you already use — it adds a skill, not an agent. The CLI itself lints, packs, previews. Zero AI inside the tool.</p>
+            <p style="color:#dce7fb">gui setup installs the .gui skill into the coding agents you already use:it adds a skill, not an agent. The CLI itself lints, packs, previews. Zero AI inside the tool.</p>
           </NuxtLink>
           <NuxtLink class="prod reveal" to="/kit" style="background:var(--yellow);color:var(--ink)">
             <div class="top"><span class="pkg" style="color:#8a6a00">@dotgui/kit</span><svg viewBox="0 0 24 24" fill="none" stroke="#101010" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
             <h3>The engine keeps it honest</h3>
-            <p style="color:#4a3d08">Parse, validate, render, lint, autofix, score — one deterministic package. A low score is still a valid file.</p>
+            <p style="color:#4a3d08">Parse, validate, render, lint, autofix, score:one deterministic package. A low score is still a valid file.</p>
           </NuxtLink>
           <NuxtLink class="prod reveal" to="/embed" style="background:var(--green);color:#fff">
             <div class="top"><span class="pkg" style="color:#cdebd8">@dotgui/embed</span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
@@ -273,7 +273,7 @@
             <div class="canvas" style="background:var(--dark)">
               <i style="display:block;width:118px;height:118px;background:var(--purple);border-radius:9px;margin-bottom:14px"></i>
               <p style="font-size:13px;font-weight:600;color:#fafaf7">Night Drive</p>
-              <p style="font-size:11px;color:#8a8578;margin-top:3px">Solar State — 3:42</p>
+              <p style="font-size:11px;color:#8a8578;margin-top:3px">Solar State:3:42</p>
             </div>
             <div class="cap"><span>player.gui · dark</span><b>score 91</b></div>
           </div>
@@ -314,41 +314,41 @@
               <tr class="is-gui">
                 <th scope="row">.gui</th>
                 <td>A portable UI design file</td>
-                <td>Yes — readable XML</td>
-                <td>Yes — stacks, grids, tokens</td>
-                <td>Yes — by design</td>
-                <td>Yes — via the renderer</td>
+                <td>Yes:readable XML</td>
+                <td>Yes:stacks, grids, tokens</td>
+                <td>Yes:by design</td>
+                <td>Yes:via the renderer</td>
               </tr>
               <tr>
                 <th scope="row">HTML</th>
                 <td>A web application runtime</td>
                 <td>Yes</td>
-                <td>Partial — needs CSS + a toolchain</td>
-                <td>Partial — verbose, framework-bound</td>
-                <td>Yes — in a browser</td>
+                <td>Partial:needs CSS + a toolchain</td>
+                <td>Partial:verbose, framework-bound</td>
+                <td>Yes:in a browser</td>
               </tr>
               <tr>
                 <th scope="row">SVG</th>
                 <td>A vector graphics format</td>
                 <td>Yes</td>
-                <td>No — paths and shapes only</td>
-                <td>Partial — no UI semantics</td>
+                <td>No:paths and shapes only</td>
+                <td>Partial:no UI semantics</td>
                 <td>Yes</td>
               </tr>
               <tr>
                 <th scope="row">Figma file</th>
                 <td>A design-tool document</td>
-                <td>No — binary API</td>
-                <td>Yes — inside Figma only</td>
-                <td>No — not text</td>
-                <td>Yes — in Figma</td>
+                <td>No:binary API</td>
+                <td>Yes:inside Figma only</td>
+                <td>No:not text</td>
+                <td>Yes:in Figma</td>
               </tr>
               <tr>
                 <th scope="row">Screenshot</th>
                 <td>A flat raster image</td>
                 <td>No</td>
                 <td>No</td>
-                <td>No — needs vision guessing</td>
+                <td>No:needs vision guessing</td>
                 <td>It is pixels</td>
               </tr>
             </tbody>
@@ -368,12 +368,12 @@
 
     <footer class="v3foot">
       <div class="wrap foot-links">
-        <span>.gui — the open file format for user interfaces</span>
+        <span>.gui:the open file format for user interfaces</span>
         <span class="r">
           <NuxtLink to="/spec">spec</NuxtLink><NuxtLink to="/cli">cli</NuxtLink><NuxtLink to="/kit">kit</NuxtLink><NuxtLink to="/embed">embed</NuxtLink><NuxtLink to="/figma">figma</NuxtLink><NuxtLink to="/faq">faq</NuxtLink><a href="/llms.txt">llms.txt</a><a href="https://github.com/dotgui/core" target="_blank" rel="noopener">github</a>
         </span>
       </div>
-      <p class="gridhint">these aren't pixels anymore — hover the grid and read them</p>
+      <p class="gridhint">these aren't pixels anymore:hover the grid and read them</p>
       <div class="gridwall" ref="gridwallEl">
         <span class="seed" style="left:150px;top:50px;background:var(--purple)"></span>
         <span class="seed" style="left:500px;top:150px;background:var(--blue)"></span>
@@ -390,16 +390,16 @@
 <script setup lang="ts">
 const SITE_URL = 'https://dotgui.org'
 
-// Single source of truth for the freshness signal — used in the visible
+// Single source of truth for the freshness signal:used in the visible
 // "Updated" line under the comparison table and the Article dateModified.
 const LAST_UPDATED = '2026-07-07'
 const lastUpdatedLabel = 'July 2026'
 
 usePageSeo({
   path: '/',
-  title: '.gui — The open file format for user interfaces',
-  description: '.gui is an open, text-based file format for user interfaces. AI agents write it, a deterministic toolchain validates it, and any browser, tool, or design app renders it — one portable file with markup, tokens, fonts, and assets.',
-  ogTitle: '.gui — The file format for user interfaces',
+  title: '.gui:The open file format for user interfaces',
+  description: '.gui is an open, text-based file format for user interfaces. AI agents write it, a deterministic toolchain validates it, and any browser, tool, or design app renders it:one portable file with markup, tokens, fonts, and assets.',
+  ogTitle: '.gui:The file format for user interfaces',
   ogDescription: 'Open, text-based, AI-native. Your agent writes the file; the deterministic toolchain keeps it valid; render it anywhere.'
 })
 
@@ -425,7 +425,7 @@ useHead({
         alternateName: 'dotgui',
         applicationCategory: 'DeveloperApplication',
         operatingSystem: 'Web, any',
-        description: '.gui is an open, text-based file format for user interfaces. A .gui file is a zip package — XML markup plus assets and a preview — that AI agents can read and write, a deterministic toolchain validates, and any browser or design tool renders.',
+        description: '.gui is an open, text-based file format for user interfaces. A .gui file is a zip package:XML markup plus assets and a preview:that AI agents can read and write, a deterministic toolchain validates, and any browser or design tool renders.',
         url: SITE_URL,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         author: { '@type': 'Organization', name: '.gui (dotgui)', url: SITE_URL }
@@ -438,7 +438,7 @@ useHead({
       innerHTML: JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'Article',
-        headline: '.gui — the open file format for user interfaces',
+        headline: '.gui:the open file format for user interfaces',
         description: '.gui is an open, text-based file format for user interfaces. AI agents write it, a deterministic toolchain validates it, and any browser, tool, or design app renders it.',
         datePublished: '2025-05-15',
         dateModified: LAST_UPDATED,
@@ -457,7 +457,7 @@ useHead({
 })
 
 // ── hero split: real .gui markup, syntax-highlighted at build time ──
-const HERO_SRC = `<gui version="0.2" name="Oscillate — Music Production">
+const HERO_SRC = `<gui version="0.2" name="Oscillate:Music Production">
   <tokens>
     <!-- surfaces -->
     <color name="bg"      value="#0D0E10" />
@@ -782,8 +782,8 @@ onMounted(() => {
 .btn-install svg { width: 17px; height: 17px; fill: currentColor; }
 .btn-ghost { border: 1.5px solid var(--ink); color: var(--ink); border-radius: 999px; padding: 12.5px 26px; font-size: 14px; font-weight: 500; text-decoration: none; }
 
-/* hero — floating formats field */
-/* hero — the file that is also a picture (drag-to-skim split) */
+/* hero:floating formats field */
+/* hero:the file that is also a picture (drag-to-skim split) */
 .herofig { --split: 44%; position: relative; max-width: 1000px; margin: 52px auto 16px; border-radius: 16px; overflow: hidden; border: 1px solid var(--hairline); box-shadow: 0 44px 110px -34px rgba(16,16,16,.36), 0 8px 24px rgba(16,16,16,.10); background: #0c0e10; aspect-ratio: 1440 / 900; touch-action: none; user-select: none; }
 .hf-bar { position: absolute; inset: 0 0 auto 0; height: 40px; z-index: 7; display: flex; align-items: center; gap: 8px; padding: 0 15px; background: rgba(12,14,16,.72); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,.07); }
 .hf-bar i { width: 11px; height: 11px; border-radius: 50%; }
@@ -809,7 +809,7 @@ onMounted(() => {
   .hf-code pre { font-size: 9.5px; line-height: 1.6; }
 }
 
-/* the statement — huge type that fills in on scroll */
+/* the statement:huge type that fills in on scroll */
 .statement { border-top: 1px solid var(--hairline); padding: 22vh 0; }
 .statement .fill { font-family: var(--display); font-weight: 600; font-size: clamp(32px, 5vw, 66px); line-height: 1.16; letter-spacing: -0.03em; max-width: 1000px; }
 .statement .fill span { color: #dcd9d0; transition: color 260ms ease; }
@@ -817,7 +817,7 @@ onMounted(() => {
 .statement .fill span.gui.lit { color: var(--blue); }
 @media (prefers-reduced-motion: reduce) { .statement .fill span { color: var(--ink); } }
 
-/* what does GUI stand for — collaborative cursor study */
+/* what does GUI stand for:collaborative cursor study */
 .gui-profiles { border-top: 1px solid var(--hairline); background: var(--canvas); padding: 104px 0 112px; overflow: hidden; }
 .gp-shell { max-width: 1120px; margin: 0 auto; padding: 0 32px; }
 .gp-head { max-width: 620px; margin-bottom: 46px; }
@@ -869,7 +869,7 @@ section { padding: 92px 0; border-top: none; }
 h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weight: 600; line-height: 1.08; letter-spacing: -0.025em; }
 .lede { font-size: 17px; line-height: 1.6; color: var(--body); max-width: 640px; margin-top: 16px; }
 
-/* ── THE LOOP — hero animated moment ── */
+/* ── THE LOOP:hero animated moment ── */
 .loop { border-top: 1px solid var(--hairline); }
 .loop .head { text-align: center; margin-bottom: 12px; }
 .loop .head .kicker { margin-bottom: 14px; }

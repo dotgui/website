@@ -4,8 +4,8 @@
       <p class="doc-eyebrow">dotgui for Figma · plugin</p>
       <h1 class="doc-title">Export any Figma screen as a .gui file</h1>
       <p class="doc-desc">
-        The dotgui Figma plugin exports any layer — a frame, component, group, or single
-        shape — as a <code>.gui</code> file. The export provides <strong>high-fidelity coverage (~95%)</strong> of
+        The dotgui Figma plugin exports any layer:a frame, component, group, or single
+        shape:as a <code>.gui</code> file. The export provides <strong>high-fidelity coverage (~95%)</strong> of
         Figma's layer model: auto-layout, fills, gradients, effects, and tokens
         are preserved with documented limitations (gradient strokes, some effect types, heavily overridden instances).
       </p>
@@ -34,7 +34,7 @@
       <h2 class="cat-label">Why it matters</h2>
       <p class="cat-lead">Your designs, out of the walled garden.</p>
       <p class="cat-note">
-        Figma's native format is a proprietary API — not something you can paste into a
+        Figma's native format is a proprietary API:not something you can paste into a
         prompt, check into a repo, or open in another tool. Exporting to <code>.gui</code>
         turns a screen into an open artifact: an AI agent can read the exact layout, text,
         colors, and spacing without screenshots or visual reasoning, and any renderer can
@@ -46,8 +46,8 @@
       <h2 class="cat-label">Roadmap</h2>
       <p class="cat-lead">Round-trip is the goal.</p>
       <p class="cat-note">
-        Export is shipping today. The round-trip — <code>gui pull &lt;figma-url&gt;</code>
-        and <code>gui push home.gui &lt;figma-url&gt;</code> from the CLI — is on the
+        Export is shipping today. The round-trip:<code>gui pull &lt;figma-url&gt;</code>
+        and <code>gui push home.gui &lt;figma-url&gt;</code> from the CLI:is on the
         roadmap, closing the loop: design in Figma, iterate with your agent, push back to
         Figma without losing fidelity.
       </p>
@@ -68,7 +68,7 @@
 <script setup lang="ts">
 const steps = [
   { n: '01', text: 'Install the dotgui plugin from the Figma Community.' },
-  { n: '02', text: 'Select any visible layer — frames, components, groups, or individual shapes.' },
+  { n: '02', text: 'Select any visible layer:frames, components, groups, or individual shapes.' },
   { n: '03', text: 'Export. Small selections produce inline .gui XML; larger ones download as a packaged .gui with an assets/ folder.' },
   { n: '04', text: 'Render it with the kit, embed it on a page, or hand it to your agent as structured context.' }
 ]
@@ -96,25 +96,25 @@ const faq = [
   },
   {
     q: 'Where do images and other assets go?',
-    a: 'Small exports inline everything into a single .gui XML file. Larger exports download as a packaged .gui — a zip with the markup plus an assets/ folder holding the images.'
+    a: 'Small exports inline everything into a single .gui XML file. Larger exports download as a packaged .gui:a zip with the markup plus an assets/ folder holding the images.'
   },
   {
     q: 'Can I import a .gui file back into Figma?',
-    a: 'Not yet — export is shipping today, and the pull/push round-trip via the CLI is on the roadmap.'
+    a: 'Not yet:export is shipping today, and the pull/push round-trip via the CLI is on the roadmap.'
   }
 ]
 
 usePageSeo({
   path: '/figma',
-  title: 'dotgui Figma plugin — export Figma designs to .gui',
-  description: 'Export any Figma frame, component, or layer as an open .gui file. A 1:1 mapping of Figma\'s layer model — auto-layout, fills, gradients, effects, and tokens preserved — ready for AI agents and any renderer.'
+  title: 'dotgui Figma plugin:export Figma designs to .gui',
+  description: 'Export any Figma frame, component, or layer as an open .gui file. A 1:1 mapping of Figma\'s layer model:auto-layout, fills, gradients, effects, and tokens preserved:ready for AI agents and any renderer.'
 })
 
 useProductSchema({
   path: '/figma',
   name: 'dotgui Figma plugin',
   crumb: 'figma',
-  description: 'A Figma plugin that exports any layer as a .gui file — a 1:1, token-preserving mapping of Figma\'s layer model into the open .gui format.',
+  description: 'A Figma plugin that exports any layer as a .gui file:a 1:1, token-preserving mapping of Figma\'s layer model into the open .gui format.',
   faq
 })
 </script>
