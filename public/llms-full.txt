@@ -3266,7 +3266,7 @@ CSS styles a document that already exists somewhere else. .gui is the document �
 
 ## What that actually changes
 
-In CSS, the same element can end up styled by five different rules from three different files, and the final appearance depends on specificity math and load order. Reading a stylesheet does not tell you what anything looks like — you have to run the cascade in your head. In `.gui`, every node carries its own resolved appearance attributes directly, plus optional [design tokens](https://dotgui.org/spec/tokens) (`$brand`, `$spacing-md`) for values meant to repeat. There is one place a value lives and one place it’s read from.
+In CSS, the same element can end up styled by five different rules from three different files, and the final appearance depends on specificity math and load order. Reading a stylesheet does not tell you what anything looks like — you have to run the cascade in your head. In `.gui`, every node carries its own resolved appearance attributes directly, plus optional [design tokens](https://dotgui.org/spec/tokens) (`$brand`, `$spacing-md`) — a flat, named-reference system rather than CSS custom properties, since a `--variable` implies a CSS runtime and `.gui` is platform-agnostic ([RFC-0005](https://github.com/dotgui/core/blob/main/rfcs/0005-token-system.md)) — for values meant to repeat. There is one place a value lives and one place it’s read from.
 
 Layout works the same way. CSS spacing between siblings is usually simulated — margins on the parent or child, sometimes an empty spacer element left over from table-layout habits. `.gui`’s [`row`](https://dotgui.org/spec/row), [`col`](https://dotgui.org/spec/col), and [`grid`](https://dotgui.org/spec/grid) elements take a literal `gap` attribute — one declared number, no simulated elements. See [Spacing and gaps](https://dotgui.org/guides/spacing-and-gaps).
 
@@ -3306,11 +3306,13 @@ A file that can’t run code is a file that can be fully understood by reading i
 
 HTML is the right choice when the interface needs behavior — a live feed, client-side validation, a WebSocket connection. `.gui` is not a competitor there; it’s a source-of-truth format for the design that a real app (in HTML, SwiftUI, Jetpack Compose, whatever) then gets built from. The [`&lt;gui-embed&gt;`](https://dotgui.org/embed) library renders a `.gui` file directly on a web page with one script tag when you do want it live in a browser, but the file itself stays inert — no logic, no side effects, same output every render.
 
-The role vocabulary closes the same gap semantic HTML tries to close with tags like `&lt;nav&gt;` or `&lt;article&gt;` — except `.gui`’s [53 roles](https://dotgui.org/spec/roles) are a closed, enumerated set rather than a loose convention, so `role="button"` means the same thing in every file, not "probably a button, check the click handler to be sure."
+The role vocabulary closes the same gap semantic HTML tries to close with tags like `&lt;nav&gt;` or `&lt;article&gt;` — except `.gui`’s [53 roles](https://dotgui.org/spec/roles) ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)) are a closed, enumerated set rather than a loose convention, so `role="button"` means the same thing in every file, not "probably a button, check the click handler to be sure."
 
 ## Borrowing the idea, not the tax
 
 HTML started as a simple trio — markup, style, script. In practice almost nobody hand-writes plain HTML for a real interface today; the actual authoring surface is a JavaScript framework (React, Vue, and the rest) sitting on top, and that layer is where most of the weight now lives. HTML won by adoption, not because raw markup is a great design representation — it’s the one format every browser, tool, and person already knows, so "design in code" defaults to it by network effect more than by merit.
+
+The markup itself is a deliberate, direct descendant of that instinct: `.gui` is XML-inspired rather than JSON, specifically because a tag name carries meaning a JSON `"type"` key has to fake, and because every major model has been trained on enormous amounts of tag-based markup — asking an agent to write `.gui` is closer to asking it to write JSX than to invent a new schema ([RFC-0001](https://github.com/dotgui/core/blob/main/rfcs/0001-xml-over-json.md)).
 
 `.gui` borrows HTML’s actual insight — plain markup any tool can parse, no proprietary format underneath — while trying not to inherit what widespread adoption did to it. A small, concrete example lives in its own layout vocabulary: the underlying primitive is a single [`&lt;stack direction="..."&gt;`](https://dotgui.org/spec/stack) element, but writing `direction="horizontal"` on every row-shaped container turned out to be noisy in practice, so `&lt;row&gt;`, `&lt;col&gt;`, and `&lt;grid&gt;` exist as sugar that drop the `direction` attribute for the common case ([RFC-0006](https://github.com/dotgui/core/blob/main/rfcs/0006-layout-sugar-tags.md)). Same capability, less to write, less for an agent to get wrong — cutting tax on an idea, not just copying it.
 
@@ -3390,17 +3392,19 @@ SVG has no concept of a layout system — no flex-like `row`/`col` with a `gap`,
 
 `.gui` adds the layer SVG is missing: [`row`](https://dotgui.org/spec/row)/[`col`](https://dotgui.org/spec/col)/[`grid`](https://dotgui.org/spec/grid) for layout with a real `gap`, [design tokens](https://dotgui.org/spec/tokens) for values meant to repeat, and a closed [53-role vocabulary](https://dotgui.org/spec/roles) so a node can declare *what it is* (`role="button"`), not just how it’s drawn. Shape primitives (`rect`, `ellipse`, `line`) exist in `.gui` too, so an icon or illustration can sit inside a `.gui` file natively — it just isn’t the whole story the way it is in SVG.
 
+For genuinely complex vector artwork, `.gui` doesn’t reject SVG outright — an `&lt;svg&gt;` node can hold raw inline SVG markup directly, with no asset file or indirection needed, specifically so an AI agent that already knows how to write SVG paths can emit a logo or icon in place, in the layout tree, instead of fabricating an asset pipeline for a few shapes ([RFC-0020](https://github.com/dotgui/core/blob/main/rfcs/0020-svg-inline-content.md)). SVG is exactly right for that job — it’s just not asked to be the layout language too.
+
 ## Why .gui is a package, not a single file
 
 There’s a second gap SVG leaves for interfaces: a single SVG file has nowhere good to put a real photo. Embedding an actual raster image means either linking an external URL — the file alone no longer carries what it needs, so portability breaks — or inlining it as base64 text, which bloats the file enormously. If an AI model has to pass that file through, it pays the token cost of every base64 character even though the image data is completely opaque to it.
 
-That cost is measured, not assumed: in early testing, inlining just two to four images as base64 consumed roughly half the token budget of a multi-hour session converting a file ([RFC-0004](https://github.com/dotgui/core/blob/main/rfcs/0004-package-format.md)). Plain path references cost nothing to reference.
+That cost is measured, not assumed: in early testing, inlining just two to four images as base64 consumed roughly half the token budget of a multi-hour session converting a file ([RFC-0004](https://github.com/dotgui/core/blob/main/rfcs/0004-package-format.md)). Plain path references cost nothing to reference — which is also why `.gui` skips a separate asset-manifest block entirely: an image just declares `src="assets/hero.webp"` inline, at the point it appears, the same way HTML, SwiftUI, and Android handle images ([RFC-0031](https://github.com/dotgui/core/blob/main/rfcs/0031-images-and-assets.md)).
 
-That’s one of the two reasons `.gui` is defined as a zip package rather than a flat text file: real image files sit in an `assets/` folder alongside the markup, referenced by a plain relative path (`src="assets/hero.webp"`). See [.gui vs a screenshot](https://dotgui.org/guides/vs-screenshots) for why keeping the structure itself — not just the image — is the bigger point.
+That’s one of the two reasons `.gui` is defined as a zip package rather than a flat text file: real image files sit in an `assets/` folder alongside the markup, referenced by a plain relative path. See [.gui vs a screenshot](https://dotgui.org/guides/vs-screenshots) for why keeping the structure itself — not just the image — is the bigger point.
 
 **FAQ**
 
-- **Can I put SVG shapes inside a .gui file?** .gui has its own shape primitives — rect, ellipse, line — that cover the same ground for icons and simple graphics inside a screen, alongside the layout and role vocabulary SVG doesn’t have.
+- **Can I put SVG shapes inside a .gui file?** .gui has its own shape primitives — rect, ellipse, line — that cover the same ground for icons and simple graphics. For more complex artwork, an <svg> node can also hold raw inline SVG markup directly, no asset file required.
 - **Why not just extend SVG with a layout system instead of a new format?** SVG’s design targets arbitrary vector graphics, not application interfaces — it has no concept of roles, tokens, or a UI-shaped element vocabulary. .gui borrows SVG’s "readable text, not pixels" idea but is purpose-built for UI from the ground up.
 - **Why is .gui a zip package instead of a single text file like SVG?** Mainly to keep real images as real files instead of inlined base64 text. Testing found that inlining a handful of images as base64 could consume roughly half the token budget of a long AI session — a plain path reference into the package’s assets/ folder costs almost nothing by comparison.
 
@@ -3410,7 +3414,7 @@ That’s one of the two reasons `.gui` is defined as a zip package rather than a
 
 gui setup teaches your own agent the format. Here’s the mental model and what to actually say.
 
-**.gui contains no AI.** The CLI and the reference engine are 100% deterministic — validation, rendering, and scoring, zero model calls. The actual design generation happens in **your own agent** — Claude Code, Gemini CLI, Cursor, Codex, whatever you already use. `gui setup` installs the dotgui skill into that agent, so when you ask it to build something, it already knows the format instead of guessing at markup.
+**.gui contains no AI.** The CLI and the reference engine are 100% deterministic — validation, rendering, and scoring, zero model calls, by design ([RFC-0010](https://github.com/dotgui/core/blob/main/rfcs/0010-no-ai-in-pipeline.md)): a deterministic pipeline is one an agent can trust to mean exactly what it says. The actual design generation happens in **your own agent** — Claude Code, Gemini CLI, Cursor, Codex, whatever you already use. `gui setup` installs the dotgui skill into that agent, so when you ask it to build something, it already knows the format instead of guessing at markup.
 
 ## The mental model
 
@@ -3469,7 +3473,7 @@ Repeating the same literal `fill="#2B6BE4"` across a dozen nodes instead of decl
 
 ## 3. Skipping role= entirely
 
-Leaving structural nodes without a [`role=`](https://dotgui.org/spec/roles) anchor. It costs nothing to add and it’s the entire basis of the **Comprehensible** CCAC level — a button without `role="button"` is invisible to any tool trying to read the file’s semantics, not just to a human.
+Leaving structural nodes without a [`role=`](https://dotgui.org/spec/roles) anchor. It costs nothing to add and it’s the entire basis of the **Comprehensible** CCAC level — a button without `role="button"` is invisible to any tool trying to read the file’s semantics, not just to a human. Roles are declared, not inferred, on purpose: only the author (or the agent writing the file) actually knows a subtree is a nav-bar rather than a breadcrumb trail that happens to look similar ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)).
 
 ## 4. Over-nesting containers
 
@@ -3563,15 +3567,15 @@ The [CCAC model](https://dotgui.org/spec/quality) explains what the score measur
 
 - Add role= to every structural node it applies to, from the closed 53-role vocabulary — a button without role="button" scores as if it isn’t one.
 - Prefer the most specific correct role over a generic one when the vocabulary has it.
-- Remember this level is saturating count, not full coverage — declaring roles on the nodes that matter (nav, actions, key content) moves the number; it doesn’t require tagging literally everything.
+- Understand the score is reach-coverage, not a flat tag-everything ratio: each declared role documents its own subtree as far as its catalog-defined reach allows. A self-contained widget’s reach covers everything inside it; a card’s reach covers one chrome level before its contents need their own roles. A few roles placed on the right nodes can legitimately cover a large share of the tree.
 
-None of this is a gate — [a low score is still a valid, packable file](https://dotgui.org/spec/quality). The score is a diagnostic, not a blocker; treat a low number as a punch list, not a rejection.
+None of this is a gate — [a low score is still a valid, packable file](https://dotgui.org/spec/quality). The score is a diagnostic, not a blocker; treat a low number as a punch list, not a rejection. The scoring model ([RFC-0040](https://github.com/dotgui/core/blob/main/rfcs/0040-quality-scoring-model.md)) and the role vocabulary it reads ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)) both document the exact mechanics if you want the full reasoning.
 
 **FAQ**
 
 - **Do I need a perfect CCAC score to ship a .gui file?** No. A low score still describes a valid, packable file — the score is advisory, not a gate. Any pass/fail threshold is a decision made by whatever tool consumes the score, not by the format itself.
 - **What’s the fastest single fix to improve a low score?** Usually adding role= to structural nodes (Comprehensible) or swapping repeated literal values for tokens (Consistent) — both are mechanical changes, not redesigns, and both move the number directly.
-- **Does Comprehensible require tagging every single node with a role?** No — it’s a saturating count on the nodes that matter (nav, actions, key content), not full coverage of every node in the tree.
+- **Does Comprehensible require tagging every single node with a role?** No — it’s reach-coverage, not full coverage. Each declared role documents its own subtree as far as its catalog-defined reach allows (a self-contained widget’s reach covers everything inside it; a card’s reach covers one chrome level before its payload needs its own roles), so a handful of well-placed roles can cover a large share of the tree without individually tagging every node.
 
 ---
 
