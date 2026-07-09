@@ -22,6 +22,12 @@
           <NuxtLink to="/figma">Figma plugin</NuxtLink>
         </div>
         <div class="footer-col">
+          <p class="footer-col-label">Guides</p>
+          <NuxtLink to="/guides">All guides</NuxtLink>
+          <NuxtLink to="/guides/vs-css">.gui vs CSS</NuxtLink>
+          <NuxtLink to="/guides/prompting-your-agent">Prompting your agent</NuxtLink>
+        </div>
+        <div class="footer-col">
           <p class="footer-col-label">Machine-readable</p>
           <a href="/llms.txt">llms.txt</a>
           <a href="/llms-full.txt">llms-full.txt</a>

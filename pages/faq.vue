@@ -30,6 +30,14 @@
         </NuxtLink>
       </div>
     </section>
+
+    <section id="guides" class="cat">
+      <h2 class="cat-label">Still have questions?</h2>
+      <p class="cat-lead">
+        The <NuxtLink to="/guides">guides</NuxtLink> go deeper than a one-line answer — comparisons
+        to CSS, HTML, Figma, and SVG, plus best practices for structuring and prompting a .gui file.
+      </p>
+    </section>
   </DocShell>
 </template>
 

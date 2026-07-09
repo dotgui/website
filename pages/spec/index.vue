@@ -184,6 +184,8 @@ useHead({
 }
 .card:hover .card-cta { color: var(--text); }
 
+section:last-child { padding-bottom: 64px; }
+
 @media (max-width: 900px) {
   .spec-header { padding: 36px 20px 8px; }
   .cat { padding: 28px 20px 0; }
