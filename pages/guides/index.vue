@@ -106,7 +106,7 @@ useHead({
 }
 .guide-header-desc :deep(a) { color: var(--text); }
 
-.cat { padding: 32px 40px 0; }
+.cat { padding: 32px 40px 0; border-top: none; }
 
 .cat-label {
   font-size: 11px;
