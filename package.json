@@ -8,9 +8,10 @@
     "generate": "bun run sync:all && nuxt generate",
     "build:ci": "nuxt build",
     "preview": "nuxt preview",
-    "sync:all": "bun run sync:spec && bun run sync:roles && bun run gen:llms",
+    "sync:all": "bun run sync:spec && bun run sync:roles && bun run gen:llms && bun run gen:sitemap",
     "sync:roles": "bun scripts/sync-roles.ts",
     "gen:llms": "bun scripts/gen-llms.ts",
+    "gen:sitemap": "bun scripts/gen-sitemap.ts",
     "sync:spec": "cp ../core/spec/spec.json lib/spec.json",
     "sync:spec:check": "cp ../core/spec/spec.json lib/spec.json && git diff --exit-code lib/spec.json"
   },

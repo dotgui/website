@@ -1,9 +1,12 @@
 import { specSlugs } from './lib/spec-data'
+import { guideSlugs } from './lib/guides-data'
 
 const SITE_URL = 'https://dotgui.org'
 
 // Per-element spec pages, prerendered to static HTML for SEO/GEO.
 const specRoutes = specSlugs.map(slug => `/spec/${slug}`)
+// Per-guide pages, same treatment.
+const guideRoutes = guideSlugs.map(slug => `/guides/${slug}`)
 
 export default defineNuxtConfig({
   // Render real HTML so search engines and AI crawlers see content, not an
@@ -17,7 +20,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
-      routes: ['/', '/spec', '/spec/roles', '/spec/quality', '/cli', '/kit', '/embed', '/figma', '/faq', ...specRoutes]
+      routes: ['/', '/spec', '/spec/roles', '/spec/quality', '/cli', '/kit', '/embed', '/figma', '/faq', '/guides', ...specRoutes, ...guideRoutes]
     }
   },
   routeRules: {
@@ -29,6 +32,8 @@ export default defineNuxtConfig({
     '/embed': { prerender: true },
     '/figma': { prerender: true },
     '/faq': { prerender: true },
+    '/guides': { prerender: true },
+    '/guides/**': { prerender: true },
     // CodeMirror + panzoom editor  no SEO value, keep it a client-only SPA.
     '/playground': { ssr: false }
   },

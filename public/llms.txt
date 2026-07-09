@@ -27,6 +27,20 @@ Key facts:
 - [@dotgui/embed](https://dotgui.org/embed): render .gui files on any website with one CDN script
 - [Figma plugin](https://dotgui.org/figma): export any Figma layer as a .gui file
 
+## Guides
+
+- [.gui vs CSS: a file format vs a styling language](https://dotgui.org/guides/vs-css): CSS styles a document that already exists somewhere else. .gui is the document — structure, layout, and appearance in one file, with no cascade to fight.
+- [.gui vs HTML: a closed vocabulary vs an open runtime](https://dotgui.org/guides/vs-html): HTML is a programming surface that happens to describe UI. .gui is a static, closed vocabulary that always terminates in the same picture, everywhere.
+- [.gui vs Figma files: portable text vs a vendor’s app](https://dotgui.org/guides/vs-figma): A Figma file only exists inside Figma. A .gui file is plain text in a zip — readable, diffable, and versionable without opening any design tool.
+- [.gui vs a screenshot or PNG mockup](https://dotgui.org/guides/vs-screenshots): A picture is a dead end — an agent has to guess spacing, hierarchy, and color from pixels. A .gui file hands those values over directly, already structured.
+- [.gui vs SVG: graphics format vs interface format](https://dotgui.org/guides/vs-svg): SVG made graphics text. .gui borrows that idea but is purpose-built for interface layout and semantics — things SVG was never designed to express.
+- [Prompting your AI agent to build a .gui file](https://dotgui.org/guides/prompting-your-agent): gui setup teaches your own agent the format. Here’s the mental model and what to actually say.
+- [Common mistakes AI agents make in .gui files](https://dotgui.org/guides/common-agent-mistakes): An agent that hasn’t been taught the format brings habits over from HTML and CSS that don’t belong in .gui. Here are the five that show up most.
+- [Spacing in .gui: use gap, not an empty row](https://dotgui.org/guides/spacing-and-gaps): The single most common habit agents bring over from HTML/CSS — and the one-attribute fix.
+- [How to get a good CCAC score](https://dotgui.org/guides/ccac-score): The four levels explained on /spec/quality, turned into concrete things to actually go fix.
+- [Structuring a screen: row vs col vs grid](https://dotgui.org/guides/layout-row-col-grid): Three layout elements cover almost every screen. Here’s how to pick between them without guessing.
+- [Making AI-generated UI not look generic](https://dotgui.org/guides/avoiding-generic-ui): The tells of an unedited AI-generated screen, and the structural (not aesthetic) fixes .gui makes available.
+
 ## Optional
 
 - [Playground](https://dotgui.org/playground): write .gui XML and see it render live

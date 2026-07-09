@@ -11,11 +11,50 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { guideEntries, type GuideBlock, type GuideEntry } from '../lib/guides-data'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const root = join(here, '../..')
 const out = (f: string) => join(here, '../public', f)
 const read = (p: string) => readFileSync(join(root, p), 'utf8').trim()
+
+// ── guides-data.ts → markdown ────────────────────────────────────────────
+// Single-sources guide content from lib/guides-data.ts into llms-full.txt,
+// so the site and the AI-crawler corpus never drift apart.
+function htmlToMd(s: string): string {
+  return s
+    .replace(/<code>(.*?)<\/code>/g, '`$1`')
+    .replace(/<strong>(.*?)<\/strong>/g, '**$1**')
+    .replace(/<em>(.*?)<\/em>/g, '*$1*')
+    .replace(/<a href="([^"]+)">(.*?)<\/a>/g, (_m, href: string, text: string) =>
+      `[${text}](${href.startsWith('http') ? href : `https://dotgui.org${href}`})`
+    )
+}
+
+function blockToMd(b: GuideBlock): string {
+  switch (b.type) {
+    case 'p': return htmlToMd(b.text)
+    case 'h2': return `## ${b.text}`
+    case 'list': return b.items.map(i => `- ${htmlToMd(i)}`).join('\n')
+    case 'code': return `${b.label ? `**${b.label}**\n\n` : ''}\`\`\`${b.lang}\n${b.code}\n\`\`\``
+    case 'callout': return `> **${b.tone === 'do' ? 'Do' : "Don't"}:** ${htmlToMd(b.text)}`
+    case 'table': return [
+      `| ${b.head.join(' | ')} |`,
+      `| ${b.head.map(() => '---').join(' | ')} |`,
+      ...b.rows.map(r => `| ${r.map(htmlToMd).join(' | ')} |`)
+    ].join('\n')
+  }
+}
+
+function guideToMd(g: GuideEntry): string {
+  const parts = [`### ${g.title}`, '', g.dek, '', ...g.body.map(b => `${blockToMd(b)}\n`)]
+  if (g.faq.length) {
+    parts.push('**FAQ**', '')
+    for (const f of g.faq) parts.push(`- **${f.q}** ${f.a}`)
+    parts.push('')
+  }
+  return parts.join('\n')
+}
 
 // ── llms.txt  the index ────────────────────────────────────────────────────
 const llms = `# .gui (dotgui)
@@ -47,6 +86,10 @@ Key facts:
 - [@dotgui/embed](https://dotgui.org/embed): render .gui files on any website with one CDN script
 - [Figma plugin](https://dotgui.org/figma): export any Figma layer as a .gui file
 
+## Guides
+
+${guideEntries.map(g => `- [${g.title}](https://dotgui.org/guides/${g.slug}): ${g.dek}`).join('\n')}
+
 ## Optional
 
 - [Playground](https://dotgui.org/playground): write .gui XML and see it render live
@@ -61,7 +104,8 @@ const sections: [string, string][] = [
   ['The CCAC quality model', read('core/spec/QUALITY.md')],
   ['@dotgui/kit  the reference engine', read('kit/README.md')],
   ['@dotgui/cli  the command-line toolchain', read('cli/README.md')],
-  ['@dotgui/embed  render .gui in the browser', read('embed/README.md')]
+  ['@dotgui/embed  render .gui in the browser', read('embed/README.md')],
+  ['Guides  comparisons and best practices', guideEntries.map(guideToMd).join('\n---\n\n')]
 ]
 
 const full = [
