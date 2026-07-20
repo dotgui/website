@@ -1,9 +1,10 @@
-const SITE_URL = 'https://dotgui.org'
-
 /**
  * Per-page SEO: title/description/OG + a per-page canonical.
  * Every prerendered route must call this  the global canonical was removed
  * from nuxt.config so pages don't all canonicalize to the homepage.
+ *
+ * `url` is the canonical trailing-slash URL (`/` stays `/`), used for both
+ * the <link rel="canonical"> and og:url so they match the final 200 URL.
  */
 export function usePageSeo(opts: {
   path: string
@@ -12,7 +13,7 @@ export function usePageSeo(opts: {
   ogTitle?: string
   ogDescription?: string
 }) {
-  const url = opts.path === '/' ? `${SITE_URL}/` : `${SITE_URL}${opts.path}`
+  const url = canonicalUrl(opts.path)
   useSeoMeta({
     title: opts.title,
     description: opts.description,

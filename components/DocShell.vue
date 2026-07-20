@@ -44,7 +44,7 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
-const isOverview = computed(() => route.path === props.overview)
+const isOverview = computed(() => isSamePath(route.path, props.overview))
 </script>
 
 <style scoped>

@@ -21,8 +21,8 @@
             </div>
             <div class="nav-group">
               <p class="nav-group-label">Semantics</p>
-              <NuxtLink to="/spec/roles" class="nav-link" :class="{ active: route.path === '/spec/roles' }">Roles</NuxtLink>
-              <NuxtLink to="/spec/quality" class="nav-link" :class="{ active: route.path === '/spec/quality' }">Quality</NuxtLink>
+              <NuxtLink to="/spec/roles" class="nav-link" :class="{ active: isSamePath(route.path, '/spec/roles') }">Roles</NuxtLink>
+              <NuxtLink to="/spec/quality" class="nav-link" :class="{ active: isSamePath(route.path, '/spec/quality') }">Quality</NuxtLink>
             </div>
           </nav>
         </div>
@@ -46,7 +46,7 @@ const route = useRoute()
 // <stack> represents the row/col/stack family in the nav; when viewing
 // /spec/row or /spec/col, highlight the <stack> entry.
 const currentSlug = computed(() => (route.params.element as string) || '')
-const isIndex = computed(() => route.path === '/spec')
+const isIndex = computed(() => isSamePath(route.path, '/spec'))
 const activeSlug = computed(() =>
   currentSlug.value === 'row' || currentSlug.value === 'col' ? 'stack' : currentSlug.value
 )

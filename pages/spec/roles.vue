@@ -54,7 +54,8 @@ import rolesJson from '~/lib/roles.json'
 const roles = rolesJson.roles
 const count = rolesJson.count
 
-const pageUrl = 'https://dotgui.org/spec/roles'
+const pageUrl = canonicalUrl('/spec/roles')
+const specUrl = canonicalUrl('/spec')
 
 usePageSeo({
   path: '/spec/roles',
@@ -72,8 +73,8 @@ useHead({
         headline: `The .gui role vocabulary  ${count} recognized UI roles`,
         description: `The closed role= catalog of the .gui format: ${count} UI structures with reach and platform coverage.`,
         url: pageUrl,
-        isPartOf: { '@type': 'TechArticle', name: '.gui Spec Reference', url: 'https://dotgui.org/spec' },
-        author: { '@type': 'Organization', name: '.gui (dotgui)', url: 'https://dotgui.org' }
+        isPartOf: { '@type': 'TechArticle', name: '.gui Spec Reference', url: specUrl },
+        author: { '@type': 'Organization', name: '.gui (dotgui)', url: canonicalUrl('/') }
       })
     },
     {
@@ -82,7 +83,7 @@ useHead({
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Spec Reference', item: 'https://dotgui.org/spec' },
+          { '@type': 'ListItem', position: 1, name: 'Spec Reference', item: specUrl },
           { '@type': 'ListItem', position: 2, name: 'Roles', item: pageUrl }
         ]
       })

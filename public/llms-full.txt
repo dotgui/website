@@ -3266,9 +3266,9 @@ CSS styles a document that already exists somewhere else. .gui is the document �
 
 ## What that actually changes
 
-In CSS, the same element can end up styled by five different rules from three different files, and the final appearance depends on specificity math and load order. Reading a stylesheet does not tell you what anything looks like — you have to run the cascade in your head. In `.gui`, every node carries its own resolved appearance attributes directly, plus optional [design tokens](https://dotgui.org/spec/tokens) (`$brand`, `$spacing-md`) — a flat, named-reference system rather than CSS custom properties, since a `--variable` implies a CSS runtime and `.gui` is platform-agnostic ([RFC-0005](https://github.com/dotgui/core/blob/main/rfcs/0005-token-system.md)) — for values meant to repeat. There is one place a value lives and one place it’s read from.
+In CSS, the same element can end up styled by five different rules from three different files, and the final appearance depends on specificity math and load order. Reading a stylesheet does not tell you what anything looks like — you have to run the cascade in your head. In `.gui`, every node carries its own resolved appearance attributes directly, plus optional [design tokens](https://dotgui.org/spec/tokens/) (`$brand`, `$spacing-md`) — a flat, named-reference system rather than CSS custom properties, since a `--variable` implies a CSS runtime and `.gui` is platform-agnostic ([RFC-0005](https://github.com/dotgui/core/blob/main/rfcs/0005-token-system.md)) — for values meant to repeat. There is one place a value lives and one place it’s read from.
 
-Layout works the same way. CSS spacing between siblings is usually simulated — margins on the parent or child, sometimes an empty spacer element left over from table-layout habits. `.gui`’s [`row`](https://dotgui.org/spec/row), [`col`](https://dotgui.org/spec/col), and [`grid`](https://dotgui.org/spec/grid) elements take a literal `gap` attribute — one declared number, no simulated elements. See [Spacing and gaps](https://dotgui.org/guides/spacing-and-gaps).
+Layout works the same way. CSS spacing between siblings is usually simulated — margins on the parent or child, sometimes an empty spacer element left over from table-layout habits. `.gui`’s [`row`](https://dotgui.org/spec/row/), [`col`](https://dotgui.org/spec/col/), and [`grid`](https://dotgui.org/spec/grid/) elements take a literal `gap` attribute — one declared number, no simulated elements. See [Spacing and gaps](https://dotgui.org/guides/spacing-and-gaps/).
 
 ## Direction and alignment as values, not axis algebra
 
@@ -3280,7 +3280,7 @@ There’s no controlled benchmark for the token difference this makes, but the i
 
 ## Why this matters for AI agents
 
-An agent asked to "style this the way the mockup looks" using CSS has to reason about cascade order across every stylesheet that could touch the element. An agent asked to change a `.gui` node’s fill changes one attribute on one node — nothing else in the file is implicated. That’s also what makes `.gui` deterministically [scoreable](https://dotgui.org/spec/quality): a validator can check a CSS ruleset for syntax errors, but it can’t tell you the cascade produced a sane result. A `.gui` file’s resolved appearance is just sitting there, readable, checkable.
+An agent asked to "style this the way the mockup looks" using CSS has to reason about cascade order across every stylesheet that could touch the element. An agent asked to change a `.gui` node’s fill changes one attribute on one node — nothing else in the file is implicated. That’s also what makes `.gui` deterministically [scoreable](https://dotgui.org/spec/quality/): a validator can check a CSS ruleset for syntax errors, but it can’t tell you the cascade produced a sane result. A `.gui` file’s resolved appearance is just sitting there, readable, checkable.
 
 **.gui** is not trying to replace CSS on the web — a browser still needs CSS to paint DOM. What `.gui` replaces is using CSS (or a CSS-in-JS system, or Tailwind classes) as the source of truth for a design. The design lives in the `.gui` file; CSS, if it appears at all, is one possible render target for it, generated rather than hand-maintained.
 
@@ -3300,13 +3300,13 @@ HTML, in practice, is never just HTML — it’s HTML plus CSS plus JavaScript, 
 
 ## What "closed vocabulary" buys you
 
-A file that can’t run code is a file that can be fully understood by reading it. That’s what makes a `.gui` file **diffable** (two versions differ by exactly the attributes that changed, not by whatever a script does at runtime), **validatable** (a fixed vocabulary has a fixed set of legal shapes to check against), and **scoreable** (see [the CCAC model](https://dotgui.org/spec/quality)) — none of which is meaningfully possible for an arbitrary HTML+JS bundle, because the actual rendered result depends on execution, not just the source.
+A file that can’t run code is a file that can be fully understood by reading it. That’s what makes a `.gui` file **diffable** (two versions differ by exactly the attributes that changed, not by whatever a script does at runtime), **validatable** (a fixed vocabulary has a fixed set of legal shapes to check against), and **scoreable** (see [the CCAC model](https://dotgui.org/spec/quality/)) — none of which is meaningfully possible for an arbitrary HTML+JS bundle, because the actual rendered result depends on execution, not just the source.
 
 ## Where HTML still wins
 
-HTML is the right choice when the interface needs behavior — a live feed, client-side validation, a WebSocket connection. `.gui` is not a competitor there; it’s a source-of-truth format for the design that a real app (in HTML, SwiftUI, Jetpack Compose, whatever) then gets built from. The [`&lt;gui-embed&gt;`](https://dotgui.org/embed) library renders a `.gui` file directly on a web page with one script tag when you do want it live in a browser, but the file itself stays inert — no logic, no side effects, same output every render.
+HTML is the right choice when the interface needs behavior — a live feed, client-side validation, a WebSocket connection. `.gui` is not a competitor there; it’s a source-of-truth format for the design that a real app (in HTML, SwiftUI, Jetpack Compose, whatever) then gets built from. The [`&lt;gui-embed&gt;`](https://dotgui.org/embed/) library renders a `.gui` file directly on a web page with one script tag when you do want it live in a browser, but the file itself stays inert — no logic, no side effects, same output every render.
 
-The role vocabulary closes the same gap semantic HTML tries to close with tags like `&lt;nav&gt;` or `&lt;article&gt;` — except `.gui`’s [53 roles](https://dotgui.org/spec/roles) ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)) are a closed, enumerated set rather than a loose convention, so `role="button"` means the same thing in every file, not "probably a button, check the click handler to be sure."
+The role vocabulary closes the same gap semantic HTML tries to close with tags like `&lt;nav&gt;` or `&lt;article&gt;` — except `.gui`’s [53 roles](https://dotgui.org/spec/roles/) ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)) are a closed, enumerated set rather than a loose convention, so `role="button"` means the same thing in every file, not "probably a button, check the click handler to be sure."
 
 ## Borrowing the idea, not the tax
 
@@ -3314,7 +3314,7 @@ HTML started as a simple trio — markup, style, script. In practice almost nobo
 
 The markup itself is a deliberate, direct descendant of that instinct: `.gui` is XML-inspired rather than JSON, specifically because a tag name carries meaning a JSON `"type"` key has to fake, and because every major model has been trained on enormous amounts of tag-based markup — asking an agent to write `.gui` is closer to asking it to write JSX than to invent a new schema ([RFC-0001](https://github.com/dotgui/core/blob/main/rfcs/0001-xml-over-json.md)).
 
-`.gui` borrows HTML’s actual insight — plain markup any tool can parse, no proprietary format underneath — while trying not to inherit what widespread adoption did to it. A small, concrete example lives in its own layout vocabulary: the underlying primitive is a single [`&lt;stack direction="..."&gt;`](https://dotgui.org/spec/stack) element, but writing `direction="horizontal"` on every row-shaped container turned out to be noisy in practice, so `&lt;row&gt;`, `&lt;col&gt;`, and `&lt;grid&gt;` exist as sugar that drop the `direction` attribute for the common case ([RFC-0006](https://github.com/dotgui/core/blob/main/rfcs/0006-layout-sugar-tags.md)). Same capability, less to write, less for an agent to get wrong — cutting tax on an idea, not just copying it.
+`.gui` borrows HTML’s actual insight — plain markup any tool can parse, no proprietary format underneath — while trying not to inherit what widespread adoption did to it. A small, concrete example lives in its own layout vocabulary: the underlying primitive is a single [`&lt;stack direction="..."&gt;`](https://dotgui.org/spec/stack/) element, but writing `direction="horizontal"` on every row-shaped container turned out to be noisy in practice, so `&lt;row&gt;`, `&lt;col&gt;`, and `&lt;grid&gt;` exist as sugar that drop the `direction` attribute for the common case ([RFC-0006](https://github.com/dotgui/core/blob/main/rfcs/0006-layout-sugar-tags.md)). Same capability, less to write, less for an agent to get wrong — cutting tax on an idea, not just copying it.
 
 **FAQ**
 
@@ -3333,7 +3333,7 @@ A Figma file is only fully readable inside Figma — the app, the API, or an exp
 
 ## .gui doesn’t require Figma
 
-The [Figma plugin](https://dotgui.org/figma) exports any Figma layer tree to a `.gui` file — auto-layout, fills, gradients, effects, and tokens carried over as a 1:1 mapping of Figma’s own layer model, not approximated. That makes Figma **one entry point among several**, not a requirement. An agent can write a `.gui` file directly from a prompt with no design tool touched at any point — see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent).
+The [Figma plugin](https://dotgui.org/figma/) exports any Figma layer tree to a `.gui` file — auto-layout, fills, gradients, effects, and tokens carried over as a 1:1 mapping of Figma’s own layer model, not approximated. That makes Figma **one entry point among several**, not a requirement. An agent can write a `.gui` file directly from a prompt with no design tool touched at any point — see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent/).
 
 ## The loop, not a one-way export
 
@@ -3390,7 +3390,7 @@ SVG proved something important: a graphic doesn’t have to be a raster of pixel
 
 SVG has no concept of a layout system — no flex-like `row`/`col` with a `gap`, no responsive behavior, no design tokens, no idea of what a "button" or "nav bar" is. Everything in an SVG is either an absolutely positioned shape or a manually computed path. That’s exactly right for an icon or an illustration, and exactly wrong for a screen that needs to lay itself out, carry semantic roles, and reference reusable tokens.
 
-`.gui` adds the layer SVG is missing: [`row`](https://dotgui.org/spec/row)/[`col`](https://dotgui.org/spec/col)/[`grid`](https://dotgui.org/spec/grid) for layout with a real `gap`, [design tokens](https://dotgui.org/spec/tokens) for values meant to repeat, and a closed [53-role vocabulary](https://dotgui.org/spec/roles) so a node can declare *what it is* (`role="button"`), not just how it’s drawn. Shape primitives (`rect`, `ellipse`, `line`) exist in `.gui` too, so an icon or illustration can sit inside a `.gui` file natively — it just isn’t the whole story the way it is in SVG.
+`.gui` adds the layer SVG is missing: [`row`](https://dotgui.org/spec/row/)/[`col`](https://dotgui.org/spec/col/)/[`grid`](https://dotgui.org/spec/grid/) for layout with a real `gap`, [design tokens](https://dotgui.org/spec/tokens/) for values meant to repeat, and a closed [53-role vocabulary](https://dotgui.org/spec/roles/) so a node can declare *what it is* (`role="button"`), not just how it’s drawn. Shape primitives (`rect`, `ellipse`, `line`) exist in `.gui` too, so an icon or illustration can sit inside a `.gui` file natively — it just isn’t the whole story the way it is in SVG.
 
 For genuinely complex vector artwork, `.gui` doesn’t reject SVG outright — an `&lt;svg&gt;` node can hold raw inline SVG markup directly, with no asset file or indirection needed, specifically so an AI agent that already knows how to write SVG paths can emit a logo or icon in place, in the layout tree, instead of fabricating an asset pipeline for a few shapes ([RFC-0020](https://github.com/dotgui/core/blob/main/rfcs/0020-svg-inline-content.md)). SVG is exactly right for that job — it’s just not asked to be the layout language too.
 
@@ -3400,7 +3400,7 @@ There’s a second gap SVG leaves for interfaces: a single SVG file has nowhere 
 
 That cost is measured, not assumed: in early testing, inlining just two to four images as base64 consumed roughly half the token budget of a multi-hour session converting a file ([RFC-0004](https://github.com/dotgui/core/blob/main/rfcs/0004-package-format.md)). Plain path references cost nothing to reference — which is also why `.gui` skips a separate asset-manifest block entirely: an image just declares `src="assets/hero.webp"` inline, at the point it appears, the same way HTML, SwiftUI, and Android handle images ([RFC-0031](https://github.com/dotgui/core/blob/main/rfcs/0031-images-and-assets.md)).
 
-That’s one of the two reasons `.gui` is defined as a zip package rather than a flat text file: real image files sit in an `assets/` folder alongside the markup, referenced by a plain relative path. See [.gui vs a screenshot](https://dotgui.org/guides/vs-screenshots) for why keeping the structure itself — not just the image — is the bigger point.
+That’s one of the two reasons `.gui` is defined as a zip package rather than a flat text file: real image files sit in an `assets/` folder alongside the markup, referenced by a plain relative path. See [.gui vs a screenshot](https://dotgui.org/guides/vs-screenshots/) for why keeping the structure itself — not just the image — is the bigger point.
 
 **FAQ**
 
@@ -3424,7 +3424,7 @@ gui setup teaches your own agent the format. Here’s the mental model and what 
 you ──ask──▶ your agent ──uses──▶ dotgui skill ──calls──▶ gui (this tool)
 ```
 
-You ask in plain language. The skill tells your agent the format’s vocabulary, conventions, and pitfalls (see [Common agent mistakes](https://dotgui.org/guides/common-agent-mistakes)). The agent writes `design.guix` markup directly, then calls the `gui` CLI to validate and package it — `gui` never designs anything itself, it only checks and packages what the agent wrote.
+You ask in plain language. The skill tells your agent the format’s vocabulary, conventions, and pitfalls (see [Common agent mistakes](https://dotgui.org/guides/common-agent-mistakes/)). The agent writes `design.guix` markup directly, then calls the `gui` CLI to validate and package it — `gui` never designs anything itself, it only checks and packages what the agent wrote.
 
 ## Getting started
 
@@ -3459,7 +3459,7 @@ Once you have a file, iteration is just more asks: "make the balance number larg
 
 An agent that hasn’t been taught the format brings habits over from HTML and CSS that don’t belong in .gui. Here are the five that show up most.
 
-An agent that generates `.gui` without the dotgui skill installed (see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent)) will often fall back on HTML/CSS habits that technically validate but miss what the format is actually for. These are the five that show up most.
+An agent that generates `.gui` without the dotgui skill installed (see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent/)) will often fall back on HTML/CSS habits that technically validate but miss what the format is actually for. These are the five that show up most.
 
 ## 1. Faking spacing with an empty row
 
@@ -3469,11 +3469,11 @@ An agent that generates `.gui` without the dotgui skill installed (see [Promptin
 
 ## 2. Hardcoding colors instead of using tokens
 
-Repeating the same literal `fill="#2B6BE4"` across a dozen nodes instead of declaring it once as a [token](https://dotgui.org/spec/tokens) and referencing `$brand`. This directly costs points on the **Consistent** level of [CCAC scoring](https://dotgui.org/spec/quality) — a file that hand-repeats a value doesn’t agree with itself the way a token-backed one does.
+Repeating the same literal `fill="#2B6BE4"` across a dozen nodes instead of declaring it once as a [token](https://dotgui.org/spec/tokens/) and referencing `$brand`. This directly costs points on the **Consistent** level of [CCAC scoring](https://dotgui.org/spec/quality/) — a file that hand-repeats a value doesn’t agree with itself the way a token-backed one does.
 
 ## 3. Skipping role= entirely
 
-Leaving structural nodes without a [`role=`](https://dotgui.org/spec/roles) anchor. It costs nothing to add and it’s the entire basis of the **Comprehensible** CCAC level — a button without `role="button"` is invisible to any tool trying to read the file’s semantics, not just to a human. Roles are declared, not inferred, on purpose: only the author (or the agent writing the file) actually knows a subtree is a nav-bar rather than a breadcrumb trail that happens to look similar ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)).
+Leaving structural nodes without a [`role=`](https://dotgui.org/spec/roles/) anchor. It costs nothing to add and it’s the entire basis of the **Comprehensible** CCAC level — a button without `role="button"` is invisible to any tool trying to read the file’s semantics, not just to a human. Roles are declared, not inferred, on purpose: only the author (or the agent writing the file) actually knows a subtree is a nav-bar rather than a breadcrumb trail that happens to look similar ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)).
 
 ## 4. Over-nesting containers
 
@@ -3511,7 +3511,7 @@ It renders correctly, and it will pass a naive visual check against a reference 
 
 ## The fix: gap
 
-[`row`](https://dotgui.org/spec/row), [`col`](https://dotgui.org/spec/col), and [`grid`](https://dotgui.org/spec/grid) all take a `gap` attribute — the space between every child, declared once on the parent.
+[`row`](https://dotgui.org/spec/row/), [`col`](https://dotgui.org/spec/col/), and [`grid`](https://dotgui.org/spec/grid/) all take a `gap` attribute — the space between every child, declared once on the parent.
 
 **Do**
 
@@ -3526,11 +3526,11 @@ One number, on the container that actually owns the spacing decision. Add a thir
 
 ## Why agents default to the old pattern
 
-It’s inherited from HTML, where a real `gap` property only reliably exists in flex/grid layout contexts and plenty of training data still comes from table-layout-era markup or naive absolute positioning, where an invisible spacer was the only tool available. `.gui`’s layout elements always support `gap` — there’s never a context where the workaround is actually necessary, so an agent that reaches for it either hasn’t been told the format has `gap`, or is pattern-matching from HTML habit. `gui setup` installs a skill that teaches this explicitly (see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent)).
+It’s inherited from HTML, where a real `gap` property only reliably exists in flex/grid layout contexts and plenty of training data still comes from table-layout-era markup or naive absolute positioning, where an invisible spacer was the only tool available. `.gui`’s layout elements always support `gap` — there’s never a context where the workaround is actually necessary, so an agent that reaches for it either hasn’t been told the format has `gap`, or is pattern-matching from HTML habit. `gui setup` installs a skill that teaches this explicitly (see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent/)).
 
 ## It also affects your score
 
-A dead spacer node is exactly what the **Clean** level of [CCAC scoring](https://dotgui.org/spec/quality) flags — unused markup with no layout purpose. Swapping it for `gap` is a direct, mechanical fix, not a matter of taste.
+A dead spacer node is exactly what the **Clean** level of [CCAC scoring](https://dotgui.org/spec/quality/) flags — unused markup with no layout purpose. Swapping it for `gap` is a direct, mechanical fix, not a matter of taste.
 
 **FAQ**
 
@@ -3544,7 +3544,7 @@ A dead spacer node is exactly what the **Clean** level of [CCAC scoring](https:/
 
 The four levels explained on /spec/quality, turned into concrete things to actually go fix.
 
-The [CCAC model](https://dotgui.org/spec/quality) explains what the score measures. This is the companion piece: what to actually change in a file to move each number, assuming a file has already cleared the **Valid + Intact** gate (a file that fails either isn’t scored at all).
+The [CCAC model](https://dotgui.org/spec/quality/) explains what the score measures. This is the companion piece: what to actually change in a file to move each number, assuming a file has already cleared the **Valid + Intact** gate (a file that fails either isn’t scored at all).
 
 ## Clean — remove waste
 
@@ -3569,7 +3569,7 @@ The [CCAC model](https://dotgui.org/spec/quality) explains what the score measur
 - Prefer the most specific correct role over a generic one when the vocabulary has it.
 - Understand the score is reach-coverage, not a flat tag-everything ratio: each declared role documents its own subtree as far as its catalog-defined reach allows. A self-contained widget’s reach covers everything inside it; a card’s reach covers one chrome level before its contents need their own roles. A few roles placed on the right nodes can legitimately cover a large share of the tree.
 
-None of this is a gate — [a low score is still a valid, packable file](https://dotgui.org/spec/quality). The score is a diagnostic, not a blocker; treat a low number as a punch list, not a rejection. The scoring model ([RFC-0040](https://github.com/dotgui/core/blob/main/rfcs/0040-quality-scoring-model.md)) and the role vocabulary it reads ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)) both document the exact mechanics if you want the full reasoning.
+None of this is a gate — [a low score is still a valid, packable file](https://dotgui.org/spec/quality/). The score is a diagnostic, not a blocker; treat a low number as a punch list, not a rejection. The scoring model ([RFC-0040](https://github.com/dotgui/core/blob/main/rfcs/0040-quality-scoring-model.md)) and the role vocabulary it reads ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)) both document the exact mechanics if you want the full reasoning.
 
 **FAQ**
 
@@ -3587,7 +3587,7 @@ Most screens are built from three layout elements. Picking the right one is most
 
 ## row and col — direction
 
-[`row`](https://dotgui.org/spec/row) arranges children left to right; [`col`](https://dotgui.org/spec/col) arranges children top to bottom. Both belong to the same underlying stack family and both take `gap` and standard spacing/alignment attributes (see [Spacing and gaps](https://dotgui.org/guides/spacing-and-gaps)). Default to whichever matches the actual reading direction of the content — a settings list is a `col` of rows; a button toolbar is a `row`.
+[`row`](https://dotgui.org/spec/row/) arranges children left to right; [`col`](https://dotgui.org/spec/col/) arranges children top to bottom. Both belong to the same underlying stack family and both take `gap` and standard spacing/alignment attributes (see [Spacing and gaps](https://dotgui.org/guides/spacing-and-gaps/)). Default to whichever matches the actual reading direction of the content — a settings list is a `col` of rows; a button toolbar is a `row`.
 
 **A settings screen: col of rows**
 
@@ -3604,7 +3604,7 @@ Most screens are built from three layout elements. Picking the right one is most
 
 ## grid — fixed multi-track layout
 
-Reach for [`grid`](https://dotgui.org/spec/grid) when content repeats across more than one axis at once — a photo gallery, a dashboard of cards, anything that would otherwise be a `row` of `col`s (or vice versa) faked to look like a grid. `grid` takes its own track and `gap` attributes and expresses the two-axis relationship directly instead of nesting stacks to fake it.
+Reach for [`grid`](https://dotgui.org/spec/grid/) when content repeats across more than one axis at once — a photo gallery, a dashboard of cards, anything that would otherwise be a `row` of `col`s (or vice versa) faked to look like a grid. `grid` takes its own track and `gap` attributes and expresses the two-axis relationship directly instead of nesting stacks to fake it.
 
 **A card gallery: grid, not nested rows**
 
@@ -3624,7 +3624,7 @@ Reach for [`grid`](https://dotgui.org/spec/grid) when content repeats across mor
 | Repeats across rows and columns at once | `grid` |
 | A fixed positioned container or canvas root | `frame` |
 
-Nesting a `row` inside a `col` to fake a grid is exactly the kind of over-nesting the **Clean** CCAC level penalizes (see [Common agent mistakes](https://dotgui.org/guides/common-agent-mistakes)) — if the content is genuinely two-axis, `grid` is the correct element, not a workaround.
+Nesting a `row` inside a `col` to fake a grid is exactly the kind of over-nesting the **Clean** CCAC level penalizes (see [Common agent mistakes](https://dotgui.org/guides/common-agent-mistakes/)) — if the content is genuinely two-axis, `grid` is the correct element, not a workaround.
 
 **FAQ**
 
@@ -3641,7 +3641,7 @@ Unedited AI-generated interfaces tend to converge on the same handful of tells: 
 
 ## Replace default fills with a real token palette
 
-A generic gradient is usually a placeholder nobody committed to. Define [tokens](https://dotgui.org/spec/tokens) that came from the actual product — a brand color, a real neutral scale — and reference them everywhere instead of leaving default fills in place. This is the same fix that improves **Consistent** scoring in [CCAC](https://dotgui.org/guides/ccac-score): one committed system beats several undecided ones.
+A generic gradient is usually a placeholder nobody committed to. Define [tokens](https://dotgui.org/spec/tokens/) that came from the actual product — a brand color, a real neutral scale — and reference them everywhere instead of leaving default fills in place. This is the same fix that improves **Consistent** scoring in [CCAC](https://dotgui.org/guides/ccac-score/): one committed system beats several undecided ones.
 
 ## Give spacing a scale, not one number
 
@@ -3649,7 +3649,7 @@ Uniform 16px everywhere is a tell precisely because real interfaces don’t spac
 
 ## Use role= to make hierarchy structural, not just visual
 
-Generic UI often has visual hierarchy (a bigger font here, a bolder weight there) with nothing underneath it. Declaring [`role=`](https://dotgui.org/spec/roles) on headings, primary actions, and key content makes the hierarchy a structural fact of the file, not just a font-size choice — and it’s the same signal that improves **Comprehensible** scoring.
+Generic UI often has visual hierarchy (a bigger font here, a bolder weight there) with nothing underneath it. Declaring [`role=`](https://dotgui.org/spec/roles/) on headings, primary actions, and key content makes the hierarchy a structural fact of the file, not just a font-size choice — and it’s the same signal that improves **Comprehensible** scoring.
 
 None of this requires design taste to execute — it requires actually deciding on a token set and a spacing scale instead of accepting whatever a model defaulted to, and the closed vocabulary makes it possible to check that those decisions were actually applied consistently across the file.
 

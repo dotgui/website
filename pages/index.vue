@@ -389,6 +389,8 @@
 
 <script setup lang="ts">
 const SITE_URL = 'https://dotgui.org'
+// Canonical homepage URL (trailing slash) for structured-data identity refs.
+const HOME_URL = canonicalUrl('/')
 
 // Single source of truth for the freshness signal:used in the visible
 // "Updated" line under the comparison table and the Article dateModified.
@@ -411,7 +413,7 @@ useHead({
         '@context': 'https://schema.org',
         '@type': 'Organization',
         name: '.gui (dotgui)',
-        url: SITE_URL,
+        url: HOME_URL,
         logo: `${SITE_URL}/og.png`,
         sameAs: ['https://github.com/dotgui']
       })
@@ -435,7 +437,7 @@ useHead({
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         datePublished: '2025-05-15',
         dateModified: LAST_UPDATED,
-        author: { '@type': 'Organization', name: '.gui (dotgui)', url: SITE_URL }
+        author: { '@type': 'Organization', name: '.gui (dotgui)', url: HOME_URL }
       })
     },
     {
@@ -450,12 +452,12 @@ useHead({
         datePublished: '2025-05-15',
         dateModified: LAST_UPDATED,
         inLanguage: 'en',
-        mainEntityOfPage: { '@type': 'WebPage', '@id': SITE_URL },
-        author: { '@type': 'Organization', name: '.gui (dotgui)', url: SITE_URL },
+        mainEntityOfPage: { '@type': 'WebPage', '@id': HOME_URL },
+        author: { '@type': 'Organization', name: '.gui (dotgui)', url: HOME_URL },
         publisher: {
           '@type': 'Organization',
           name: '.gui (dotgui)',
-          url: SITE_URL,
+          url: HOME_URL,
           logo: { '@type': 'ImageObject', url: `${SITE_URL}/og.png` }
         }
       })

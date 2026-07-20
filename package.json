@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "nuxt dev",
+    "test": "bun test",
     "build": "bun run sync:all && nuxt build",
     "generate": "bun run sync:all && nuxt generate",
     "build:ci": "nuxt build",

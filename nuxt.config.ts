@@ -1,7 +1,6 @@
 import { specSlugs } from './lib/spec-data'
 import { guideSlugs } from './lib/guides-data'
-
-const SITE_URL = 'https://dotgui.org'
+import { SITE_URL } from './utils/site-url'
 
 // Per-element spec pages, prerendered to static HTML for SEO/GEO.
 const specRoutes = specSlugs.map(slug => `/spec/${slug}`)
@@ -15,7 +14,16 @@ export default defineNuxtConfig({
   ssr: true,
   compatibilityDate: '2026-05-20',
   experimental: {
-    viteEnvironmentApi: true
+    viteEnvironmentApi: true,
+    // Trailing-slash URLs are canonical (Netlify serves <route>/ as 200 and
+    // 301s the extensionless path to it). 'append' makes every <NuxtLink>
+    // render its href with a trailing slash, so internal navigation points
+    // straight at the final 200 URL instead of a URL that redirects.
+    defaults: {
+      nuxtLink: {
+        trailingSlash: 'append'
+      }
+    }
   },
   nitro: {
     prerender: {

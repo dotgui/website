@@ -1,5 +1,3 @@
-const SITE_URL = 'https://dotgui.org'
-
 /**
  * JSON-LD for the product pages: SoftwareApplication + BreadcrumbList,
  * plus FAQPage when the page renders a FAQ (schema must mirror visible
@@ -12,7 +10,8 @@ export function useProductSchema(opts: {
   description: string
   faq?: { q: string; a: string }[]
 }) {
-  const url = `${SITE_URL}${opts.path}`
+  const url = canonicalUrl(opts.path)
+  const homeUrl = canonicalUrl('/')
   const scripts: { type: string; innerHTML: string }[] = [
     {
       type: 'application/ld+json',
@@ -25,7 +24,7 @@ export function useProductSchema(opts: {
         description: opts.description,
         url,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-        author: { '@type': 'Organization', name: '.gui (dotgui)', url: SITE_URL }
+        author: { '@type': 'Organization', name: '.gui (dotgui)', url: homeUrl }
       })
     },
     {
@@ -34,7 +33,7 @@ export function useProductSchema(opts: {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: '.gui', item: SITE_URL },
+          { '@type': 'ListItem', position: 1, name: '.gui', item: homeUrl },
           { '@type': 'ListItem', position: 2, name: opts.crumb, item: url }
         ]
       })

@@ -58,7 +58,8 @@ const relatedEntries = (entry.related || [])
   .map(s => getGuideEntry(s))
   .filter((e): e is NonNullable<typeof e> => !!e)
 
-const pageUrl = `https://dotgui.org/guides/${entry.slug}`
+const pageUrl = canonicalUrl(`/guides/${entry.slug}`)
+const guidesUrl = canonicalUrl('/guides')
 
 useSeoMeta({
   title: entry.seoTitle,
@@ -81,8 +82,8 @@ const ldScripts = [
       url: pageUrl,
       datePublished: entry.datePublished,
       dateModified: entry.dateModified,
-      isPartOf: { '@type': 'CollectionPage', name: '.gui Guides', url: 'https://dotgui.org/guides' },
-      author: { '@type': 'Organization', name: '.gui (dotgui)', url: 'https://dotgui.org' }
+      isPartOf: { '@type': 'CollectionPage', name: '.gui Guides', url: guidesUrl },
+      author: { '@type': 'Organization', name: '.gui (dotgui)', url: canonicalUrl('/') }
     })
   },
   {
@@ -91,7 +92,7 @@ const ldScripts = [
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Guides', item: 'https://dotgui.org/guides' },
+        { '@type': 'ListItem', position: 1, name: 'Guides', item: guidesUrl },
         { '@type': 'ListItem', position: 2, name: entry.navLabel, item: pageUrl }
       ]
     })

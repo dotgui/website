@@ -37,7 +37,7 @@
 import { guideGroups } from '~/lib/guides-data'
 
 const route = useRoute()
-const isIndex = computed(() => route.path === '/guides')
+const isIndex = computed(() => isSamePath(route.path, '/guides'))
 const activeSlug = computed(() => (route.params.slug as string) || '')
 </script>
 
