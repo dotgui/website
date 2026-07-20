@@ -76,6 +76,8 @@ const ldScripts = [
       headline: `${cleanTitle}  .gui Spec Reference`,
       description: entry.seoDescription,
       url: pageUrl,
+      datePublished: '2025-05-15',
+      dateModified: '2026-07-07',
       about: { '@type': 'Thing', name: specDisplayName(entry.name) },
       isPartOf: { '@type': 'TechArticle', name: '.gui Spec Reference', url: 'https://dotgui.org/spec' },
       author: { '@type': 'Organization', name: '.gui', url: 'https://dotgui.org' }

@@ -41,6 +41,10 @@ Key facts:
 - [Structuring a screen: row vs col vs grid](https://dotgui.org/guides/layout-row-col-grid): Three layout elements cover almost every screen. Here’s how to pick between them without guessing.
 - [Making AI-generated UI not look generic](https://dotgui.org/guides/avoiding-generic-ui): The tells of an unedited AI-generated screen, and the structural (not aesthetic) fixes .gui makes available.
 
+## Pricing
+
+- [Pricing](https://dotgui.org/pricing.md): free and open source — no paid tiers, no usage limits, no account required
+
 ## Optional
 
 - [Playground](https://dotgui.org/playground): write .gui XML and see it render live

@@ -90,6 +90,10 @@ Key facts:
 
 ${guideEntries.map(g => `- [${g.title}](https://dotgui.org/guides/${g.slug}): ${g.dek}`).join('\n')}
 
+## Pricing
+
+- [Pricing](https://dotgui.org/pricing.md): free and open source — no paid tiers, no usage limits, no account required
+
 ## Optional
 
 - [Playground](https://dotgui.org/playground): write .gui XML and see it render live
