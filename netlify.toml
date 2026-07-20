@@ -4,7 +4,10 @@
 # On Netlify, Nitro auto-detects the `netlify` preset and writes the static
 # site to `dist/` (+ server functions to `.netlify/`), so publish = "dist".
 [build]
-  command = "npm run build:ci"   # nuxt build (no sync — see below)
+  # nuxt build (no sync — see below), then notify IndexNow. The ping script
+  # no-ops unless CONTEXT=production, so deploy previews / branch deploys
+  # never announce their throwaway URLs, and it never fails the build.
+  command = "npm run build:ci && node scripts/ping-indexnow.mjs"
   publish = "dist"
 
 [build.environment]
