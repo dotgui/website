@@ -71,7 +71,8 @@
 </template>
 
 <script setup lang="ts">
-const pageUrl = 'https://dotgui.org/spec/quality'
+const pageUrl = canonicalUrl('/spec/quality')
+const specUrl = canonicalUrl('/spec')
 
 const faq = [
   {
@@ -104,8 +105,8 @@ useHead({
         headline: 'CCAC  the .gui quality model',
         description: 'The quality specification for .gui files: a deterministic, zero-AI, fully local score across Clean, Consistent, Accessible, and Comprehensible levels.',
         url: pageUrl,
-        isPartOf: { '@type': 'TechArticle', name: '.gui Spec Reference', url: 'https://dotgui.org/spec' },
-        author: { '@type': 'Organization', name: '.gui (dotgui)', url: 'https://dotgui.org' }
+        isPartOf: { '@type': 'TechArticle', name: '.gui Spec Reference', url: specUrl },
+        author: { '@type': 'Organization', name: '.gui (dotgui)', url: canonicalUrl('/') }
       })
     },
     {
@@ -114,7 +115,7 @@ useHead({
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Spec Reference', item: 'https://dotgui.org/spec' },
+          { '@type': 'ListItem', position: 1, name: 'Spec Reference', item: specUrl },
           { '@type': 'ListItem', position: 2, name: 'Quality', item: pageUrl }
         ]
       })

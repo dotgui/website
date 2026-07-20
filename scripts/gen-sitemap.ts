@@ -11,10 +11,10 @@ import { fileURLToPath } from 'node:url'
 import { specSlugs } from '../lib/spec-data'
 import { kitModules } from '../lib/kit-data'
 import { guideSlugs } from '../lib/guides-data'
+import { SITE_URL, canonicalPath } from '../utils/site-url'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const out = join(here, '../public/sitemap.xml')
-const SITE_URL = 'https://dotgui.org'
 
 interface Entry { loc: string; changefreq: string; priority: string }
 
@@ -50,7 +50,9 @@ const xml = [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   ...all.map(e =>
-    `  <url><loc>${SITE_URL}${e.loc}</loc><changefreq>${e.changefreq}</changefreq><priority>${e.priority}</priority></url>`
+    // Trailing-slash canonical form (`/` stays `/`) so crawlers hit the final
+    // 200 URL directly instead of the extensionless path that 301-redirects.
+    `  <url><loc>${SITE_URL}${canonicalPath(e.loc)}</loc><changefreq>${e.changefreq}</changefreq><priority>${e.priority}</priority></url>`
   ),
   '</urlset>',
   ''

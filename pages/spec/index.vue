@@ -56,12 +56,12 @@ useHead({
         '@type': 'CollectionPage',
         name: '.gui Spec Reference',
         description: 'The complete specification of the .gui file format  every element, attribute, token type, the role vocabulary, and the CCAC quality model.',
-        url: 'https://dotgui.org/spec',
-        isPartOf: { '@type': 'WebSite', name: '.gui (dotgui)', url: 'https://dotgui.org' },
+        url: canonicalUrl('/spec'),
+        isPartOf: { '@type': 'WebSite', name: '.gui (dotgui)', url: canonicalUrl('/') },
         hasPart: specEntries.filter(e => !e.hubHidden).map(e => ({
           '@type': 'TechArticle',
           name: specDisplayName(e.name),
-          url: `https://dotgui.org/spec/${e.slug}`
+          url: canonicalUrl(`/spec/${e.slug}`)
         }))
       })
     }

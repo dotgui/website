@@ -43,7 +43,7 @@
 import { kitModules } from '~/lib/kit-data'
 
 const route = useRoute()
-const isIndex = computed(() => route.path === '/kit')
+const isIndex = computed(() => isSamePath(route.path, '/kit'))
 const activeSlug = computed(() => (route.params.module as string) || '')
 </script>
 

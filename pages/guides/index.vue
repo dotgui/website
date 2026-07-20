@@ -50,12 +50,12 @@ useHead({
         '@type': 'CollectionPage',
         name: '.gui Guides',
         description: 'Comparison and best-practice guides for the .gui file format.',
-        url: 'https://dotgui.org/guides',
-        isPartOf: { '@type': 'WebSite', name: '.gui (dotgui)', url: 'https://dotgui.org' },
+        url: canonicalUrl('/guides'),
+        isPartOf: { '@type': 'WebSite', name: '.gui (dotgui)', url: canonicalUrl('/') },
         hasPart: guideEntries.map(g => ({
           '@type': 'Article',
           name: g.title,
-          url: `https://dotgui.org/guides/${g.slug}`
+          url: canonicalUrl(`/guides/${g.slug}`)
         }))
       })
     },
@@ -65,8 +65,8 @@ useHead({
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: '.gui', item: 'https://dotgui.org' },
-          { '@type': 'ListItem', position: 2, name: 'Guides', item: 'https://dotgui.org/guides' }
+          { '@type': 'ListItem', position: 1, name: '.gui', item: canonicalUrl('/') },
+          { '@type': 'ListItem', position: 2, name: 'Guides', item: canonicalUrl('/guides') }
         ]
       })
     }

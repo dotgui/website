@@ -12,6 +12,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { guideEntries, type GuideBlock, type GuideEntry } from '../lib/guides-data'
+import { canonicalUrl, SITE_URL } from '../utils/site-url'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const root = join(here, '../..')
@@ -27,7 +28,9 @@ function htmlToMd(s: string): string {
     .replace(/<strong>(.*?)<\/strong>/g, '**$1**')
     .replace(/<em>(.*?)<\/em>/g, '*$1*')
     .replace(/<a href="([^"]+)">(.*?)<\/a>/g, (_m, href: string, text: string) =>
-      `[${text}](${href.startsWith('http') ? href : `https://dotgui.org${href}`})`
+      // Internal hrefs → absolute canonical (trailing-slash) URLs; leave
+      // external links and in-page anchors as-is.
+      `[${text}](${href.startsWith('http') || href.startsWith('#') ? href : canonicalUrl(href)})`
     )
 }
 
@@ -74,29 +77,29 @@ Key facts:
 
 ## Documentation
 
-- [Full spec and toolchain docs](https://dotgui.org/llms-full.txt): everything below concatenated as one markdown file
-- [Spec Reference](https://dotgui.org/spec): every element, attribute, and token type
-- [Role vocabulary](https://dotgui.org/spec/roles): the 53 recognized UI roles
-- [Quality model](https://dotgui.org/spec/quality): the CCAC scoring spec
+- [Full spec and toolchain docs](${canonicalUrl('/llms-full.txt')}): everything below concatenated as one markdown file
+- [Spec Reference](${canonicalUrl('/spec')}): every element, attribute, and token type
+- [Role vocabulary](${canonicalUrl('/spec/roles')}): the 53 recognized UI roles
+- [Quality model](${canonicalUrl('/spec/quality')}): the CCAC scoring spec
 
 ## Toolchain
 
-- [gui CLI](https://dotgui.org/cli): read, write, lint, render, and package .gui files; \`gui setup\` installs the dotgui skill into AI agents
-- [@dotgui/kit](https://dotgui.org/kit): the reference engine  parser, validator, renderer, scorer in one deterministic package
-- [@dotgui/embed](https://dotgui.org/embed): render .gui files on any website with one CDN script
-- [Figma plugin](https://dotgui.org/figma): export any Figma layer as a .gui file
+- [gui CLI](${canonicalUrl('/cli')}): read, write, lint, render, and package .gui files; \`gui setup\` installs the dotgui skill into AI agents
+- [@dotgui/kit](${canonicalUrl('/kit')}): the reference engine  parser, validator, renderer, scorer in one deterministic package
+- [@dotgui/embed](${canonicalUrl('/embed')}): render .gui files on any website with one CDN script
+- [Figma plugin](${canonicalUrl('/figma')}): export any Figma layer as a .gui file
 
 ## Guides
 
-${guideEntries.map(g => `- [${g.title}](https://dotgui.org/guides/${g.slug}): ${g.dek}`).join('\n')}
+${guideEntries.map(g => `- [${g.title}](${canonicalUrl(`/guides/${g.slug}`)}): ${g.dek}`).join('\n')}
 
 ## Pricing
 
-- [Pricing](https://dotgui.org/pricing.md): free and open source — no paid tiers, no usage limits, no account required
+- [Pricing](${canonicalUrl('/pricing.md')}): free and open source — no paid tiers, no usage limits, no account required
 
 ## Optional
 
-- [Playground](https://dotgui.org/playground): write .gui XML and see it render live
+- [Playground](${canonicalUrl('/playground')}): write .gui XML and see it render live
 `
 
 // ── llms-full.txt  the whole corpus ────────────────────────────────────────
@@ -116,7 +119,7 @@ const full = [
   '# .gui (dotgui)  full documentation',
   '',
   '> This file concatenates the canonical .gui docs for AI consumption.',
-  '> Index: https://dotgui.org/llms.txt · Site: https://dotgui.org',
+  `> Index: ${canonicalUrl('/llms.txt')} · Site: ${SITE_URL}`,
   '',
   ...sections.flatMap(([title, body]) => [
     '',

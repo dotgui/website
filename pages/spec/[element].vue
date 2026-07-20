@@ -55,7 +55,8 @@ const relatedEntries = (entry.related || [])
   .filter((e): e is NonNullable<typeof e> => !!e)
 
 const cleanTitle = specDisplayName(entry.title)
-const pageUrl = `https://dotgui.org/spec/${entry.slug}`
+const pageUrl = canonicalUrl(`/spec/${entry.slug}`)
+const specUrl = canonicalUrl('/spec')
 
 useSeoMeta({
   title: `${cleanTitle}  .gui Spec Reference`,
@@ -79,8 +80,8 @@ const ldScripts = [
       datePublished: '2025-05-15',
       dateModified: '2026-07-07',
       about: { '@type': 'Thing', name: specDisplayName(entry.name) },
-      isPartOf: { '@type': 'TechArticle', name: '.gui Spec Reference', url: 'https://dotgui.org/spec' },
-      author: { '@type': 'Organization', name: '.gui', url: 'https://dotgui.org' }
+      isPartOf: { '@type': 'TechArticle', name: '.gui Spec Reference', url: specUrl },
+      author: { '@type': 'Organization', name: '.gui', url: canonicalUrl('/') }
     })
   },
   {
@@ -89,7 +90,7 @@ const ldScripts = [
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Spec Reference', item: 'https://dotgui.org/spec' },
+        { '@type': 'ListItem', position: 1, name: 'Spec Reference', item: specUrl },
         { '@type': 'ListItem', position: 2, name: specDisplayName(entry.name), item: pageUrl }
       ]
     })

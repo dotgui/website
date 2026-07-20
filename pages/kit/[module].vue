@@ -82,7 +82,8 @@ const relatedMods = (mod.related || [])
   .map(s => getKitModule(s))
   .filter((m): m is NonNullable<typeof m> => !!m)
 
-const pageUrl = `https://dotgui.org/kit/${mod.slug}`
+const pageUrl = canonicalUrl(`/kit/${mod.slug}`)
+const kitUrl = canonicalUrl('/kit')
 const importPath = mod.slug === 'types' ? '@dotgui/kit' : `@dotgui/kit${mod.name}`
 
 useSeoMeta({
@@ -106,8 +107,8 @@ useHead({
         headline: `${importPath}  @dotgui/kit`,
         description: mod.seo,
         url: pageUrl,
-        isPartOf: { '@type': 'TechArticle', name: '@dotgui/kit', url: 'https://dotgui.org/kit' },
-        author: { '@type': 'Organization', name: '.gui (dotgui)', url: 'https://dotgui.org' }
+        isPartOf: { '@type': 'TechArticle', name: '@dotgui/kit', url: kitUrl },
+        author: { '@type': 'Organization', name: '.gui (dotgui)', url: canonicalUrl('/') }
       })
     },
     {
@@ -116,7 +117,7 @@ useHead({
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'The Kit', item: 'https://dotgui.org/kit' },
+          { '@type': 'ListItem', position: 1, name: 'The Kit', item: kitUrl },
           { '@type': 'ListItem', position: 2, name: mod.name, item: pageUrl }
         ]
       })
