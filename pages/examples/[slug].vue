@@ -174,10 +174,10 @@ useHead({
 }
 .exd-embed { display: block; width: 100%; height: 100%; }
 
-/* theater mode — preview spans the full width, metadata reflows below it */
+/* theater mode — preview spans the full width (same height); the native embed
+   keeps the file centered, so it stays visible in both states. */
 .exd-split.theater { grid-template-columns: 1fr; gap: 28px; }
 .exd-split.theater .exd-preview-col { position: static; }
-.exd-split.theater .exd-preview { height: 85vh; }
 
 .exd-expand {
   position: absolute;
