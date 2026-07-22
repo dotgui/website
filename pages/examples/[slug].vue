@@ -145,20 +145,28 @@ useHead({
 
 .exd-split { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: start; }
 
-/* preview — the embed fills the frame edge to edge */
+/* preview — the frame hugs the rendered file (no dotted margins). The embed
+   reports its own width (native for mobile, scaled-to-fit for wide web files),
+   so width:fit-content wraps it tightly; the dot grid is blended out. */
 .exd-preview {
   position: sticky;
   top: 92px;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
   border-radius: 16px;
   border: 1px solid var(--hairline);
   overflow: hidden;
-  display: flex;
-  justify-content: center;
+  background: var(--surface);
 }
-.exd-preview.is-mobile { align-items: flex-start; }
-.exd-embed { width: 100%; display: block; }
-.exd-preview-img { width: 100%; display: block; }
-.exd-preview-empty { padding: 60px 0; color: var(--muted-soft); font-family: var(--mono); font-size: 13px; }
+.exd-embed {
+  display: block;
+  max-width: 100%;
+  --gui-embed-bg: var(--surface);
+  --gui-embed-dot: var(--surface);
+}
+.exd-preview-img { display: block; max-width: 100%; }
+.exd-preview-empty { padding: 60px 40px; color: var(--muted-soft); font-family: var(--mono); font-size: 13px; }
 
 /* info column */
 .exd-cat { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-soft); }

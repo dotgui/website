@@ -54,6 +54,9 @@ export default defineNuxtConfig({
     '/guides/**': { prerender: true },
     '/examples': { prerender: true },
     '/examples/**': { prerender: true },
+    // The extension-less raw source file downloads as octet-stream by default;
+    // serve it as text/plain so "View raw" displays in-browser (dev + prod).
+    '/examples/*/raw': { headers: { 'content-type': 'text/plain; charset=utf-8' } },
     // CodeMirror + panzoom editor  no SEO value, keep it a client-only SPA.
     '/playground': { ssr: false }
   },
