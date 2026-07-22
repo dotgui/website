@@ -9,16 +9,30 @@
         <span class="current">{{ ex.title }}</span>
       </nav>
 
-      <div class="exd-split">
-        <!-- Left: live preview, edge to edge -->
-        <div class="exd-preview" :class="`is-${ex.category}`">
-          <ClientOnly>
-            <gui-embed :src="ex.download" class="exd-embed" />
-            <template #fallback>
-              <img v-if="ex.preview" :src="ex.preview" :alt="`${ex.title} preview`" class="exd-preview-img" />
-              <div v-else class="exd-preview-empty">Loading preview…</div>
-            </template>
-          </ClientOnly>
+      <div class="exd-split" :class="{ theater }">
+        <!-- Left: live preview -->
+        <div class="exd-preview-col">
+          <div class="exd-preview">
+            <button
+              class="exd-expand"
+              type="button"
+              :aria-pressed="theater"
+              :title="theater ? 'Collapse preview' : 'Expand preview'"
+              :aria-label="theater ? 'Collapse preview' : 'Expand preview'"
+              @click="theater = !theater"
+            >
+              <svg v-if="!theater" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg>
+              <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 6h4V2M14 6h-4V2M2 10h4v4M14 10h-4v4"/></svg>
+            </button>
+            <ClientOnly>
+              <gui-embed :src="ex.download" class="exd-embed" />
+              <template #fallback>
+                <img v-if="ex.preview" :src="ex.preview" :alt="`${ex.title} preview`" class="exd-preview-img" />
+                <div v-else class="exd-preview-empty">Loading preview…</div>
+              </template>
+            </ClientOnly>
+          </div>
+          <a class="exd-embed-credit" href="/embed">Rendered with <code>@dotgui/embed</code> →</a>
         </div>
 
         <!-- Right: metadata + actions -->
@@ -80,6 +94,7 @@ const { data: source } = await useAsyncData(`example-src-${slug}`, async () => {
   return $fetch<string>(ex.raw, { parseResponse: (t) => t })
 })
 
+const theater = ref(false)
 const copied = ref(false)
 async function copySource() {
   try {
@@ -144,13 +159,13 @@ useHead({
 .exd-crumb .current { color: var(--body); }
 
 .exd-split { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: start; }
+.exd-preview-col { position: sticky; top: 92px; display: flex; flex-direction: column; gap: 12px; }
 
 /* preview — a fixed-size panel; the native <gui-embed> fills it and keeps its
    own dotted canvas (same look as the playground), centering and scaling the
    file to fit. */
 .exd-preview {
-  position: sticky;
-  top: 92px;
+  position: relative;
   width: 100%;
   height: 620px;
   border-radius: 16px;
@@ -158,6 +173,41 @@ useHead({
   overflow: hidden;
 }
 .exd-embed { display: block; width: 100%; height: 100%; }
+
+/* theater mode — preview spans the full width, metadata reflows below it */
+.exd-split.theater { grid-template-columns: 1fr; gap: 28px; }
+.exd-split.theater .exd-preview-col { position: static; }
+.exd-split.theater .exd-preview { height: 85vh; }
+
+.exd-expand {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  border: 1px solid var(--hairline);
+  background: color-mix(in srgb, var(--canvas) 82%, transparent);
+  backdrop-filter: blur(6px);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 160ms var(--ease-out), background 160ms var(--ease-out);
+}
+.exd-expand:hover { border-color: var(--muted-soft); }
+
+.exd-embed-credit {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted-soft);
+  text-decoration: none;
+  align-self: flex-start;
+}
+.exd-embed-credit code { font-family: var(--mono); }
+.exd-embed-credit:hover { color: var(--ink); }
 .exd-preview-img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .exd-preview-empty {
   display: flex; align-items: center; justify-content: center;
@@ -193,6 +243,6 @@ useHead({
 
 @media (max-width: 860px) {
   .exd-split { grid-template-columns: 1fr; gap: 28px; }
-  .exd-preview { position: static; }
+  .exd-preview-col { position: static; }
 }
 </style>
