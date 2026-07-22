@@ -6,7 +6,8 @@
  * Each source bundle (a ZIP with design.guix + preview.webp + assets/) becomes
  * a flat public/examples/<slug>/ folder with clean, GitHub-style URLs:
  *   - download      the original .gui bundle (Download button + live preview)
- *   - raw           the design.guix XML, served as text/plain (View raw + agents)
+ *   - source.guix   the design.guix XML; the /examples/<slug>/raw server route
+ *                   reads it and serves it as text/plain (View raw + agents)
  *   - preview.webp  gallery + og image (when the bundle ships one)
  *
  * Slugs are unique across categories, so category lives in the manifest (for
@@ -119,9 +120,10 @@ function run() {
       const destDir = join(outDir, slug)
       mkdirSync(destDir, { recursive: true })
 
-      // Clean, extension-less URLs: /examples/<slug>/download and /raw.
+      // /examples/<slug>/download serves the bundle; the /raw route serves
+      // source.guix (kept as a real file so the route/prerender can read it).
       cpSync(join(catDir, file), join(destDir, 'download'))
-      writeFileSync(join(destDir, 'raw'), guixBytes)
+      writeFileSync(join(destDir, 'source.guix'), guixBytes)
 
       let hasPreview = false
       const previewBytes = zip['preview.webp']

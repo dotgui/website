@@ -75,7 +75,7 @@ const { data: source } = await useAsyncData(`example-src-${slug}`, async () => {
   if (import.meta.server) {
     const { readFile } = await import('node:fs/promises')
     const { join } = await import('node:path')
-    return readFile(join(process.cwd(), 'public', ex.raw), 'utf8')
+    return readFile(join(process.cwd(), 'public', 'examples', ex.slug, 'source.guix'), 'utf8')
   }
   return $fetch<string>(ex.raw, { parseResponse: (t) => t })
 })
@@ -145,28 +145,24 @@ useHead({
 
 .exd-split { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: start; }
 
-/* preview — the frame hugs the rendered file (no dotted margins). The embed
-   reports its own width (native for mobile, scaled-to-fit for wide web files),
-   so width:fit-content wraps it tightly; the dot grid is blended out. */
+/* preview — a fixed-size panel; the native <gui-embed> fills it and keeps its
+   own dotted canvas (same look as the playground), centering and scaling the
+   file to fit. */
 .exd-preview {
   position: sticky;
   top: 92px;
-  width: fit-content;
-  max-width: 100%;
-  margin-inline: auto;
+  width: 100%;
+  height: 620px;
   border-radius: 16px;
   border: 1px solid var(--hairline);
   overflow: hidden;
-  background: var(--surface);
 }
-.exd-embed {
-  display: block;
-  max-width: 100%;
-  --gui-embed-bg: var(--surface);
-  --gui-embed-dot: var(--surface);
+.exd-embed { display: block; width: 100%; height: 100%; }
+.exd-preview-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.exd-preview-empty {
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; color: var(--muted-soft); font-family: var(--mono); font-size: 13px;
 }
-.exd-preview-img { display: block; max-width: 100%; }
-.exd-preview-empty { padding: 60px 40px; color: var(--muted-soft); font-family: var(--mono); font-size: 13px; }
 
 /* info column */
 .exd-cat { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-soft); }

@@ -9,6 +9,9 @@ const specRoutes = specSlugs.map(slug => `/spec/${slug}`)
 const guideRoutes = guideSlugs.map(slug => `/guides/${slug}`)
 // Per-example detail pages — prerendered so the .gui source is in the HTML.
 const exampleRoutes = examples.map(e => `/examples/${e.slug}`)
+// Raw .gui source endpoints, prerendered to static text so agents/crawlers
+// (and the "View raw" button) get the source with no server round-trip.
+const exampleRawRoutes = examples.map(e => `/examples/${e.slug}/raw`)
 
 export default defineNuxtConfig({
   // Render real HTML so search engines and AI crawlers see content, not an
@@ -31,7 +34,7 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
-      routes: ['/', '/spec', '/spec/roles', '/spec/quality', '/cli', '/kit', '/embed', '/figma', '/faq', '/guides', '/examples', ...specRoutes, ...guideRoutes, ...exampleRoutes]
+      routes: ['/', '/spec', '/spec/roles', '/spec/quality', '/cli', '/kit', '/embed', '/figma', '/faq', '/guides', '/examples', ...specRoutes, ...guideRoutes, ...exampleRoutes, ...exampleRawRoutes]
     }
   },
   vue: {
@@ -54,9 +57,6 @@ export default defineNuxtConfig({
     '/guides/**': { prerender: true },
     '/examples': { prerender: true },
     '/examples/**': { prerender: true },
-    // The extension-less raw source file downloads as octet-stream by default;
-    // serve it as text/plain so "View raw" displays in-browser (dev + prod).
-    '/examples/*/raw': { headers: { 'content-type': 'text/plain; charset=utf-8' } },
     // CodeMirror + panzoom editor  no SEO value, keep it a client-only SPA.
     '/playground': { ssr: false }
   },
