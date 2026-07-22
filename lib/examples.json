@@ -21,9 +21,9 @@
         "value": "#000000"
       }
     ],
-    "gui": "/examples/mobile/skeuomorphic-album/skeuomorphic-album.gui",
-    "guix": "/examples/mobile/skeuomorphic-album/design.guix",
-    "preview": "/examples/mobile/skeuomorphic-album/preview.webp"
+    "download": "/examples/skeuomorphic-album/download",
+    "raw": "/examples/skeuomorphic-album/raw",
+    "preview": "/examples/skeuomorphic-album/preview.webp"
   },
   {
     "slug": "bloom-pdp",
@@ -63,8 +63,8 @@
         "value": "#C0EDA0"
       }
     ],
-    "gui": "/examples/mobile/bloom-pdp/bloom-pdp.gui",
-    "guix": "/examples/mobile/bloom-pdp/design.guix",
+    "download": "/examples/bloom-pdp/download",
+    "raw": "/examples/bloom-pdp/raw",
     "preview": ""
   },
   {
@@ -105,9 +105,9 @@
         "value": "#9CA3AF"
       }
     ],
-    "gui": "/examples/mobile/flight-results-mobile/flight-results-mobile.gui",
-    "guix": "/examples/mobile/flight-results-mobile/design.guix",
-    "preview": "/examples/mobile/flight-results-mobile/preview.webp"
+    "download": "/examples/flight-results-mobile/download",
+    "raw": "/examples/flight-results-mobile/raw",
+    "preview": "/examples/flight-results-mobile/preview.webp"
   },
   {
     "slug": "flight-search-results",
@@ -147,9 +147,9 @@
         "value": "#CE6D48"
       }
     ],
-    "gui": "/examples/mobile/flight-search-results/flight-search-results.gui",
-    "guix": "/examples/mobile/flight-search-results/design.guix",
-    "preview": "/examples/mobile/flight-search-results/preview.webp"
+    "download": "/examples/flight-search-results/download",
+    "raw": "/examples/flight-search-results/raw",
+    "preview": "/examples/flight-search-results/preview.webp"
   },
   {
     "slug": "headspace-clone",
@@ -189,9 +189,9 @@
         "value": "#FE7B47"
       }
     ],
-    "gui": "/examples/mobile/headspace-clone/headspace-clone.gui",
-    "guix": "/examples/mobile/headspace-clone/design.guix",
-    "preview": "/examples/mobile/headspace-clone/preview.webp"
+    "download": "/examples/headspace-clone/download",
+    "raw": "/examples/headspace-clone/raw",
+    "preview": "/examples/headspace-clone/preview.webp"
   },
   {
     "slug": "video-editor",
@@ -231,9 +231,9 @@
         "value": "#0F0F13"
       }
     ],
-    "gui": "/examples/mobile/video-editor/video-editor.gui",
-    "guix": "/examples/mobile/video-editor/design.guix",
-    "preview": "/examples/mobile/video-editor/preview.webp"
+    "download": "/examples/video-editor/download",
+    "raw": "/examples/video-editor/raw",
+    "preview": "/examples/video-editor/preview.webp"
   },
   {
     "slug": "instagram-clone",
@@ -273,9 +273,9 @@
         "value": "#E5E5E5"
       }
     ],
-    "gui": "/examples/mobile/instagram-clone/instagram-clone.gui",
-    "guix": "/examples/mobile/instagram-clone/design.guix",
-    "preview": "/examples/mobile/instagram-clone/preview.webp"
+    "download": "/examples/instagram-clone/download",
+    "raw": "/examples/instagram-clone/raw",
+    "preview": "/examples/instagram-clone/preview.webp"
   },
   {
     "slug": "chair",
@@ -315,8 +315,8 @@
         "value": "#6F6960"
       }
     ],
-    "gui": "/examples/mobile/chair/chair.gui",
-    "guix": "/examples/mobile/chair/design.guix",
+    "download": "/examples/chair/download",
+    "raw": "/examples/chair/raw",
     "preview": ""
   },
   {
@@ -329,9 +329,9 @@
         "value": "#FFFFFF"
       }
     ],
-    "gui": "/examples/mobile/meridian-flight-results/meridian-flight-results.gui",
-    "guix": "/examples/mobile/meridian-flight-results/design.guix",
-    "preview": "/examples/mobile/meridian-flight-results/preview.webp"
+    "download": "/examples/meridian-flight-results/download",
+    "raw": "/examples/meridian-flight-results/raw",
+    "preview": "/examples/meridian-flight-results/preview.webp"
   },
   {
     "slug": "player",
@@ -371,8 +371,8 @@
         "value": "#16110F"
       }
     ],
-    "gui": "/examples/mobile/player/player.gui",
-    "guix": "/examples/mobile/player/design.guix",
+    "download": "/examples/player/download",
+    "raw": "/examples/player/raw",
     "preview": ""
   },
   {
@@ -397,9 +397,9 @@
         "value": "#000000"
       }
     ],
-    "gui": "/examples/mobile/skeuomorphic-music/skeuomorphic-music.gui",
-    "guix": "/examples/mobile/skeuomorphic-music/design.guix",
-    "preview": "/examples/mobile/skeuomorphic-music/preview.webp"
+    "download": "/examples/skeuomorphic-music/download",
+    "raw": "/examples/skeuomorphic-music/raw",
+    "preview": "/examples/skeuomorphic-music/preview.webp"
   },
   {
     "slug": "posthog-flights",
@@ -439,9 +439,9 @@
         "value": "#23251d"
       }
     ],
-    "gui": "/examples/mobile/posthog-flights/posthog-flights.gui",
-    "guix": "/examples/mobile/posthog-flights/design.guix",
-    "preview": "/examples/mobile/posthog-flights/preview.webp"
+    "download": "/examples/posthog-flights/download",
+    "raw": "/examples/posthog-flights/raw",
+    "preview": "/examples/posthog-flights/preview.webp"
   },
   {
     "slug": "posthog-analytics",
@@ -481,9 +481,9 @@
         "value": "#4d4f46"
       }
     ],
-    "gui": "/examples/mobile/posthog-analytics/posthog-analytics.gui",
-    "guix": "/examples/mobile/posthog-analytics/design.guix",
-    "preview": "/examples/mobile/posthog-analytics/preview.webp"
+    "download": "/examples/posthog-analytics/download",
+    "raw": "/examples/posthog-analytics/raw",
+    "preview": "/examples/posthog-analytics/preview.webp"
   },
   {
     "slug": "material-expressive-fitness",
@@ -523,9 +523,9 @@
         "value": "#FFFFFF"
       }
     ],
-    "gui": "/examples/mobile/material-expressive-fitness/material-expressive-fitness.gui",
-    "guix": "/examples/mobile/material-expressive-fitness/design.guix",
-    "preview": "/examples/mobile/material-expressive-fitness/preview.webp"
+    "download": "/examples/material-expressive-fitness/download",
+    "raw": "/examples/material-expressive-fitness/raw",
+    "preview": "/examples/material-expressive-fitness/preview.webp"
   },
   {
     "slug": "snapchat",
@@ -565,9 +565,9 @@
         "value": "#9D4EDD"
       }
     ],
-    "gui": "/examples/mobile/snapchat/snapchat.gui",
-    "guix": "/examples/mobile/snapchat/design.guix",
-    "preview": "/examples/mobile/snapchat/preview.webp"
+    "download": "/examples/snapchat/download",
+    "raw": "/examples/snapchat/raw",
+    "preview": "/examples/snapchat/preview.webp"
   },
   {
     "slug": "spotify-playlist",
@@ -607,9 +607,9 @@
         "value": "#1ED760"
       }
     ],
-    "gui": "/examples/mobile/spotify-playlist/spotify-playlist.gui",
-    "guix": "/examples/mobile/spotify-playlist/design.guix",
-    "preview": "/examples/mobile/spotify-playlist/preview.webp"
+    "download": "/examples/spotify-playlist/download",
+    "raw": "/examples/spotify-playlist/raw",
+    "preview": "/examples/spotify-playlist/preview.webp"
   },
   {
     "slug": "stride-today",
@@ -649,9 +649,9 @@
         "value": "#CDEDA3"
       }
     ],
-    "gui": "/examples/mobile/stride-today/stride-today.gui",
-    "guix": "/examples/mobile/stride-today/design.guix",
-    "preview": "/examples/mobile/stride-today/preview.webp"
+    "download": "/examples/stride-today/download",
+    "raw": "/examples/stride-today/raw",
+    "preview": "/examples/stride-today/preview.webp"
   },
   {
     "slug": "whoop-dashboard",
@@ -691,9 +691,9 @@
         "value": "#00E676"
       }
     ],
-    "gui": "/examples/mobile/whoop-dashboard/whoop-dashboard.gui",
-    "guix": "/examples/mobile/whoop-dashboard/design.guix",
-    "preview": "/examples/mobile/whoop-dashboard/preview.webp"
+    "download": "/examples/whoop-dashboard/download",
+    "raw": "/examples/whoop-dashboard/raw",
+    "preview": "/examples/whoop-dashboard/preview.webp"
   },
   {
     "slug": "dotgui-landing-page",
@@ -733,9 +733,9 @@
         "value": "#52525B"
       }
     ],
-    "gui": "/examples/web/dotgui-landing-page/dotgui-landing-page.gui",
-    "guix": "/examples/web/dotgui-landing-page/design.guix",
-    "preview": "/examples/web/dotgui-landing-page/preview.webp"
+    "download": "/examples/dotgui-landing-page/download",
+    "raw": "/examples/dotgui-landing-page/raw",
+    "preview": "/examples/dotgui-landing-page/preview.webp"
   },
   {
     "slug": "drift",
@@ -775,8 +775,8 @@
         "value": "#3F7D74"
       }
     ],
-    "gui": "/examples/web/drift/drift.gui",
-    "guix": "/examples/web/drift/design.guix",
+    "download": "/examples/drift/download",
+    "raw": "/examples/drift/raw",
     "preview": ""
   },
   {
@@ -817,9 +817,9 @@
         "value": "#9C8E7B"
       }
     ],
-    "gui": "/examples/web/echelon-atelier-events/echelon-atelier-events.gui",
-    "guix": "/examples/web/echelon-atelier-events/design.guix",
-    "preview": "/examples/web/echelon-atelier-events/preview.webp"
+    "download": "/examples/echelon-atelier-events/download",
+    "raw": "/examples/echelon-atelier-events/raw",
+    "preview": "/examples/echelon-atelier-events/preview.webp"
   },
   {
     "slug": "figma-clone",
@@ -859,9 +859,9 @@
         "value": "#B3B3B3"
       }
     ],
-    "gui": "/examples/web/figma-clone/figma-clone.gui",
-    "guix": "/examples/web/figma-clone/design.guix",
-    "preview": "/examples/web/figma-clone/preview.webp"
+    "download": "/examples/figma-clone/download",
+    "raw": "/examples/figma-clone/raw",
+    "preview": "/examples/figma-clone/preview.webp"
   },
   {
     "slug": "flight-results",
@@ -901,9 +901,9 @@
         "value": "#F3F4F6"
       }
     ],
-    "gui": "/examples/web/flight-results/flight-results.gui",
-    "guix": "/examples/web/flight-results/design.guix",
-    "preview": "/examples/web/flight-results/preview.webp"
+    "download": "/examples/flight-results/download",
+    "raw": "/examples/flight-results/raw",
+    "preview": "/examples/flight-results/preview.webp"
   },
   {
     "slug": "design-event-booking",
@@ -943,9 +943,9 @@
         "value": "#ffffff12"
       }
     ],
-    "gui": "/examples/web/design-event-booking/design-event-booking.gui",
-    "guix": "/examples/web/design-event-booking/design.guix",
-    "preview": "/examples/web/design-event-booking/preview.webp"
+    "download": "/examples/design-event-booking/download",
+    "raw": "/examples/design-event-booking/raw",
+    "preview": "/examples/design-event-booking/preview.webp"
   },
   {
     "slug": "music-production-daw",
@@ -985,9 +985,9 @@
         "value": "#3A3E46"
       }
     ],
-    "gui": "/examples/web/music-production-daw/music-production-daw.gui",
-    "guix": "/examples/web/music-production-daw/design.guix",
-    "preview": "/examples/web/music-production-daw/preview.webp"
+    "download": "/examples/music-production-daw/download",
+    "raw": "/examples/music-production-daw/raw",
+    "preview": "/examples/music-production-daw/preview.webp"
   },
   {
     "slug": "premium-baby-accessories",
@@ -1023,8 +1023,8 @@
         "value": "#ebdcd033"
       }
     ],
-    "gui": "/examples/web/premium-baby-accessories/premium-baby-accessories.gui",
-    "guix": "/examples/web/premium-baby-accessories/design.guix",
+    "download": "/examples/premium-baby-accessories/download",
+    "raw": "/examples/premium-baby-accessories/raw",
     "preview": ""
   },
   {
@@ -1065,9 +1065,9 @@
         "value": "#B3B3B3"
       }
     ],
-    "gui": "/examples/web/spotify-desktop/spotify-desktop.gui",
-    "guix": "/examples/web/spotify-desktop/design.guix",
-    "preview": "/examples/web/spotify-desktop/preview.webp"
+    "download": "/examples/spotify-desktop/download",
+    "raw": "/examples/spotify-desktop/raw",
+    "preview": "/examples/spotify-desktop/preview.webp"
   },
   {
     "slug": "sundial-studio",
@@ -1107,9 +1107,9 @@
         "value": "#E8401F"
       }
     ],
-    "gui": "/examples/web/sundial-studio/sundial-studio.gui",
-    "guix": "/examples/web/sundial-studio/design.guix",
-    "preview": "/examples/web/sundial-studio/preview.webp"
+    "download": "/examples/sundial-studio/download",
+    "raw": "/examples/sundial-studio/raw",
+    "preview": "/examples/sundial-studio/preview.webp"
   },
   {
     "slug": "farfield",
@@ -1149,8 +1149,8 @@
         "value": "#A7B894"
       }
     ],
-    "gui": "/examples/web/farfield/farfield.gui",
-    "guix": "/examples/web/farfield/design.guix",
+    "download": "/examples/farfield/download",
+    "raw": "/examples/farfield/raw",
     "preview": ""
   }
 ]

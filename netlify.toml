@@ -13,11 +13,19 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# Serve the raw .guix example sources as UTF-8 text so "View raw" displays the
-# markup in-browser (like GitHub's raw view) instead of downloading a binary.
-# Their extension is unknown to Netlify's mime table, which defaults to
-# application/octet-stream.
+# "View raw" → the extension-less /examples/<slug>/raw file. Serve it as UTF-8
+# text so the .gui source displays in-browser (GitHub-style) instead of
+# downloading, since Netlify would otherwise default to octet-stream.
 [[headers]]
-  for = "/examples/*/*/design.guix"
+  for = "/examples/*/raw"
   [headers.values]
     Content-Type = "text/plain; charset=utf-8"
+
+# "Download .gui" → the extension-less /examples/<slug>/download file (the .gui
+# bundle). Force a download so a direct visit saves the file rather than
+# rendering garbage; the anchor's download attribute supplies the real name.
+[[headers]]
+  for = "/examples/*/download"
+  [headers.values]
+    Content-Type = "application/octet-stream"
+    Content-Disposition = "attachment"

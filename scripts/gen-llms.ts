@@ -103,7 +103,7 @@ shows its full source; the raw design.guix links below return the plain-text
 ${examples
     .map(
       e =>
-        `- [${e.title}](${canonicalUrl(`/examples/${e.category}/${e.slug}`)}) — ${e.category}${e.description ? `; ${e.description}` : ''} · [raw source](${SITE_URL}${e.guix})`
+        `- [${e.title}](${canonicalUrl(`/examples/${e.slug}`)}) — ${e.category}${e.description ? `; ${e.description}` : ''} · [raw source](${SITE_URL}${e.raw})`
     )
     .join('\n')}
 

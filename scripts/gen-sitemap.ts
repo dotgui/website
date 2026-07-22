@@ -60,7 +60,7 @@ const examplesTop: Entry[] = [
   { loc: '/examples', changefreq: 'weekly', priority: '0.8', lastmod: EXAMPLES_ADDED }
 ]
 const exampleEntries: Entry[] = examples.map(e => ({
-  loc: `/examples/${e.category}/${e.slug}`, changefreq: 'monthly', priority: '0.7', lastmod: EXAMPLES_ADDED
+  loc: `/examples/${e.slug}`, changefreq: 'monthly', priority: '0.7', lastmod: EXAMPLES_ADDED
 }))
 
 const all = [...staticTop, ...specEntries, ...kitEntries, ...guideEntries, ...examplesTop, ...exampleEntries]

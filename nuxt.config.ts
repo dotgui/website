@@ -8,7 +8,7 @@ const specRoutes = specSlugs.map(slug => `/spec/${slug}`)
 // Per-guide pages, same treatment.
 const guideRoutes = guideSlugs.map(slug => `/guides/${slug}`)
 // Per-example detail pages — prerendered so the .gui source is in the HTML.
-const exampleRoutes = examples.map(e => `/examples/${e.category}/${e.slug}`)
+const exampleRoutes = examples.map(e => `/examples/${e.slug}`)
 
 export default defineNuxtConfig({
   // Render real HTML so search engines and AI crawlers see content, not an

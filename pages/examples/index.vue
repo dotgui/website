@@ -30,7 +30,7 @@
         <NuxtLink
           v-for="ex in visible"
           :key="ex.slug"
-          :to="`/examples/${ex.category}/${ex.slug}`"
+          :to="`/examples/${ex.slug}`"
           class="ex-card"
         >
           <div class="ex-thumb" :class="{ 'is-web': ex.category === 'web' }">
@@ -115,7 +115,7 @@ useHead({
           '@type': 'SoftwareSourceCode',
           name: e.title,
           programmingLanguage: 'gui',
-          url: canonicalUrl(`/examples/${e.category}/${e.slug}`)
+          url: canonicalUrl(`/examples/${e.slug}`)
         }))
       })
     }

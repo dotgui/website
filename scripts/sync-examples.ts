@@ -1,14 +1,17 @@
 /**
  * Extract the .gui example bundles in ./examples into public/examples so the
  * site can serve, render, and link them, and generate lib/examples.json — the
- * manifest that drives /examples and /examples/[slug].
+ * manifest that drives /examples and /examples/<slug>.
  *
- * Each source bundle (a ZIP with design.guix + preview.webp + assets/) is
- * unpacked into public/examples/<category>/<slug>/ with:
- *   - <slug>.gui      the original bundle (Download button)
- *   - design.guix     the raw XML source (View raw + inline display + agents)
- *   - preview.webp    gallery + og image
- *   - assets/...      referenced images, so live <gui-embed> renders resolve
+ * Each source bundle (a ZIP with design.guix + preview.webp + assets/) becomes
+ * a flat public/examples/<slug>/ folder with clean, GitHub-style URLs:
+ *   - download      the original .gui bundle (Download button + live preview)
+ *   - raw           the design.guix XML, served as text/plain (View raw + agents)
+ *   - preview.webp  gallery + og image (when the bundle ships one)
+ *
+ * Slugs are unique across categories, so category lives in the manifest (for
+ * the gallery filter and label) but not in the URL. The live <gui-embed> reads
+ * assets straight from the bundle, so the loose assets/ folder is not emitted.
  *
  * Hand-authored prose lives in lib/examples-meta.ts and is merged in at page
  * render time — this script only emits machine-derivable data.
@@ -38,8 +41,8 @@ export interface ExampleEntry {
   /** Up to 8 token colors, for the palette strip and preview. */
   colors: ExampleColor[]
   /** Public paths (served from /public). */
-  gui: string
-  guix: string
+  download: string
+  raw: string
   preview: string
 }
 
@@ -87,6 +90,7 @@ function run() {
   mkdirSync(outDir, { recursive: true })
 
   const manifest: ExampleEntry[] = []
+  const seenSlugs = new Set<string>()
 
   for (const category of CATEGORIES) {
     const catDir = join(srcDir, category)
@@ -95,8 +99,14 @@ function run() {
 
     for (const file of files) {
       const slug = slugify(file)
-      const bytes = readFileSync(join(catDir, file))
-      const zip = unzipSync(new Uint8Array(bytes))
+      if (seenSlugs.has(slug)) {
+        console.error(`[sync-examples] duplicate slug "${slug}" (${category}/${file}) — flat URLs require unique slugs`)
+        process.exit(1)
+      }
+      seenSlugs.add(slug)
+
+      const guiBytes = readFileSync(join(catDir, file))
+      const zip = unzipSync(new Uint8Array(guiBytes))
 
       const guixBytes = zip['design.guix']
       if (!guixBytes) {
@@ -106,31 +116,28 @@ function run() {
       const xml = new TextDecoder().decode(guixBytes)
       const parsed = parseGuix(xml)
 
-      const destDir = join(outDir, category, slug)
-      mkdirSync(join(destDir, 'assets'), { recursive: true })
+      const destDir = join(outDir, slug)
+      mkdirSync(destDir, { recursive: true })
 
-      // Original bundle (download) + raw source (view raw / inline).
-      cpSync(join(catDir, file), join(destDir, `${slug}.gui`))
-      writeFileSync(join(destDir, 'design.guix'), guixBytes)
+      // Clean, extension-less URLs: /examples/<slug>/download and /raw.
+      cpSync(join(catDir, file), join(destDir, 'download'))
+      writeFileSync(join(destDir, 'raw'), guixBytes)
 
-      // Everything else from the bundle (preview.webp, assets/*).
       let hasPreview = false
-      for (const [name, data] of Object.entries(zip)) {
-        if (name === 'design.guix' || name.endsWith('/')) continue
-        if (name === 'preview.webp') hasPreview = true
-        const target = join(destDir, name)
-        mkdirSync(dirname(target), { recursive: true })
-        writeFileSync(target, data)
+      const previewBytes = zip['preview.webp']
+      if (previewBytes) {
+        writeFileSync(join(destDir, 'preview.webp'), previewBytes)
+        hasPreview = true
       }
 
-      const base = `/examples/${category}/${slug}`
+      const base = `/examples/${slug}`
       manifest.push({
         slug,
         category,
         name: parsed.name || humanize(slug),
         colors: parsed.colors,
-        gui: `${base}/${slug}.gui`,
-        guix: `${base}/design.guix`,
+        download: `${base}/download`,
+        raw: `${base}/raw`,
         preview: hasPreview ? `${base}/preview.webp` : ''
       })
     }

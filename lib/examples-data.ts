@@ -20,10 +20,10 @@ export interface Example {
   /** SEO/GEO description. Empty string if not yet authored. */
   description: string
   colors: ExampleColor[]
-  /** Public path to the .gui bundle (download). */
-  gui: string
-  /** Public path to the raw design.guix XML (view raw / agents). */
-  guix: string
+  /** Public path to the .gui bundle (download + live preview). */
+  download: string
+  /** Public path to the raw design.guix XML, served text/plain (view raw / agents). */
+  raw: string
   /** Public path to preview.webp, or '' when the bundle has none. */
   preview: string
 }
@@ -33,8 +33,8 @@ interface RawEntry {
   category: ExampleCategory
   name: string
   colors: ExampleColor[]
-  gui: string
-  guix: string
+  download: string
+  raw: string
   preview: string
 }
 
@@ -46,8 +46,8 @@ export const examples: Example[] = (rawManifest as RawEntry[]).map((e) => {
     title: meta?.title || e.name,
     description: meta?.description || '',
     colors: e.colors,
-    gui: e.gui,
-    guix: e.guix,
+    download: e.download,
+    raw: e.raw,
     preview: e.preview
   }
 })
