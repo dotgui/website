@@ -1,0 +1,1156 @@
+[
+  {
+    "slug": "skeuomorphic-album",
+    "category": "mobile",
+    "name": "Album Details",
+    "colors": [
+      {
+        "name": "cream",
+        "value": "#ECE4D2"
+      },
+      {
+        "name": "cream-2",
+        "value": "#B4A88F"
+      },
+      {
+        "name": "groove",
+        "value": "#12100C"
+      },
+      {
+        "name": "ring",
+        "value": "#000000"
+      }
+    ],
+    "download": "/examples/skeuomorphic-album/download",
+    "raw": "/examples/skeuomorphic-album/raw",
+    "preview": "/examples/skeuomorphic-album/preview.webp"
+  },
+  {
+    "slug": "bloom-pdp",
+    "category": "mobile",
+    "name": "Bloom/PDP",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#FBFDF7"
+      },
+      {
+        "name": "surface",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "surface-variant",
+        "value": "#E8F0DE"
+      },
+      {
+        "name": "ink",
+        "value": "#1A1C17"
+      },
+      {
+        "name": "text-2",
+        "value": "#45483E"
+      },
+      {
+        "name": "outline",
+        "value": "#C3C8B6"
+      },
+      {
+        "name": "primary",
+        "value": "#3F6B2E"
+      },
+      {
+        "name": "primary-cont",
+        "value": "#C0EDA0"
+      }
+    ],
+    "download": "/examples/bloom-pdp/download",
+    "raw": "/examples/bloom-pdp/raw",
+    "preview": ""
+  },
+  {
+    "slug": "flight-results-mobile",
+    "category": "mobile",
+    "name": "Flight Results Mobile",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#07070A"
+      },
+      {
+        "name": "surface",
+        "value": "#12121A"
+      },
+      {
+        "name": "surface-elevated",
+        "value": "#1A1A26"
+      },
+      {
+        "name": "border",
+        "value": "#22222F"
+      },
+      {
+        "name": "primary",
+        "value": "#A78BFA"
+      },
+      {
+        "name": "success-green",
+        "value": "#10B981"
+      },
+      {
+        "name": "text-primary",
+        "value": "#F3F4F6"
+      },
+      {
+        "name": "text-muted",
+        "value": "#9CA3AF"
+      }
+    ],
+    "download": "/examples/flight-results-mobile/download",
+    "raw": "/examples/flight-results-mobile/raw",
+    "preview": "/examples/flight-results-mobile/preview.webp"
+  },
+  {
+    "slug": "flight-search-results",
+    "category": "mobile",
+    "name": "Flight Search Results",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#FAF8F5"
+      },
+      {
+        "name": "surface",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "surface-2",
+        "value": "#F3EFE9"
+      },
+      {
+        "name": "border",
+        "value": "#EBE5DF"
+      },
+      {
+        "name": "text-primary",
+        "value": "#1C1816"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#7A706B"
+      },
+      {
+        "name": "text-tertiary",
+        "value": "#B2A7A0"
+      },
+      {
+        "name": "primary",
+        "value": "#CE6D48"
+      }
+    ],
+    "download": "/examples/flight-search-results/download",
+    "raw": "/examples/flight-search-results/raw",
+    "preview": "/examples/flight-search-results/preview.webp"
+  },
+  {
+    "slug": "headspace-clone",
+    "category": "mobile",
+    "name": "Headspace Clone",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#FAF5EF"
+      },
+      {
+        "name": "surface",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "surface-elevated",
+        "value": "#FFFDF9"
+      },
+      {
+        "name": "border",
+        "value": "#EBE5DC"
+      },
+      {
+        "name": "text-primary",
+        "value": "#37322D"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#7A7065"
+      },
+      {
+        "name": "text-tertiary",
+        "value": "#B8AEA2"
+      },
+      {
+        "name": "primary-orange",
+        "value": "#FE7B47"
+      }
+    ],
+    "download": "/examples/headspace-clone/download",
+    "raw": "/examples/headspace-clone/raw",
+    "preview": "/examples/headspace-clone/preview.webp"
+  },
+  {
+    "slug": "video-editor",
+    "category": "mobile",
+    "name": "I Pad Video Editor",
+    "colors": [
+      {
+        "name": "bg-dark",
+        "value": "#09090B"
+      },
+      {
+        "name": "surface-dark",
+        "value": "#18181B"
+      },
+      {
+        "name": "surface-dark-2",
+        "value": "#27272A"
+      },
+      {
+        "name": "text-primary",
+        "value": "#FAFAFA"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#A1A1AA"
+      },
+      {
+        "name": "primary-accent",
+        "value": "#8B5CF6"
+      },
+      {
+        "name": "primary-accent-light",
+        "value": "#A78BFA"
+      },
+      {
+        "name": "timeline-bg",
+        "value": "#0F0F13"
+      }
+    ],
+    "download": "/examples/video-editor/download",
+    "raw": "/examples/video-editor/raw",
+    "preview": "/examples/video-editor/preview.webp"
+  },
+  {
+    "slug": "instagram-clone",
+    "category": "mobile",
+    "name": "Instagram",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#000000"
+      },
+      {
+        "name": "surface",
+        "value": "#121212"
+      },
+      {
+        "name": "surface-2",
+        "value": "#1F1F1F"
+      },
+      {
+        "name": "border",
+        "value": "#262626"
+      },
+      {
+        "name": "text-primary",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#A8A8A8"
+      },
+      {
+        "name": "text-tertiary",
+        "value": "#737373"
+      },
+      {
+        "name": "text-highlight",
+        "value": "#E5E5E5"
+      }
+    ],
+    "download": "/examples/instagram-clone/download",
+    "raw": "/examples/instagram-clone/raw",
+    "preview": "/examples/instagram-clone/preview.webp"
+  },
+  {
+    "slug": "chair",
+    "category": "mobile",
+    "name": "Lindholm Chair",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#F4F1EC"
+      },
+      {
+        "name": "surface",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "ink",
+        "value": "#2C2925"
+      },
+      {
+        "name": "muted",
+        "value": "#8C857B"
+      },
+      {
+        "name": "line",
+        "value": "#E6E1D8"
+      },
+      {
+        "name": "accent",
+        "value": "#6B6258"
+      },
+      {
+        "name": "sand",
+        "value": "#DED6C8"
+      },
+      {
+        "name": "desc",
+        "value": "#6F6960"
+      }
+    ],
+    "download": "/examples/chair/download",
+    "raw": "/examples/chair/raw",
+    "preview": ""
+  },
+  {
+    "slug": "meridian-flight-results",
+    "category": "mobile",
+    "name": "Meridian Flight Results",
+    "colors": [
+      {
+        "name": "on-accent",
+        "value": "#FFFFFF"
+      }
+    ],
+    "download": "/examples/meridian-flight-results/download",
+    "raw": "/examples/meridian-flight-results/raw",
+    "preview": "/examples/meridian-flight-results/preview.webp"
+  },
+  {
+    "slug": "player",
+    "category": "mobile",
+    "name": "Now Playing",
+    "colors": [
+      {
+        "name": "dust",
+        "value": "#241F1C"
+      },
+      {
+        "name": "dust-2",
+        "value": "#2E2823"
+      },
+      {
+        "name": "dust-3",
+        "value": "#3A322C"
+      },
+      {
+        "name": "cream",
+        "value": "#F3E9D8"
+      },
+      {
+        "name": "cream-dim",
+        "value": "#CABBA4"
+      },
+      {
+        "name": "oxblood",
+        "value": "#8C2F2A"
+      },
+      {
+        "name": "oxblood-bright",
+        "value": "#B5413A"
+      },
+      {
+        "name": "ink",
+        "value": "#16110F"
+      }
+    ],
+    "download": "/examples/player/download",
+    "raw": "/examples/player/raw",
+    "preview": ""
+  },
+  {
+    "slug": "skeuomorphic-music",
+    "category": "mobile",
+    "name": "Now Playing",
+    "colors": [
+      {
+        "name": "cream",
+        "value": "#ECE4D2"
+      },
+      {
+        "name": "cream-2",
+        "value": "#B4A88F"
+      },
+      {
+        "name": "groove",
+        "value": "#12100C"
+      },
+      {
+        "name": "ring",
+        "value": "#000000"
+      }
+    ],
+    "download": "/examples/skeuomorphic-music/download",
+    "raw": "/examples/skeuomorphic-music/raw",
+    "preview": "/examples/skeuomorphic-music/preview.webp"
+  },
+  {
+    "slug": "posthog-flights",
+    "category": "mobile",
+    "name": "Post Hog Flight Search Results",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#eeefe9"
+      },
+      {
+        "name": "surface",
+        "value": "#ffffff"
+      },
+      {
+        "name": "surface-soft",
+        "value": "#e5e7e0"
+      },
+      {
+        "name": "border",
+        "value": "#bfc1b7"
+      },
+      {
+        "name": "border-soft",
+        "value": "#dcdfd2"
+      },
+      {
+        "name": "primary",
+        "value": "#f7a501"
+      },
+      {
+        "name": "primary-pressed",
+        "value": "#dd9001"
+      },
+      {
+        "name": "on-primary",
+        "value": "#23251d"
+      }
+    ],
+    "download": "/examples/posthog-flights/download",
+    "raw": "/examples/posthog-flights/raw",
+    "preview": "/examples/posthog-flights/preview.webp"
+  },
+  {
+    "slug": "posthog-analytics",
+    "category": "mobile",
+    "name": "Post Hog Mobile Analytics",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#eeefe9"
+      },
+      {
+        "name": "surface",
+        "value": "#ffffff"
+      },
+      {
+        "name": "surface-soft",
+        "value": "#e5e7e0"
+      },
+      {
+        "name": "border",
+        "value": "#bfc1b7"
+      },
+      {
+        "name": "border-soft",
+        "value": "#dcdfd2"
+      },
+      {
+        "name": "primary",
+        "value": "#f7a501"
+      },
+      {
+        "name": "on-primary",
+        "value": "#23251d"
+      },
+      {
+        "name": "body",
+        "value": "#4d4f46"
+      }
+    ],
+    "download": "/examples/posthog-analytics/download",
+    "raw": "/examples/posthog-analytics/raw",
+    "preview": "/examples/posthog-analytics/preview.webp"
+  },
+  {
+    "slug": "material-expressive-fitness",
+    "category": "mobile",
+    "name": "Pulse",
+    "colors": [
+      {
+        "name": "c-move",
+        "value": "#7C5CFF"
+      },
+      {
+        "name": "c-ex",
+        "value": "#FF4D8D"
+      },
+      {
+        "name": "c-stand",
+        "value": "#00C2A8"
+      },
+      {
+        "name": "c-heart",
+        "value": "#FF5A5F"
+      },
+      {
+        "name": "c-fire",
+        "value": "#FF7043"
+      },
+      {
+        "name": "c-brand",
+        "value": "#6750A4"
+      },
+      {
+        "name": "c-track",
+        "value": "#8E879455"
+      },
+      {
+        "name": "ink-inv",
+        "value": "#FFFFFF"
+      }
+    ],
+    "download": "/examples/material-expressive-fitness/download",
+    "raw": "/examples/material-expressive-fitness/raw",
+    "preview": "/examples/material-expressive-fitness/preview.webp"
+  },
+  {
+    "slug": "snapchat",
+    "category": "mobile",
+    "name": "Snapchat Camera",
+    "colors": [
+      {
+        "name": "brand-yellow",
+        "value": "#FFFC00"
+      },
+      {
+        "name": "bg-dark",
+        "value": "#0C0A09"
+      },
+      {
+        "name": "hud-glass",
+        "value": "#0000005C"
+      },
+      {
+        "name": "hud-glass-border",
+        "value": "#FFFFFF26"
+      },
+      {
+        "name": "text-primary",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#A1A1AA"
+      },
+      {
+        "name": "chat-badge",
+        "value": "#00A8FF"
+      },
+      {
+        "name": "stories-badge",
+        "value": "#9D4EDD"
+      }
+    ],
+    "download": "/examples/snapchat/download",
+    "raw": "/examples/snapchat/raw",
+    "preview": "/examples/snapchat/preview.webp"
+  },
+  {
+    "slug": "spotify-playlist",
+    "category": "mobile",
+    "name": "Spotify Playlist",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#09080B"
+      },
+      {
+        "name": "surface",
+        "value": "#131118"
+      },
+      {
+        "name": "surface-2",
+        "value": "#211E29"
+      },
+      {
+        "name": "border",
+        "value": "#1E1C24"
+      },
+      {
+        "name": "text-primary",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#9C98A6"
+      },
+      {
+        "name": "text-tertiary",
+        "value": "#5B5764"
+      },
+      {
+        "name": "primary",
+        "value": "#1ED760"
+      }
+    ],
+    "download": "/examples/spotify-playlist/download",
+    "raw": "/examples/spotify-playlist/raw",
+    "preview": "/examples/spotify-playlist/preview.webp"
+  },
+  {
+    "slug": "stride-today",
+    "category": "mobile",
+    "name": "Stride/Today",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#FBFDF6"
+      },
+      {
+        "name": "surface",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "surface-variant",
+        "value": "#E8F0DE"
+      },
+      {
+        "name": "ink",
+        "value": "#1A1C18"
+      },
+      {
+        "name": "text-2",
+        "value": "#44483D"
+      },
+      {
+        "name": "outline",
+        "value": "#C4C8BA"
+      },
+      {
+        "name": "primary",
+        "value": "#3F6B2E"
+      },
+      {
+        "name": "primary-cont",
+        "value": "#CDEDA3"
+      }
+    ],
+    "download": "/examples/stride-today/download",
+    "raw": "/examples/stride-today/raw",
+    "preview": "/examples/stride-today/preview.webp"
+  },
+  {
+    "slug": "whoop-dashboard",
+    "category": "mobile",
+    "name": "Whoop Dashboard",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#08080C"
+      },
+      {
+        "name": "surface",
+        "value": "#111116"
+      },
+      {
+        "name": "surface-elevated",
+        "value": "#181822"
+      },
+      {
+        "name": "border",
+        "value": "#1F1F2C"
+      },
+      {
+        "name": "text-primary",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#9BA3B0"
+      },
+      {
+        "name": "text-tertiary",
+        "value": "#64748B"
+      },
+      {
+        "name": "recovery-green",
+        "value": "#00E676"
+      }
+    ],
+    "download": "/examples/whoop-dashboard/download",
+    "raw": "/examples/whoop-dashboard/raw",
+    "preview": "/examples/whoop-dashboard/preview.webp"
+  },
+  {
+    "slug": "dotgui-landing-page",
+    "category": "web",
+    "name": "Dot Gui Landing Page",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#050507"
+      },
+      {
+        "name": "surface",
+        "value": "#0C0C10"
+      },
+      {
+        "name": "surface-2",
+        "value": "#12121A"
+      },
+      {
+        "name": "border",
+        "value": "#FFFFFF0D"
+      },
+      {
+        "name": "border-strong",
+        "value": "#FFFFFF1D"
+      },
+      {
+        "name": "text-primary",
+        "value": "#FAFAFC"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#A0A0AB"
+      },
+      {
+        "name": "text-tertiary",
+        "value": "#52525B"
+      }
+    ],
+    "download": "/examples/dotgui-landing-page/download",
+    "raw": "/examples/dotgui-landing-page/raw",
+    "preview": "/examples/dotgui-landing-page/preview.webp"
+  },
+  {
+    "slug": "drift",
+    "category": "web",
+    "name": "Drift",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#ECEAE5"
+      },
+      {
+        "name": "surface",
+        "value": "#E4E1DA"
+      },
+      {
+        "name": "surface-2",
+        "value": "#DAD6CD"
+      },
+      {
+        "name": "border",
+        "value": "#CDC8BD"
+      },
+      {
+        "name": "text",
+        "value": "#23211D"
+      },
+      {
+        "name": "muted",
+        "value": "#6C6860"
+      },
+      {
+        "name": "faint",
+        "value": "#9C978C"
+      },
+      {
+        "name": "accent",
+        "value": "#3F7D74"
+      }
+    ],
+    "download": "/examples/drift/download",
+    "raw": "/examples/drift/raw",
+    "preview": ""
+  },
+  {
+    "slug": "echelon-atelier-events",
+    "category": "web",
+    "name": "Echelon Atelier — Event Production",
+    "colors": [
+      {
+        "name": "cream",
+        "value": "#F5EFE5"
+      },
+      {
+        "name": "cream-deep",
+        "value": "#EFE6D8"
+      },
+      {
+        "name": "paper",
+        "value": "#FBF7F0"
+      },
+      {
+        "name": "espresso",
+        "value": "#261C14"
+      },
+      {
+        "name": "espresso-soft",
+        "value": "#322519"
+      },
+      {
+        "name": "ink",
+        "value": "#2E2418"
+      },
+      {
+        "name": "body",
+        "value": "#6F6354"
+      },
+      {
+        "name": "taupe",
+        "value": "#9C8E7B"
+      }
+    ],
+    "download": "/examples/echelon-atelier-events/download",
+    "raw": "/examples/echelon-atelier-events/raw",
+    "preview": "/examples/echelon-atelier-events/preview.webp"
+  },
+  {
+    "slug": "figma-clone",
+    "category": "web",
+    "name": "Figma Clone",
+    "colors": [
+      {
+        "name": "bg-canvas",
+        "value": "#1E1E1E"
+      },
+      {
+        "name": "bg-panel",
+        "value": "#2C2C2C"
+      },
+      {
+        "name": "bg-panel-elevated",
+        "value": "#333333"
+      },
+      {
+        "name": "border",
+        "value": "#3E3E3E"
+      },
+      {
+        "name": "brand-blue",
+        "value": "#0C8CE9"
+      },
+      {
+        "name": "brand-blue-bg",
+        "value": "#0C8CE91F"
+      },
+      {
+        "name": "text-primary",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#B3B3B3"
+      }
+    ],
+    "download": "/examples/figma-clone/download",
+    "raw": "/examples/figma-clone/raw",
+    "preview": "/examples/figma-clone/preview.webp"
+  },
+  {
+    "slug": "flight-results",
+    "category": "web",
+    "name": "Flight Results",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#07070A"
+      },
+      {
+        "name": "surface",
+        "value": "#12121A"
+      },
+      {
+        "name": "surface-elevated",
+        "value": "#1A1A26"
+      },
+      {
+        "name": "border",
+        "value": "#22222F"
+      },
+      {
+        "name": "primary",
+        "value": "#A78BFA"
+      },
+      {
+        "name": "primary-light",
+        "value": "#F5F3FF"
+      },
+      {
+        "name": "success-green",
+        "value": "#10B981"
+      },
+      {
+        "name": "text-primary",
+        "value": "#F3F4F6"
+      }
+    ],
+    "download": "/examples/flight-results/download",
+    "raw": "/examples/flight-results/raw",
+    "preview": "/examples/flight-results/preview.webp"
+  },
+  {
+    "slug": "design-event-booking",
+    "category": "web",
+    "name": "Nexus Event",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#08090b"
+      },
+      {
+        "name": "surface",
+        "value": "#111317"
+      },
+      {
+        "name": "surface-elevated",
+        "value": "#1a1d24"
+      },
+      {
+        "name": "primary",
+        "value": "#e0a96d"
+      },
+      {
+        "name": "primary-soft",
+        "value": "#e0a96d18"
+      },
+      {
+        "name": "text-primary",
+        "value": "#f3f4f6"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#858e99"
+      },
+      {
+        "name": "border",
+        "value": "#ffffff12"
+      }
+    ],
+    "download": "/examples/design-event-booking/download",
+    "raw": "/examples/design-event-booking/raw",
+    "preview": "/examples/design-event-booking/preview.webp"
+  },
+  {
+    "slug": "music-production-daw",
+    "category": "web",
+    "name": "Oscillate — Music Production",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#0D0E10"
+      },
+      {
+        "name": "surface",
+        "value": "#131418"
+      },
+      {
+        "name": "surface-raised",
+        "value": "#191B1F"
+      },
+      {
+        "name": "surface-overlay",
+        "value": "#22242A"
+      },
+      {
+        "name": "well",
+        "value": "#08090B"
+      },
+      {
+        "name": "hairline",
+        "value": "#272A30"
+      },
+      {
+        "name": "hairline-soft",
+        "value": "#1E2025"
+      },
+      {
+        "name": "hairline-strong",
+        "value": "#3A3E46"
+      }
+    ],
+    "download": "/examples/music-production-daw/download",
+    "raw": "/examples/music-production-daw/raw",
+    "preview": "/examples/music-production-daw/preview.webp"
+  },
+  {
+    "slug": "premium-baby-accessories",
+    "category": "web",
+    "name": "Premium Baby Accessories",
+    "colors": [
+      {
+        "name": "beige",
+        "value": "#ebdcd0"
+      },
+      {
+        "name": "terra",
+        "value": "#b86847"
+      },
+      {
+        "name": "ink",
+        "value": "#2c2826"
+      },
+      {
+        "name": "ink-2",
+        "value": "#2c282699"
+      },
+      {
+        "name": "beige-2",
+        "value": "#ebdcd0B3"
+      },
+      {
+        "name": "line",
+        "value": "#2c28261A"
+      },
+      {
+        "name": "terra-line",
+        "value": "#ebdcd033"
+      }
+    ],
+    "download": "/examples/premium-baby-accessories/download",
+    "raw": "/examples/premium-baby-accessories/raw",
+    "preview": ""
+  },
+  {
+    "slug": "spotify-desktop",
+    "category": "web",
+    "name": "Spotify Desktop",
+    "colors": [
+      {
+        "name": "bg-base",
+        "value": "#000000"
+      },
+      {
+        "name": "bg-main",
+        "value": "#121212"
+      },
+      {
+        "name": "surface-card",
+        "value": "#181818"
+      },
+      {
+        "name": "surface-card-hover",
+        "value": "#242424"
+      },
+      {
+        "name": "surface-elevated",
+        "value": "#282828"
+      },
+      {
+        "name": "accent-green",
+        "value": "#1DB954"
+      },
+      {
+        "name": "text-primary",
+        "value": "#FFFFFF"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#B3B3B3"
+      }
+    ],
+    "download": "/examples/spotify-desktop/download",
+    "raw": "/examples/spotify-desktop/raw",
+    "preview": "/examples/spotify-desktop/preview.webp"
+  },
+  {
+    "slug": "sundial-studio",
+    "category": "web",
+    "name": "Sundial Studio",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#F1EFE9"
+      },
+      {
+        "name": "bg-2",
+        "value": "#E7E3D8"
+      },
+      {
+        "name": "surface",
+        "value": "#FBFAF6"
+      },
+      {
+        "name": "ink",
+        "value": "#16140F"
+      },
+      {
+        "name": "text-2",
+        "value": "#57534A"
+      },
+      {
+        "name": "text-3",
+        "value": "#8A857A"
+      },
+      {
+        "name": "border",
+        "value": "#D8D3C6"
+      },
+      {
+        "name": "accent",
+        "value": "#E8401F"
+      }
+    ],
+    "download": "/examples/sundial-studio/download",
+    "raw": "/examples/sundial-studio/raw",
+    "preview": "/examples/sundial-studio/preview.webp"
+  },
+  {
+    "slug": "farfield",
+    "category": "web",
+    "name": "The Far Field",
+    "colors": [
+      {
+        "name": "bg",
+        "value": "#2A2D2C"
+      },
+      {
+        "name": "surface",
+        "value": "#323634"
+      },
+      {
+        "name": "surface-2",
+        "value": "#363A38"
+      },
+      {
+        "name": "line",
+        "value": "#E6E3DA1A"
+      },
+      {
+        "name": "text",
+        "value": "#E7E4DB"
+      },
+      {
+        "name": "muted",
+        "value": "#9C978B"
+      },
+      {
+        "name": "faint",
+        "value": "#6F6D65"
+      },
+      {
+        "name": "sage",
+        "value": "#A7B894"
+      }
+    ],
+    "download": "/examples/farfield/download",
+    "raw": "/examples/farfield/raw",
+    "preview": ""
+  }
+]

@@ -9,8 +9,9 @@
     "generate": "bun run sync:all && nuxt generate",
     "build:ci": "nuxt build",
     "preview": "nuxt preview",
-    "sync:all": "bun run sync:spec && bun run sync:roles && bun run gen:llms && bun run gen:sitemap",
+    "sync:all": "bun run sync:spec && bun run sync:roles && bun run sync:examples && bun run gen:llms && bun run gen:sitemap",
     "sync:roles": "bun scripts/sync-roles.ts",
+    "sync:examples": "bun scripts/sync-examples.ts",
     "gen:llms": "bun scripts/gen-llms.ts",
     "gen:sitemap": "bun scripts/gen-sitemap.ts",
     "sync:spec": "cp ../core/spec/spec.json lib/spec.json",
@@ -18,6 +19,7 @@
   },
   "dependencies": {
     "@codemirror/lang-xml": "^6.1.0",
+    "@dotgui/embed": "^0.2.0",
     "@dotgui/kit": "^0.2.1",
     "@panzoom/panzoom": "^4.6.2",
     "codemirror": "^6.0.2",

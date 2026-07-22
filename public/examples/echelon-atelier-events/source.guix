@@ -1,0 +1,655 @@
+<gui version="0.2" name="Echelon Atelier — Event Production">
+  <tokens>
+    <color name="cream" value="#F5EFE5" />
+    <color name="cream-deep" value="#EFE6D8" />
+    <color name="paper" value="#FBF7F0" />
+    <color name="espresso" value="#261C14" />
+    <color name="espresso-soft" value="#322519" />
+    <color name="ink" value="#2E2418" />
+    <color name="body" value="#6F6354" />
+    <color name="taupe" value="#9C8E7B" />
+    <color name="hairline" value="#E3D8C6" />
+    <color name="hairline-dark" value="#3E3225" />
+    <color name="gold" value="#BE9663" />
+    <color name="gold-deep" value="#A87F4D" />
+    <color name="gold-soft" value="#BE966326" />
+    <color name="on-dark" value="#F1E8DA" />
+    <color name="on-dark-dim" value="#B7A993" />
+
+    <number name="radius-sm" value="2" />
+    <number name="radius-pill" value="999" />
+  </tokens>
+
+  <fonts>
+    <font family="Jost" source="google" weights="300 400 500 600" styles="normal" />
+    <font family="Inter" source="google" weights="400 500 600" styles="normal" />
+  </fonts>
+
+  <styles>
+    <text-style name="Display/Hero" font-family="Jost" font-size="58" font-weight="300" line-height="72" />
+    <text-style name="Display/Section" font-family="Jost" font-size="40" font-weight="300" line-height="52" />
+    <text-style name="Display/Quote" font-family="Jost" font-size="22" font-weight="400" line-height="32" />
+    <text-style name="Number/Giant" font-family="Jost" font-size="80" font-weight="300" line-height="84" />
+    <text-style name="Stat" font-family="Jost" font-size="40" font-weight="300" line-height="46" />
+    <text-style name="Title/Card" font-family="Jost" font-size="24" font-weight="400" line-height="32" />
+    <text-style name="Title/Sm" font-family="Jost" font-size="19" font-weight="500" line-height="26" />
+    <text-style name="Wordmark" font-family="Jost" font-size="17" font-weight="600" line-height="22" />
+    <text-style name="Body" font-family="Inter" font-size="14" font-weight="400" line-height="23" />
+    <text-style name="Body/Sm" font-family="Inter" font-size="13" font-weight="400" line-height="20" />
+    <text-style name="Label" font-family="Inter" font-size="11" font-weight="600" line-height="15" />
+    <text-style name="Label/Md" font-family="Inter" font-size="11" font-weight="600" line-height="15" />
+    <text-style name="Btn" font-family="Inter" font-size="11" font-weight="600" line-height="15" />
+  </styles>
+
+  <col w="1440" fill="$cream">
+
+    <!-- ───────────── Utility bar ───────────── -->
+    <row w="fill" h="34" p="0 64" gap="auto" align="middle-left" border-bottom="1 $hairline">
+      <text text-style="Label" value="MONTREAL · PARIS · NEW YORK" fill="$taupe" letter-spacing="14%" />
+      <text text-style="Label" value="PRIVATE SOIRÉES · BRAND MOMENTS · EXECUTIVE GATHERINGS" fill="$taupe" letter-spacing="14%" />
+      <text text-style="Label" value="2026 CALENDAR NOW OPEN — REQUEST PRIVATE AVAILABILITY" fill="$gold-deep" letter-spacing="14%" />
+    </row>
+
+    <!-- ───────────── Nav ───────────── -->
+    <row role="top-navigation-bar" w="fill" h="76" p="0 64" gap="auto" align="middle-left" border-bottom="1 $hairline">
+      <row gap="12" align="middle-left">
+        <rect w="30" h="30" radius="$radius-sm" fill="$espresso" rotation="45" />
+        <text text-style="Wordmark" value="ECHELON ATELIER" fill="$ink" letter-spacing="12%" />
+      </row>
+      <row role="navigation-menu" gap="10" align="middle-left">
+        <row h="34" p="0 16" radius="$radius-pill" border="1 $hairline" align="middle-center">
+          <text text-style="Btn" value="CAPABILITIES" fill="$ink" letter-spacing="10%" />
+        </row>
+        <row h="34" p="0 16" radius="$radius-pill" border="1 $hairline" align="middle-center">
+          <text text-style="Btn" value="PRODUCTIONS" fill="$ink" letter-spacing="10%" />
+        </row>
+        <row h="34" p="0 16" radius="$radius-pill" border="1 $hairline" align="middle-center">
+          <text text-style="Btn" value="METHOD" fill="$ink" letter-spacing="10%" />
+        </row>
+        <row h="34" p="0 16" radius="$radius-pill" border="1 $hairline" align="middle-center">
+          <text text-style="Btn" value="NOTES" fill="$ink" letter-spacing="10%" />
+        </row>
+      </row>
+      <row role="button" h="42" p="0 22" fill="$espresso" gap="8" align="middle-center">
+        <text text-style="Btn" value="BEGIN A PRIVATE BRIEF" fill="$on-dark" letter-spacing="10%" />
+        <img src="https://api.iconify.design/lucide/arrow-up-right.svg?color=%23BE9663" w="13" h="13" />
+      </row>
+    </row>
+
+    <!-- ───────────── Hero ───────────── -->
+    <row w="fill" p="64 64 56 64" gap="auto" align="top-left">
+      <col w="660" gap="28">
+        <row gap="10" align="middle-left">
+          <rect w="6" h="6" fill="$gold" rotation="45" />
+          <text text-style="Label/Md" value="HIGH-END EVENT DIRECTION" fill="$gold-deep" letter-spacing="16%" />
+        </row>
+        <col gap="2">
+          <text text-style="Display/Hero" value="CURATED EVENTS" fill="$ink" letter-spacing="8%" />
+          <text text-style="Display/Hero" value="FOR BRANDS, LEADERS" fill="$ink" letter-spacing="8%" />
+          <text text-style="Display/Hero" value="AND PRIVATE CIRCLES" fill="$ink" letter-spacing="8%" />
+        </col>
+        <row gap="12" align="middle-left">
+          <rect w="22" h="22" radius="$radius-sm" fill="$gold" rotation="45" />
+          <text text-style="Label/Md" value="FULL PRODUCTION ATELIER" fill="$ink" letter-spacing="16%" />
+        </row>
+        <text text-style="Body" w="470" fill="$body"
+          value="We design, plan and produce elevated gatherings with the precision of a command center and the atmosphere of a private atelier. One team, brief to final guest departure." />
+        <row gap="18" align="middle-left">
+          <row role="button" h="46" p="0 24" fill="$espresso" gap="8" align="middle-center">
+            <text text-style="Btn" value="PLAN THE MOMENT" fill="$on-dark" letter-spacing="10%" />
+            <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23BE9663" w="13" h="13" />
+          </row>
+          <text text-style="Label" value="+ STRATEGY     + DIRECTION     + PRODUCTION" fill="$taupe" letter-spacing="14%" />
+        </row>
+        <line fill="$hairline" />
+        <row w="fill" gap="48" align="top-left">
+          <col gap="4">
+            <text text-style="Stat" value="120+" fill="$ink" />
+            <text text-style="Label" value="EVENTS PRODUCED" fill="$taupe" letter-spacing="12%" />
+          </col>
+          <col gap="4">
+            <text text-style="Stat" value="14" fill="$ink" />
+            <text text-style="Label" value="CITIES SERVICED" fill="$taupe" letter-spacing="12%" />
+          </col>
+          <col gap="4">
+            <text text-style="Stat" value="02" fill="$gold-deep" />
+            <text text-style="Label" value="OPENINGS LEFT IN 2026" fill="$taupe" letter-spacing="12%" />
+          </col>
+        </row>
+      </col>
+
+      <!-- collage (overlapping posters on a unit grid) -->
+      <grid unit="8" w="560" h="528">
+        <img gc="1/24" gr="12/57" fit="cover" radius="$radius-sm"
+          src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&amp;fit=crop&amp;w=384&amp;h=720&amp;q=80" />
+        <img gc="26/47" gr="1/51" fit="cover" radius="$radius-sm" border="4 $paper"
+          src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&amp;fit=crop&amp;w=352&amp;h=800&amp;q=80" />
+        <img gc="49/70" gr="18/60" fit="cover" radius="$radius-sm"
+          src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&amp;fit=crop&amp;w=352&amp;h=672&amp;q=80" />
+        <row gc="3" gr="59" h="26" p="0 12" fill="$espresso" align="middle-center">
+          <text text-style="Label" value="PRIVATE SALON" fill="$on-dark" letter-spacing="12%" />
+        </row>
+        <row gc="28" gr="53" h="26" p="0 12" fill="$gold" align="middle-center">
+          <text text-style="Label" value="SIGNATURE GALA" fill="$espresso" letter-spacing="12%" />
+        </row>
+        <row gc="51" gr="62" h="26" p="0 12" fill="$paper" border="1 $hairline" align="middle-center">
+          <text text-style="Label" value="BRAND LAUNCH" fill="$ink" letter-spacing="12%" />
+        </row>
+      </grid>
+    </row>
+
+    <!-- numbered service cards -->
+    <row w="fill" p="0 64 56 64" gap="20" align="top-left">
+      <col role="card" w="fill" p="20" gap="10" fill="$paper" border="1 $hairline">
+        <row w="fill" gap="auto" align="middle-left">
+          <text text-style="Label/Md" value="01 / BRIEF" fill="$gold-deep" letter-spacing="12%" />
+          <img src="https://api.iconify.design/lucide/arrow-up-right.svg?color=%239C8E7B" w="14" h="14" />
+        </row>
+        <text text-style="Title/Sm" value="Strategic Brief" fill="$ink" />
+        <text text-style="Body/Sm" value="Purpose, audience, guest journey and event concept — decided before a single vendor call." fill="$body" w="fill" />
+      </col>
+      <col role="card" w="fill" p="20" gap="10" fill="$paper" border="1 $hairline">
+        <row w="fill" gap="auto" align="middle-left">
+          <text text-style="Label/Md" value="02 / DIRECTION" fill="$gold-deep" letter-spacing="12%" />
+          <img src="https://api.iconify.design/lucide/arrow-up-right.svg?color=%239C8E7B" w="14" h="14" />
+        </row>
+        <text text-style="Title/Sm" value="Atmospheric Direction" fill="$ink" />
+        <text text-style="Body/Sm" value="Mood, scenography, room rhythm, scent and sound — every sensory decision authored as one score." fill="$body" w="fill" />
+      </col>
+      <col role="card" w="fill" p="20" gap="10" fill="$paper" border="1 $hairline">
+        <row w="fill" gap="auto" align="middle-left">
+          <text text-style="Label/Md" value="03 / COMMAND" fill="$gold-deep" letter-spacing="12%" />
+          <img src="https://api.iconify.design/lucide/arrow-up-right.svg?color=%239C8E7B" w="14" h="14" />
+        </row>
+        <text text-style="Title/Sm" value="Live Production" fill="$ink" />
+        <text text-style="Body/Sm" value="Vendors, run-of-show, staffing and on-site command — invisible until the moment it matters." fill="$body" w="fill" />
+      </col>
+    </row>
+
+    <!-- ticker -->
+    <row w="fill" h="52" p="0 40" gap="28" align="middle-left" border-top="1 $hairline" border-bottom="1 $hairline" clip="true">
+      <text text-style="Label" value="GUEST JOURNEY MAPPING" fill="$ink" letter-spacing="14%" />
+      <text text-style="Label/Md" value="+" fill="$gold" />
+      <text text-style="Label" value="STAGE TRANSFORMATION" fill="$taupe" letter-spacing="14%" />
+      <text text-style="Label/Md" value="+" fill="$gold" />
+      <text text-style="Label" value="CULINARY DIRECTION" fill="$ink" letter-spacing="14%" />
+      <text text-style="Label/Md" value="+" fill="$gold" />
+      <text text-style="Label" value="PROTOCOL ON COMMAND" fill="$taupe" letter-spacing="14%" />
+      <text text-style="Label/Md" value="+" fill="$gold" />
+      <text text-style="Label" value="ATMOSPHERIC DESIGN" fill="$ink" letter-spacing="14%" />
+      <text text-style="Label/Md" value="+" fill="$gold" />
+      <text text-style="Label" value="GUEST JOURNEY MAPPING" fill="$taupe" letter-spacing="14%" />
+      <text text-style="Label/Md" value="+" fill="$gold" />
+      <text text-style="Label" value="STAGE TRANSFORMATION" fill="$ink" letter-spacing="14%" />
+    </row>
+
+    <!-- ───────────── Capabilities ───────────── -->
+    <col w="fill" p="96 64" gap="48" align="top-center">
+      <col gap="14" align="top-center">
+        <text text-style="Label" value="( CAPABILITIES )" fill="$gold-deep" letter-spacing="18%" />
+        <col gap="0" align="top-center">
+          <text text-style="Display/Section" value="FULL-SERVICE PLANNING FOR" fill="$ink" letter-spacing="6%" align="center" />
+          <text text-style="Display/Section" value="HIGH-STAKES MOMENTS" fill="$gold" letter-spacing="6%" align="center" />
+        </col>
+      </col>
+
+      <row w="fill" gap="20" align="top-left">
+        <col role="card" w="fill" p="28" gap="14" fill="$paper" border="1 $hairline">
+          <row w="fill" gap="auto" align="middle-left">
+            <text text-style="Label" value="01 / PRIVATE" fill="$gold-deep" letter-spacing="14%" />
+            <text text-style="Label" value="BY INVITATION" fill="$taupe" letter-spacing="14%" />
+          </row>
+          <text text-style="Title/Card" value="Private Celebrations" fill="$ink" />
+          <text text-style="Body" w="fill" fill="$body"
+            value="Intimate gatherings designed with the precision of a state dinner and the warmth of a private residence. Every detail is mapped around guest flow, atmosphere and lasting memory." />
+          <line fill="$hairline" />
+          <row w="fill" gap="20" align="top-left">
+            <col w="fill" gap="8">
+              <row gap="8" align="middle-left">
+                <rect w="5" h="5" fill="$gold" rotation="45" />
+                <text text-style="Body/Sm" value="Private dinners &amp; salons" fill="$ink" />
+              </row>
+              <row gap="8" align="middle-left">
+                <rect w="5" h="5" fill="$gold" rotation="45" />
+                <text text-style="Body/Sm" value="Destination weekends" fill="$ink" />
+              </row>
+            </col>
+            <col w="fill" gap="8">
+              <row gap="8" align="middle-left">
+                <rect w="5" h="5" fill="$gold" rotation="45" />
+                <text text-style="Body/Sm" value="Milestone celebrations" fill="$ink" />
+              </row>
+              <row gap="8" align="middle-left">
+                <rect w="5" h="5" fill="$gold" rotation="45" />
+                <text text-style="Body/Sm" value="Bespoke guest hospitality" fill="$ink" />
+              </row>
+            </col>
+          </row>
+        </col>
+
+        <col role="card" w="fill" p="28" gap="14" fill="$espresso">
+          <row w="fill" gap="auto" align="middle-left">
+            <text text-style="Label" value="02 / BRAND" fill="$gold" letter-spacing="14%" />
+            <text text-style="Label" value="PRESS-READY" fill="$on-dark-dim" letter-spacing="14%" />
+          </row>
+          <text text-style="Title/Card" value="Brand &amp; Cultural Moments" fill="$on-dark" />
+          <text text-style="Body" w="fill" fill="$on-dark-dim"
+            value="Launches, press previews and cultural experiences built to feel cinematic, controlled and memorable. We translate brand strategy into rooms, rituals, pacing and moments people want to be seen in." />
+          <line fill="$hairline-dark" />
+          <row w="fill" gap="20" align="top-left">
+            <col w="fill" gap="8">
+              <row gap="8" align="middle-left">
+                <rect w="5" h="5" fill="$gold" rotation="45" />
+                <text text-style="Body/Sm" value="Product reveals" fill="$on-dark" />
+              </row>
+              <row gap="8" align="middle-left">
+                <rect w="5" h="5" fill="$gold" rotation="45" />
+                <text text-style="Body/Sm" value="Cultural salons" fill="$on-dark" />
+              </row>
+            </col>
+            <col w="fill" gap="8">
+              <row gap="8" align="middle-left">
+                <rect w="5" h="5" fill="$gold" rotation="45" />
+                <text text-style="Body/Sm" value="Press &amp; VIP previews" fill="$on-dark" />
+              </row>
+              <row gap="8" align="middle-left">
+                <rect w="5" h="5" fill="$gold" rotation="45" />
+                <text text-style="Body/Sm" value="Premium hospitality programs" fill="$on-dark" />
+              </row>
+            </col>
+          </row>
+        </col>
+      </row>
+
+      <row w="fill" gap="20" align="top-left">
+        <col w="fill" gap="0" border="1 $hairline" fill="$paper">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&amp;fit=crop&amp;w=864&amp;h=380&amp;q=80" w="fill" h="190" fit="cover" />
+          <col p="16" gap="6">
+            <text text-style="Label" value="EXECUTIVE" fill="$gold-deep" letter-spacing="14%" />
+            <text text-style="Title/Sm" value="Leadership Summits" fill="$ink" />
+            <text text-style="Body/Sm" value="Retreats, board salons and founder gatherings designed for better conversations." fill="$body" w="fill" />
+          </col>
+        </col>
+        <col role="card" w="fill" gap="0" border="1 $hairline" fill="$paper">
+          <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&amp;fit=crop&amp;w=864&amp;h=380&amp;q=80" w="fill" h="190" fit="cover" />
+          <col p="16" gap="6">
+            <text text-style="Label" value="HOSPITALITY" fill="$gold-deep" letter-spacing="14%" />
+            <text text-style="Title/Sm" value="Guest Experience Systems" fill="$ink" />
+            <text text-style="Body/Sm" value="Arrival, seating, pacing and farewell — choreographed end to end." fill="$body" w="fill" />
+          </col>
+        </col>
+        <col role="card" w="fill" gap="0" border="1 $hairline" fill="$paper">
+          <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&amp;fit=crop&amp;w=864&amp;h=380&amp;q=80" w="fill" h="190" fit="cover" />
+          <col p="16" gap="6">
+            <text text-style="Label" value="CULINARY" fill="$gold-deep" letter-spacing="14%" />
+            <text text-style="Title/Sm" value="Tablescape &amp; Service Design" fill="$ink" />
+            <text text-style="Body/Sm" value="Menu narrative, table lighting and service rhythm, plated like a film." fill="$body" w="fill" />
+          </col>
+        </col>
+      </row>
+    </col>
+
+    <!-- ───────────── Sensory strip (dark) ───────────── -->
+    <row w="fill" h="72" p="0 64" gap="auto" align="middle-left" fill="$espresso">
+      <row gap="10" align="middle-left">
+        <img src="https://api.iconify.design/lucide/compass.svg?color=%23BE9663" w="16" h="16" />
+        <text text-style="Label/Md" value="CONCEPT STRATEGY" fill="$on-dark" letter-spacing="12%" />
+      </row>
+      <row gap="10" align="middle-left">
+        <img src="https://api.iconify.design/lucide/layers.svg?color=%23BE9663" w="16" h="16" />
+        <text text-style="Label/Md" value="VENUE TRANSFORMATION" fill="$on-dark" letter-spacing="12%" />
+      </row>
+      <row gap="10" align="middle-left">
+        <img src="https://api.iconify.design/lucide/sparkles.svg?color=%23BE9663" w="16" h="16" />
+        <text text-style="Label/Md" value="SENSORY DIRECTION" fill="$on-dark" letter-spacing="12%" />
+      </row>
+      <row gap="10" align="middle-left">
+        <img src="https://api.iconify.design/lucide/gem.svg?color=%23BE9663" w="16" h="16" />
+        <text text-style="Label/Md" value="BRAND EXPERIENCE" fill="$on-dark" letter-spacing="12%" />
+      </row>
+    </row>
+
+    <!-- ───────────── Productions ───────────── -->
+    <col w="fill" p="96 64" gap="48" align="top-center" fill="$cream-deep">
+      <col gap="14" align="top-center">
+        <text text-style="Label" value="( RECENT PRODUCTIONS )" fill="$gold-deep" letter-spacing="18%" />
+        <col gap="0" align="top-center">
+          <text text-style="Display/Section" value="CURATED PRODUCTIONS" fill="$ink" letter-spacing="6%" align="center" />
+          <text text-style="Display/Section" value="EVENT WORLDS" fill="$gold" letter-spacing="6%" align="center" />
+        </col>
+      </col>
+
+      <row w="fill" gap="20" align="top-left">
+        <col role="card" w="fill" fill="$paper" border="1 $hairline">
+          <img src="https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&amp;fit=crop&amp;w=624&amp;h=360&amp;q=80" w="fill" h="180" fit="cover" />
+          <col p="16" gap="10">
+            <text text-style="Label" value="BRAND LAUNCH" fill="$gold-deep" letter-spacing="14%" />
+            <col gap="2">
+              <text text-style="Title/Sm" value="Maison Launch" fill="$ink" />
+              <text text-style="Body/Sm" value="Flagship reveal · Paris" fill="$body" />
+            </col>
+            <line fill="$hairline" />
+            <row w="fill" gap="auto" align="top-left">
+              <col gap="2">
+                <text text-style="Label/Md" value="180" fill="$ink" />
+                <text text-style="Label" value="GUESTS" fill="$taupe" letter-spacing="10%" />
+              </col>
+              <col gap="2">
+                <text text-style="Label/Md" value="06" fill="$ink" />
+                <text text-style="Label" value="ACTS" fill="$taupe" letter-spacing="10%" />
+              </col>
+              <col gap="2">
+                <text text-style="Label/Md" value="01" fill="$ink" />
+                <text text-style="Label" value="EVENING" fill="$taupe" letter-spacing="10%" />
+              </col>
+            </row>
+            <row gap="6" align="middle-left">
+              <text text-style="Label" value="PRESS PREVIEW" fill="$gold-deep" letter-spacing="12%" />
+              <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23A87F4D" w="12" h="12" />
+            </row>
+          </col>
+        </col>
+
+        <col role="card" w="fill" fill="$espresso">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&amp;fit=crop&amp;w=624&amp;h=360&amp;q=80" w="fill" h="180" fit="cover" />
+          <col p="16" gap="10">
+            <text text-style="Label" value="SIGNATURE GALA" fill="$gold" letter-spacing="14%" />
+            <col gap="2">
+              <text text-style="Title/Sm" value="Patron Gala" fill="$on-dark" />
+              <text text-style="Body/Sm" value="Museum benefit · New York" fill="$on-dark-dim" />
+            </col>
+            <line fill="$hairline-dark" />
+            <row w="fill" gap="auto" align="top-left">
+              <col gap="2">
+                <text text-style="Label/Md" value="420" fill="$on-dark" />
+                <text text-style="Label" value="GUESTS" fill="$on-dark-dim" letter-spacing="10%" />
+              </col>
+              <col gap="2">
+                <text text-style="Label/Md" value="12" fill="$on-dark" />
+                <text text-style="Label" value="ACTS" fill="$on-dark-dim" letter-spacing="10%" />
+              </col>
+              <col gap="2">
+                <text text-style="Label/Md" value="03" fill="$on-dark" />
+                <text text-style="Label" value="DAYS" fill="$on-dark-dim" letter-spacing="10%" />
+              </col>
+            </row>
+            <row gap="6" align="middle-left">
+              <text text-style="Label" value="SEATING PROTOCOL" fill="$gold" letter-spacing="12%" />
+              <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23BE9663" w="12" h="12" />
+            </row>
+          </col>
+        </col>
+
+        <col role="card" w="fill" fill="$espresso">
+          <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?auto=format&amp;fit=crop&amp;w=624&amp;h=360&amp;q=80" w="fill" h="180" fit="cover" />
+          <col p="16" gap="10">
+            <text text-style="Label" value="PRIVATE SALON" fill="$gold" letter-spacing="14%" />
+            <col gap="2">
+              <text text-style="Title/Sm" value="Lake House Salon" fill="$on-dark" />
+              <text text-style="Body/Sm" value="Milestone weekend · Como" fill="$on-dark-dim" />
+            </col>
+            <line fill="$hairline-dark" />
+            <row w="fill" gap="auto" align="top-left">
+              <col gap="2">
+                <text text-style="Label/Md" value="48" fill="$on-dark" />
+                <text text-style="Label" value="GUESTS" fill="$on-dark-dim" letter-spacing="10%" />
+              </col>
+              <col gap="2">
+                <text text-style="Label/Md" value="09" fill="$on-dark" />
+                <text text-style="Label" value="ACTS" fill="$on-dark-dim" letter-spacing="10%" />
+              </col>
+              <col gap="2">
+                <text text-style="Label/Md" value="02" fill="$on-dark" />
+                <text text-style="Label" value="DAYS" fill="$on-dark-dim" letter-spacing="10%" />
+              </col>
+            </row>
+            <row gap="6" align="middle-left">
+              <text text-style="Label" value="DESTINATION SERIES" fill="$gold" letter-spacing="12%" />
+              <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23BE9663" w="12" h="12" />
+            </row>
+          </col>
+        </col>
+
+        <col role="card" w="fill" fill="$paper" border="1 $hairline">
+          <img src="https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&amp;fit=crop&amp;w=624&amp;h=360&amp;q=80" w="fill" h="180" fit="cover" />
+          <col p="16" gap="10">
+            <text text-style="Label" value="EXECUTIVE RETREAT" fill="$gold-deep" letter-spacing="14%" />
+            <col gap="2">
+              <text text-style="Title/Sm" value="Founders Summit" fill="$ink" />
+              <text text-style="Body/Sm" value="Leadership retreat · Aspen" fill="$body" />
+            </col>
+            <line fill="$hairline" />
+            <row w="fill" gap="auto" align="top-left">
+              <col gap="2">
+                <text text-style="Label/Md" value="60" fill="$ink" />
+                <text text-style="Label" value="GUESTS" fill="$taupe" letter-spacing="10%" />
+              </col>
+              <col gap="2">
+                <text text-style="Label/Md" value="14" fill="$ink" />
+                <text text-style="Label" value="SESSIONS" fill="$taupe" letter-spacing="10%" />
+              </col>
+              <col gap="2">
+                <text text-style="Label/Md" value="04" fill="$ink" />
+                <text text-style="Label" value="DAYS" fill="$taupe" letter-spacing="10%" />
+              </col>
+            </row>
+            <row gap="6" align="middle-left">
+              <text text-style="Label" value="LEADERSHIP PROGRAM" fill="$gold-deep" letter-spacing="12%" />
+              <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23A87F4D" w="12" h="12" />
+            </row>
+          </col>
+        </col>
+      </row>
+
+      <row role="button" h="46" p="0 26" fill="$espresso" gap="8" align="middle-center">
+        <text text-style="Btn" value="VIEW ALL PRODUCTIONS" fill="$on-dark" letter-spacing="10%" />
+        <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23BE9663" w="13" h="13" />
+      </row>
+    </col>
+
+    <!-- ───────────── Method ───────────── -->
+    <col w="fill" p="96 64" gap="48" align="top-center">
+      <col gap="14" align="top-center">
+        <text text-style="Label" value="( METHOD )" fill="$gold-deep" letter-spacing="18%" />
+        <col gap="0" align="top-center">
+          <text text-style="Display/Section" value="FROM BRIEF TO" fill="$ink" letter-spacing="6%" align="center" />
+          <text text-style="Display/Section" value="FINAL GUEST DEPARTURE" fill="$gold" letter-spacing="6%" align="center" />
+        </col>
+      </col>
+
+      <row w="fill" gap="20" align="top-left">
+        <col role="card" w="fill" p="22" gap="8" fill="$paper" border="1 $hairline">
+          <text text-style="Number/Giant" value="01" fill="$gold-soft" />
+          <text text-style="Label" value="STRATEGY" fill="$gold-deep" letter-spacing="14%" />
+          <text text-style="Title/Sm" value="Define the Moment" fill="$ink" />
+          <text text-style="Body/Sm" w="fill" fill="$body"
+            value="We clarify the purpose, guest profile, emotional tone, narrative and what success should feel like." />
+        </col>
+        <col role="card" w="fill" p="22" gap="8" fill="$espresso">
+          <text text-style="Number/Giant" value="02" fill="#BE966340" />
+          <text text-style="Label" value="WORLD-BUILDING" fill="$gold" letter-spacing="14%" />
+          <text text-style="Title/Sm" value="Build the World" fill="$on-dark" />
+          <text text-style="Body/Sm" w="fill" fill="$on-dark-dim"
+            value="We shape the concept, venue logic, visual language, room rhythm and production map into one cohesive event world." />
+        </col>
+        <col role="card" w="fill" p="22" gap="8" fill="$espresso">
+          <text text-style="Number/Giant" value="03" fill="#BE966340" />
+          <text text-style="Label" value="EXECUTION" fill="$gold" letter-spacing="14%" />
+          <text text-style="Title/Sm" value="Command the Room" fill="$on-dark" />
+          <text text-style="Body/Sm" w="fill" fill="$on-dark-dim"
+            value="We orchestrate vendors, staffing, timing and rehearsals, then run show-calls live — invisible until needed." />
+        </col>
+        <col role="card" w="fill" p="22" gap="8" fill="$paper" border="1 $hairline">
+          <text text-style="Number/Giant" value="04" fill="$gold-soft" />
+          <text text-style="Label" value="AFTERGLOW" fill="$gold-deep" letter-spacing="14%" />
+          <text text-style="Title/Sm" value="Close the Memory" fill="$ink" />
+          <text text-style="Body/Sm" w="fill" fill="$body"
+            value="We manage guest departures, press assets, debriefs and follow-through, so the event continues beyond the room." />
+        </col>
+      </row>
+
+      <row h="46" p="0 26" border="1 $espresso" gap="8" align="middle-center">
+        <text text-style="Btn" value="START INQUIRY" fill="$ink" letter-spacing="10%" />
+        <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23A87F4D" w="13" h="13" />
+      </row>
+    </col>
+
+    <!-- ───────────── Client notes (dark) ───────────── -->
+    <row w="fill" p="104 64" gap="64" align="top-left" fill="$espresso">
+      <col w="420" gap="20">
+        <text text-style="Label" value="( CLIENT NOTES )" fill="$gold" letter-spacing="18%" />
+        <col gap="0">
+          <text text-style="Display/Section" value="THE ROOM FELT" fill="$on-dark" letter-spacing="6%" />
+          <text text-style="Display/Section" value="INEVITABLE." fill="$gold" letter-spacing="6%" />
+        </col>
+        <text text-style="Body" w="fill" fill="$on-dark-dim"
+          value="The best feedback is mentioning an event without mentioning its effort. These notes are the ones we keep — composed rooms, calm hosts, guests who stayed too long." />
+        <row gap="6" align="middle-left">
+          <text text-style="Label" value="READ MORE NOTES" fill="$gold" letter-spacing="14%" />
+          <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23BE9663" w="12" h="12" />
+        </row>
+      </col>
+
+      <col w="fill" gap="20">
+        <col role="card" w="fill" p="28" gap="14" fill="$paper">
+          <row w="fill" gap="auto" align="middle-left">
+            <text text-style="Label" value="01 / PRIVATE" fill="$gold-deep" letter-spacing="14%" />
+            <text text-style="Label" value="LAKE COMO, 2025" fill="$taupe" letter-spacing="14%" />
+          </row>
+          <text text-style="Display/Quote" w="fill" fill="$ink"
+            value="&#8220;They translated a complicated brief into an evening that felt calm, cinematic and deeply personal.&#8221;" />
+          <line fill="$hairline" />
+          <row w="fill" gap="auto" align="middle-left">
+            <col gap="1">
+              <text text-style="Label/Md" value="PRIVATE CLIENT" fill="$ink" letter-spacing="8%" />
+              <text text-style="Body/Sm" value="Milestone celebration · Como" fill="$body" />
+            </col>
+            <text text-style="Label" value="48 GUESTS · 2 DAYS" fill="$taupe" letter-spacing="10%" />
+          </row>
+        </col>
+        <col role="card" w="fill" p="28" gap="14" fill="$espresso-soft" border="1 $hairline-dark">
+          <row w="fill" gap="auto" align="middle-left">
+            <text text-style="Label" value="02 / BRAND" fill="$gold" letter-spacing="14%" />
+            <text text-style="Label" value="NEW YORK, 2026" fill="$on-dark-dim" letter-spacing="14%" />
+          </row>
+          <text text-style="Display/Quote" w="fill" fill="$on-dark"
+            value="&#8220;The production stayed invisible. That was the luxury.&#8221;" />
+          <line fill="$hairline-dark" />
+          <row w="fill" gap="auto" align="middle-left">
+            <col gap="1">
+              <text text-style="Label/Md" value="BRAND DIRECTOR" fill="$on-dark" letter-spacing="8%" />
+              <text text-style="Body/Sm" value="Product reveal · New York" fill="$on-dark-dim" />
+            </col>
+            <text text-style="Label" value="420 GUESTS · PRESS PREVIEW" fill="$on-dark-dim" letter-spacing="10%" />
+          </row>
+        </col>
+      </col>
+    </row>
+
+    <!-- ───────────── Field notes ───────────── -->
+    <col w="fill" p="96 64" gap="48" align="top-center">
+      <col gap="14" align="top-center">
+        <text text-style="Label" value="( FIELD NOTES )" fill="$gold-deep" letter-spacing="18%" />
+        <col gap="0" align="top-center">
+          <text text-style="Display/Section" value="NOTES ON DESIGNING" fill="$ink" letter-spacing="6%" align="center" />
+          <text text-style="Display/Section" value="UNFORGETTABLE ROOMS" fill="$gold" letter-spacing="6%" align="center" />
+        </col>
+      </col>
+
+      <row w="fill" gap="20" align="top-left">
+        <col role="card" w="fill" border="1 $hairline" fill="$paper">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&amp;fit=crop&amp;w=864&amp;h=420&amp;q=80" w="fill" h="210" fit="cover" />
+          <col p="18" gap="8">
+            <row w="fill" gap="auto" align="middle-left">
+              <text text-style="Label" value="HOSPITALITY" fill="$gold-deep" letter-spacing="14%" />
+              <text text-style="Label" value="6 MIN" fill="$taupe" letter-spacing="10%" />
+            </row>
+            <text text-style="Title/Sm" value="How pacing shapes the memory of a dinner" fill="$ink" w="fill" />
+            <text text-style="Body/Sm" w="fill" fill="$body"
+              value="The most memorable dinners are rarely the most designed ones. They are shaped by arrival rhythm, service silence and the final goodbye." />
+            <row gap="6" align="middle-left">
+              <text text-style="Label" value="READ NOTE" fill="$gold-deep" letter-spacing="12%" />
+              <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23A87F4D" w="12" h="12" />
+            </row>
+          </col>
+        </col>
+        <col role="card" w="fill" fill="$espresso">
+          <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&amp;fit=crop&amp;w=864&amp;h=420&amp;q=80" w="fill" h="210" fit="cover" />
+          <col p="18" gap="8">
+            <row w="fill" gap="auto" align="middle-left">
+              <text text-style="Label" value="STRATEGY" fill="$gold" letter-spacing="14%" />
+              <text text-style="Label" value="8 MIN" fill="$on-dark-dim" letter-spacing="10%" />
+            </row>
+            <text text-style="Title/Sm" value="Why product launches need a stronger reveal system" fill="$on-dark" w="fill" />
+            <text text-style="Body/Sm" w="fill" fill="$on-dark-dim"
+              value="A launch is not just a room with a logo. The strongest moments are choreographed: arrival, build, silence, reveal, and the social aftermath." />
+            <row gap="6" align="middle-left">
+              <text text-style="Label" value="READ NOTE" fill="$gold" letter-spacing="12%" />
+              <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23BE9663" w="12" h="12" />
+            </row>
+          </col>
+        </col>
+        <col role="card" w="fill" border="1 $hairline" fill="$paper">
+          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&amp;fit=crop&amp;w=864&amp;h=421&amp;q=80" w="fill" h="210" fit="cover" />
+          <col p="18" gap="8">
+            <row w="fill" gap="auto" align="middle-left">
+              <text text-style="Label" value="RETREATS" fill="$gold-deep" letter-spacing="14%" />
+              <text text-style="Label" value="5 MIN" fill="$taupe" letter-spacing="10%" />
+            </row>
+            <text text-style="Title/Sm" value="Designing retreats that produce better conversations" fill="$ink" w="fill" />
+            <text text-style="Body/Sm" w="fill" fill="$body"
+              value="Executive retreats work best when the environment lowers friction: great structures for reflection and zero logistics for the guests." />
+            <row gap="6" align="middle-left">
+              <text text-style="Label" value="READ NOTE" fill="$gold-deep" letter-spacing="12%" />
+              <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23A87F4D" w="12" h="12" />
+            </row>
+          </col>
+        </col>
+      </row>
+    </col>
+
+    <!-- ───────────── Footer ───────────── -->
+    <col w="fill" fill="$espresso" p="80 64 36 64" gap="48">
+      <row w="fill" gap="auto" align="top-left">
+        <col w="380" gap="16">
+          <row gap="12" align="middle-left">
+            <rect w="26" h="26" radius="$radius-sm" fill="$gold" rotation="45" />
+            <text text-style="Wordmark" value="ECHELON ATELIER" fill="$on-dark" letter-spacing="12%" />
+          </row>
+          <text text-style="Body/Sm" w="fill" fill="$on-dark-dim"
+            value="High-end event production for private clients, brands, cultural institutions and executive teams. Brief to final guest departure — one atelier, full command." />
+          <text text-style="Label" value="MONTREAL · PARIS · NEW YORK" fill="$gold" letter-spacing="14%" />
+        </col>
+        <col gap="12">
+          <text text-style="Label" value="STUDIO" fill="$on-dark-dim" letter-spacing="14%" />
+          <text text-style="Body/Sm" value="Services" fill="$on-dark" />
+          <text text-style="Body/Sm" value="Portfolio" fill="$on-dark" />
+          <text text-style="Body/Sm" value="Process" fill="$on-dark" />
+          <text text-style="Body/Sm" value="Journal" fill="$on-dark" />
+        </col>
+        <col gap="12">
+          <text text-style="Label" value="EVENTS" fill="$on-dark-dim" letter-spacing="14%" />
+          <text text-style="Body/Sm" value="Private Celebrations" fill="$on-dark" />
+          <text text-style="Body/Sm" value="Brand Launches" fill="$on-dark" />
+          <text text-style="Body/Sm" value="Corporate Retreats" fill="$on-dark" />
+          <text text-style="Body/Sm" value="Estate Galas" fill="$on-dark" />
+        </col>
+        <col w="340" gap="12">
+          <text text-style="Label" value="REQUEST AVAILABILITY" fill="$on-dark-dim" letter-spacing="14%" />
+          <row role="text-field" w="fill" h="48" border="1 $hairline-dark" gap="auto" align="middle-left" p="0 0 0 14">
+            <text text-style="Label/Md" value="YOUR@EMAIL.COM" fill="$on-dark-dim" letter-spacing="8%" />
+            <row role="button" w="96" h="48" fill="$gold" align="middle-center">
+              <text text-style="Btn" value="SUBMIT" fill="$espresso" letter-spacing="10%" />
+            </row>
+          </row>
+          <text text-style="Body/Sm" value="Two productions per month, worldwide. Replies within one business day." fill="$on-dark-dim" w="fill" />
+        </col>
+      </row>
+      <row w="fill" gap="auto" align="middle-left" pt="32" border-top="1 $hairline-dark">
+        <text text-style="Label" value="© 2026 ECHELON ATELIER" fill="$on-dark-dim" letter-spacing="12%" />
+        <text text-style="Label" value="PRIVATE BY DESIGN — NO PHOTOGRAPHY WITHOUT CONSENT" fill="$on-dark-dim" letter-spacing="12%" />
+        <text text-style="Label" value="MONTREAL — PARIS — NEW YORK" fill="$on-dark-dim" letter-spacing="12%" />
+      </row>
+    </col>
+  </col>
+</gui>

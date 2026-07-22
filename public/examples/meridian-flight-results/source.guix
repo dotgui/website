@@ -1,0 +1,225 @@
+<gui version="0.2" name="Meridian Flight Results">
+  <mode name="theme" values="light dark" default="light" />
+
+  <tokens>
+    <color name="bg"         theme-light="#FAF7F5" theme-dark="#141113" />
+    <color name="surface"    theme-light="#FFFFFF" theme-dark="#1E1A1C" />
+    <color name="surface-2"  theme-light="#F4EFEC" theme-dark="#272325" />
+    <color name="text"       theme-light="#1A1619" theme-dark="#F6F1EF" />
+    <color name="text-2"     theme-light="#6E696B" theme-dark="#A8A2A4" />
+    <color name="text-3"     theme-light="#9C9698" theme-dark="#726C6E" />
+    <color name="border"     theme-light="#ECE6E2" theme-dark="#2E2A2C" />
+    <color name="accent"     theme-light="#D6486A" theme-dark="#EE6C86" />
+    <color name="accent-2"   theme-light="#B23A57" theme-dark="#F58CA0" />
+    <color name="accent-soft" theme-light="#FBE9EE" theme-dark="#3A2027" />
+    <color name="on-accent"  value="#FFFFFF" />
+    <number name="r-card" value="20" />
+  </tokens>
+
+  <fonts>
+    <font family="SF Pro" source="system" weights="400 500 600 700" styles="normal" />
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <components>
+    <component name="Flight" id="comp-flight">
+      <props>
+        <prop name="airline"  type="text" target="t-airline" />
+        <prop name="flightno" type="text" target="t-flightno" />
+        <prop name="fare"     type="text" target="t-fare" />
+        <prop name="dep"      type="text" target="t-dep" />
+        <prop name="depcode"  type="text" target="t-depcode" />
+        <prop name="arr"      type="text" target="t-arr" />
+        <prop name="arrcode"  type="text" target="t-arrcode" />
+        <prop name="dur"      type="text" target="t-dur" />
+        <prop name="stops"    type="text" target="t-stops" />
+        <prop name="price"    type="text" target="t-price" />
+      </props>
+      <col role="card" w="fill" fill="$surface" radius="$r-card" p="16" gap="16" border="1 $border">
+        <row w="fill" gap="auto" align="middle-left">
+          <row gap="10" align="middle-left">
+            <row w="36" h="36" radius="999" fill="$surface-2" align="middle-center">
+              <img src="https://api.iconify.design/lucide/plane.svg?color=%23E2607A" w="18" h="18" />
+            </row>
+            <col gap="2">
+              <text id="t-airline" value="Atlas Air" font-family="SF Pro" font-size="15" font-weight="600" color="$text" />
+              <text id="t-flightno" value="AT 1140" font-family="SF Pro" font-size="12" font-weight="400" color="$text-3" />
+            </col>
+          </row>
+          <text id="t-fare" value="Economy" font-family="SF Pro" font-size="12" font-weight="500" color="$text-2" align="right" />
+        </row>
+
+        <row w="fill" gap="12" align="bottom-left">
+          <col gap="3">
+            <text id="t-dep" value="6:15 AM" font-family="SF Pro" font-size="22" font-weight="700" color="$text" />
+            <text id="t-depcode" value="JFK" font-family="SF Pro" font-size="12" font-weight="500" color="$text-2" />
+          </col>
+          <col gap="4" align="middle-center" w="fill">
+            <text id="t-dur" value="9h 05m" font-family="SF Pro" font-size="12" font-weight="400" color="$text-2" align="center" />
+            <row w="fill" gap="6" align="middle-center">
+              <line fill="$border" />
+              <img src="https://api.iconify.design/lucide/plane.svg?color=%239A9396" w="14" h="14" />
+              <line fill="$border" />
+            </row>
+            <text id="t-stops" value="1 stop · BOS" font-family="SF Pro" font-size="11" font-weight="500" color="$text-3" align="center" />
+          </col>
+          <col gap="3" align="top-right">
+            <text id="t-arr" value="8:20 PM" font-family="SF Pro" font-size="22" font-weight="700" color="$text" align="right" />
+            <text id="t-arrcode" value="LHR" font-family="SF Pro" font-size="12" font-weight="500" color="$text-2" align="right" />
+          </col>
+        </row>
+
+        <line fill="$border" />
+
+        <row w="fill" gap="auto" align="middle-left">
+          <text value="Round trip" font-family="SF Pro" font-size="12" font-weight="400" color="$text-3" />
+          <row gap="2" align="bottom-left">
+            <text value="$" font-family="SF Pro" font-size="14" font-weight="600" color="$text" />
+            <text id="t-price" value="618" font-family="SF Pro" font-size="20" font-weight="700" color="$text" />
+          </row>
+        </row>
+      </col>
+    </component>
+  </components>
+
+  <!-- single screen, root unpinned: renderer flips theme via tokens -->
+  <col w="390" fill="$bg">
+    <!-- status bar -->
+    <row w="fill" p="16 24 0 24" gap="auto" align="middle-center">
+      <text value="9:41" font-family="SF Pro" font-size="15" font-weight="600" color="$text" />
+      <row gap="6" align="middle-center">
+        <img src="https://api.iconify.design/lucide/signal.svg?color=%239A9396" w="16" h="16" />
+        <img src="https://api.iconify.design/lucide/wifi.svg?color=%239A9396" w="16" h="16" />
+        <img src="https://api.iconify.design/lucide/battery-full.svg?color=%239A9396" w="20" h="16" />
+      </row>
+    </row>
+
+    <!-- nav bar -->
+    <row role="top-navigation-bar" w="fill" p="10 16" gap="auto" align="middle-center">
+      <row role="button" w="38" h="38" radius="999" fill="$surface" border="1 $border" align="middle-center">
+        <img src="https://api.iconify.design/lucide/chevron-left.svg?color=%239A9396" w="20" h="20" />
+      </row>
+      <col gap="1" align="middle-center">
+        <row gap="6" align="middle-center">
+          <text value="New York" font-family="SF Pro" font-size="16" font-weight="700" color="$text" />
+          <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%239A9396" w="15" h="15" />
+          <text value="London" font-family="SF Pro" font-size="16" font-weight="700" color="$text" />
+        </row>
+        <text value="Sat, Jun 14 · 1 adult · Economy" font-family="SF Pro" font-size="12" font-weight="400" color="$text-2" align="center" />
+      </col>
+      <row role="button" w="38" h="38" radius="999" fill="$surface" border="1 $border" align="middle-center">
+        <img src="https://api.iconify.design/lucide/sliders-horizontal.svg?color=%239A9396" w="18" h="18" />
+      </row>
+    </row>
+
+    <!-- filter chips -->
+    <row w="fill" p="6 16 14 16" gap="8" align="middle-left">
+      <row role="chip" gap="6" p="8 14" radius="999" fill="$accent" align="middle-center">
+        <img src="https://api.iconify.design/lucide/sparkles.svg?color=%23FFFFFF" w="14" h="14" />
+        <text value="Best" font-family="SF Pro" font-size="13" font-weight="600" color="$on-accent" />
+      </row>
+      <row role="chip" p="8 14" radius="999" fill="$surface" border="1 $border" align="middle-center">
+        <text value="Nonstop" font-family="SF Pro" font-size="13" font-weight="500" color="$text" />
+      </row>
+      <row role="chip" p="8 14" radius="999" fill="$surface" border="1 $border" align="middle-center">
+        <text value="Cheapest" font-family="SF Pro" font-size="13" font-weight="500" color="$text" />
+      </row>
+      <row role="chip" p="8 14" radius="999" fill="$surface" border="1 $border" align="middle-center">
+        <text value="Morning" font-family="SF Pro" font-size="13" font-weight="500" color="$text" />
+      </row>
+    </row>
+
+    <!-- results -->
+    <col w="fill" p="0 16 16 16" gap="12">
+      <row w="fill" gap="auto" align="middle-center">
+        <text value="247 flights" font-family="SF Pro" font-size="13" font-weight="500" color="$text-2" />
+        <row gap="4" align="middle-center">
+          <text value="Sort: Best value" font-family="SF Pro" font-size="13" font-weight="500" color="$text" />
+          <img src="https://api.iconify.design/lucide/chevron-down.svg?color=%239A9396" w="15" h="15" />
+        </row>
+      </row>
+
+      <!-- hero card -->
+      <col role="card" w="fill" fill="$surface" radius="$r-card" p="16" gap="16" border="1.5 $accent">
+        <row w="fill" gap="auto" align="middle-left">
+          <row gap="10" align="middle-left">
+            <row w="36" h="36" radius="999" fill="$accent-soft" align="middle-center">
+              <img src="https://api.iconify.design/lucide/plane.svg?color=%23E2607A" w="18" h="18" />
+            </row>
+            <col gap="2">
+              <text value="Meridian" font-family="SF Pro" font-size="15" font-weight="600" color="$text" />
+              <text value="MR 281" font-family="SF Pro" font-size="12" font-weight="400" color="$text-3" />
+            </col>
+          </row>
+          <row gap="5" p="5 10" radius="999" fill="$accent-soft" align="middle-center">
+            <img src="https://api.iconify.design/lucide/sparkles.svg?color=%23E2607A" w="12" h="12" />
+            <text value="Best value" font-family="SF Pro" font-size="11" font-weight="600" color="$accent-2" />
+          </row>
+        </row>
+
+        <row w="fill" gap="12" align="bottom-left">
+          <col gap="3">
+            <text value="9:40 AM" font-family="SF Pro" font-size="24" font-weight="700" color="$text" />
+            <text value="JFK" font-family="SF Pro" font-size="12" font-weight="500" color="$text-2" />
+          </col>
+          <col gap="4" align="middle-center" w="fill">
+            <text value="7h 05m" font-family="SF Pro" font-size="12" font-weight="400" color="$text-2" align="center" />
+            <row w="fill" gap="6" align="middle-center">
+              <line fill="$accent" />
+              <img src="https://api.iconify.design/lucide/plane.svg?color=%23E2607A" w="14" h="14" />
+              <line fill="$accent" />
+            </row>
+            <text value="Nonstop" font-family="SF Pro" font-size="11" font-weight="600" color="$accent-2" align="center" />
+          </col>
+          <col gap="3" align="top-right">
+            <text value="9:45 PM" font-family="SF Pro" font-size="24" font-weight="700" color="$text" align="right" />
+            <text value="LHR" font-family="SF Pro" font-size="12" font-weight="500" color="$text-2" align="right" />
+          </col>
+        </row>
+
+        <line fill="$border" />
+
+        <row w="fill" gap="auto" align="middle-center">
+          <row gap="6" align="middle-center">
+            <img src="https://api.iconify.design/lucide/zap.svg?color=%239A9396" w="14" h="14" />
+            <text value="Premium cabin · Wi-Fi" font-family="SF Pro" font-size="12" font-weight="400" color="$text-2" />
+          </row>
+          <row gap="2" align="bottom-left">
+            <text value="$" font-family="SF Pro" font-size="15" font-weight="600" color="$accent" />
+            <text value="842" font-family="SF Pro" font-size="24" font-weight="700" color="$accent" />
+          </row>
+        </row>
+      </col>
+
+      <instance component="comp-flight" airline="Atlas Air" flightno="AT 1140" fare="Economy" dep="6:15 AM" depcode="JFK" arr="8:20 PM" arrcode="LHR" dur="9h 05m" stops="1 stop · BOS" price="618" />
+      <instance component="comp-flight" airline="Caledon" flightno="CL 76" fare="Economy" dep="8:50 PM" depcode="JFK" arr="11:30 AM" arrcode="LHR" dur="9h 40m" stops="1 stop · DUB" price="574" />
+
+      <row role="button" w="fill" p="12" radius="14" fill="$surface-2" align="middle-center">
+        <text value="Show 244 more flights" font-family="SF Pro" font-size="14" font-weight="600" color="$text" align="center" />
+      </row>
+    </col>
+
+    <!-- tab bar -->
+    <col w="fill" fill="$surface">
+      <line fill="$border" />
+      <row role="tab-bar" w="fill" p="10 24 28 24" gap="auto" align="top-center">
+        <col gap="4" align="middle-center" w="fill">
+          <img src="https://api.iconify.design/lucide/search.svg?color=%23E2607A" w="22" h="22" />
+          <text value="Search" font-family="SF Pro" font-size="10" font-weight="600" color="$accent" align="center" />
+        </col>
+        <col gap="4" align="middle-center" w="fill">
+          <img src="https://api.iconify.design/lucide/heart.svg?color=%239A9396" w="22" h="22" />
+          <text value="Saved" font-family="SF Pro" font-size="10" font-weight="500" color="$text-3" align="center" />
+        </col>
+        <col gap="4" align="middle-center" w="fill">
+          <img src="https://api.iconify.design/lucide/ticket.svg?color=%239A9396" w="22" h="22" />
+          <text value="Trips" font-family="SF Pro" font-size="10" font-weight="500" color="$text-3" align="center" />
+        </col>
+        <col gap="4" align="middle-center" w="fill">
+          <img src="https://api.iconify.design/lucide/user.svg?color=%239A9396" w="22" h="22" />
+          <text value="Account" font-family="SF Pro" font-size="10" font-weight="500" color="$text-3" align="center" />
+        </col>
+      </row>
+    </col>
+  </col>
+</gui>

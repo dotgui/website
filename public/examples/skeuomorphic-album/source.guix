@@ -1,0 +1,231 @@
+<gui version="0.2" name="Album Details">
+  <mode name="theme" values="light dark" default="light" />
+
+  <tokens>
+    <!-- Mode-varying warm surfaces (the "room" the device sits in) -->
+    <color name="bg"     theme-light="#ECE3D1" theme-dark="#15110D" />
+    <color name="panel"  theme-light="#F6F0E2" theme-dark="#221D17" />
+    <color name="ink"    theme-light="#2A2018" theme-dark="#F2EADA" />
+    <color name="ink-2"  theme-light="#8C7C62" theme-dark="#A2937A" />
+    <color name="hair"   theme-light="#DCD0B9" theme-dark="#332C24" />
+
+    <!-- Constant device hardware (reads the same in any light) -->
+    <color name="cream"   value="#ECE4D2" />
+    <color name="cream-2" value="#B4A88F" />
+    <color name="groove"  value="#12100C" />
+    <color name="ring"    value="#000000" />
+
+    <number name="r-art"   value="18" />
+    <number name="r-panel" value="22" />
+    <number name="r-deck"  value="26" />
+    <number name="r-pill"  value="999" />
+  </tokens>
+
+  <styles>
+    <text-style name="Serif/Title" font-family="Playfair Display" font-size="27" font-weight="700" line-height="32" />
+    <text-style name="Serif/Head"  font-family="Playfair Display" font-size="19" font-weight="600" line-height="24" />
+    <text-style name="Eyebrow"     font-family="SF Pro" font-size="11" font-weight="600" line-height="14" letter-spacing="1.4" />
+    <text-style name="Body"        font-family="SF Pro" font-size="15" font-weight="400" line-height="20" />
+    <text-style name="Label"       font-family="SF Pro" font-size="13" font-weight="600" line-height="16" />
+    <text-style name="Time"        font-family="SF Pro" font-size="12" font-weight="600" line-height="14" letter-spacing="0.3" />
+    <text-style name="Caption"     font-family="SF Pro" font-size="11" font-weight="500" line-height="14" />
+  </styles>
+
+  <fonts>
+    <font family="SF Pro" source="system" weights="400 500 600 700" styles="normal" />
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+    <font family="Playfair Display" source="google" weights="600 700" styles="normal" />
+  </fonts>
+
+  <components />
+
+  <col w="390" fill="$bg" pb="34" gap="22">
+
+    <!-- Status bar -->
+    <row w="fill" p="16 22 0" align="middle-center" gap="auto">
+      <text value="9:41" font-family="SF Pro" font-size="15" font-weight="600" color="$ink" />
+      <row gap="6" align="middle-center">
+        <text text-style="Caption" value="100%" color="$ink-2" />
+        <row gap="2" align="middle-center">
+          <row w="22" h="11" radius="3" border="1 $ink-2" p="2" align="middle-left">
+            <rect w="15" h="6" radius="1" fill="$ink" />
+          </row>
+          <rect w="2" h="4" radius="1" fill="$ink-2" />
+        </row>
+      </row>
+    </row>
+
+    <!-- Header: round metal buttons flanking a serif title -->
+    <row role="top-navigation-bar" w="fill" p="2 16 0" align="middle-center" gap="auto">
+      <col role="button" w="40" h="40" radius="$r-pill" align="middle-center" fill="linear-gradient(180deg, #524A40 0%, #322C25 100%)">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(180deg, #524A40 0%, #322C25 100%)" />
+          <effect type="drop-shadow" x="0" y="4" radius="10" spread="0" color="#00000055" />
+          <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF26" />
+        </appearance>
+        <img src="https://api.iconify.design/mdi/arrow-left.svg?color=%23ECE4D2" w="22" h="22" />
+      </col>
+      <col gap="2" align="middle-center">
+        <text text-style="Eyebrow" text-case="uppercase" value="Now Playing From" color="$ink-2" align="center" />
+        <text value="Margin Notes" font-family="SF Pro" font-size="14" font-weight="600" color="$ink" align="center" />
+      </col>
+      <col role="button" w="40" h="40" radius="$r-pill" align="middle-center" fill="linear-gradient(180deg, #524A40 0%, #322C25 100%)">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(180deg, #524A40 0%, #322C25 100%)" />
+          <effect type="drop-shadow" x="0" y="4" radius="10" spread="0" color="#00000055" />
+          <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF26" />
+        </appearance>
+        <img src="https://api.iconify.design/mdi/dots-horizontal.svg?color=%23ECE4D2" w="22" h="22" />
+      </col>
+    </row>
+
+    <!-- Vinyl Record sliding out of sleeve visual -->
+    <col w="fill" p="6 16 0" align="middle-center">
+      <frame w="358" h="210">
+        <!-- Vinyl Record partially sliding out to the right -->
+        <ellipse x="138" y="5" w="200" h="200" fill="radial-gradient(circle at 50% 36%, #2C2823 0%, #100E0B 58%, #050403 100%)" border="1 #FFFFFF10">
+          <appearance>
+            <fill type="radial-gradient" value="radial-gradient(circle at 50% 36%, #2C2823 0%, #100E0B 58%, #050403 100%)" />
+            <effect type="drop-shadow" x="8" y="16" radius="28" spread="-8" color="#0000008F" />
+          </appearance>
+        </ellipse>
+        <!-- Center label of vinyl record -->
+        <ellipse x="198" y="65" w="80" h="80" fill="linear-gradient(180deg, #D24A2C 0%, #A82E16 100%)">
+          <appearance>
+            <fill type="linear-gradient" value="linear-gradient(180deg, #D24A2C 0%, #A82E16 100%)" />
+            <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF4D" />
+          </appearance>
+        </ellipse>
+        <!-- Spindle hole -->
+        <ellipse x="233" y="100" w="10" h="10" fill="#15110D">
+          <appearance>
+            <fill type="color" value="#15110D" />
+            <effect type="inner-shadow" x="0" y="1" radius="1" spread="0" color="#000000A6" />
+          </appearance>
+        </ellipse>
+
+        <!-- Album Cover Sleeve resting on top -->
+        <frame x="20" y="5" w="200" h="200" radius="10" clip="true">
+          <appearance>
+            <fill type="image" src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&amp;q=80" fit="cover" />
+            <effect type="drop-shadow" x="0" y="10" radius="24" spread="-6" color="#00000099" />
+          </appearance>
+          <!-- Spine shadow -->
+          <rect w="8" h="200" fill="linear-gradient(90deg, #0000007A 0%, #00000000 100%)" abs="true" x="0" y="0" />
+          <rect w="200" h="200" fill="linear-gradient(135deg, #FFFFFF14 0%, #FFFFFF00 40%)" abs="true" x="0" y="0" />
+        </frame>
+      </frame>
+    </col>
+
+    <!-- Ruled Notepad Clipboard Tracklist -->
+    <col w="fill" p="10 16 0" gap="0">
+      <!-- Legal pad paper sheet background -->
+      <col w="fill" fill="$panel" radius="12" p="28 20 24" border="1 $hair">
+        <appearance>
+          <effect type="drop-shadow" x="0" y="12" radius="28" spread="-6" color="#0000003A" />
+          <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFFB3" />
+        </appearance>
+
+        <!-- Ruled Red Margin Line -->
+        <rect w="2" h="fill" fill="#E2552F" abs="true" x="42" y="0" opacity="0.6" />
+
+        <!-- Clipboard clamp at the top -->
+        <col w="80" h="16" radius="4" abs="true" x="139" y="-6" fill="linear-gradient(180deg, #8A8275 0%, #5E564C 100%)" border="1 #FFFFFF22">
+          <appearance>
+            <effect type="drop-shadow" x="0" y="2" radius="4" spread="0" color="#00000055" />
+            <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF1A" />
+          </appearance>
+        </col>
+
+        <!-- Album Metadata Header -->
+        <col gap="4" pb="14" align="top-left" w="fill">
+          <text text-style="Serif/Head" value="Margin Notes" color="$ink" />
+          <row gap="6" align="middle-left">
+            <text text-style="Caption" value="Chapter &amp; Verse  &#183;  12 Tracks  &#183;  46 min" color="$ink-2" />
+          </row>
+        </col>
+
+        <!-- Ruled lines track list -->
+        <col gap="0" w="fill">
+          
+          <!-- Track 1 -->
+          <col w="fill">
+            <row w="fill" p="12 4" align="middle-center" gap="auto">
+              <row gap="22" align="middle-left">
+                <text font-family="SF Pro" font-size="13" font-weight="700" value="01" color="$ink-2" w="20" align="center" />
+                <text text-style="Body" value="Foreword" color="$ink" />
+              </row>
+              <text text-style="Label" value="1:42" color="$ink-2" />
+            </row>
+            <line fill="$hair" />
+          </col>
+
+          <!-- Track 2 -->
+          <col w="fill">
+            <row w="fill" p="12 4" align="middle-center" gap="auto">
+              <row gap="22" align="middle-left">
+                <text font-family="SF Pro" font-size="13" font-weight="700" value="02" color="$ink-2" w="20" align="center" />
+                <text text-style="Body" value="Spine &amp; Thread" color="$ink" />
+              </row>
+              <text text-style="Label" value="3:05" color="$ink-2" />
+            </row>
+            <line fill="$hair" />
+          </col>
+
+          <!-- Track 3 (Active Playing) -->
+          <col w="fill" fill="#D24A2C0F" radius="6" p="0 6">
+            <row w="fill" p="12 4" align="middle-center" gap="auto">
+              <row gap="22" align="middle-left">
+                <!-- Glowing pin indicator -->
+                <ellipse w="8" h="8" fill="#E2552F" ml="6">
+                  <appearance>
+                    <effect type="drop-shadow" x="0" y="0" radius="6" spread="2" color="#E2552FB3" />
+                  </appearance>
+                </ellipse>
+                <text font-family="SF Pro" font-size="15" font-weight="700" value="Dog-Eared" color="#A82E16" />
+                <!-- Small soundwave bars -->
+                <row gap="3" align="bottom-left" h="12" pl="4">
+                  <rect w="3" h="10" fill="#E2552F" radius="1.5" />
+                  <rect w="3" h="6" fill="#E2552F" radius="1.5" />
+                  <rect w="3" h="12" fill="#E2552F" radius="1.5" />
+                </row>
+              </row>
+              <row gap="10" align="middle-center">
+                <!-- Recessed play/pause indicator -->
+                <img src="https://api.iconify.design/mdi/volume-high.svg?color=%23A82E16" w="18" h="18" />
+                <text font-family="SF Pro" font-size="13" font-weight="700" value="4:47" color="#A82E16" />
+              </row>
+            </row>
+            <line fill="$hair" />
+          </col>
+
+          <!-- Track 4 -->
+          <col w="fill">
+            <row w="fill" p="12 4" align="middle-center" gap="auto">
+              <row gap="22" align="middle-left">
+                <text font-family="SF Pro" font-size="13" font-weight="700" value="04" color="$ink-2" w="20" align="center" />
+                <text text-style="Body" value="Footnotes" color="$ink" />
+              </row>
+              <text text-style="Label" value="2:38" color="$ink-2" />
+            </row>
+            <line fill="$hair" />
+          </col>
+
+          <!-- Track 5 -->
+          <col w="fill">
+            <row w="fill" p="12 4" align="middle-center" gap="auto">
+              <row gap="22" align="middle-left">
+                <text font-family="SF Pro" font-size="13" font-weight="700" value="05" color="$ink-2" w="20" align="center" />
+                <text text-style="Body" value="The Bindery" color="$ink" />
+              </row>
+              <text text-style="Label" value="4:02" color="$ink-2" />
+            </row>
+            <line fill="$hair" />
+          </col>
+
+        </col>
+      </col>
+    </col>
+
+  </col>
+</gui>

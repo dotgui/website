@@ -1,0 +1,296 @@
+<gui version="0.2" name="Premium Baby Accessories">
+  <tokens>
+    <color name="beige" value="#ebdcd0" />
+    <color name="terra" value="#b86847" />
+    <color name="ink" value="#2c2826" />
+    <color name="ink-2" value="#2c282699" />
+    <color name="beige-2" value="#ebdcd0B3" />
+    <color name="line" value="#2c28261A" />
+    <color name="terra-line" value="#ebdcd033" />
+  </tokens>
+  <fonts>
+    <font family="Inter" source="google" weights="300 400 500" styles="normal" />
+    <font family="Archivo Narrow" source="google" weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <col w="1440" fill="$beige" gap="0" align="top-left">
+
+    <!-- ============ HERO BAND: sidebar(18%) + main(82%) ============ -->
+    <row w="fill" gap="0" align="stretch">
+
+      <!-- SIDEBAR -->
+      <col w="259" h="fill" fill="$terra" p="40 0 0" gap="0" align="top-center">
+        <img src="assets/logo.svg" w="40" h="40" />
+        <col w="30" h="220" align="middle-center" pt="28">
+          <text value="PREMIUM BABY ACCESSORIES" font-family="Archivo Narrow" font-size="13" font-weight="600" color="$beige" letter-spacing="2" rotation="-90" />
+        </col>
+        <text value="01" font-family="Archivo Narrow" font-size="40" font-weight="500" color="$beige" pt="24" />
+        <img src="assets/badge.svg" w="92" h="92" pt="20" />
+      </col>
+
+      <!-- MAIN -->
+      <col w="fill" fill="$beige" gap="0" align="top-left">
+
+        <!-- HEADER -->
+        <row w="fill" h="76" p="0 40" gap="auto" align="middle-center" border-bottom="1 $line">
+          <row gap="28" align="middle-center">
+            <text value="Shop" font-family="Inter" font-size="13" font-weight="500" color="$ink" letter-spacing="0.5" />
+            <text value="Collections" font-family="Inter" font-size="13" font-weight="500" color="$ink" letter-spacing="0.5" />
+            <text value="About" font-family="Inter" font-size="13" font-weight="500" color="$ink-2" letter-spacing="0.5" />
+            <text value="Journal" font-family="Inter" font-size="13" font-weight="500" color="$ink-2" letter-spacing="0.5" />
+          </row>
+          <row gap="22" align="middle-center">
+            <img src="https://api.iconify.design/lucide/search.svg?color=%232c2826" w="18" h="18" />
+            <img src="https://api.iconify.design/lucide/user.svg?color=%232c2826" w="18" h="18" />
+            <row gap="6" align="middle-center">
+              <img src="https://api.iconify.design/lucide/shopping-bag.svg?color=%232c2826" w="18" h="18" />
+              <text value="(0)" font-family="Inter" font-size="12" color="$ink-2" />
+            </row>
+          </row>
+        </row>
+
+        <!-- HERO BODY -->
+        <row w="fill" gap="0" align="top-left">
+          <col w="fill" p="56 40 56 48" gap="28" align="top-left">
+            <text value="CURATED PIECES · TIMELESS QUALITY" font-family="Inter" font-size="11" font-weight="500" color="$terra" letter-spacing="3" />
+            <col gap="0">
+              <text value="ESSENTIALS" font-family="Archivo Narrow" font-size="78" font-weight="600" color="$ink" letter-spacing="-1" line-height="74" />
+              <text value="FOR THEIR" font-family="Archivo Narrow" font-size="78" font-weight="600" color="$ink" letter-spacing="-1" line-height="74" />
+              <text value="FIRST" font-family="Archivo Narrow" font-size="78" font-weight="600" color="$terra" letter-spacing="-1" line-height="74" />
+              <text value="WORLD." font-family="Archivo Narrow" font-size="78" font-weight="600" color="$ink" letter-spacing="-1" line-height="74" />
+            </col>
+            <text w="360" value="Thoughtfully designed essentials for baby's comfort, care and every beautiful moment in between." font-family="Inter" font-size="14" font-weight="300" color="$ink-2" line-height="24" />
+            <row role="button" gap="12" p="16 26" radius="2" fill="$terra" align="middle-center">
+              <text value="EXPLORE COLLECTION" font-family="Inter" font-size="13" font-weight="500" color="$beige" letter-spacing="1" />
+              <img src="https://api.iconify.design/lucide/plus.svg?color=%23ebdcd0" w="16" h="16" />
+            </row>
+          </col>
+          <col w="440" h="fill" min-height="500" clip align="top-left">
+            <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/917d6f93-fb36-439a-8c48-884b67b35381_1600w.jpg" abs w="fill" h="fill" fit="cover" />
+            <row abs x="318" y="20" gap="6" p="7 12" radius="999" fill="$ink" align="middle-center"><text value="Made in Aust" font-family="Inter" font-size="10" color="$beige" letter-spacing="0.3" /></row>
+            <text abs x="398" y="220" value="SS / 26" font-family="Archivo Narrow" font-size="13" font-weight="500" color="$beige" letter-spacing="2" rotation="-90" />
+          </col>
+        </row>
+
+        <!-- FEATURE STRIP -->
+        <grid cols="4" gap="0" w="fill">
+          <col w="fill" h="170" p="24 28" gap="0" fill="$terra" align="top-left" border-top="1 $terra-line">
+            <row w="fill" gap="auto" align="middle-center"><text value="01" font-family="Archivo Narrow" font-size="13" font-weight="600" color="$beige" /><ellipse w="26" h="26" fill="$beige" /></row>
+            <text value="SAFE BY DESIGN" font-family="Archivo Narrow" font-size="17" font-weight="600" color="$beige" letter-spacing="0.5" pt="auto" />
+            <text value="Non-toxic, tested, built to last." font-family="Inter" font-size="12" font-weight="300" color="$beige-2" line-height="18" pt="8" />
+          </col>
+          <col w="fill" h="170" p="24 28" gap="0" fill="$terra" align="top-left" border-top="1 $terra-line">
+            <row w="fill" gap="auto" align="middle-center"><text value="02" font-family="Archivo Narrow" font-size="13" font-weight="600" color="$beige" /><rect w="30" h="15" radius="15 15 0 0" fill="$beige" /></row>
+            <text value="CONSCIOUSLY MADE" font-family="Archivo Narrow" font-size="17" font-weight="600" color="$beige" letter-spacing="0.5" pt="auto" />
+            <text value="Responsible materials, makers we trust." font-family="Inter" font-size="12" font-weight="300" color="$beige-2" line-height="18" pt="8" />
+          </col>
+          <col w="fill" h="170" p="24 28" gap="0" fill="$terra" align="top-left" border-top="1 $terra-line">
+            <row w="fill" gap="auto" align="middle-center"><text value="03" font-family="Archivo Narrow" font-size="13" font-weight="600" color="$beige" /><rect w="26" h="26" radius="5" fill="$beige" /></row>
+            <text value="MADE TO LAST" font-family="Archivo Narrow" font-size="17" font-weight="600" color="$beige" letter-spacing="0.5" pt="auto" />
+            <text value="Heirloom quality, child to child." font-family="Inter" font-size="12" font-weight="300" color="$beige-2" line-height="18" pt="8" />
+          </col>
+          <col w="fill" h="170" gap="0" fill="$ink" clip align="top-left">
+            <img src="https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&amp;w=2000&amp;auto=format&amp;fit=crop" abs w="fill" h="fill" fit="cover" blend="luminosity" opacity="0.5" />
+            <col w="fill" h="fill" p="24 28" gap="8" align="top-left">
+              <text value="JOIN OUR WORLD" font-family="Archivo Narrow" font-size="17" font-weight="600" color="$beige" letter-spacing="0.5" />
+              <text w="180" value="Early access, quiet drops, studio notes." font-family="Inter" font-size="12" font-weight="300" color="$beige-2" line-height="18" />
+              <row gap="0" w="180" align="middle-center" pt="auto" border-bottom="1 $terra-line">
+                <text w="fill" value="Email address" font-family="Inter" font-size="12" color="$beige-2" p="0 0 7" />
+                <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23ebdcd0" w="15" h="15" />
+              </row>
+            </col>
+          </col>
+        </grid>
+      </col>
+    </row>
+
+    <!-- ============ FULL-WIDTH SECTIONS (no sidebar) ============ -->
+
+    <!-- MARQUEE -->
+    <row w="fill" h="56" p="0 40" gap="24" align="middle-center" fill="$ink" clip>
+      <text value="CONSCIOUSLY CRAFTED" font-family="Archivo Narrow" font-size="17" font-weight="500" color="$beige" letter-spacing="1" />
+      <text value="•" font-family="Inter" font-size="14" color="$terra" />
+      <text value="NON-TOXIC MATERIALS" font-family="Archivo Narrow" font-size="17" font-weight="500" color="$beige" letter-spacing="1" />
+      <text value="•" font-family="Inter" font-size="14" color="$terra" />
+      <text value="DESIGNED FOR MODERN LIVING" font-family="Archivo Narrow" font-size="17" font-weight="500" color="$beige" letter-spacing="1" />
+      <text value="•" font-family="Inter" font-size="14" color="$terra" />
+      <text value="WORLDWIDE SHIPPING" font-family="Archivo Narrow" font-size="17" font-weight="500" color="$beige" letter-spacing="1" />
+      <text value="•" font-family="Inter" font-size="14" color="$terra" />
+      <text value="SECURE CHECKOUT" font-family="Archivo Narrow" font-size="17" font-weight="500" color="$beige" letter-spacing="1" />
+      <text value="•" font-family="Inter" font-size="14" color="$terra" />
+      <text value="CONSCIOUSLY CRAFTED" font-family="Archivo Narrow" font-size="17" font-weight="500" color="$beige-2" letter-spacing="1" />
+    </row>
+
+    <!-- CURATED COLLECTIONS -->
+    <col w="fill" p="72 40" gap="40" align="top-left">
+      <row w="fill" gap="auto" align="bottom-left">
+        <text value="CURATED COLLECTIONS" font-family="Archivo Narrow" font-size="48" font-weight="600" color="$ink" letter-spacing="-0.5" line-height="46" />
+        <text value="SHOP ALL · CATEGORIES" font-family="Inter" font-size="11" font-weight="500" color="$ink-2" letter-spacing="1" />
+      </row>
+      <row w="fill" gap="24" align="top-left">
+        <col w="fill" gap="14" pt="0" align="top-left">
+          <col w="fill" h="440" radius="2" clip><img src="https://images.unsplash.com/photo-1596870230751-ebdfce98ec42?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" w="fill" h="fill" fit="cover" /></col>
+          <col gap="4"><text value="FEEDING" font-family="Archivo Narrow" font-size="20" font-weight="600" color="$ink" letter-spacing="0.5" /><text value="Glassware, bowls &amp; bottles" font-family="Inter" font-size="11" color="$ink-2" letter-spacing="0.5" /></col>
+        </col>
+        <col w="fill" gap="14" pt="36" align="top-left">
+          <col w="fill" h="440" radius="2" clip><img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/4734259a-bad7-422f-981e-ce01e79184f2_1600w.jpg" w="fill" h="fill" fit="cover" /></col>
+          <col gap="4"><text value="PLAY" font-family="Archivo Narrow" font-size="20" font-weight="600" color="$ink" letter-spacing="0.5" /><text value="Wooden toys &amp; teethers" font-family="Inter" font-size="11" color="$ink-2" letter-spacing="0.5" /></col>
+        </col>
+        <col w="fill" gap="14" pt="0" align="top-left">
+          <col w="fill" h="440" radius="2" clip><img src="https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" w="fill" h="fill" fit="cover" /></col>
+          <col gap="4"><text value="COMFORT" font-family="Archivo Narrow" font-size="20" font-weight="600" color="$ink" letter-spacing="0.5" /><text value="Organic cotton swaddles &amp; wraps" font-family="Inter" font-size="11" color="$ink-2" letter-spacing="0.5" /></col>
+        </col>
+      </row>
+    </col>
+
+    <!-- EDITORIAL SPLIT -->
+    <row w="fill" gap="0" align="top-left">
+      <col w="fill" p="72 48" gap="20" fill="$beige" align="top-left">
+        <text value="OUR PHILOSOPHY" font-family="Inter" font-size="11" font-weight="500" color="$terra" letter-spacing="3" />
+        <text value="LESS, BUT BETTER." font-family="Archivo Narrow" font-size="56" font-weight="600" color="$ink" line-height="52" letter-spacing="-1" />
+        <text w="420" value="We believe in surrounding children with objects that are not only safe and functional, but inherently beautiful. By choosing durable materials and timeless forms, we create pieces that withstand the test of time and trends." font-family="Inter" font-size="14" font-weight="300" color="$ink-2" line-height="24" />
+        <row gap="10" align="middle-center" pt="8" border-bottom="2 $ink">
+          <text value="READ OUR STORY" font-family="Inter" font-size="13" font-weight="500" color="$ink" letter-spacing="0.5" p="0 0 6" />
+          <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%232c2826" w="16" h="16" />
+        </row>
+      </col>
+      <col w="560" h="480" clip align="top-left">
+        <img src="https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&amp;w=2000&amp;auto=format&amp;fit=crop" abs w="fill" h="fill" fit="cover" />
+        <col abs x="360" y="60" w="160" p="18" gap="6" radius="4" fill="$ink" align="top-left"><text value="404" font-family="Archivo Narrow" font-size="34" font-weight="600" color="$beige" /><text value="Not found, but well made." font-family="Inter" font-size="10" color="$beige-2" line-height="14" /></col>
+      </col>
+    </row>
+
+    <!-- NEW ARRIVALS -->
+    <col w="fill" p="56 40 72" gap="32" align="top-left">
+      <row w="fill" gap="auto" align="bottom-left">
+        <text value="NEW ARRIVALS" font-family="Archivo Narrow" font-size="48" font-weight="600" color="$ink" letter-spacing="-0.5" />
+        <row gap="10" align="middle-center">
+          <col w="40" h="40" radius="999" border="1 $line" align="middle-center"><img src="https://api.iconify.design/lucide/chevron-left.svg?color=%232c2826" w="18" h="18" /></col>
+          <col w="40" h="40" radius="999" border="1 $line" align="middle-center"><img src="https://api.iconify.design/lucide/chevron-right.svg?color=%232c2826" w="18" h="18" /></col>
+        </row>
+      </row>
+      <row w="fill" gap="20" align="top-left">
+        <col w="fill" gap="14" align="top-left">
+          <col w="fill" h="300" radius="2" fill="$beige" clip align="middle-center">
+            <img src="https://images.unsplash.com/photo-1629198688000-71f23e745b6e?q=80&amp;w=800&amp;auto=format&amp;fit=crop" w="fill" h="fill" fit="cover" blend="multiply" />
+            <row abs x="14" y="14" p="6 11" radius="999" fill="$ink" align="middle-center"><text value="Made in Aust" font-family="Inter" font-size="9" color="$beige" letter-spacing="0.3" /></row>
+          </col>
+          <row w="fill" gap="auto" align="middle-center"><text value="STACKING TOWER" font-family="Inter" font-size="11" font-weight="500" color="$ink" letter-spacing="1" /><text value="$34.00" font-family="Inter" font-size="11" font-weight="400" color="$ink-2" letter-spacing="1" /></row>
+        </col>
+        <col w="fill" gap="14" align="top-left">
+          <col w="fill" h="300" radius="2" fill="$beige" clip align="middle-center"><img src="https://images.unsplash.com/photo-1590736969955-71cc94801759?q=80&amp;w=800&amp;auto=format&amp;fit=crop" w="fill" h="fill" fit="cover" blend="multiply" /></col>
+          <row w="fill" gap="auto" align="middle-center"><text value="ORGANIC MUSLIN" font-family="Inter" font-size="11" font-weight="500" color="$ink" letter-spacing="1" /><text value="$22.00" font-family="Inter" font-size="11" font-weight="400" color="$ink-2" letter-spacing="1" /></row>
+        </col>
+        <col w="fill" gap="14" align="top-left">
+          <col w="fill" h="300" radius="2" fill="$beige" clip align="middle-center"><img src="https://images.unsplash.com/photo-1540479859555-17af45c78602?q=80&amp;w=800&amp;auto=format&amp;fit=crop" w="fill" h="fill" fit="cover" blend="multiply" /></col>
+          <row w="fill" gap="auto" align="middle-center"><text value="SILICONE BIB" font-family="Inter" font-size="11" font-weight="500" color="$ink" letter-spacing="1" /><text value="$18.00" font-family="Inter" font-size="11" font-weight="400" color="$ink-2" letter-spacing="1" /></row>
+        </col>
+        <col w="fill" gap="14" align="top-left">
+          <col w="fill" h="300" radius="2" fill="$beige" clip align="middle-center"><img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c543a9e1-f226-4ced-80b0-feb8445a75b9_1600w.jpg" w="fill" h="fill" fit="cover" blend="multiply" /></col>
+          <row w="fill" gap="auto" align="middle-center"><text value="PACIFIER CLIP" font-family="Inter" font-size="11" font-weight="500" color="$ink" letter-spacing="1" /><text value="$18.00" font-family="Inter" font-size="11" font-weight="400" color="$ink-2" letter-spacing="1" /></row>
+        </col>
+      </row>
+    </col>
+
+    <!-- STATEMENT -->
+    <col w="fill" h="440" fill="$terra" clip align="middle-center">
+      <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/5bab247f-35d9-400d-a82b-fd87cfe913d2_1600w.webp" abs w="fill" h="fill" fit="cover" opacity="0.1" blend="overlay" />
+      <row abs x="1240" y="40" p="8 14" radius="999" fill="$ink" align="middle-center"><text value="Made in Aust" font-family="Inter" font-size="10" color="$beige" letter-spacing="0.3" /></row>
+      <col w="fill" h="fill" gap="22" align="middle-center">
+        <img src="assets/logo.svg" w="46" h="46" />
+        <col gap="0" align="top-center">
+          <text align="center" value="DESIGNED FOR" font-family="Archivo Narrow" font-size="58" font-weight="600" color="$beige" letter-spacing="-0.5" line-height="56" />
+          <text align="center" value="MODERN FAMILIES." font-family="Archivo Narrow" font-size="58" font-weight="600" color="$beige" letter-spacing="-0.5" line-height="56" />
+        </col>
+        <text w="460" align="center" value="Creating an environment of calm and aesthetic pleasure for both baby and parent." font-family="Inter" font-size="14" font-weight="300" color="$beige-2" line-height="22" />
+      </col>
+    </col>
+
+    <!-- THE JOURNAL -->
+    <col w="fill" p="72 40" gap="36" align="top-left">
+      <row w="fill" gap="auto" align="bottom-left">
+        <text value="THE JOURNAL" font-family="Archivo Narrow" font-size="48" font-weight="600" color="$ink" letter-spacing="-0.5" />
+        <text value="READ ALL" font-family="Inter" font-size="11" font-weight="500" color="$ink-2" letter-spacing="1" />
+      </row>
+      <row w="fill" gap="32" align="top-left">
+        <row w="fill" gap="20" align="top-left">
+          <text value="01" font-family="Archivo Narrow" font-size="14" font-weight="600" color="$terra" />
+          <col w="fill" gap="16" align="top-left" border-left="1 $line" pl="20">
+            <col w="fill" h="240" radius="2" clip><img src="https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" w="fill" h="fill" fit="cover" /></col>
+            <text value="NURSERY" font-family="Inter" font-size="10" font-weight="500" color="$terra" letter-spacing="1.5" />
+            <text value="Building a minimal nursery" font-family="Archivo Narrow" font-size="24" font-weight="500" color="$ink" line-height="28" letter-spacing="-0.3" />
+            <text value="How to create a calming, clutter-free space that prioritises rest and creativity for your little one." font-family="Inter" font-size="13" font-weight="300" color="$ink-2" line-height="22" />
+          </col>
+        </row>
+        <row w="fill" gap="20" align="top-left">
+          <text value="02" font-family="Archivo Narrow" font-size="14" font-weight="600" color="$terra" />
+          <col w="fill" gap="16" align="top-left" border-left="1 $line" pl="20">
+            <col w="fill" h="240" radius="2" clip><img src="https://images.unsplash.com/photo-1596870230751-ebdfce98ec42?q=80&amp;w=1200&amp;auto=format&amp;fit=crop" w="fill" h="fill" fit="cover" /></col>
+            <text value="MATERIALS" font-family="Inter" font-size="10" font-weight="500" color="$terra" letter-spacing="1.5" />
+            <text value="Why silicone?" font-family="Archivo Narrow" font-size="24" font-weight="500" color="$ink" line-height="28" letter-spacing="-0.3" />
+            <text value="Exploring the benefits of food-grade silicone for feeding accessories: durability, safety, and ease of cleaning." font-family="Inter" font-size="13" font-weight="300" color="$ink-2" line-height="22" />
+          </col>
+        </row>
+      </row>
+    </col>
+
+    <!-- INSTAGRAM -->
+    <col w="fill" gap="32" align="top-center">
+      <col gap="8" align="top-center" pt="16">
+        <text align="center" value="@PREMIUMBABY" font-family="Archivo Narrow" font-size="28" font-weight="600" color="$ink" letter-spacing="0.5" />
+        <text align="center" value="FOLLOW THE JOURNEY" font-family="Inter" font-size="11" font-weight="500" color="$ink-2" letter-spacing="2" />
+      </col>
+      <grid cols="4" gap="0" w="fill">
+        <col w="fill" h="280" fill="$beige" clip align="middle-center"><img src="https://images.unsplash.com/photo-1540479859555-17af45c78602?q=80&amp;w=800&amp;auto=format&amp;fit=crop" w="fill" h="fill" fit="cover" blend="multiply" /></col>
+        <col w="fill" h="280" fill="$beige" clip align="middle-center"><img src="https://images.unsplash.com/photo-1590736969955-71cc94801759?q=80&amp;w=800&amp;auto=format&amp;fit=crop" w="fill" h="fill" fit="cover" blend="multiply" /></col>
+        <col w="fill" h="280" fill="$beige" clip align="middle-center"><img src="https://images.unsplash.com/photo-1596870230751-ebdfce98ec42?q=80&amp;w=800&amp;auto=format&amp;fit=crop" w="fill" h="fill" fit="cover" blend="multiply" /></col>
+        <col w="fill" h="280" fill="$beige" clip align="middle-center">
+          <img src="https://images.unsplash.com/photo-1522771930-78848d9293e8?q=80&amp;w=800&amp;auto=format&amp;fit=crop" w="fill" h="fill" fit="cover" blend="multiply" />
+          <col abs x="0" y="0" w="fill" h="fill" fill="#2c282633" align="middle-center"><img src="https://api.iconify.design/lucide/instagram.svg?color=%23ebdcd0" w="28" h="28" /></col>
+        </col>
+      </grid>
+    </col>
+
+    <!-- FOOTER -->
+    <col w="fill" p="64 40 28" fill="$ink" gap="48" align="top-left">
+      <row w="fill" gap="48" align="top-left">
+        <col w="fill" gap="18" align="top-left">
+          <img src="assets/logo.svg" w="36" h="36" />
+          <text w="240" value="Premium baby accessories designed for modern living." font-family="Inter" font-size="13" font-weight="300" color="$beige-2" line-height="22" />
+        </col>
+        <col w="fill" gap="14" align="top-left">
+          <text value="SHOP" font-family="Archivo Narrow" font-size="13" font-weight="600" color="$beige" letter-spacing="1.5" />
+          <text value="All products" font-family="Inter" font-size="13" font-weight="300" color="$beige-2" />
+          <text value="Feeding" font-family="Inter" font-size="13" font-weight="300" color="$beige-2" />
+          <text value="Play" font-family="Inter" font-size="13" font-weight="300" color="$beige-2" />
+          <text value="Comfort" font-family="Inter" font-size="13" font-weight="300" color="$beige-2" />
+          <text value="Bundles" font-family="Inter" font-size="13" font-weight="300" color="$beige-2" />
+        </col>
+        <col w="fill" gap="14" align="top-left">
+          <text value="INFORMATION" font-family="Archivo Narrow" font-size="13" font-weight="600" color="$beige" letter-spacing="1.5" />
+          <text value="About us" font-family="Inter" font-size="13" font-weight="300" color="$beige-2" />
+          <text value="Materials" font-family="Inter" font-size="13" font-weight="300" color="$beige-2" />
+          <text value="Journal" font-family="Inter" font-size="13" font-weight="300" color="$beige-2" />
+          <text value="FAQ" font-family="Inter" font-size="13" font-weight="300" color="$beige-2" />
+          <text value="Contact" font-family="Inter" font-size="13" font-weight="300" color="$beige-2" />
+        </col>
+        <col w="fill" gap="14" align="top-left">
+          <text value="NEWSLETTER" font-family="Archivo Narrow" font-size="13" font-weight="600" color="$beige" letter-spacing="1.5" />
+          <text w="220" value="Subscribe to 10% off your first order, quiet drops and studio notes." font-family="Inter" font-size="13" font-weight="300" color="$beige-2" line-height="20" />
+          <row gap="0" w="220" align="middle-center" pt="4" border-bottom="1 $terra-line">
+            <text w="fill" value="Enter your email address" font-family="Inter" font-size="13" color="$beige-2" p="0 0 8" />
+            <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23ebdcd0" w="16" h="16" />
+          </row>
+        </col>
+      </row>
+      <row w="fill" gap="auto" align="middle-center" border-top="1 $terra-line" pt="20">
+        <text value="© 2026 Premium Baby Accessories · Made in small batches, Lisbon." font-family="Inter" font-size="10" color="$beige-2" letter-spacing="0.3" />
+        <row gap="20" align="middle-center">
+          <text value="Privacy" font-family="Inter" font-size="10" color="$beige-2" letter-spacing="0.3" />
+          <text value="Terms" font-family="Inter" font-size="10" color="$beige-2" letter-spacing="0.3" />
+        </row>
+      </row>
+    </col>
+
+  </col>
+</gui>

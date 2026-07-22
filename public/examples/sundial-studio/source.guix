@@ -1,0 +1,327 @@
+<gui version="0.2" name="Sundial Studio">
+  <tokens>
+    <color name="bg"            value="#F1EFE9" />
+    <color name="bg-2"          value="#E7E3D8" />
+    <color name="surface"       value="#FBFAF6" />
+    <color name="ink"           value="#16140F" />
+    <color name="text"          value="#16140F" />
+    <color name="text-2"        value="#57534A" />
+    <color name="text-3"        value="#8A857A" />
+    <color name="border"        value="#D8D3C6" />
+    <color name="accent"        value="#E8401F" />
+    <color name="on-accent"     value="#16140F" />
+    <color name="inv-text"      value="#EDEAE0" />
+    <color name="inv-text-2"    value="#A39E92" />
+    <color name="inv-border"    value="#322E26" />
+  </tokens>
+
+  <styles>
+    <text-style name="Display/Mega"    font-family="Bricolage Grotesque" font-size="150" font-weight="700" line-height="138" letter-spacing="-3" />
+    <text-style name="Display/H1"      font-family="Bricolage Grotesque" font-size="96"  font-weight="700" line-height="94"  letter-spacing="-2" />
+    <text-style name="Display/H2"      font-family="Bricolage Grotesque" font-size="58"  font-weight="600" line-height="62"  letter-spacing="-1" />
+    <text-style name="Display/Service" font-family="Bricolage Grotesque" font-size="40"  font-weight="600" line-height="46"  letter-spacing="-0.5" />
+    <text-style name="Display/Card"    font-family="Bricolage Grotesque" font-size="30"  font-weight="600" line-height="34" />
+    <text-style name="Stat/Numeral"    font-family="Bricolage Grotesque" font-size="84"  font-weight="700" line-height="84"  letter-spacing="-2" />
+    <text-style name="Lead"            font-family="Geist" font-size="24" font-weight="400" line-height="36" />
+    <text-style name="Body/Base"       font-family="Geist" font-size="17" font-weight="400" line-height="28" />
+    <text-style name="Body/Sm"         font-family="Geist" font-size="15" font-weight="400" line-height="23" />
+    <text-style name="Nav"             font-family="Geist" font-size="15" font-weight="500" line-height="20" />
+    <text-style name="Label/UI"        font-family="Geist" font-size="14" font-weight="600" line-height="18" letter-spacing="0.3" />
+    <text-style name="Mono/Eyebrow"    font-family="JetBrains Mono" font-size="12" font-weight="500" line-height="16" letter-spacing="2.5" />
+    <text-style name="Mono/Index"      font-family="JetBrains Mono" font-size="14" font-weight="500" line-height="20" letter-spacing="1" />
+    <text-style name="Mono/Tag"        font-family="JetBrains Mono" font-size="12" font-weight="500" line-height="16" letter-spacing="0.5" />
+  </styles>
+
+  <fonts>
+    <font family="Bricolage Grotesque" source="google" weights="400 500 600 700 800" styles="normal" />
+    <font family="Geist" source="google" weights="400 500 600 700" styles="normal" />
+    <font family="JetBrains Mono" source="google" weights="400 500" styles="normal" />
+  </fonts>
+
+  <col w="1440" fill="$bg">
+
+    <!-- ============================ NAV ============================ -->
+    <row role="top-navigation-bar" w="fill" p="26 64" gap="auto" align="middle-center" border-bottom="1 $border">
+      <row gap="10" align="middle-center">
+        <text font-family="Bricolage Grotesque" font-size="22" font-weight="700" letter-spacing="-0.5" value="Sundial" color="$text" />
+        <text font-family="Bricolage Grotesque" font-size="20" font-weight="700" value="✸" color="$accent" />
+      </row>
+      <row gap="40" align="middle-center">
+        <text text-style="Nav" value="Work" color="$text" />
+        <text text-style="Nav" value="Services" color="$text-2" />
+        <text text-style="Nav" value="Studio" color="$text-2" />
+        <text text-style="Nav" value="Journal" color="$text-2" />
+      </row>
+      <row p="12 22" fill="$accent" radius="999" align="middle-center">
+        <text text-style="Label/UI" value="Start a project" color="$on-accent" />
+      </row>
+    </row>
+
+    <!-- ============================ HERO (auto-layout / flex) ============================ -->
+    <col w="fill" p="64 64 88" gap="44" fill="$bg" align="top-left">
+
+      <!-- eyebrow -->
+      <row w="fill" gap="16" align="middle-left">
+        <text text-style="Mono/Eyebrow" text-case="uppercase" value="Product design studio" color="$accent" />
+        <text text-style="Mono/Eyebrow" text-case="uppercase" value="·  San Francisco / New York  ·  Est. 2014" color="$text-3" />
+      </row>
+
+      <!-- two columns: headline + CTA on the left, studio photograph on the right -->
+      <row w="fill" gap="56" align="top-left">
+
+        <col w="740" gap="36" align="top-left">
+          <text font-family="Bricolage Grotesque" font-size="100" font-weight="700" line-height="96" letter-spacing="-3" w="fill" value="We make software worth keeping." color="$text" />
+          <text text-style="Lead" w="560" value="Sundial partners with founders and product teams to turn ambitious ideas into interfaces that ship, scale, and earn a permanent spot on the home screen." color="$text-2" />
+          <row gap="14" align="middle-left" pt="8">
+            <row role="button" p="16 30" fill="$ink" radius="999" align="middle-center">
+              <text text-style="Label/UI" value="Start a project" color="$inv-text" />
+            </row>
+            <row role="button" p="16 28" fill="none" border="1 $text" radius="999" align="middle-center">
+              <text text-style="Label/UI" value="See selected work  →" color="$text" />
+            </row>
+          </row>
+        </col>
+
+        <col w="fill" gap="0" align="top-left">
+          <row p="9 16" fill="$accent" align="middle-center">
+            <text text-style="Mono/Tag" text-case="uppercase" value="Inside the studio" color="$on-accent" />
+          </row>
+          <img w="fill" h="512" fit="cover" src="https://images.unsplash.com/photo-1716703742354-c3c45ecc3b27?w=1400&amp;q=80&amp;auto=format&amp;fit=crop" />
+        </col>
+
+      </row>
+
+      <!-- scroll cue -->
+      <row w="fill" gap="10" align="middle-left" pt="8">
+        <text text-style="Mono/Index" value="(01)" color="$accent" />
+        <text text-style="Mono/Index" value="Scroll to explore the work" color="$text-3" />
+      </row>
+    </col>
+
+    <!-- ============================ CLIENTS ============================ -->
+    <col w="fill" p="44 64" gap="28" fill="$bg" border-top="1 $border" border-bottom="1 $border">
+      <row w="fill" gap="auto" align="middle-center">
+        <text text-style="Mono/Eyebrow" text-case="uppercase" value="Trusted by product teams at" color="$text-3" />
+        <text text-style="Mono/Eyebrow" text-case="uppercase" value="12 products shipped this year" color="$text-3" />
+      </row>
+      <row w="fill" gap="auto" align="middle-center">
+        <text font-family="Bricolage Grotesque" font-size="34" font-weight="600" letter-spacing="-1" value="Monzo" color="$text" />
+        <text font-family="Bricolage Grotesque" font-size="34" font-weight="600" letter-spacing="-1" value="Notion" color="$text" />
+        <text font-family="Bricolage Grotesque" font-size="34" font-weight="600" letter-spacing="-1" value="Linear" color="$text" />
+        <text font-family="Bricolage Grotesque" font-size="34" font-weight="600" letter-spacing="-1" value="Vercel" color="$text" />
+        <text font-family="Bricolage Grotesque" font-size="34" font-weight="600" letter-spacing="-1" value="Figma" color="$text" />
+        <text font-family="Bricolage Grotesque" font-size="34" font-weight="600" letter-spacing="-1" value="Duolingo" color="$text" />
+      </row>
+    </col>
+
+    <!-- ============================ SERVICES (dark) ============================ -->
+    <col w="fill" p="116 64" gap="64" fill="$ink">
+      <row w="fill" gap="auto" align="bottom-left">
+        <col w="640" gap="22">
+          <text text-style="Mono/Eyebrow" text-case="uppercase" value="What we do  /  02" color="$accent" />
+          <text text-style="Display/H2" value="Five ways we move the needle." color="$inv-text" />
+        </col>
+        <text text-style="Body/Base" w="360" value="A senior, embedded team. No handoffs to juniors, no endless decks. We work inside your product and your repo." color="$inv-text-2" />
+      </row>
+
+      <col w="fill" gap="0">
+        <!-- 01 -->
+        <row w="fill" gap="32" p="36 0" border-top="1 $inv-border" align="top-left">
+          <text text-style="Mono/Index" w="64" value="01" color="$accent" />
+          <text text-style="Display/Service" w="420" value="Product Strategy" color="$inv-text" />
+          <text text-style="Body/Base" w="fill" value="Research, positioning, and roadmap shaping so the right thing gets built before a single pixel is drawn." color="$inv-text-2" />
+          <text text-style="Mono/Tag" w="120" value="Research / Roadmap" color="$text-3" align="right" />
+        </row>
+        <!-- 02 -->
+        <row w="fill" gap="32" p="36 0" border-top="1 $inv-border" align="top-left">
+          <text text-style="Mono/Index" w="64" value="02" color="$accent" />
+          <text text-style="Display/Service" w="420" value="Interface Design" color="$inv-text" />
+          <text text-style="Body/Base" w="fill" value="End-to-end UX and UI for web and native apps, from flows and states to the final, pixel-honest screen." color="$inv-text-2" />
+          <text text-style="Mono/Tag" w="120" value="UX / UI / iOS" color="$text-3" align="right" />
+        </row>
+        <!-- 03 -->
+        <row w="fill" gap="32" p="36 0" border-top="1 $inv-border" align="top-left">
+          <text text-style="Mono/Index" w="64" value="03" color="$accent" />
+          <text text-style="Display/Service" w="420" value="Brand &amp; Identity" color="$inv-text" />
+          <text text-style="Body/Base" w="fill" value="Naming, logo, type, and the full visual system that makes a product feel unmistakably like itself." color="$inv-text-2" />
+          <text text-style="Mono/Tag" w="120" value="Brand / Type" color="$text-3" align="right" />
+        </row>
+        <!-- 04 -->
+        <row w="fill" gap="32" p="36 0" border-top="1 $inv-border" align="top-left">
+          <text text-style="Mono/Index" w="64" value="04" color="$accent" />
+          <text text-style="Display/Service" w="420" value="Design Systems" color="$inv-text" />
+          <text text-style="Body/Base" w="fill" value="Component libraries and tokens that keep fast-moving teams consistent, from Figma straight through to code." color="$inv-text-2" />
+          <text text-style="Mono/Tag" w="120" value="Tokens / Libraries" color="$text-3" align="right" />
+        </row>
+        <!-- 05 -->
+        <row w="fill" gap="32" p="36 0" border-top="1 $inv-border" border-bottom="1 $inv-border" align="top-left">
+          <text text-style="Mono/Index" w="64" value="05" color="$accent" />
+          <text text-style="Display/Service" w="420" value="Prototyping &amp; Motion" color="$inv-text" />
+          <text text-style="Body/Base" w="fill" value="High-fidelity prototypes and motion specs that make ideas testable, fundable, and ready to hand to engineering." color="$inv-text-2" />
+          <text text-style="Mono/Tag" w="120" value="Proto / Motion" color="$text-3" align="right" />
+        </row>
+      </col>
+    </col>
+
+    <!-- ============================ SELECTED WORK (unit grid, broken) ============================ -->
+    <col w="fill" p="116 64 40" gap="56" fill="$bg">
+      <row w="fill" gap="auto" align="bottom-left">
+        <col gap="22">
+          <text text-style="Mono/Eyebrow" text-case="uppercase" value="Selected work  /  03" color="$accent" />
+          <text text-style="Display/H2" value="A few things we shipped." color="$text" />
+        </col>
+        <text text-style="Label/UI" value="All case studies  →" color="$text" />
+      </row>
+
+      <grid role="gallery" unit="8" w="1312" h="1040" align="top-left">
+        <!-- 01 featured photo (left) -->
+        <img gc="1/82" gr="1/60" fit="cover" src="https://images.unsplash.com/photo-1609921133942-9e485ac26bc8?w=1400&amp;q=80&amp;auto=format&amp;fit=crop" />
+        <col gc="1/78" gr="63/82" gap="8" align="top-left">
+          <row gap="12" align="middle-left">
+            <text text-style="Mono/Index" value="(01)" color="$accent" />
+            <text text-style="Mono/Tag" text-case="uppercase" value="Product design · iOS · 2024" color="$text-3" />
+          </row>
+          <text text-style="Display/Card" value="Northwind, mobile banking rebuilt" color="$text" />
+          <text text-style="Body/Sm" w="560" value="A ground-up redesign of the flagship banking app: new account model, faster payments flow, and a system that scaled to 40 screens." color="$text-2" />
+        </col>
+
+        <!-- 02 tall photo (right) -->
+        <img gc="90/164" gr="1/86" fit="cover" src="https://images.unsplash.com/photo-1661246626039-5429b8f7488a?w=1200&amp;q=80&amp;auto=format&amp;fit=crop" />
+        <col gc="90/164" gr="89/107" gap="8" align="top-left">
+          <row gap="12" align="middle-left">
+            <text text-style="Mono/Index" value="(02)" color="$accent" />
+            <text text-style="Mono/Tag" text-case="uppercase" value="UX / UI · iOS · 2023" color="$text-3" />
+          </row>
+          <text text-style="Display/Card" value="Lumen, AI photo editor" color="$text" />
+          <text text-style="Body/Sm" w="540" value="A gesture-first editing surface and a backgrounds engine that turned a weekend prototype into a top-10 app." color="$text-2" />
+        </col>
+
+        <!-- 03 dark text tile (left, lower) -->
+        <col gc="1/82" gr="90/127" h="fill" p="44" gap="auto" fill="$ink" align="top-left">
+          <col gap="14" align="top-left">
+            <row gap="12" align="middle-left">
+              <text text-style="Mono/Index" value="(03)" color="$accent" />
+              <text text-style="Mono/Tag" text-case="uppercase" value="Brand &amp; identity · 2025" color="$inv-text-2" />
+            </row>
+            <text font-family="Bricolage Grotesque" font-size="44" font-weight="600" line-height="48" letter-spacing="-1" w="540" value="Halo, a brand and design system" color="$inv-text" />
+          </col>
+          <row w="fill" gap="auto" align="middle-left">
+            <text text-style="Body/Sm" w="440" value="Naming, identity, and a 200-component library that took the team from scattered Figma files to one source of truth." color="$inv-text-2" />
+            <text font-family="Bricolage Grotesque" font-size="32" font-weight="600" value="→" color="$accent" />
+          </row>
+        </col>
+      </grid>
+    </col>
+
+    <!-- ============================ APPROACH (split) ============================ -->
+    <row w="fill" p="104 64" gap="72" fill="$bg-2" align="top-left">
+      <col w="600" gap="28" align="top-left">
+        <text text-style="Mono/Eyebrow" text-case="uppercase" value="How we work  /  04" color="$accent" />
+        <text text-style="Display/H2" value="Less deck. More product." color="$text" />
+        <text text-style="Body/Base" w="540" value="We embed with your team for a focused engagement, design in the open, and leave you with something real, not a 60-slide PDF nobody opens twice." color="$text-2" />
+        <col w="fill" gap="0" pt="12">
+          <row w="fill" gap="20" p="22 0" border-top="1 $border" align="top-left">
+            <text text-style="Mono/Index" w="48" value="01" color="$accent" />
+            <col gap="4">
+              <text text-style="Label/UI" value="Discover" color="$text" />
+              <text text-style="Body/Sm" w="420" value="Two weeks to map the problem, the users, and the constraints worth fighting." color="$text-2" />
+            </col>
+          </row>
+          <row w="fill" gap="20" p="22 0" border-top="1 $border" align="top-left">
+            <text text-style="Mono/Index" w="48" value="02" color="$accent" />
+            <col gap="4">
+              <text text-style="Label/UI" value="Design" color="$text" />
+              <text text-style="Body/Sm" w="420" value="Tight loops of flows, screens, and clickable prototypes, reviewed live every week." color="$text-2" />
+            </col>
+          </row>
+          <row w="fill" gap="20" p="22 0" border-top="1 $border" border-bottom="1 $border" align="top-left">
+            <text text-style="Mono/Index" w="48" value="03" color="$accent" />
+            <col gap="4">
+              <text text-style="Label/UI" value="Ship" color="$text" />
+              <text text-style="Body/Sm" w="420" value="Production-ready files, a living system, and pairing with your engineers until it lands." color="$text-2" />
+            </col>
+          </row>
+        </col>
+      </col>
+      <img w="600" h="600" fit="cover" src="https://images.unsplash.com/photo-1572021335469-31706a17aaef?w=1200&amp;q=80&amp;auto=format&amp;fit=crop" />
+    </row>
+
+    <!-- ============================ STATS ============================ -->
+    <row w="fill" p="80 64" gap="auto" fill="$bg" align="top-left" border-bottom="1 $border">
+      <col gap="10">
+        <row gap="2" align="bottom-left">
+          <text text-style="Stat/Numeral" value="120" color="$text" />
+          <text text-style="Stat/Numeral" value="+" color="$accent" />
+        </row>
+        <text text-style="Body/Sm" value="Products shipped" color="$text-3" />
+      </col>
+      <col gap="10">
+        <text text-style="Stat/Numeral" value="9 yrs" color="$text" />
+        <text text-style="Body/Sm" value="In practice" color="$text-3" />
+      </col>
+      <col gap="10">
+        <text text-style="Stat/Numeral" value="14" color="$text" />
+        <text text-style="Body/Sm" value="Design awards" color="$text-3" />
+      </col>
+      <col gap="10">
+        <row gap="2" align="bottom-left">
+          <text text-style="Stat/Numeral" value="$400M" color="$text" />
+          <text text-style="Stat/Numeral" value="+" color="$accent" />
+        </row>
+        <text text-style="Body/Sm" value="Raised by our clients" color="$text-3" />
+      </col>
+    </row>
+
+    <!-- ============================ CTA (accent) ============================ -->
+    <col w="fill" p="128 64" gap="40" fill="$accent" align="top-left">
+      <text text-style="Mono/Eyebrow" text-case="uppercase" value="Let's talk  /  05" color="$on-accent" />
+      <text text-style="Display/H1" w="1040" value="Have something worth building? Let's make it durable." color="$on-accent" />
+      <row gap="14" align="middle-left" pt="8">
+        <row p="18 32" fill="$ink" radius="999" align="middle-center">
+          <text text-style="Label/UI" value="hello@sundial.studio" color="$inv-text" />
+        </row>
+        <row p="18 30" fill="none" border="1 $ink" radius="999" align="middle-center">
+          <text text-style="Label/UI" value="Book a 30-min intro  →" color="$on-accent" />
+        </row>
+      </row>
+    </col>
+
+    <!-- ============================ FOOTER (dark) ============================ -->
+    <col w="fill" p="80 64 40" gap="64" fill="$ink">
+      <row w="fill" gap="auto" align="top-left">
+        <col w="420" gap="18" align="top-left">
+          <row gap="10" align="middle-center">
+            <text font-family="Bricolage Grotesque" font-size="26" font-weight="700" letter-spacing="-0.5" value="Sundial" color="$inv-text" />
+            <text font-family="Bricolage Grotesque" font-size="24" font-weight="700" value="✸" color="$accent" />
+          </row>
+          <text text-style="Body/Sm" w="360" value="A product design studio for teams who care how the thing actually works, not just how it photographs." color="$inv-text-2" />
+        </col>
+        <row gap="72" align="top-left">
+          <col gap="14" align="top-left">
+            <text text-style="Mono/Eyebrow" text-case="uppercase" value="Studio" color="$text-3" />
+            <text text-style="Nav" value="About" color="$inv-text" />
+            <text text-style="Nav" value="Careers" color="$inv-text" />
+            <text text-style="Nav" value="Journal" color="$inv-text" />
+          </col>
+          <col gap="14" align="top-left">
+            <text text-style="Mono/Eyebrow" text-case="uppercase" value="Services" color="$text-3" />
+            <text text-style="Nav" value="Strategy" color="$inv-text" />
+            <text text-style="Nav" value="Interface" color="$inv-text" />
+            <text text-style="Nav" value="Systems" color="$inv-text" />
+          </col>
+          <col gap="14" align="top-left">
+            <text text-style="Mono/Eyebrow" text-case="uppercase" value="Elsewhere" color="$text-3" />
+            <text text-style="Nav" value="Twitter / X" color="$inv-text" />
+            <text text-style="Nav" value="Dribbble" color="$inv-text" />
+            <text text-style="Nav" value="LinkedIn" color="$inv-text" />
+          </col>
+        </row>
+      </row>
+      <row w="fill" gap="auto" align="middle-left" pt="32" border-top="1 $inv-border">
+        <text text-style="Mono/Tag" value="© 2026 Sundial Studio  ·  Designed in San Francisco" color="$text-3" />
+        <text text-style="Mono/Tag" value="hello@sundial.studio" color="$inv-text-2" />
+      </row>
+    </col>
+
+  </col>
+</gui>

@@ -1,0 +1,217 @@
+<gui version="0.2" name="The Far Field">
+  <tokens>
+    <color name="bg" value="#2A2D2C" />
+    <color name="surface" value="#323634" />
+    <color name="surface-2" value="#363A38" />
+    <color name="line" value="#E6E3DA1A" />
+    <color name="text" value="#E7E4DB" />
+    <color name="muted" value="#9C978B" />
+    <color name="faint" value="#6F6D65" />
+    <color name="sage" value="#A7B894" />
+    <color name="rose" value="#C9A8A3" />
+    <color name="taupe" value="#BDAE9C" />
+    <color name="oat" value="#E6DFCD" />
+  </tokens>
+  <fonts>
+    <font family="Inter" source="google" weights="300 400 500 600 700" styles="normal" />
+  </fonts>
+
+  <components>
+    <component name="BookTile" id="comp-tile">
+      <props>
+        <prop name="num" type="text" target="t-num" />
+        <prop name="tag" type="text" target="t-tag" />
+        <prop name="title" type="text" target="t-title" />
+        <prop name="author" type="text" target="t-author" />
+        <prop name="desc" type="text" target="t-desc" />
+        <prop name="year" type="text" target="t-year" />
+        <prop name="accent" type="color" target="t-num" />
+        <prop name="accent2" type="color" target="t-author" />
+      </props>
+      <col w="fill" h="268" p="26 26 28" fill="$surface" border="1 $line" radius="18" gap="auto" role="card">
+        <col w="fill" gap="14">
+          <row w="fill" gap="auto" align="middle-center">
+            <text id="t-num" value="01" font-family="Inter" font-size="34" font-weight="300" letter-spacing="-1.36" color="$taupe" />
+            <text id="t-tag" value="EPIC" font-family="Inter" font-size="10" font-weight="600" letter-spacing="1.26" text-case="uppercase" color="$muted" border="1 $line" p="5 10" radius="999" role="badge" />
+          </row>
+          <col gap="5">
+            <text id="t-title" value="Dune" font-family="Inter" font-size="21" font-weight="600" letter-spacing="-0.42" line-height="25" color="$oat" />
+            <text id="t-author" value="Frank Herbert" font-family="Inter" font-size="13" font-weight="500" color="$sage" />
+          </col>
+          <text id="t-desc" value="Description." font-family="Inter" font-size="14" line-height="22" color="$muted" />
+        </col>
+        <row w="fill" gap="6" align="middle-left">
+          <text id="t-year" value="1965" font-family="Inter" font-size="12" font-weight="600" color="$text" />
+          <text value="· Read note →" font-family="Inter" font-size="12" color="$faint" />
+        </row>
+      </col>
+    </component>
+
+    <component name="StatCard" id="comp-stat">
+      <props>
+        <prop name="big" type="text" target="s-big" />
+        <prop name="lbl" type="text" target="s-lbl" />
+        <prop name="accent" type="color" target="s-big" />
+      </props>
+      <col w="fill" p="28 24" fill="$surface" border="1 $line" radius="18" gap="14">
+        <text id="s-big" value="9" font-family="Inter" font-size="44" font-weight="300" letter-spacing="-1.76" color="$oat" />
+        <text id="s-lbl" value="Label." font-family="Inter" font-size="12" line-height="19" color="$muted" />
+      </col>
+    </component>
+
+    <component name="Mention" id="comp-mention">
+      <props>
+        <prop name="num" type="text" target="mn-num" />
+        <prop name="title" type="text" target="mn-title" />
+        <prop name="author" type="text" target="mn-author" />
+        <prop name="desc" type="text" target="mn-desc" />
+        <prop name="year" type="text" target="mn-year" />
+      </props>
+      <row w="fill" gap="22" align="middle-center" p="21 4" border-top="1 $line">
+        <text id="mn-num" w="34" value="10" font-family="Inter" font-size="14" font-weight="500" color="$faint" />
+        <col w="fill" gap="4">
+          <row gap="10" align="baseline">
+            <text id="mn-title" value="Title" font-family="Inter" font-size="18" font-weight="600" letter-spacing="-0.18" color="$oat" />
+            <text id="mn-author" value="Author" font-family="Inter" font-size="13" font-weight="500" color="$sage" />
+          </row>
+          <text id="mn-desc" value="Description." font-family="Inter" font-size="13" line-height="21" color="$muted" />
+        </col>
+        <text id="mn-year" value="1953" font-family="Inter" font-size="13" font-weight="600" color="$faint" />
+      </row>
+    </component>
+  </components>
+
+  <col w="1440" fill="$bg" align="top-center">
+    <col w="1068" pt="22">
+
+      <!-- NAV (floating pill) -->
+      <row w="fill" p="10 12 10 22" fill="#323634B8" border="1 $line" radius="999" gap="auto" align="middle-center" role="top-navigation-bar">
+        <row gap="10" align="middle-center">
+          <ellipse w="9" h="9" fill="$sage" />
+          <text value="The Far Field" font-family="Inter" font-size="15" font-weight="600" letter-spacing="-0.15" color="$text" />
+        </row>
+        <row gap="4" align="middle-center" role="navigation-menu">
+          <row fill="$oat" radius="999" p="8 15" align="middle-center" role="hyperlink"><text value="Lists" font-family="Inter" font-size="13" font-weight="500" color="$bg" /></row>
+          <text value="Essays" font-family="Inter" font-size="13" font-weight="500" color="$muted" p="8 15" role="hyperlink" />
+          <text value="Reviews" font-family="Inter" font-size="13" font-weight="500" color="$muted" p="8 15" role="hyperlink" />
+          <text value="Archive" font-family="Inter" font-size="13" font-weight="500" color="$muted" p="8 15" role="hyperlink" />
+          <text value="About" font-family="Inter" font-size="13" font-weight="500" color="$muted" p="8 15" role="hyperlink" />
+        </row>
+        <row fill="#E6E3DA0D" border="1 $line" radius="999" p="9 18" align="middle-center" role="button"><text value="Subscribe" font-family="Inter" font-size="13" font-weight="600" color="$text" /></row>
+      </row>
+
+      <!-- HERO -->
+      <col w="fill" pt="74" pb="46" border-bottom="1 $line" gap="0">
+        <row w="fill" gap="14" align="middle-left">
+          <text value="READING LIST · VOL. 09 · 2026" font-family="Inter" font-size="12" font-weight="600" letter-spacing="2.64" text-case="uppercase" color="$sage" />
+          <line w="fill" fill="$line" />
+        </row>
+        <text w="720" pt="26" font-family="Inter" font-size="60" font-weight="600" line-height="62" letter-spacing="-2.1">
+          <segment value="The Nine Novels That " font-family="Inter" font-size="60" font-weight="600" color="$oat" />
+          <segment value="Rewired" font-family="Inter" font-size="60" font-weight="600" color="$rose" />
+          <segment value=" Science Fiction" font-family="Inter" font-size="60" font-weight="600" color="$oat" />
+        </text>
+        <text w="680" pt="24" value="No spaceships on the cover, no rankings to argue over — just nine books that quietly changed the shape of what the genre could hold. We kept it to the ideas: the worlds that lingered long after the last page, and the sentences that made the future feel inevitable." font-family="Inter" font-size="18" line-height="30" color="$muted" />
+        <row w="fill" pt="30" gap="14" align="middle-left">
+          <text>
+            <segment value="By " font-family="Inter" font-size="13" color="$faint" />
+            <segment value="Mara Ellison" font-family="Inter" font-size="13" font-weight="600" color="$text" />
+          </text>
+          <ellipse w="4" h="4" fill="$faint" />
+          <text value="14 min read" font-family="Inter" font-size="13" color="$faint" />
+          <ellipse w="4" h="4" fill="$faint" />
+          <text value="Updated February 2026" font-family="Inter" font-size="13" color="$faint" />
+        </row>
+      </col>
+
+      <!-- SECTION: THE LIST -->
+      <row w="fill" pt="46" pb="22" gap="auto" align="bottom-left">
+        <text value="THE LIST" font-family="Inter" font-size="14" font-weight="600" letter-spacing="2.52" text-case="uppercase" color="$muted" />
+        <text value="In considered, not competitive, order" font-family="Inter" font-size="13" color="$faint" />
+      </row>
+
+      <grid cols="3" gap="18" w="fill" pb="64">
+        <instance component="comp-tile" num="01" tag="EPIC" title="Dune" author="Frank Herbert" desc="Ecology, religion, and empire braided into a single desert world. The blueprint for every world-spanning saga that followed it." year="1965" />
+        <instance component="comp-tile" num="02" tag="CYBERPUNK" title="Neuromancer" author="William Gibson" desc="It named cyberspace before the web existed. A neon-slick noir that taught the genre how the near future would actually feel." year="1984" accent="$rose" accent2="$rose" />
+        <instance component="comp-tile" num="03" tag="ANTHROPOLOGY" title="The Left Hand of Darkness" author="Ursula K. Le Guin" desc="A planet without fixed gender, told with aching tenderness. Proof that the genre's deepest territory is human, not technological." year="1969" accent2="$taupe" />
+        <instance component="comp-tile" num="04" tag="MOSAIC" title="Hyperion" author="Dan Simmons" desc="Seven pilgrims, seven stories, one monstrous mystery. A structural marvel that smuggles poetry inside a far-future thriller." year="1989" accent="$rose" accent2="$rose" />
+        <instance component="comp-tile" num="05" tag="FIRST CONTACT" title="Solaris" author="Stanisław Lem" desc="An ocean-mind we can never understand, mirroring our grief back at us. The definitive case against tidy, knowable aliens." year="1961" />
+        <instance component="comp-tile" num="06" tag="HARD SF" title="The Three-Body Problem" author="Liu Cixin" desc="Physics as horror, history as fuel. A cold, dizzying vision of contact that reset the scale of modern science fiction." year="2008" accent2="$taupe" />
+        <instance component="comp-tile" num="07" tag="FOUNDATIONAL" title="Foundation" author="Isaac Asimov" desc="The fall and slow rebuilding of a galactic empire, predicted by math. The idea-engine that powered decades of imitators." year="1951" />
+        <instance component="comp-tile" num="08" tag="SATIRE" title="Snow Crash" author="Neal Stephenson" desc="The Metaverse, a pizza-delivering hacker, and ancient linguistics. Reckless, prophetic, and impossible to put down." year="1992" accent="$rose" accent2="$rose" />
+        <instance component="comp-tile" num="09" tag="POST-APOC" title="A Canticle for Leibowitz" author="Walter M. Miller Jr." desc="Monks preserving knowledge across a thousand fallen years. A quiet, devastating meditation on how civilisations forget." year="1959" accent2="$taupe" />
+      </grid>
+
+      <!-- PULL QUOTE -->
+      <col w="fill" pt="58" pb="58" border-top="1 $line" border-bottom="1 $line" gap="24" align="middle-center">
+        <text w="640" align="center" font-family="Inter" font-size="30" font-weight="300" line-height="41" letter-spacing="-0.6">
+          <segment value="The future is not a place we travel to — it is a " font-family="Inter" font-size="30" font-weight="300" color="$oat" />
+          <segment value="sentence" font-family="Inter" font-size="30" font-weight="300" color="$rose" />
+          <segment value=" we learn to read before it arrives." font-family="Inter" font-size="30" font-weight="300" color="$oat" />
+        </text>
+        <text align="center">
+          <segment value="— from the introduction, " font-family="Inter" font-size="13" color="$faint" />
+          <segment value="The Far Field" font-family="Inter" font-size="13" font-weight="600" color="$sage" />
+        </text>
+      </col>
+
+      <!-- SECTION: BY THE NUMBERS -->
+      <row w="fill" pt="46" pb="22" gap="auto" align="bottom-left">
+        <text value="BY THE NUMBERS" font-family="Inter" font-size="14" font-weight="600" letter-spacing="2.52" text-case="uppercase" color="$muted" />
+        <text value="The shape of the shelf" font-family="Inter" font-size="13" color="$faint" />
+      </row>
+
+      <grid cols="4" gap="18" w="fill" pb="64">
+        <instance component="comp-stat" big="9" lbl="Novels on the list, spanning six decades of the genre's restless reinvention." />
+        <instance component="comp-stat" big="1951" lbl="The earliest entry — Asimov's Foundation, where it arguably all began." accent="$sage" />
+        <instance component="comp-stat" big="57" lbl="Years between the oldest and newest book gathered here. A long conversation." accent="$rose" />
+        <instance component="comp-stat" big="5" lbl="Distinct subgenres represented, from hard SF to anthropology to cyberpunk noir." accent="$taupe" />
+      </grid>
+
+      <!-- SECTION: HONORABLE MENTIONS -->
+      <row w="fill" pt="46" pb="22" gap="auto" align="bottom-left">
+        <text value="HONORABLE MENTIONS" font-family="Inter" font-size="14" font-weight="600" letter-spacing="2.52" text-case="uppercase" color="$muted" />
+        <text value="Nine more we couldn't quite leave behind" font-family="Inter" font-size="13" color="$faint" />
+      </row>
+
+      <col w="fill" pb="64">
+        <instance component="comp-mention" num="10" title="Childhood's End" author="Arthur C. Clarke" desc="A serene, unsettling vision of transcendence that trades catastrophe for quiet awe." year="1953" />
+        <instance component="comp-mention" num="11" title="The Dispossessed" author="Ursula K. Le Guin" desc="Two worlds, two systems, one physicist caught between them. Utopia as an open question." year="1974" />
+        <instance component="comp-mention" num="12" title="Rendezvous with Rama" author="Arthur C. Clarke" desc="A hollow world drifts through the solar system, indifferent to our wonder. Pure exploration." year="1973" />
+        <instance component="comp-mention" num="13" title="Blindsight" author="Peter Watts" desc="First contact stripped of comfort — a hard, cold inquiry into whether consciousness even matters." year="2006" />
+        <instance component="comp-mention" num="14" title="The Stars My Destination" author="Alfred Bester" desc="A revenge story at light speed, crackling with invention decades ahead of its time." year="1956" />
+        <instance component="comp-mention" num="15" title="Roadside Picnic" author="Arkady &amp; Boris Strugatsky" desc="Aliens came and left their litter behind. What we make of the wreckage is the whole story." year="1972" />
+        <line fill="$line" />
+      </col>
+
+      <!-- CTA -->
+      <row w="fill" p="48 46" fill="$surface" border="1 $line" radius="18" gap="auto" align="middle-center" wrap>
+        <col w="520" gap="10">
+          <text value="One considered list a month." font-family="Inter" font-size="26" font-weight="600" letter-spacing="-0.52" color="$oat" />
+          <text value="The Far Field is a slow journal for readers of the speculative — no rankings to argue over, just the books that lingered. Join the field notes and read with us." font-family="Inter" font-size="15" line-height="24" color="$muted" />
+        </col>
+        <row gap="10" align="middle-center">
+          <row w="240" p="13 20" fill="#E6E3DA0D" border="1 $line" radius="999" align="middle-left" role="text-field">
+            <text value="you@example.com" font-family="Inter" font-size="14" color="$faint" />
+          </row>
+          <row fill="$oat" radius="999" p="13 24" align="middle-center" role="button"><text value="Subscribe" font-family="Inter" font-size="14" font-weight="600" color="$bg" /></row>
+        </row>
+      </row>
+
+      <!-- FOOTER -->
+      <row w="fill" pt="40" pb="64" border-top="1 $line" gap="auto" align="middle-center">
+        <text>
+          <segment value="The Far Field" font-family="Inter" font-size="14" font-weight="600" color="$text" />
+          <segment value=" — a slow journal for readers of the speculative." font-family="Inter" font-size="14" color="$muted" />
+        </text>
+        <row gap="22" align="middle-center" role="navigation-menu">
+          <text value="Newsletter" font-family="Inter" font-size="13" color="$faint" role="hyperlink" />
+          <text value="Index" font-family="Inter" font-size="13" color="$faint" role="hyperlink" />
+          <text value="RSS" font-family="Inter" font-size="13" color="$faint" role="hyperlink" />
+          <text value="Contact" font-family="Inter" font-size="13" color="$faint" role="hyperlink" />
+        </row>
+      </row>
+
+    </col>
+  </col>
+</gui>

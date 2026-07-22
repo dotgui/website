@@ -1,0 +1,330 @@
+<gui version="0.2" name="FlightResults">
+  <tokens>
+    <!-- Background & Surface (Cosmic Obsidian Dark Mode) -->
+    <color name="bg" value="#07070A" />
+    <color name="surface" value="#12121A" />
+    <color name="surface-elevated" value="#1A1A26" />
+    <color name="border" value="#22222F" />
+    
+    <!-- Premium Brand Colors (Lavender) -->
+    <color name="primary" value="#A78BFA" />
+    <color name="primary-light" value="#F5F3FF" />
+    
+    <!-- Functional Status Colors -->
+    <color name="success-green" value="#10B981" />
+    
+    <!-- Text Colors -->
+    <color name="text-primary" value="#F3F4F6" />
+    <color name="text-muted" value="#9CA3AF" />
+    <color name="text-dark" value="#111115" />
+    
+    <!-- Spacing Scale -->
+    <number name="space-xs" value="4" />
+    <number name="space-sm" value="8" />
+    <number name="space-md" value="12" />
+    <number name="space-lg" value="16" />
+    <number name="space-xl" value="24" />
+    <number name="space-xxl" value="32" />
+    
+    <!-- Radius Scale -->
+    <number name="radius-sm" value="6" />
+    <number name="radius-md" value="16" />
+    <number name="radius-pill" value="999" />
+  </tokens>
+
+  <styles>
+    <text-style name="Display" font-family="Bricolage Grotesque" font-size="30" font-weight="500" line-height="36" />
+    <text-style name="Title2" font-family="Bricolage Grotesque" font-size="18" font-weight="500" line-height="24" />
+    <text-style name="Headline" font-family="Inter" font-size="14" font-weight="400" line-height="18" />
+    <text-style name="Body" font-family="Inter" font-size="13" font-weight="300" line-height="18" />
+    <text-style name="BodyStrong" font-family="Inter" font-size="13" font-weight="400" line-height="18" />
+    <text-style name="Caption" font-family="Inter" font-size="11" font-weight="300" line-height="14" />
+    <text-style name="Mono" font-family="JetBrains Mono" font-size="12" font-weight="400" line-height="16" />
+  </styles>
+
+  <fonts>
+    <font family="Playfair Display" source="google" weights="400 500 600" styles="italic normal" />
+    <font family="SF Pro" source="system" weights="300 400 500" styles="normal" />
+    <font family="Inter" source="google" weights="300 400 500" styles="normal" />
+    <font family="JetBrains Mono" source="google" weights="400 500" styles="normal" />
+  </fonts>
+
+  <components>
+    <!-- Reusable Calendar Carousel Date Cell -->
+    <component name="CarouselDate" id="comp-date">
+      <props>
+        <prop name="date" type="text" target="date-lbl" />
+        <prop name="price" type="text" target="price-lbl" />
+      </props>
+      <col w="100" h="58" fill="$surface" border="1 $border" radius="$radius-sm" p="10 8" gap="4" align="middle-center">
+        <text id="date-lbl" value="Mon, Oct 12" font-family="Inter" font-size="11" font-weight="300" color="$text-muted" />
+        <text id="price-lbl" value="$3,420" font-family="Inter" font-size="13" font-weight="400" color="$text-primary" />
+      </col>
+    </component>
+
+    <!-- Reusable Compact Thinner Flight Result Card -->
+    <component name="FlightResult" id="comp-flight">
+      <props>
+        <prop name="airline" type="text" target="lbl-airline" />
+        <prop name="dep-time" type="text" target="lbl-dep-time" />
+        <prop name="arr-time" type="text" target="lbl-arr-time" />
+        <prop name="duration" type="text" target="lbl-duration" />
+        <prop name="price" type="text" target="lbl-price" />
+        <prop name="craft" type="text" target="lbl-craft" />
+      </props>
+      <!-- Perfectly balanced 84px card height with mathematically budgeted column widths -->
+      <row role="card" w="768" h="84" fill="$surface" border="1 $border" radius="$radius-md" p="0 20" align="middle-left" gap="16">
+        <!-- 1. Airline Branding (Width: 160px - Playfair Display Serif Header!) -->
+        <row gap="10" align="middle-left" w="160">
+          <row w="32" h="32" radius="16" fill="$surface-elevated" border="1 $border" align="middle-center">
+            <img src="https://api.iconify.design/lucide/orbit.svg?color=%23A78BFA" w="18" h="18" />
+          </row>
+          <col gap="2">
+            <text id="lbl-airline" value="Singapore Airlines" font-family="Playfair Display" font-size="14" font-weight="500" color="$text-primary" />
+            <text id="lbl-craft" value="Business • Boeing 787" font-family="Inter" font-size="11" font-weight="300" color="$text-muted" />
+          </col>
+        </row>
+
+        <!-- 2. Connection Timeline (Width: 290px - Regular light weights) -->
+        <row w="290" align="middle-center" gap="16">
+          <text id="lbl-dep-time" value="13:15" font-family="Inter" font-size="16" font-weight="400" color="$text-primary" />
+          <col w="150" align="top-center" gap="2">
+            <text id="lbl-duration" value="11h 45m" font-family="Inter" font-size="11" font-weight="400" color="$primary" />
+            <line fill="$border" thickness="2" />
+            <text value="Non-stop" font-family="Inter" font-size="11" font-weight="400" color="$success-green" />
+          </col>
+          <text id="lbl-arr-time" value="08:00" font-family="Inter" font-size="16" font-weight="400" color="$text-primary" />
+        </row>
+
+        <!-- 3. Key Amenities Quick Icons (Width: 70px) -->
+        <row gap="8" align="middle-center" w="70">
+          <img src="https://api.iconify.design/lucide/wifi.svg?color=%23757575" w="14" h="14" />
+          <img src="https://api.iconify.design/lucide/utensils.svg?color=%23757575" w="14" h="14" />
+          <img src="https://api.iconify.design/lucide/bed-double.svg?color=%23757575" w="14" h="14" />
+        </row>
+
+        <!-- 4. Price & Selector CTA (Width: 160px - Flat Lighter Lavender Tint Fill, No Shadows!) -->
+        <row gap="14" align="middle-right" w="160">
+          <col align="top-right" gap="2">
+            <text id="lbl-price" value="$3,420" font-family="Inter" font-size="18" font-weight="500" color="$text-primary" />
+            <text value="incl. tax" font-family="Inter" font-size="11" font-weight="300" color="$text-muted" />
+          </col>
+          
+          <!-- Translucent flat lavender tint fill button, no drop shadow -->
+          <row w="64" h="30" radius="15" fill="#A78BFA1F" align="middle-center">
+            <text value="Select" font-family="Inter" font-size="11" font-weight="500" color="$primary" />
+          </row>
+        </row>
+      </row>
+    </component>
+  </components>
+
+  <!-- Cosmic Split-Screen Web Artboard (1440 x 900) -->
+  <frame w="1440" h="900" fill="$bg" clip="true">
+
+    <!-- LEFT PANEL: 40% Width (576px) Immersive Globe Visual -->
+    <frame w="576" h="900" abs="true" x="0" y="0" fill="$bg" border="1 $border" clip="true">
+      
+      <!-- Logo Branding Header -->
+      <row abs="true" x="32" y="32" align="middle-left" gap="8">
+        <img src="https://api.iconify.design/lucide/orbit.svg?color=%23A78BFA" w="24" h="24" />
+        <text value="aether" font-family="Playfair Display" font-size="24" font-weight="500" font-style="italic" color="$primary" letter-spacing="-0.5" />
+      </row>
+
+      <!-- Glassmorphic Search Summary Box (Top Half) -->
+      <col role="card" w="512" fill="$surface" border="1 $border" radius="$radius-md" p="24" gap="20" abs="true" x="32" y="96">
+        <appearance>
+          <fill type="color" value="$surface" />
+          <effect type="drop-shadow" x="0" y="8" radius="24" spread="0" color="#00000033" />
+        </appearance>
+
+        <!-- Header Playfair Display title -->
+        <text value="Your Search Details" font-family="Playfair Display" font-size="16" font-weight="500" color="$text-primary" />
+
+        <!-- From -> To locations query -->
+        <row w="464" align="middle-center" gap="auto">
+          <col gap="4">
+            <text value="SFO" font-family="Playfair Display" font-size="32" font-weight="500" color="$text-primary" />
+            <text value="San Francisco" font-family="Inter" font-size="12" font-weight="300" color="$text-muted" />
+          </col>
+          
+          <row w="36" h="36" radius="18" fill="$surface-elevated" border="1 $border" align="middle-center">
+            <img src="https://api.iconify.design/lucide/arrow-right-left.svg?color=%23A78BFA" w="16" h="16" />
+          </row>
+
+          <col gap="4" align="top-right">
+            <text value="CDG" font-family="Playfair Display" font-size="32" font-weight="500" color="$text-primary" />
+            <text value="Paris, France" font-family="Inter" font-size="12" font-weight="300" color="$text-muted" />
+          </col>
+        </row>
+
+        <!-- Divider Line -->
+        <line fill="$border" thickness="1" />
+
+        <!-- Search Metadata (Date, Class, Guest) -->
+        <row w="464" align="middle-left" gap="auto">
+          <col gap="4">
+            <text value="DEPARTURE DATE" font-family="Inter" font-size="11" font-weight="400" color="$text-muted" letter-spacing="0.5" />
+            <text value="Mon, Oct 12, 2026" font-family="Inter" font-size="13" font-weight="300" color="$text-primary" />
+          </col>
+          <col gap="4">
+            <text value="CABIN CLASS" font-family="Inter" font-size="11" font-weight="400" color="$text-muted" letter-spacing="0.5" />
+            <text value="Business Class" font-family="Inter" font-size="13" font-weight="300" color="$primary" />
+          </col>
+          <col gap="4" align="top-right">
+            <text value="PASSENGERS" font-family="Inter" font-size="11" font-weight="400" color="$text-muted" letter-spacing="0.5" />
+            <text value="1 Adult, 0 Children" font-family="Inter" font-size="13" font-weight="300" color="$text-primary" />
+          </col>
+        </row>
+      </col>
+
+      <!-- Atmospheric Satellite Globe (Unsplash Earth space portrait) -->
+      <!-- Globe is positioned ~50% down (Y=400 to Y=900) -->
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&amp;fit=crop&amp;w=576&amp;h=500&amp;q=80" w="576" h="500" fit="cover" abs="true" x="0" y="400" />
+      
+      <!-- Top cosmic fade banner to blend space image with obsidian page -->
+      <rect w="576" h="160" abs="true" x="0" y="400" fill="linear-gradient(180deg, #07070AFF 0%, #07070A00 100%)" />
+
+      <!-- Holographic Coordinates & Route Visual Pin Layer -->
+      
+      <!-- Pin SFO (West) -->
+      <frame w="40" h="40" abs="true" x="120" y="660">
+        <!-- Glowing concentric rings -->
+        <ellipse w="32" h="32" fill="#A78BFA1A" border="1 #A78BFA4D" abs="true" x="4" y="4" />
+        <ellipse w="8" h="8" fill="$primary" abs="true" x="16" y="16" />
+        <!-- Pin label -->
+        <text value="SFO" font-family="Inter" font-size="11" font-weight="400" color="$text-primary" abs="true" x="9" y="38" />
+      </frame>
+
+      <!-- Curved dash route indicator (Holographic track points) -->
+      <ellipse w="4" h="4" fill="$primary" opacity="0.4" abs="true" x="170" y="655" />
+      <ellipse w="4" h="4" fill="$primary" opacity="0.5" abs="true" x="205" y="635" />
+      <ellipse w="4" h="4" fill="$primary" opacity="0.6" abs="true" x="240" y="620" />
+      <ellipse w="4" h="4" fill="$primary" opacity="0.8" abs="true" x="275" y="610" />
+      
+      <!-- Flying glowing airplane icon in center of route -->
+      <img src="https://api.iconify.design/lucide/plane.svg?color=%23A78BFA" w="18" h="18" rotation="45" abs="true" x="282" y="601" />
+
+      <ellipse w="4" h="4" fill="$primary" opacity="0.8" abs="true" x="310" y="605" />
+      <ellipse w="4" h="4" fill="$primary" opacity="0.6" abs="true" x="345" y="605" />
+      <ellipse w="4" h="4" fill="$primary" opacity="0.5" abs="true" x="380" y="610" />
+      <ellipse w="4" h="4" fill="$primary" opacity="0.4" abs="true" x="415" y="620" />
+
+      <!-- Pin CDG (East) -->
+      <frame w="40" h="40" abs="true" x="430" y="615">
+        <!-- Glowing concentric rings -->
+        <ellipse w="32" h="32" fill="#A78BFA1A" border="1 #A78BFA4D" abs="true" x="4" y="4" />
+        <ellipse w="8" h="8" fill="$primary" abs="true" x="16" y="16" />
+        <!-- Pin label -->
+        <text value="CDG" font-family="Inter" font-size="11" font-weight="400" color="$text-primary" abs="true" x="8" y="38" />
+      </frame>
+
+    </frame>
+
+    <!-- RIGHT PANEL: 60% Width (864px) Flight Search Results List -->
+    <!-- Beautiful spacious layout with increased gap="20" -->
+    <col w="864" h="900" abs="true" x="576" y="0" p="32 48" gap="20" align="top-left">
+      
+      <!-- 1. Top Section: Header Titles and Sort selection -->
+      <row w="768" align="middle-left" gap="auto">
+        <col gap="4" align="top-left">
+          <!-- Playfair Display editorial title -->
+          <text text-style="Display" value="Select Outbound Flight" color="$text-primary" />
+          <text font-family="Inter" font-size="13" font-weight="300" value="5 Premium Business direct flights found SFO → CDG" color="$text-muted" />
+        </col>
+        
+        <row gap="8" align="middle-right">
+          <text font-family="Inter" font-size="13" font-weight="300" value="Sort by:" color="$text-muted" />
+          <row fill="$surface" border="1 $border" radius="$radius-sm" p="6 12" align="middle-center" gap="6">
+            <text text-style="BodyStrong" value="Best Option" color="$primary" />
+            <img src="https://api.iconify.design/lucide/chevron-down.svg?color=%23A78BFA" w="14" h="14" />
+          </row>
+        </row>
+      </row>
+
+      <!-- Luxurious spacing -->
+      <col h="4" />
+
+      <!-- 2. DATE FARE CAROUSEL (Top of Results) -->
+      <row role="carousel" w="768" gap="10" align="middle-center">
+        <instance component="comp-date" date="Sat, Oct 10" price="$3,520" />
+        <instance component="comp-date" date="Sun, Oct 11" price="$3,480" />
+        
+        <!-- Active Date (Mon, Oct 12) - High-end flat lavender border visual, no bold -->
+        <col w="100" h="58" fill="$surface-elevated" border="1 $primary" radius="$radius-sm" p="10 8" gap="4" align="middle-center">
+          <text value="Mon, Oct 12" font-family="Inter" font-size="11" font-weight="500" color="$primary" />
+          <text value="$3,420" font-family="Inter" font-size="13" font-weight="500" color="$text-primary" />
+        </col>
+        
+        <instance component="comp-date" date="Tue, Oct 13" price="$2,850" />
+        <instance component="comp-date" date="Wed, Oct 14" price="$3,100" />
+        <instance component="comp-date" date="Thu, Oct 15" price="$3,350" />
+        <instance component="comp-date" date="Fri, Oct 16" price="$3,890" />
+      </row>
+
+      <!-- Luxurious spacing -->
+      <col h="4" />
+
+      <!-- 3. Sort Options Comparison Row Tabs (Unified Playfair Display pricing, no bold) -->
+      <row w="768" gap="16" align="middle-left">
+        <!-- Tab 1: Recommended Best Choice (Active) -->
+        <col role="chip" w="245" fill="$surface-elevated" border="1 $primary" radius="$radius-md" p="12 16" gap="2" align="top-left">
+          <text font-family="Inter" font-size="11" font-weight="400" color="$primary" letter-spacing="0.5" value="RECOMMENDED" />
+          <text text-style="BodyStrong" value="Best Choice • 11h 45m" color="$text-primary" />
+          <text font-family="Playfair Display" font-size="18" font-weight="500" color="$primary" value="$3,420" />
+        </col>
+
+        <!-- Tab 2: Budget Choice -->
+        <col role="chip" w="245" fill="$surface" border="1 $border" radius="$radius-md" p="12 16" gap="2" align="top-left">
+          <text font-family="Inter" font-size="11" font-weight="400" color="$text-muted" letter-spacing="0.5" value="BUDGET" />
+          <text text-style="BodyStrong" value="Cheapest • 13h 10m" color="$text-muted" />
+          <text font-family="Playfair Display" font-size="18" font-weight="500" color="$text-primary" value="$1,890" />
+        </col>
+
+        <!-- Tab 3: Speedy Choice -->
+        <col role="chip" w="245" fill="$surface" border="1 $border" radius="$radius-md" p="12 16" gap="2" align="top-left">
+          <text font-family="Inter" font-size="11" font-weight="400" color="$text-muted" letter-spacing="0.5" value="SPEEDY" />
+          <text text-style="BodyStrong" value="Fastest • 11h 40m" color="$text-muted" />
+          <text font-family="Playfair Display" font-size="18" font-weight="500" color="$text-primary" value="$3,850" />
+        </col>
+      </row>
+
+      <!-- Luxurious spacing -->
+      <col h="8" />
+
+      <!-- 4. Sleek compact horizontal Results Flight Card List -->
+      <col w="768" gap="12" align="top-left">
+        
+        <!-- Flight 1: Singapore Airlines -->
+        <instance component="comp-flight" airline="Singapore Airlines" dep-time="13:15" arr-time="08:00" duration="11h 45m" price="$3,420" craft="Business • Boeing 787" />
+        
+        <!-- Flight 2: Qatar Airways -->
+        <instance component="comp-flight" airline="Qatar Airways" dep-time="16:40" arr-time="11:25" duration="11h 45m" price="$3,980" craft="QSuite • Airbus A350" />
+        
+        <!-- Flight 3: Air France -->
+        <instance component="comp-flight" airline="Air France" dep-time="19:20" arr-time="14:00" duration="11h 40m" price="$2,850" craft="Business • Boeing 777" />
+        
+        <!-- Flight 4: British Airways -->
+        <instance component="comp-flight" airline="British Airways" dep-time="08:30" arr-time="03:15" duration="11h 45m" price="$3,120" craft="Club Suite • Airbus A350" />
+        
+        <!-- Flight 5: Delta Air Lines -->
+        <instance component="comp-flight" airline="Delta Air Lines" dep-time="22:00" arr-time="16:45" duration="11h 45m" price="$2,950" craft="Delta One • Airbus A330" />
+        
+      </col>
+
+      <!-- Luxurious spacing -->
+      <col h="8" />
+
+      <!-- 5. Bottom Nav Details -->
+      <row w="768" align="middle-left" gap="auto">
+        <text text-style="Caption" value="Prices include all mandatory taxes, carrier charges, and booking fees." color="$text-muted" />
+        <row gap="6" align="middle-right">
+          <text text-style="Caption" value="Need help?" color="$text-muted" />
+          <text text-style="Caption" value="Contact Desk" color="$primary" font-weight="400" />
+        </row>
+      </row>
+
+    </col>
+
+  </frame>
+</gui>

@@ -1,0 +1,363 @@
+<gui version="0.2" name="Instagram">
+  <tokens>
+    <!-- Background & Surface Colors -->
+    <color name="bg" value="#000000" />
+    <color name="surface" value="#121212" />
+    <color name="surface-2" value="#1F1F1F" />
+    <color name="border" value="#262626" />
+    
+    <!-- Text Colors -->
+    <color name="text-primary" value="#FFFFFF" />
+    <color name="text-secondary" value="#A8A8A8" />
+    <color name="text-tertiary" value="#737373" />
+    <color name="text-highlight" value="#E5E5E5" />
+    
+    <!-- Accent Colors -->
+    <color name="primary" value="#0095F6" />
+    <color name="danger" value="#FF3040" />
+    
+    <!-- Sizing & Radii -->
+    <number name="radius-sm" value="4" />
+    <number name="radius-md" value="8" />
+    <number name="radius-lg" value="12" />
+    <number name="radius-pill" value="999" />
+    
+    <!-- Spacing -->
+    <number name="space-xs" value="4" />
+    <number name="space-sm" value="8" />
+    <number name="space-md" value="12" />
+    <number name="space-lg" value="16" />
+    <number name="space-xl" value="24" />
+  </tokens>
+
+  <styles>
+    <text-style name="BrandLogo" font-family="SF Pro" font-size="22" font-weight="700" line-height="28" letter-spacing="-0.5" />
+    <text-style name="Headline" font-family="SF Pro" font-size="14" font-weight="600" line-height="18" />
+    <text-style name="Headline/Small" font-family="SF Pro" font-size="13" font-weight="600" line-height="17" />
+    <text-style name="Body" font-family="SF Pro" font-size="14" font-weight="400" line-height="18" />
+    <text-style name="Body/Small" font-family="SF Pro" font-size="13" font-weight="400" line-height="17" />
+    <text-style name="Caption" font-family="SF Pro" font-size="12" font-weight="400" line-height="16" />
+    <text-style name="Tiny" font-family="SF Pro" font-size="10" font-weight="500" line-height="14" />
+  </styles>
+
+  <fonts>
+    <font family="SF Pro" source="system" weights="400 500 600 700" styles="normal" />
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <components>
+    <!-- Reusable Follow Button Component -->
+    <component name="FollowButton" id="comp-follow-btn">
+      <props>
+        <prop name="label" type="text" target="btn-label" />
+      </props>
+      <row role="button" p="6 12" fill="$primary" radius="$radius-md" align="middle-center">
+        <text id="btn-label" value="Follow" font-family="SF Pro" font-size="12" font-weight="600" color="#FFFFFF" line-height="14" />
+      </row>
+    </component>
+
+    <!-- Reusable Comment Row Component -->
+    <component name="CommentRow" id="comp-comment-row">
+      <props>
+        <prop name="username" type="text" target="comm-user" />
+        <prop name="text" type="text" target="comm-text" />
+      </props>
+      <row w="390" p="2 16" gap="6" align="top-left">
+        <text id="comm-user" value="username" font-family="SF Pro" font-size="13" font-weight="600" color="$text-primary" line-height="17" />
+        <text id="comm-text" value="comment content" font-family="SF Pro" font-size="13" font-weight="400" color="$text-highlight" line-height="17" w="290" />
+      </row>
+    </component>
+  </components>
+
+  <!-- Root Canvas: Mobile iOS layout hugging height -->
+  <col w="390" fill="$bg">
+    
+    <!-- 1. iPhone 14/15 Status Bar -->
+    <row w="390" h="47" p="0 20" align="middle-left" gap="auto">
+      <text value="9:41" font-family="SF Pro" font-size="15" font-weight="600" color="$text-primary" line-height="18" />
+      <row gap="6" align="middle-right">
+        <img src="https://api.iconify.design/lucide/signal.svg?color=%23ffffff" w="17" h="11" />
+        <img src="https://api.iconify.design/lucide/wifi.svg?color=%23ffffff" w="17" h="11" />
+        <img src="https://api.iconify.design/lucide/battery.svg?color=%23ffffff" w="20" h="11" />
+      </row>
+    </row>
+
+    <!-- 2. Brand Header Navigation Bar -->
+    <row role="top-navigation-bar" w="390" h="52" p="0 16" align="middle-left" gap="auto" fill="$bg">
+      <text value="Instagram" text-style="BrandLogo" color="$text-primary" />
+      <row gap="20" align="middle-right">
+        <!-- New Post Icon -->
+        <img src="https://api.iconify.design/lucide/plus-square.svg?color=%23ffffff" w="24" h="24" />
+        <!-- Notification Heart Icon -->
+        <img src="https://api.iconify.design/lucide/heart.svg?color=%23ffffff" w="24" h="24" />
+        <!-- Direct Message Icon -->
+        <img src="https://api.iconify.design/lucide/send.svg?color=%23ffffff" w="24" h="24" />
+      </row>
+    </row>
+
+    <!-- 3. Stories Tray (Horizontal Row Container) -->
+    <row role="carousel" w="390" p="8 8 12 8" gap="14" align="middle-left" fill="$bg">
+      
+      <!-- Story 1: Your Story -->
+      <col gap="6" align="top-center">
+        <frame w="64" h="64">
+          <!-- Avatar image -->
+          <frame role="avatar" w="56" h="56" x="4" y="4" radius="28" clip="true">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=56&amp;h=56&amp;q=80" w="56" h="56" fit="cover" />
+          </frame>
+          <!-- Blue Plus Badge -->
+          <row role="badge" abs="true" x="44" y="44" w="18" h="18" radius="9" fill="$primary" stroke="$bg" stroke-width="2" align="middle-center">
+            <img src="https://api.iconify.design/lucide/plus.svg?color=%23ffffff" w="10" h="10" />
+          </row>
+        </frame>
+        <text value="Your Story" font-family="SF Pro" font-size="11" font-weight="400" color="$text-secondary" line-height="14" />
+      </col>
+
+      <!-- Story 2: nature.hub (Active story) -->
+      <col gap="6" align="top-center">
+        <frame w="64" h="64">
+          <!-- IG Gradient Ring -->
+          <ellipse fill="linear-gradient(135deg, #F91A00 0%, #E20078 30%, #FF8A00 70%, #FFD600 100%)" w="64" h="64" />
+          <!-- Black Inner Gap -->
+          <ellipse fill="$bg" w="60" h="60" abs="true" x="2" y="2" />
+          <!-- Story Avatar -->
+          <frame role="avatar" w="54" h="54" abs="true" x="5" y="5" radius="27" clip="true">
+            <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&amp;fit=crop&amp;w=54&amp;h=54&amp;q=80" w="54" h="54" fit="cover" />
+          </frame>
+        </frame>
+        <text value="nature.hub" font-family="SF Pro" font-size="11" font-weight="400" color="$text-primary" line-height="14" />
+      </col>
+
+      <!-- Story 3: traveler (Active story) -->
+      <col gap="6" align="top-center">
+        <frame w="64" h="64">
+          <!-- IG Gradient Ring -->
+          <ellipse fill="linear-gradient(135deg, #F91A00 0%, #E20078 30%, #FF8A00 70%, #FFD600 100%)" w="64" h="64" />
+          <ellipse fill="$bg" w="60" h="60" abs="true" x="2" y="2" />
+          <!-- Story Avatar -->
+          <frame role="avatar" w="54" h="54" abs="true" x="5" y="5" radius="27" clip="true">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&amp;fit=crop&amp;w=54&amp;h=54&amp;q=80" w="54" h="54" fit="cover" />
+          </frame>
+        </frame>
+        <text value="traveler" font-family="SF Pro" font-size="11" font-weight="400" color="$text-primary" line-height="14" />
+      </col>
+
+      <!-- Story 4: chef_lucas (Active story) -->
+      <col gap="6" align="top-center">
+        <frame w="64" h="64">
+          <!-- IG Gradient Ring -->
+          <ellipse fill="linear-gradient(135deg, #F91A00 0%, #E20078 30%, #FF8A00 70%, #FFD600 100%)" w="64" h="64" />
+          <ellipse fill="$bg" w="60" h="60" abs="true" x="2" y="2" />
+          <!-- Story Avatar -->
+          <frame role="avatar" w="54" h="54" abs="true" x="5" y="5" radius="27" clip="true">
+            <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&amp;fit=crop&amp;w=54&amp;h=54&amp;q=80" w="54" h="54" fit="cover" />
+          </frame>
+        </frame>
+        <text value="chef_lucas" font-family="SF Pro" font-size="11" font-weight="400" color="$text-primary" line-height="14" />
+      </col>
+
+      <!-- Story 5: art.gallery (Viewed/Inactive story) -->
+      <col gap="6" align="top-center">
+        <frame w="64" h="64">
+          <!-- Grey Inactive Ring -->
+          <ellipse fill="$border" w="64" h="64" />
+          <ellipse fill="$bg" w="60" h="60" abs="true" x="2" y="2" />
+          <!-- Story Avatar -->
+          <frame role="avatar" w="54" h="54" abs="true" x="5" y="5" radius="27" clip="true">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&amp;fit=crop&amp;w=54&amp;h=54&amp;q=80" w="54" h="54" fit="cover" />
+          </frame>
+        </frame>
+        <text value="art.gallery" font-family="SF Pro" font-size="11" font-weight="400" color="$text-secondary" line-height="14" />
+      </col>
+    </row>
+
+    <!-- Thin Divider Line -->
+    <rect fill="$border" w="390" h="1" />
+
+    <!-- 4. FEED POSTS -->
+
+    <!-- POST 1: traveler (Amalfi Coast) -->
+    <col role="card" w="390" fill="$bg">
+      
+      <!-- Post Header -->
+      <row w="390" p="12 16" align="middle-left" gap="auto">
+        <row gap="10" align="middle-left">
+          <!-- Round Poster Avatar -->
+          <frame role="avatar" w="32" h="32" radius="16" clip="true">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&amp;fit=crop&amp;w=32&amp;h=32&amp;q=80" w="32" h="32" fit="cover" />
+          </frame>
+          <col gap="2">
+            <row gap="4" align="middle-left">
+              <text value="traveler" text-style="Headline/Small" color="$text-primary" />
+              <!-- Verification Blue Badge -->
+              <img role="badge" src="https://api.iconify.design/lucide/badge-check.svg?color=%230095f6&amp;fill=%23ffffff" w="12" h="12" />
+            </row>
+            <text value="Amalfi Coast, Italy" font-family="SF Pro" font-size="11" font-weight="400" color="$text-secondary" line-height="14" />
+          </col>
+        </row>
+        <!-- Options Button -->
+        <img src="https://api.iconify.design/lucide/more-horizontal.svg?color=%23ffffff" w="20" h="20" />
+      </row>
+
+      <!-- Post Main Photo (Amalfi Coast) -->
+      <img src="https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&amp;fit=crop&amp;w=390&amp;h=390&amp;q=80" w="390" h="390" fit="cover" />
+
+      <!-- Post Action Buttons Area -->
+      <row w="390" p="12 14" align="middle-left" gap="auto">
+        <row gap="16" align="middle-left">
+          <!-- Red Filled Heart (Liked State) -->
+          <img src="https://api.iconify.design/lucide/heart.svg?color=%23FF3040&amp;fill=%23FF3040" w="24" h="24" />
+          <!-- Comment Icon -->
+          <img src="https://api.iconify.design/lucide/message-circle.svg?color=%23ffffff" w="24" h="24" />
+          <!-- Share / Direct Send Icon -->
+          <img src="https://api.iconify.design/lucide/send.svg?color=%23ffffff" w="24" h="24" />
+        </row>
+        <!-- Bookmark Icon (Unsaved State) -->
+        <img src="https://api.iconify.design/lucide/bookmark.svg?color=%23ffffff" w="24" h="24" />
+      </row>
+
+      <!-- Likes Section -->
+      <row w="390" p="0 16 6 16" align="middle-left">
+        <text value="Liked by nature.hub and 4,892 others" font-family="SF Pro" font-size="13" font-weight="600" color="$text-primary" line-height="17" w="358" />
+      </row>
+
+      <!-- Caption Section -->
+      <row w="390" p="2 16" gap="6" align="top-left">
+        <text w="358">
+          <segment value="traveler " font-family="SF Pro" font-size="13" font-weight="600" color="$text-primary" />
+          <segment value="Unbelievable golden hour in Amalfi. Can't wait to come back! 🇮🇹✨" font-family="SF Pro" font-size="13" font-weight="400" color="$text-highlight" />
+        </text>
+      </row>
+
+      <!-- Comments Preview -->
+      <col w="390" p="4 0" gap="4">
+        <!-- View All Link -->
+        <row role="hyperlink" w="390" p="2 16">
+          <text value="View all 84 comments" font-family="SF Pro" font-size="13" font-weight="400" color="$text-secondary" line-height="17" />
+        </row>
+        
+        <!-- Highlight Comments Using Reusable Component -->
+        <instance component="comp-comment-row" username="nature.hub" text="Stunner! Adding to my bucket list immediately. 🌅" />
+        <instance component="comp-comment-row" username="chef_lucas" text="Amazing colors! Need to eat there!" />
+      </col>
+
+      <!-- Timestamp -->
+      <row w="390" p="6 16 16 16">
+        <text value="42 minutes ago" font-family="SF Pro" font-size="10" font-weight="400" color="$text-tertiary" line-height="14" />
+      </row>
+    </col>
+
+    <rect fill="$border" w="390" h="1" />
+
+    <!-- POST 2: creative.studio (Tokyo Street) -->
+    <col role="card" w="390" fill="$bg">
+      
+      <!-- Post Header -->
+      <row w="390" p="12 16" align="middle-left" gap="auto">
+        <row gap="10" align="middle-left">
+          <!-- Round Poster Avatar -->
+          <frame role="avatar" w="32" h="32" radius="16" clip="true">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&amp;fit=crop&amp;w=32&amp;h=32&amp;q=80" w="32" h="32" fit="cover" />
+          </frame>
+          <col gap="2">
+            <row gap="4" align="middle-left">
+              <text value="creative.studio" text-style="Headline/Small" color="$text-primary" />
+              <img role="badge" src="https://api.iconify.design/lucide/badge-check.svg?color=%230095f6&amp;fill=%23ffffff" w="12" h="12" />
+            </row>
+            <text value="Tokyo, Japan" font-family="SF Pro" font-size="11" font-weight="400" color="$text-secondary" line-height="14" />
+          </col>
+        </row>
+        <!-- Options Button -->
+        <img src="https://api.iconify.design/lucide/more-horizontal.svg?color=%23ffffff" w="20" h="20" />
+      </row>
+
+      <!-- Post Main Photo (Tokyo Neon) -->
+      <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&amp;fit=crop&amp;w=390&amp;h=390&amp;q=80" w="390" h="390" fit="cover" />
+
+      <!-- Post Action Buttons Area -->
+      <row w="390" p="12 14" align="middle-left" gap="auto">
+        <row gap="16" align="middle-left">
+          <!-- Stroke Heart (Unliked State) -->
+          <img src="https://api.iconify.design/lucide/heart.svg?color=%23ffffff" w="24" h="24" />
+          <!-- Comment Icon -->
+          <img src="https://api.iconify.design/lucide/message-circle.svg?color=%23ffffff" w="24" h="24" />
+          <!-- Share / Direct Send Icon -->
+          <img src="https://api.iconify.design/lucide/send.svg?color=%23ffffff" w="24" h="24" />
+        </row>
+        <!-- Bookmark Icon (Saved/Filled State) -->
+        <img src="https://api.iconify.design/lucide/bookmark.svg?color=%23ffffff&amp;fill=%23ffffff" w="24" h="24" />
+      </row>
+
+      <!-- Likes Section -->
+      <row w="390" p="0 16 6 16" align="middle-left">
+        <text value="Liked by traveler and 1,204 others" font-family="SF Pro" font-size="13" font-weight="600" color="$text-primary" line-height="17" w="358" />
+      </row>
+
+      <!-- Caption Section -->
+      <row w="390" p="2 16" gap="6" align="top-left">
+        <text w="358">
+          <segment value="creative.studio " font-family="SF Pro" font-size="13" font-weight="600" color="$text-primary" />
+          <segment value="Tokyo neon vibes at 2 AM. 🇯🇵🏮 #tokyo #neondreams" font-family="SF Pro" font-size="13" font-weight="400" color="$text-highlight" />
+        </text>
+      </row>
+
+      <!-- Comments Preview -->
+      <col w="390" p="4 0" gap="4">
+        <!-- View All Link -->
+        <row role="hyperlink" w="390" p="2 16">
+          <text value="View all 12 comments" font-family="SF Pro" font-size="13" font-weight="400" color="$text-secondary" line-height="17" />
+        </row>
+        
+        <!-- Highlight Comments Using Reusable Component -->
+        <instance component="comp-comment-row" username="neon_dreamer" text="The reflection on the wet asphalt is perfect! 🤩" />
+      </col>
+
+      <!-- Timestamp -->
+      <row w="390" p="6 16 16 16">
+        <text value="3 hours ago" font-family="SF Pro" font-size="10" font-weight="400" color="$text-tertiary" line-height="14" />
+      </row>
+    </col>
+
+    <rect fill="$border" w="390" h="1" />
+
+    <!-- 5. Fixed Bottom Navigation Bar (Glassmorphic look) -->
+    <col w="390" fill="$surface">
+      
+      <!-- Icons Container -->
+      <row role="tab-bar" w="390" h="50" align="middle-left" border-top="1 $border">
+        <!-- Tab 1: Home (Selected/Filled) -->
+        <row w="78" h="50" align="middle-center">
+          <img src="https://api.iconify.design/lucide/home.svg?color=%23ffffff&amp;fill=%23ffffff" w="24" h="24" />
+        </row>
+        <!-- Tab 2: Search -->
+        <row w="78" h="50" align="middle-center">
+          <img src="https://api.iconify.design/lucide/search.svg?color=%23ffffff" w="24" h="24" />
+        </row>
+        <!-- Tab 3: Create -->
+        <row w="78" h="50" align="middle-center">
+          <img src="https://api.iconify.design/lucide/plus-square.svg?color=%23ffffff" w="24" h="24" />
+        </row>
+        <!-- Tab 4: Reels -->
+        <row w="78" h="50" align="middle-center">
+          <img src="https://api.iconify.design/lucide/film.svg?color=%23ffffff" w="24" h="24" />
+        </row>
+        <!-- Tab 5: Profile (Small Circular User Profile Avatar) -->
+        <row w="78" h="50" align="middle-center">
+          <ellipse fill="$text-primary" w="24" h="24" align="middle-center">
+            <frame role="avatar" w="22" h="22" radius="11" clip="true">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=22&amp;h=22&amp;q=80" w="22" h="22" fit="cover" />
+            </frame>
+          </ellipse>
+        </row>
+      </row>
+
+      <!-- iPhone Home Indicator Safe Area Bottom Spacer -->
+      <frame w="390" h="34" clip="true">
+        <!-- Home Indicator Bar -->
+        <rect fill="#FFFFFF" w="140" h="5" radius="3" abs="true" x="125" y="15" />
+      </frame>
+
+    </col>
+
+  </col>
+</gui>

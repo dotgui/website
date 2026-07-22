@@ -1,0 +1,236 @@
+<gui version="0.2" name="HeadspaceClone">
+  <tokens>
+    <!-- Color Palette -->
+    <color name="bg" value="#FAF5EF" />
+    <color name="surface" value="#FFFFFF" />
+    <color name="surface-elevated" value="#FFFDF9" />
+    <color name="border" value="#EBE5DC" />
+    <color name="text-primary" value="#37322D" />
+    <color name="text-secondary" value="#7A7065" />
+    <color name="text-tertiary" value="#B8AEA2" />
+    
+    <!-- Accent Colors -->
+    <color name="primary-orange" value="#FE7B47" />
+    <color name="primary-orange-bg" value="#FE7B471F" />
+    <color name="sleep-blue" value="#396A93" />
+    <color name="sleep-blue-bg" value="#396A931F" />
+    <color name="focus-yellow" value="#D97706" />
+    <color name="focus-yellow-bg" value="#FFFBEB" />
+    <color name="move-green" value="#10B981" />
+    <color name="move-green-bg" value="#F0FDF4" />
+    
+    <!-- Night Mode -->
+    <color name="night-bg" value="#1C2D42" />
+    <color name="white" value="#FFFFFF" />
+
+    <!-- Spacing Scale -->
+    <number name="space-xs" value="4" />
+    <number name="space-sm" value="8" />
+    <number name="space-md" value="12" />
+    <number name="space-lg" value="16" />
+    <number name="space-xl" value="24" />
+    <number name="space-xxl" value="32" />
+
+    <!-- Corner Radius Scale -->
+    <number name="radius-subtle" value="8" />
+    <number name="radius-card" value="24" />
+    <number name="radius-pill" value="999" />
+  </tokens>
+
+  <styles>
+    <!-- Typography Scales (Optimized line-heights for spacious breathing room) -->
+    <text-style name="Display" font-family="SF Pro" font-size="40" font-weight="700" line-height="52" />
+    <text-style name="LargeTitle" font-family="SF Pro" font-size="28" font-weight="700" line-height="34" />
+    <text-style name="Headline" font-family="SF Pro" font-size="17" font-weight="600" line-height="24" />
+    <text-style name="Body" font-family="SF Pro" font-size="17" font-weight="400" line-height="24" />
+    <text-style name="Subheadline" font-family="SF Pro" font-size="15" font-weight="400" line-height="22" />
+    <text-style name="Footnote" font-family="SF Pro" font-size="13" font-weight="400" line-height="20" />
+    <text-style name="Caption" font-family="SF Pro" font-size="12" font-weight="500" line-height="18" letter-spacing="0.4" />
+    <text-style name="Tiny" font-family="SF Pro" font-size="10" font-weight="600" line-height="16" letter-spacing="0.8" />
+  </styles>
+
+  <fonts>
+    <font family="SF Pro" source="system" weights="400 500 600 700" styles="normal" />
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <!-- iOS Root Layout Canvas (Width strictly 390px, height scrollable) -->
+  <col w="390" fill="$bg">
+    
+    <!-- iOS Top Safe Area Spacer -->
+    <col h="47" />
+
+    <!-- Section 1: Navigation Header Bar (Title left, Smiling Mascot right) -->
+    <row role="top-navigation-bar" w="fill" p="16 20 8 20" align="middle-left" gap="12">
+      <col gap="4">
+        <text font-family="SF Pro" font-size="20" font-weight="700" value="Good morning, Jinson" color="$text-primary" line-height="26" />
+        <text text-style="Footnote" value="Let's find some space today." color="$text-secondary" />
+      </col>
+      
+      <col w="fill" />
+
+      <!-- Headspace happy smiling mascot circle on the right -->
+      <frame w="40" h="40">
+        <ellipse fill="$primary-orange" w="40" h="40" x="0" y="0" />
+        <!-- Eyes -->
+        <ellipse fill="$white" w="4" h="4" x="12" y="13" />
+        <ellipse fill="$white" w="4" h="4" x="24" y="13" />
+        <!-- Smile -->
+        <rect fill="$white" w="14" h="4" radius="2" x="13" y="21" />
+      </frame>
+    </row>
+
+    <!-- Main Content Stream (Enforced w="fill" stretching to prevent jamming) -->
+    <col w="fill" p="8 16 12 16" gap="16">
+
+      <!-- Playful Streak Banner (Mindfulness Streak) -->
+      <row role="banner" w="fill" fill="$surface" radius="16" p="10 16" gap="12" align="middle-left" border="1 $border">
+        <row fill="$primary-orange-bg" p="4 8" radius="10" align="middle-center" gap="4">
+          <img src="https://api.iconify.design/lucide/flame.svg?color=%23FE7B47" w="14" h="14" />
+          <text font-family="SF Pro" font-size="12" font-weight="700" value="6" color="$primary-orange" line-height="16" />
+        </row>
+        <col gap="2" w="fill">
+          <text font-family="SF Pro" font-size="13" font-weight="600" value="6 Day Meditation Streak" color="$text-primary" line-height="18" />
+          <text font-family="SF Pro" font-size="10" font-weight="600" value="YOUR HIGHEST STREAK YET! KEEP GOING." color="$text-secondary" line-height="14" letter-spacing="0.4" />
+        </col>
+        <img src="https://api.iconify.design/lucide/chevron-right.svg?color=%237A7065" w="16" h="16" />
+      </row>
+
+      <!-- Hero "Today's Meditation" Card -->
+      <col role="card" w="fill" fill="$surface" radius="$radius-card" p="16" gap="14" border="1 $border">
+        <!-- Beautiful Cozy Headspace Meditation Mascot Illustration -->
+        <img src="assets/meditation_illustration.png" w="326" h="240" radius="16" fit="cover" />
+        
+        <col gap="4" w="fill">
+          <row fill="$primary-orange-bg" p="2 8" radius="6" w="150" align="middle-center">
+            <text font-family="SF Pro" font-size="11" font-weight="700" value="DAILY FOCUS • 5-10 MIN" color="$primary-orange" line-height="14" />
+          </row>
+          <text text-style="LargeTitle" value="Managing Daily Stress" color="$text-primary" />
+          <text text-style="Footnote" value="Find a comfortable seat, settle in, and let go of tension with today's guided session." color="$text-secondary" />
+        </col>
+
+        <!-- Play Button -->
+        <row role="button" fill="$primary-orange" p="12 24" radius="$radius-pill" gap="8" align="middle-center" w="180">
+          <img src="https://api.iconify.design/lucide/play.svg?color=%23FFFFFF" w="16" h="16" />
+          <text font-family="SF Pro" font-size="14" font-weight="700" value="Play Session" color="$white" line-height="18" />
+        </row>
+      </col>
+
+      <!-- 2x2 Mindfulness Pillars Grid -->
+      <grid columns="2" gap="12" w="fill">
+        
+        <!-- Pillar 1: Meditate -->
+        <col role="card" w="fill" fill="#FFF4F0" radius="20" p="14" gap="10" border="1 #FE7B471F">
+          <row w="36" h="36" radius="18" fill="$white" align="middle-center">
+            <img src="https://api.iconify.design/lucide/brain.svg?color=%23FE7B47" w="18" h="18" />
+          </row>
+          <col gap="2">
+            <text font-family="SF Pro" font-size="16" font-weight="700" value="Meditate" color="$text-primary" line-height="20" />
+            <text font-family="SF Pro" font-size="12" font-weight="500" value="Find peace" color="#FE7B47" line-height="16" />
+          </col>
+        </col>
+
+        <!-- Pillar 2: Sleep -->
+        <col role="card" w="fill" fill="#F0F5FA" radius="20" p="14" gap="10" border="1 #396A931F">
+          <row w="36" h="36" radius="18" fill="$white" align="middle-center">
+            <img src="https://api.iconify.design/lucide/moon.svg?color=%23396A93" w="18" h="18" />
+          </row>
+          <col gap="2">
+            <text font-family="SF Pro" font-size="16" font-weight="700" value="Sleep" color="$text-primary" line-height="20" />
+            <text font-family="SF Pro" font-size="12" font-weight="500" value="Drift off" color="#396A93" line-height="16" />
+          </col>
+        </col>
+
+        <!-- Pillar 3: Focus -->
+        <col role="card" w="fill" fill="#FFFBEB" radius="20" p="14" gap="10" border="1 #D977061F">
+          <row w="36" h="36" radius="18" fill="$white" align="middle-center">
+            <img src="https://api.iconify.design/lucide/sparkles.svg?color=%23D97706" w="18" h="18" />
+          </row>
+          <col gap="2">
+            <text font-family="SF Pro" font-size="16" font-weight="700" value="Focus" color="$text-primary" line-height="20" />
+            <text font-family="SF Pro" font-size="12" font-weight="500" value="Get clarity" color="#D97706" line-height="16" />
+          </col>
+        </col>
+
+        <!-- Pillar 4: Move -->
+        <col role="card" w="fill" fill="#F0FDF4" radius="20" p="14" gap="10" border="1 #10B9811F">
+          <row w="36" h="36" radius="18" fill="$white" align="middle-center">
+            <img src="https://api.iconify.design/lucide/bike.svg?color=%2310B981" w="18" h="18" />
+          </row>
+          <col gap="2">
+            <text font-family="SF Pro" font-size="16" font-weight="700" value="Move" color="$text-primary" line-height="20" />
+            <text font-family="SF Pro" font-size="12" font-weight="500" value="Active mind" color="#10B981" line-height="16" />
+          </col>
+        </col>
+
+      </grid>
+
+      <!-- Cozy Night "Sleepcast" Card (Deep Indigo theme) -->
+      <col role="card" w="fill" fill="$night-bg" radius="$radius-card" p="16" gap="14">
+        <!-- Beautiful Cozy Headspace Sleepcast Illustration -->
+        <img src="assets/sleepcast_illustration.png" w="326" h="240" radius="16"  />
+        
+        <col gap="4" w="fill">
+          <row fill="#FFFFFF20" p="2 8" radius="6" w="120" align="middle-center">
+            <text font-family="SF Pro" font-size="11" font-weight="700" value="SLEEPCAST • 45 MIN" color="$white" line-height="14" />
+          </row>
+          <text font-family="SF Pro" font-size="24" font-weight="700" value="Rainday Antiques" color="$white" line-height="30" />
+          <text text-style="Footnote" value="A warm, drafty antique shop on a rainy night. Settle in and let the gentle rain soothe your mind." color="#A3C7E8" />
+        </col>
+
+        <!-- Drift Away Button -->
+        <row role="button" fill="$white" p="12 24" radius="$radius-pill" gap="8" align="middle-center" w="160">
+          <img src="https://api.iconify.design/lucide/moon.svg?color=%231C2D42" w="16" h="16" />
+          <text font-family="SF Pro" font-size="14" font-weight="700" value="Drift Away" color="#1C2D42" line-height="18" />
+        </row>
+      </col>
+
+      <col h="12" />
+
+    </col>
+
+    <!-- Section 5: iOS Fixed-Style Bottom Tab Bar Spacer -->
+    <row role="tab-bar" w="390" h="83" fill="$surface" p="10 24 34 24" gap="auto" align="middle-center" border="1 $border">
+      
+      <!-- Tab 1: Today (Active) -->
+      <col gap="4" align="middle-center" w="50">
+        <!-- Headspace Smiling Mascot circle as Active Home button! -->
+        <frame w="20" h="20">
+          <ellipse fill="$primary-orange" w="20" h="20" x="0" y="0" />
+          <!-- Eyes -->
+          <ellipse fill="$white" w="2" h="2" x="6" y="6" />
+          <ellipse fill="$white" w="2" h="2" x="12" y="6" />
+          <!-- Smile -->
+          <rect fill="$white" w="8" h="2" radius="1" x="6" y="11" />
+        </frame>
+        <text font-family="SF Pro" font-size="10" font-weight="700" value="Today" color="$primary-orange" line-height="14" />
+      </col>
+
+      <!-- Tab 2: Meditate (Inactive) -->
+      <col gap="4" align="middle-center" w="50">
+        <img src="https://api.iconify.design/lucide/brain.svg?color=%2364748B" w="20" h="20" />
+        <text text-style="Tiny" value="Meditate" color="$text-tertiary" />
+      </col>
+
+      <!-- Tab 3: Sleep (Inactive) -->
+      <col gap="4" align="middle-center" w="50">
+        <img src="https://api.iconify.design/lucide/moon.svg?color=%2364748B" w="20" h="20" />
+        <text text-style="Tiny" value="Sleep" color="$text-tertiary" />
+      </col>
+
+      <!-- Tab 4: Focus (Inactive) -->
+      <col gap="4" align="middle-center" w="50">
+        <img src="https://api.iconify.design/lucide/sparkles.svg?color=%2364748B" w="20" h="20" />
+        <text text-style="Tiny" value="Focus" color="$text-tertiary" />
+      </col>
+
+      <!-- Tab 5: Profile (Inactive) -->
+      <col gap="4" align="middle-center" w="50">
+        <img src="https://api.iconify.design/lucide/user.svg?color=%2364748B" w="20" h="20" />
+        <text text-style="Tiny" value="Profile" color="$text-tertiary" />
+      </col>
+      
+    </row>
+
+  </col>
+</gui>

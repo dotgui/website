@@ -1,13 +1,26 @@
 <template>
-  <nav class="site-nav">
+  <nav class="site-nav" :class="{ 'is-open': open }">
     <div class="wrap">
-      <NuxtLink class="nav-logo" to="/">.gui <i style="background:var(--blue)"></i><i style="background:var(--yellow)"></i><i style="background:var(--orange)"></i></NuxtLink>
-      <div class="nav-links">
+      <NuxtLink class="nav-logo" to="/" @click="open = false">.gui <i style="background:var(--blue)"></i><i style="background:var(--yellow)"></i><i style="background:var(--orange)"></i></NuxtLink>
+      <button
+        class="nav-toggle"
+        type="button"
+        :aria-expanded="open"
+        aria-controls="nav-links"
+        aria-label="Toggle navigation menu"
+        @click="open = !open"
+      >
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+      </button>
+      <div id="nav-links" class="nav-links" @click="open = false">
         <NuxtLink to="/spec">Spec</NuxtLink>
         <NuxtLink to="/cli">CLI</NuxtLink>
         <NuxtLink to="/kit">Kit</NuxtLink>
         <NuxtLink to="/embed">Embed</NuxtLink>
         <NuxtLink to="/figma">Figma</NuxtLink>
+        <NuxtLink to="/examples">Examples</NuxtLink>
         <NuxtLink to="/guides">Guides</NuxtLink>
         <NuxtLink to="/playground">Playground</NuxtLink>
         <a class="nav-cta" href="https://github.com/dotgui/core" target="_blank" rel="noopener" aria-label="GitHub">
@@ -18,3 +31,8 @@
     </div>
   </nav>
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+const open = ref(false)
+</script>

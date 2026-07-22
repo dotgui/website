@@ -12,6 +12,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { guideEntries, type GuideBlock, type GuideEntry } from '../lib/guides-data'
+import { examples } from '../lib/examples-data'
 import { canonicalUrl, SITE_URL } from '../utils/site-url'
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -92,6 +93,19 @@ Key facts:
 ## Guides
 
 ${guideEntries.map(g => `- [${g.title}](${canonicalUrl(`/guides/${g.slug}`)}): ${g.dek}`).join('\n')}
+
+## Examples
+
+Real .gui files to read and learn from. Each page renders the file live and
+shows its full source; the raw design.guix links below return the plain-text
+.gui markup directly — no download or unzip needed.
+
+${examples
+    .map(
+      e =>
+        `- [${e.title}](${canonicalUrl(`/examples/${e.slug}`)}) — ${e.category}${e.description ? `; ${e.description}` : ''} · [raw source](${SITE_URL}${e.raw})`
+    )
+    .join('\n')}
 
 ## Pricing
 

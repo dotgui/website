@@ -1,0 +1,286 @@
+<gui version="0.2" name="Pulse">
+  <mode name="theme" values="light dark" default="light" />
+
+  <tokens>
+    <!-- Mode-varying surfaces & text (Material 3 tonal roles) -->
+    <color name="bg"        theme-light="#FEF7FF" theme-dark="#141218" />
+    <color name="surf"      theme-light="#F4EFF7" theme-dark="#211F26" />
+    <color name="surf2"     theme-light="#FFFFFF" theme-dark="#2B2930" />
+    <color name="ink"       theme-light="#1C1B1F" theme-dark="#E6E1E5" />
+    <color name="ink2"      theme-light="#49454F" theme-dark="#CAC4D0" />
+    <color name="line"      theme-light="#E2DCE6" theme-dark="#3A383F" />
+
+    <color name="prim"      theme-light="#6750A4" theme-dark="#D0BCFF" />
+    <color name="on-prim"   theme-light="#FFFFFF" theme-dark="#381E72" />
+    <color name="prim-c"    theme-light="#EADDFF" theme-dark="#4F378B" />
+    <color name="on-prim-c" theme-light="#21005D" theme-dark="#EADDFF" />
+    <color name="ter-c"     theme-light="#FFD8E4" theme-dark="#633B48" />
+    <color name="on-ter-c"  theme-light="#31111D" theme-dark="#FFD8E4" />
+    <color name="hr-c"      theme-light="#FFDAD6" theme-dark="#5C0007" />
+    <color name="on-hr-c"   theme-light="#410002" theme-dark="#FFDAD6" />
+
+    <!-- Constant vibrant accents (icon chips, rings, FAB read the same in both modes) -->
+    <color name="c-move"    value="#7C5CFF" />
+    <color name="c-ex"      value="#FF4D8D" />
+    <color name="c-stand"   value="#00C2A8" />
+    <color name="c-heart"   value="#FF5A5F" />
+    <color name="c-fire"    value="#FF7043" />
+    <color name="c-brand"   value="#6750A4" />
+    <color name="c-track"   value="#8E879455" />
+    <color name="ink-inv"   value="#FFFFFF" />
+
+    <number name="r-s"    value="12" />
+    <number name="r-m"    value="16" />
+    <number name="r-l"    value="20" />
+    <number name="r-xl"   value="28" />
+    <number name="r-full" value="999" />
+  </tokens>
+
+  <styles>
+    <text-style name="Num"     font-family="Roboto" font-size="30" font-weight="600" line-height="34" />
+    <text-style name="Stat"    font-family="Roboto" font-size="22" font-weight="600" line-height="26" />
+    <text-style name="Headline" font-family="Roboto" font-size="24" font-weight="500" line-height="30" />
+    <text-style name="Title"   font-family="Roboto" font-size="18" font-weight="600" line-height="24" />
+    <text-style name="TitleM"  font-family="Roboto" font-size="16" font-weight="500" line-height="22" />
+    <text-style name="Body"    font-family="Roboto" font-size="14" font-weight="400" line-height="20" />
+    <text-style name="Label"   font-family="Roboto" font-size="12" font-weight="500" line-height="16" letter-spacing="0.4" />
+    <text-style name="LabelL"  font-family="Roboto" font-size="14" font-weight="500" line-height="20" letter-spacing="0.2" />
+  </styles>
+
+  <fonts>
+    <font family="Roboto" source="google" weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <col w="360" fill="$bg" gap="16">
+    <!-- Top app bar (top padding reserves the status bar) -->
+    <row role="top-navigation-bar" w="fill" p="28 16 0" align="middle-center" gap="12">
+      <col gap="2" w="fill" align="top-left">
+        <text text-style="Body" value="Good morning" color="$ink2" />
+        <text text-style="Headline" value="Mara Ellison" color="$ink" />
+      </col>
+      <row p="8 12" radius="$r-full" fill="$surf" gap="6" align="middle-center">
+        <img src="https://api.iconify.design/mdi/fire.svg?color=%23FF7043" w="18" h="18" />
+        <text text-style="LabelL" value="12" color="$ink" />
+      </row>
+      <col w="44" h="44" radius="$r-full" fill="$c-brand" align="middle-center">
+        <text font-family="Roboto" font-size="16" font-weight="600" value="ME" color="$ink-inv" />
+      </col>
+    </row>
+
+    <!-- Hero: activity rings -->
+    <col w="fill" p="0 16">
+      <col w="fill" fill="$surf" radius="$r-xl" p="24" gap="22">
+        <row w="fill" align="middle-center" gap="auto">
+          <text text-style="Title" value="Today's activity" color="$ink" />
+          <row gap="2" align="middle-center">
+            <text text-style="Label" value="Goals" color="$prim" />
+            <img src="https://api.iconify.design/mdi/chevron-right.svg?color=%237C5CFF" w="16" h="16" />
+          </row>
+        </row>
+
+        <col w="fill" align="middle-center">
+          <!-- Concentric conic-gradient rings: Move / Exercise / Stand -->
+          <col w="200" h="200" radius="$r-full" align="middle-center" fill="conic-gradient(from 0deg at 50% 50%, #7C5CFF 0deg, #7C5CFF 297deg, #8E879455 297deg, #8E879455 360deg)">
+            <col w="170" h="170" radius="$r-full" align="middle-center" fill="$surf">
+              <col w="156" h="156" radius="$r-full" align="middle-center" fill="conic-gradient(from 0deg at 50% 50%, #FF4D8D 0deg, #FF4D8D 336deg, #8E879455 336deg, #8E879455 360deg)">
+                <col w="126" h="126" radius="$r-full" align="middle-center" fill="$surf">
+                  <col w="112" h="112" radius="$r-full" align="middle-center" fill="conic-gradient(from 0deg at 50% 50%, #00C2A8 0deg, #00C2A8 270deg, #8E879455 270deg, #8E879455 360deg)">
+                    <col w="82" h="82" radius="$r-full" align="middle-center" fill="$surf" gap="0">
+                      <text text-style="Num" value="742" color="$ink" align="center" />
+                      <text text-style="Label" text-case="uppercase" value="kcal" color="$ink2" align="center" />
+                    </col>
+                  </col>
+                </col>
+              </col>
+            </col>
+          </col>
+        </col>
+
+        <row w="fill" gap="8" align="top-center">
+          <col w="fill" gap="3" align="top-left">
+            <row gap="6" align="middle-left">
+              <ellipse w="9" h="9" fill="$c-move" />
+              <text text-style="Label" value="Move" color="$ink2" />
+            </row>
+            <text text-style="TitleM" value="742/900" color="$ink" />
+          </col>
+          <col w="fill" gap="3" align="top-left">
+            <row gap="6" align="middle-left">
+              <ellipse w="9" h="9" fill="$c-ex" />
+              <text text-style="Label" value="Exercise" color="$ink2" />
+            </row>
+            <text text-style="TitleM" value="28/30 min" color="$ink" />
+          </col>
+          <col w="fill" gap="3" align="top-left">
+            <row gap="6" align="middle-left">
+              <ellipse w="9" h="9" fill="$c-stand" />
+              <text text-style="Label" value="Stand" color="$ink2" />
+            </row>
+            <text text-style="TitleM" value="9/12 hr" color="$ink" />
+          </col>
+        </row>
+      </col>
+    </col>
+
+    <!-- Metric chips: multi-tonal -->
+    <row w="fill" p="0 16" gap="12" align="top-center">
+      <col role="card" w="fill" fill="$prim-c" radius="$r-l" p="14" gap="12" align="top-left">
+        <col w="38" h="38" radius="$r-full" fill="$c-move" align="middle-center">
+          <img src="https://api.iconify.design/mdi/walk.svg?color=%23FFFFFF" w="22" h="22" />
+        </col>
+        <col gap="1" align="top-left">
+          <text text-style="Stat" value="8,420" color="$on-prim-c" />
+          <text text-style="Label" value="steps" color="$on-prim-c" />
+        </col>
+      </col>
+      <col role="card" w="fill" fill="$ter-c" radius="$r-l" p="14" gap="12" align="top-left">
+        <col w="38" h="38" radius="$r-full" fill="$c-ex" align="middle-center">
+          <img src="https://api.iconify.design/mdi/map-marker-distance.svg?color=%23FFFFFF" w="22" h="22" />
+        </col>
+        <col gap="1" align="top-left">
+          <text text-style="Stat" value="5.2" color="$on-ter-c" />
+          <text text-style="Label" value="km today" color="$on-ter-c" />
+        </col>
+      </col>
+      <col role="card" w="fill" fill="$hr-c" radius="$r-l" p="14" gap="12" align="top-left">
+        <col w="38" h="38" radius="$r-full" fill="$c-heart" align="middle-center">
+          <img src="https://api.iconify.design/mdi/heart.svg?color=%23FFFFFF" w="20" h="20" />
+        </col>
+        <col gap="1" align="top-left">
+          <text text-style="Stat" value="72" color="$on-hr-c" />
+          <text text-style="Label" value="avg bpm" color="$on-hr-c" />
+        </col>
+      </col>
+    </row>
+
+    <!-- Today's plan -->
+    <col w="fill" p="0 16" gap="12">
+      <row w="fill" align="middle-center" gap="auto">
+        <text text-style="Title" value="Today's plan" color="$ink" />
+        <text text-style="Label" value="See all" color="$prim" />
+      </row>
+
+      <!-- Hero workout (elevated) -->
+      <row role="card" w="fill" fill="$surf2" radius="$r-xl" p="16" gap="14" align="middle-left">
+        <appearance>
+          <fill type="color" value="$surf2" />
+          <effect type="drop-shadow" x="0" y="2" radius="10" spread="0" color="#1C1B1F1F" />
+        </appearance>
+        <col w="56" h="56" radius="$r-m" fill="$c-move" align="middle-center">
+          <img src="https://api.iconify.design/mdi/run-fast.svg?color=%23FFFFFF" w="30" h="30" />
+        </col>
+        <col w="fill" gap="4" align="top-left">
+          <text text-style="TitleM" value="Morning Run" color="$ink" />
+          <text text-style="Body" value="30 min  &#183;  320 kcal  &#183;  Zone 2" color="$ink2" />
+          <row p="3 10" radius="$r-full" fill="$prim-c" align="middle-center">
+            <text text-style="Label" value="Cardio" color="$on-prim-c" />
+          </row>
+        </col>
+        <col w="44" h="44" radius="$r-full" fill="$c-brand" align="middle-center">
+          <img src="https://api.iconify.design/mdi/play.svg?color=%23FFFFFF" w="24" h="24" />
+        </col>
+      </row>
+
+      <!-- Secondary workout -->
+      <row role="card" w="fill" fill="$surf" radius="$r-m" p="14" gap="14" align="middle-left">
+        <col w="48" h="48" radius="$r-s" fill="$c-ex" align="middle-center">
+          <img src="https://api.iconify.design/mdi/dumbbell.svg?color=%23FFFFFF" w="26" h="26" />
+        </col>
+        <col w="fill" gap="3" align="top-left">
+          <text text-style="TitleM" value="Core &amp; Mobility" color="$ink" />
+          <text text-style="Body" value="20 min  &#183;  140 kcal" color="$ink2" />
+        </col>
+        <row p="3 10" radius="$r-full" fill="$ter-c" align="middle-center">
+          <text text-style="Label" value="Strength" color="$on-ter-c" />
+        </row>
+      </row>
+    </col>
+
+    <!-- Weekly bar chart -->
+    <col w="fill" p="0 16">
+      <col w="fill" fill="$surf" radius="$r-xl" p="20" gap="16">
+        <row w="fill" align="middle-center" gap="auto">
+          <text text-style="Title" value="This week" color="$ink" />
+          <row p="4 10" radius="$r-full" fill="$prim-c" align="middle-center">
+            <text text-style="Label" value="+12% vs last" color="$on-prim-c" />
+          </row>
+        </row>
+        <row w="fill" h="108" gap="auto" align="bottom-center">
+          <col gap="8" align="middle-center">
+            <rect w="26" h="56" radius="$r-full" fill="$prim-c" />
+            <text text-style="Label" value="M" color="$ink2" />
+          </col>
+          <col gap="8" align="middle-center">
+            <rect w="26" h="74" radius="$r-full" fill="$prim-c" />
+            <text text-style="Label" value="T" color="$ink2" />
+          </col>
+          <col gap="8" align="middle-center">
+            <rect w="26" h="44" radius="$r-full" fill="$prim-c" />
+            <text text-style="Label" value="W" color="$ink2" />
+          </col>
+          <col gap="8" align="middle-center">
+            <rect w="26" h="88" radius="$r-full" fill="$prim" />
+            <text text-style="Label" value="T" color="$prim" />
+          </col>
+          <col gap="8" align="middle-center">
+            <rect w="26" h="62" radius="$r-full" fill="$prim-c" />
+            <text text-style="Label" value="F" color="$ink2" />
+          </col>
+          <col gap="8" align="middle-center">
+            <rect w="26" h="34" radius="$r-full" fill="$prim-c" />
+            <text text-style="Label" value="S" color="$ink2" />
+          </col>
+          <col gap="8" align="middle-center">
+            <rect w="26" h="70" radius="$r-full" fill="$prim-c" />
+            <text text-style="Label" value="S" color="$ink2" />
+          </col>
+        </row>
+      </col>
+    </col>
+
+    <!-- Extended FAB (constant brand) -->
+    <col w="fill" p="4 16 0" align="middle-center">
+      <row role="floating-action-button" w="fill" radius="$r-full" fill="$c-brand" p="16 24" gap="10" align="middle-center">
+        <appearance>
+          <fill type="color" value="#6750A4" />
+          <effect type="drop-shadow" x="0" y="4" radius="14" spread="-2" color="#6750A480" />
+        </appearance>
+        <img src="https://api.iconify.design/mdi/plus.svg?color=%23FFFFFF" w="22" h="22" />
+        <text text-style="LabelL" value="Start a workout" color="$ink-inv" />
+      </row>
+    </col>
+
+    <!-- Bottom navigation -->
+    <row role="tab-bar" w="fill" h="80" fill="$surf2" p="0 8" gap="auto" align="middle-center">
+      <appearance>
+        <fill type="color" value="$surf2" />
+        <effect type="drop-shadow" x="0" y="-1" radius="8" spread="0" color="#1C1B1F14" />
+      </appearance>
+      <col gap="6" align="middle-center" w="76">
+        <row p="6 18" radius="$r-full" fill="$c-brand" align="middle-center">
+          <img src="https://api.iconify.design/mdi/home.svg?color=%23FFFFFF" w="22" h="22" />
+        </row>
+        <text text-style="Label" value="Home" color="$prim" />
+      </col>
+      <col gap="6" align="middle-center" w="76">
+        <row p="6 18" align="middle-center">
+          <img src="https://api.iconify.design/mdi/chart-box-outline.svg?color=%238E8794" w="22" h="22" />
+        </row>
+        <text text-style="Label" value="Activity" color="$ink2" />
+      </col>
+      <col gap="6" align="middle-center" w="76">
+        <row p="6 18" align="middle-center">
+          <img src="https://api.iconify.design/mdi/target.svg?color=%238E8794" w="22" h="22" />
+        </row>
+        <text text-style="Label" value="Goals" color="$ink2" />
+      </col>
+      <col gap="6" align="middle-center" w="76">
+        <row p="6 18" align="middle-center">
+          <img src="https://api.iconify.design/mdi/account-outline.svg?color=%238E8794" w="22" h="22" />
+        </row>
+        <text text-style="Label" value="Profile" color="$ink2" />
+      </col>
+    </row>
+
+  </col>
+</gui>

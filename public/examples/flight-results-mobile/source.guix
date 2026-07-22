@@ -1,0 +1,275 @@
+<gui version="0.2" name="FlightResultsMobile">
+  <tokens>
+    <!-- Background & Surface (Cosmic Obsidian Dark Mode) -->
+    <color name="bg" value="#07070A" />
+    <color name="surface" value="#12121A" />
+    <color name="surface-elevated" value="#1A1A26" />
+    <color name="border" value="#22222F" />
+    
+    <!-- Premium Brand Colors (Lavender) -->
+    <color name="primary" value="#A78BFA" />
+    
+    <!-- Functional Status Colors -->
+    <color name="success-green" value="#10B981" />
+    
+    <!-- Text Colors -->
+    <color name="text-primary" value="#F3F4F6" />
+    <color name="text-muted" value="#9CA3AF" />
+    
+    <!-- Spacing Scale -->
+    <number name="space-xs" value="4" />
+    <number name="space-sm" value="8" />
+    <number name="space-md" value="12" />
+    <number name="space-lg" value="16" />
+    <number name="space-xl" value="20" />
+    
+    <!-- Radius Scale -->
+    <number name="radius-sm" value="6" />
+    <number name="radius-md" value="16" />
+    <number name="radius-pill" value="999" />
+  </tokens>
+
+  <styles>
+    <text-style name="Display" font-family="Playfair Display" font-size="20" font-weight="500" line-height="24" />
+    <text-style name="Title2" font-family="Playfair Display" font-size="16" font-weight="500" line-height="20" />
+    <text-style name="Headline" font-family="Inter" font-size="13" font-weight="400" line-height="16" />
+    <text-style name="Body" font-family="Inter" font-size="13" font-weight="300" line-height="18" />
+    <text-style name="BodyStrong" font-family="Inter" font-size="13" font-weight="400" line-height="18" />
+    <text-style name="Caption" font-family="Inter" font-size="11" font-weight="300" line-height="14" />
+  </styles>
+
+  <fonts>
+    <font family="Playfair Display" source="google" weights="400 500" styles="italic normal" />
+    <font family="SF Pro" source="system" weights="300 400 500" styles="normal" />
+    <font family="Inter" source="google" weights="300 400 500" styles="normal" />
+    <font family="JetBrains Mono" source="google" weights="400" styles="normal" />
+  </fonts>
+
+  <components>
+    <!-- Reusable Calendar Carousel Date Cell (Mobile sized) -->
+    <component name="CarouselDate" id="comp-date">
+      <props>
+        <prop name="date" type="text" target="date-lbl" />
+        <prop name="price" type="text" target="price-lbl" />
+      </props>
+      <col w="64" h="54" fill="$surface" border="1 $border" radius="$radius-sm" p="8 6" gap="4" align="middle-center">
+        <text id="date-lbl" value="Mon 12" font-family="Inter" font-size="11" font-weight="300" color="$text-muted" />
+        <text id="price-lbl" value="$3.4K" font-family="Inter" font-size="12" font-weight="400" color="$text-primary" />
+      </col>
+    </component>
+
+    <!-- Reusable Compact Thinner Flight Result Card (Adapted from flight_search_results.gui!) -->
+    <component name="FlightResult" id="comp-flight">
+      <props>
+        <prop name="airline" type="text" target="lbl-airline" />
+        <prop name="dep-time" type="text" target="lbl-dep-time" />
+        <prop name="arr-time" type="text" target="lbl-arr-time" />
+        <prop name="duration" type="text" target="lbl-duration" />
+        <prop name="price" type="text" target="lbl-price" />
+        <prop name="craft" type="text" target="lbl-craft" />
+        <prop name="badge1" type="text" target="lbl-badge1" />
+        <prop name="badge2" type="text" target="lbl-badge2" />
+      </props>
+      <!-- Basalt slate container card -->
+      <col role="card" w="358" fill="$surface" border="1 $border" radius="$radius-md" p="16" gap="12" align="top-center">
+        <!-- 1. Badges row -->
+        <row gap="8" w="326" align="middle-left">
+          <row fill="$surface-elevated" border="1 $border" radius="$radius-pill" p="4 8" align="middle-center">
+            <text id="lbl-badge1" value="Non-stop" font-family="Inter" font-size="10" font-weight="400" color="$text-muted" />
+          </row>
+          <row fill="#A78BFA1A" border="1 #A78BFA33" radius="$radius-pill" p="4 8" align="middle-center">
+            <text id="lbl-badge2" value="Business Class" font-family="Inter" font-size="10" font-weight="400" color="$primary" />
+          </row>
+        </row>
+
+        <!-- 2. Flight details timeline -->
+        <row w="326" align="middle-left" gap="auto">
+          <!-- Origin -->
+          <col gap="4" w="60">
+            <text id="lbl-dep-time" value="13:15" font-family="Inter" font-size="16" font-weight="400" color="$text-primary" />
+            <text value="SFO" font-family="Inter" font-size="11" font-weight="500" color="$text-muted" />
+            <text value="San Francisco" font-family="Inter" font-size="9" font-weight="300" color="$text-muted" />
+          </col>
+
+          <!-- Middle timeline path -->
+          <col align="middle-center" gap="2" w="180">
+            <text id="lbl-duration" value="11h 45m" font-family="Inter" font-size="10" font-weight="400" color="$primary" />
+            <row align="middle-center" w="120" h="16" gap="4">
+              <ellipse w="6" h="6" fill="$border" />
+              <line fill="$border" thickness="1" />
+              <img src="https://api.iconify.design/lucide/plane.svg?color=%23A78BFA" w="14" h="14" />
+              <line fill="$border" thickness="1" />
+              <ellipse w="6" h="6" fill="$border" />
+            </row>
+            <text value="Direct" font-family="Inter" font-size="10" font-weight="400" color="$success-green" />
+          </col>
+
+          <!-- Destination -->
+          <col gap="4" w="60" align="top-right">
+            <text id="lbl-arr-time" value="08:00" font-family="Inter" font-size="16" font-weight="400" color="$text-primary" />
+            <text value="CDG" font-family="Inter" font-size="11" font-weight="500" color="$text-muted" />
+            <text value="Paris" font-family="Inter" font-size="9" font-weight="300" color="$text-muted" />
+          </col>
+        </row>
+
+        <!-- 3. Hairline Divider -->
+        <row h="1" fill="$border" w="326" />
+
+        <!-- 4. Footer: Airline Info, Price & Select -->
+        <row w="326" align="middle-left" gap="auto">
+          <!-- Airline logo + name (Playfair Display Serif Header!) -->
+          <row gap="8" align="middle-left">
+            <row w="28" h="28" fill="$surface-elevated" border="1 $border" radius="$radius-sm" align="middle-center">
+              <img src="https://api.iconify.design/lucide/orbit.svg?color=%23A78BFA" w="14" h="14" />
+            </row>
+            <col gap="2">
+              <text id="lbl-airline" value="Singapore Airlines" font-family="Playfair Display" font-size="13" font-weight="500" color="$text-primary" />
+              <text id="lbl-craft" value="SQ 32 • Boeing 787" font-family="Inter" font-size="10" font-weight="300" color="$text-muted" />
+            </col>
+          </row>
+
+          <!-- Price & CTA -->
+          <row gap="12" align="middle-right">
+            <col gap="2" align="top-right">
+              <!-- Playfair Display pricing, no bold -->
+              <text id="lbl-price" value="$3,420" font-family="Playfair Display" font-size="16" font-weight="500" color="$text-primary" />
+              <text value="incl. tax" font-family="Inter" font-size="9" font-weight="300" color="$text-muted" />
+            </col>
+            
+            <!-- Flat translucent lavender select button -->
+            <row role="button" w="64" h="30" radius="15" fill="#A78BFA1F" align="middle-center">
+              <text value="Select" font-family="Inter" font-size="11" font-weight="500" color="$primary" />
+            </row>
+          </row>
+        </row>
+      </col>
+    </component>
+  </components>
+
+  <!-- iOS Mobile App Canvas (390 x Scrolling hug) -->
+  <col w="390" fill="$bg" p="0 0 34 0" gap="16" align="top-center">
+    
+    <!-- 1. iOS Status Bar -->
+    <row w="390" h="47" p="0 20" align="middle-left" gap="auto">
+      <text value="9:41" font-family="SF Pro" font-size="15" font-weight="500" color="$text-primary" />
+      <row gap="6" align="middle-right">
+        <img src="https://api.iconify.design/lucide/signal.svg?color=%23F3F4F6" w="17" h="17" />
+        <img src="https://api.iconify.design/lucide/wifi.svg?color=%23F3F4F6" w="17" h="17" />
+        <img src="https://api.iconify.design/lucide/battery.svg?color=%23F3F4F6" w="22" h="13" />
+      </row>
+    </row>
+
+    <!-- 2. Mobile App Top Navigation Bar -->
+    <row role="top-navigation-bar" w="390" h="44" p="0 16" align="middle-center" gap="auto">
+      <img src="https://api.iconify.design/lucide/arrow-left.svg?color=%239CA3AF" w="18" h="18" />
+      
+      <col align="top-center" gap="2">
+        <text text-style="Display" value="SFO → CDG" color="$text-primary" />
+        <text font-family="Inter" font-size="11" font-weight="300" value="Mon, Oct 12 • 1 Guest • Business" color="$text-muted" />
+      </col>
+
+      <img src="https://api.iconify.design/lucide/settings.svg?color=%239CA3AF" w="18" h="18" />
+    </row>
+
+    <!-- 3. Staked Immersive Globe Visual Card (Width: 358px) -->
+    <frame role="card" w="358" h="190" radius="$radius-md" clip="true">
+      
+      <!-- Planet visual -->
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&amp;fit=crop&amp;w=358&amp;h=190&amp;q=80" w="358" h="190" fit="cover" />
+      
+      <!-- Dark gradient overlay to blend -->
+      <rect w="358" h="70" abs="true" x="0" y="0" fill="linear-gradient(180deg, #07070ACC 0%, #07070A00 100%)" />
+
+      <!-- Map route SFO -> CDG -->
+      
+      <!-- SFO Pin -->
+      <frame w="30" h="30" abs="true" x="50" y="100">
+        <ellipse w="22" h="22" fill="#A78BFA1A" border="1 #A78BFA4D" abs="true" x="4" y="4" />
+        <ellipse w="6" h="6" fill="$primary" abs="true" x="12" y="12" />
+        <text value="SFO" font-family="Inter" font-size="9" font-weight="400" color="$text-primary" abs="true" x="6" y="28" />
+      </frame>
+
+      <!-- Path connector dashes -->
+      <ellipse w="3" h="3" fill="$primary" opacity="0.4" abs="true" x="90" y="102" />
+      <ellipse w="3" h="3" fill="$primary" opacity="0.5" abs="true" x="115" y="93" />
+      <ellipse w="3" h="3" fill="$primary" opacity="0.7" abs="true" x="140" y="87" />
+      
+      <!-- Glowing plane flyby -->
+      <img src="https://api.iconify.design/lucide/plane.svg?color=%23A78BFA" w="14" h="14" rotation="45" abs="true" x="165" y="81" />
+
+      <ellipse w="3" h="3" fill="$primary" opacity="0.7" abs="true" x="195" y="87" />
+      <ellipse w="3" h="3" fill="$primary" opacity="0.5" abs="true" x="220" y="93" />
+      <ellipse w="3" h="3" fill="$primary" opacity="0.4" abs="true" x="245" y="102" />
+
+      <!-- CDG Pin -->
+      <frame w="30" h="30" abs="true" x="260" y="100">
+        <ellipse w="22" h="22" fill="#A78BFA1A" border="1 #A78BFA4D" abs="true" x="4" y="4" />
+        <ellipse w="6" h="6" fill="$primary" abs="true" x="12" y="12" />
+        <text value="CDG" font-family="Inter" font-size="9" font-weight="400" color="$text-primary" abs="true" x="6" y="28" />
+      </frame>
+
+    </frame>
+
+    <!-- 4. DATE FARE CAROUSEL ROW -->
+    <row role="carousel" w="358" gap="8" align="middle-center">
+      <instance component="comp-date" date="Sat 10" price="$3.5K" />
+      <instance component="comp-date" date="Sun 11" price="$3.4K" />
+      
+      <!-- Active Date (Mon, Oct 12) - High-end flat lavender border visual, no bold -->
+      <col w="64" h="54" fill="$surface-elevated" border="1 $primary" radius="$radius-sm" p="8 6" gap="4" align="middle-center">
+        <text value="Mon 12" font-family="Inter" font-size="11" font-weight="500" color="$primary" />
+        <text value="$3.4K" font-family="Inter" font-size="12" font-weight="500" color="$text-primary" />
+      </col>
+      
+      <instance component="comp-date" date="Tue 13" price="$2.8K" />
+      <instance component="comp-date" date="Wed 14" price="$3.1K" />
+    </row>
+
+    <!-- 5. Sort Comparison Pills Row -->
+    <row w="358" gap="8" align="middle-left" p="0 4">
+      <!-- Tab 1: Recommended Best Choice (Active) -->
+      <row role="chip" fill="$surface-elevated" border="1 $primary" radius="$radius-pill" p="6 12" align="middle-center">
+        <text value="Best • $3.4K" font-family="Inter" font-size="11" font-weight="400" color="$primary" />
+      </row>
+
+      <!-- Tab 2: Budget Choice -->
+      <row role="chip" fill="$surface" border="1 $border" radius="$radius-pill" p="6 12" align="middle-center">
+        <text value="Cheapest • $1.8K" font-family="Inter" font-size="11" font-weight="300" color="$text-muted" />
+      </row>
+
+      <!-- Tab 3: Speedy Choice -->
+      <row role="chip" fill="$surface" border="1 $border" radius="$radius-pill" p="6 12" align="middle-center">
+        <text value="Fastest • $3.8K" font-family="Inter" font-size="11" font-weight="300" color="$text-muted" />
+      </row>
+    </row>
+
+    <!-- 6. Compact Mobile Flight Result List (5 Flights Stacked!) -->
+    <col w="358" gap="12" align="top-center">
+      
+      <!-- Flight 1: Singapore Airlines -->
+      <instance component="comp-flight" airline="Singapore Airlines" dep-time="13:15" arr-time="08:00" duration="11h 45m" price="$3,420" craft="SQ 32 • Boeing 787" badge1="Recommended" badge2="Business Class" />
+      
+      <!-- Flight 2: Qatar Airways -->
+      <instance component="comp-flight" airline="Qatar Airways" dep-time="16:40" arr-time="11:25" duration="11h 45m" price="$3,980" craft="QR 722 • Airbus A350" badge1="QSuite Class" badge2="5-Star Service" />
+      
+      <!-- Flight 3: Air France -->
+      <instance component="comp-flight" airline="Air France" dep-time="19:20" arr-time="14:00" duration="11h 40m" price="$2,850" craft="AF 1106 • Boeing 777" badge1="Direct Flight" badge2="Chef Menu" />
+      
+      <!-- Flight 4: British Airways -->
+      <instance component="comp-flight" airline="British Airways" dep-time="08:30" arr-time="03:15" duration="11h 45m" price="$3,120" craft="BA 228 • Airbus A350" badge1="Club Suite" badge2="Lounge Access" />
+      
+      <!-- Flight 5: Delta Air Lines -->
+      <instance component="comp-flight" airline="Delta Air Lines" dep-time="22:00" arr-time="16:45" duration="11h 45m" price="$2,950" craft="DL 82 • Airbus A330" badge1="Delta One" badge2="Priority Pass" />
+      
+    </col>
+
+    <!-- Extra page bottom layout cushion -->
+    <col h="12" />
+
+    <!-- 7. iOS Home Indicator System Bar -->
+    <row w="390" h="34" align="middle-center">
+      <rect w="134" h="5" radius="3" fill="#FFFFFF" opacity="0.2" />
+    </row>
+
+  </col>
+</gui>

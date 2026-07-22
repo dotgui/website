@@ -12,6 +12,7 @@
           <NuxtLink to="/spec/roles">Roles</NuxtLink>
           <NuxtLink to="/spec/quality">Quality</NuxtLink>
           <NuxtLink to="/playground">Playground</NuxtLink>
+          <NuxtLink to="/examples">Examples</NuxtLink>
           <NuxtLink to="/faq">FAQ</NuxtLink>
         </div>
         <div class="footer-col">

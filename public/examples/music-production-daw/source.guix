@@ -1,0 +1,774 @@
+<gui version="0.2" name="Oscillate — Music Production">
+  <tokens>
+    <!-- surfaces -->
+    <color name="bg" value="#0D0E10" />
+    <color name="surface" value="#131418" />
+    <color name="surface-raised" value="#191B1F" />
+    <color name="surface-overlay" value="#22242A" />
+    <color name="well" value="#08090B" />
+
+    <!-- lines -->
+    <color name="hairline" value="#272A30" />
+    <color name="hairline-soft" value="#1E2025" />
+    <color name="hairline-strong" value="#3A3E46" />
+
+    <!-- ink -->
+    <color name="ink" value="#F3F4F6" />
+    <color name="body" value="#A8ADB5" />
+    <color name="muted" value="#6E737C" />
+
+    <!-- accents -->
+    <color name="accent" value="#FFB224" />
+    <color name="accent-soft" value="#FFB2241C" />
+    <color name="green" value="#3DD68C" />
+    <color name="red" value="#F2555A" />
+
+    <!-- track colors -->
+    <color name="tr-drums" value="#F2555A" />
+    <color name="tr-bass" value="#9D7BFF" />
+    <color name="tr-keys" value="#4FC1FF" />
+    <color name="tr-gtr" value="#FF8A5C" />
+    <color name="tr-vox" value="#3DD68C" />
+    <color name="tr-fx" value="#FF7AB2" />
+
+    <!-- radii -->
+    <number name="radius-xs" value="4" />
+    <number name="radius-sm" value="6" />
+    <number name="radius-md" value="8" />
+    <number name="radius-pill" value="999" />
+  </tokens>
+
+  <fonts>
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+    <font family="JetBrains Mono" source="google" weights="400 500 600" styles="normal" />
+    <font family="Space Grotesk" source="google" weights="500 700" styles="normal" />
+  </fonts>
+
+  <styles>
+    <text-style name="Brand" font-family="Space Grotesk" font-size="14" font-weight="700" line-height="18" />
+    <text-style name="Body" font-family="Inter" font-size="13" font-weight="400" line-height="18" />
+    <text-style name="Body/Strong" font-family="Inter" font-size="13" font-weight="600" line-height="18" />
+    <text-style name="Label" font-family="Inter" font-size="12" font-weight="500" line-height="16" />
+    <text-style name="Caption" font-family="Inter" font-size="11" font-weight="400" line-height="14" />
+    <text-style name="Tiny" font-family="Inter" font-size="11" font-weight="600" line-height="13" />
+    <text-style name="ClipName" font-family="Inter" font-size="11" font-weight="600" line-height="12" />
+    <text-style name="Mono/Big" font-family="JetBrains Mono" font-size="19" font-weight="600" line-height="24" />
+    <text-style name="Mono" font-family="JetBrains Mono" font-size="11" font-weight="500" line-height="15" />
+    <text-style name="Mono/Tiny" font-family="JetBrains Mono" font-size="11" font-weight="500" line-height="12" />
+  </styles>
+
+  <components>
+    <!-- Track header: name, kind, color strip, instrument icon, arm dot -->
+    <component name="TrackHeader" id="comp-track-header">
+      <props>
+        <prop name="track-name" type="string" target="name" />
+        <prop name="track-kind" type="string" target="kind" />
+        <prop name="accent" type="color" target="strip" />
+        <prop name="icon" type="image" target="icon" />
+        <prop name="armed" type="boolean" target="arm-dot" />
+      </props>
+      <row w="220" h="68" pr="12" align="middle-left" gap="10" fill="#131418" border-bottom="1 #1E2025">
+        <rect id="strip" w="3" h="68" fill="#F2555A" />
+        <row w="28" h="28" radius="6" fill="#22242A" align="middle-center">
+          <img id="icon" src="https://api.iconify.design/lucide/drum.svg?color=%23A8ADB5" w="14" h="14" />
+        </row>
+        <col gap="2" w="fill">
+          <text id="name" text-style="Body/Strong" value="Drums" fill="#F3F4F6" truncate="true" />
+          <text id="kind" text-style="Caption" value="Audio · Stereo" fill="#6E737C" truncate="true" />
+        </col>
+        <ellipse id="arm-dot" w="8" h="8" fill="#F2555A" />
+        <row gap="4">
+          <row w="20" h="18" radius="4" border="1 #3A3E46" align="middle-center">
+            <text text-style="Tiny" value="M" fill="#6E737C" />
+          </row>
+          <row w="20" h="18" radius="4" border="1 #3A3E46" align="middle-center">
+            <text text-style="Tiny" value="S" fill="#6E737C" />
+          </row>
+        </row>
+      </row>
+    </component>
+
+    <!-- Browser sample row -->
+    <component name="BrowserItem" id="comp-browser-item">
+      <props>
+        <prop name="sample" type="string" target="sname" />
+        <prop name="meta" type="string" target="smeta" />
+        <prop name="dur" type="string" target="sdur" />
+        <prop name="icon" type="image" target="sicon" />
+      </props>
+      <row w="fill" p="7 8" radius="4" align="middle-left" gap="8">
+        <img id="sicon" src="https://api.iconify.design/lucide/audio-lines.svg?color=%236E737C" w="12" h="12" />
+        <col gap="1" w="fill">
+          <text id="sname" text-style="Mono" value="sample.wav" fill="#F3F4F6" truncate="true" />
+          <text id="smeta" text-style="Caption" value="Drums · loop" fill="#6E737C" truncate="true" />
+        </col>
+        <text id="sdur" text-style="Mono/Tiny" value="0:07" fill="#6E737C" />
+      </row>
+    </component>
+  </components>
+
+  <col w="1440" fill="$bg">
+
+    <!-- ───────────── Title bar ───────────── -->
+    <row role="top-navigation-bar" w="fill" h="46" p="0 16" align="middle-left" gap="auto" fill="$surface" border-bottom="1 $hairline">
+      <row gap="14" align="middle-left">
+        <row gap="8" align="middle-left">
+          <row w="20" h="20" radius="5" fill="$accent" align="middle-center">
+            <img src="https://api.iconify.design/lucide/audio-waveform.svg?color=%230D0E10" w="12" h="12" />
+          </row>
+          <text text-style="Brand" value="OSCILLATE" fill="$ink" letter-spacing="8%" />
+        </row>
+        <rect w="1" h="16" fill="$hairline" />
+        <row gap="16" align="middle-left">
+          <text text-style="Label" value="File" fill="$muted" />
+          <text text-style="Label" value="Edit" fill="$muted" />
+          <text text-style="Label" value="Create" fill="$muted" />
+          <text text-style="Label" value="Track" fill="$muted" />
+          <text text-style="Label" value="View" fill="$muted" />
+          <text text-style="Label" value="Help" fill="$muted" />
+        </row>
+      </row>
+
+      <row gap="8" align="middle-center">
+        <text text-style="Body/Strong" value="Midnight Drive" fill="$ink" />
+        <text text-style="Caption" value="E minor · 124 BPM · v12" fill="$muted" />
+        <row p="2 8" radius="$radius-pill" fill="#3DD68C1A" gap="5" align="middle-left">
+          <ellipse w="5" h="5" fill="$green" />
+          <text text-style="Tiny" value="Saved" fill="$green" />
+        </row>
+      </row>
+
+      <row gap="10" align="middle-left">
+        <row gap="4" align="middle-left">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&amp;fit=facearea&amp;facepad=2&amp;w=48&amp;h=48&amp;q=80" w="24" h="24" radius="12" border="1.5 $hairline-strong" fit="cover" />
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=facearea&amp;facepad=2&amp;w=48&amp;h=48&amp;q=80" w="24" h="24" radius="12" border="1.5 $hairline-strong" fit="cover" />
+        </row>
+        <row h="30" p="0 14" radius="$radius-sm" fill="$accent" align="middle-center" gap="6">
+          <img src="https://api.iconify.design/lucide/arrow-down-to-line.svg?color=%230D0E10" w="13" h="13" />
+          <text text-style="Tiny" value="Export" fill="#0D0E10" />
+        </row>
+        <img src="https://api.iconify.design/lucide/settings-2.svg?color=%236E737C" w="16" h="16" />
+      </row>
+    </row>
+
+    <!-- ───────────── Transport ───────────── -->
+    <row role="toolbar" w="fill" h="60" p="0 16" align="middle-left" gap="auto" fill="$surface" border-bottom="1 $hairline">
+      <!-- tools -->
+      <row gap="6" align="middle-left">
+        <row w="28" h="24" radius="$radius-xs" fill="$surface-overlay" align="middle-center">
+          <img src="https://api.iconify.design/lucide/mouse-pointer-2.svg?color=%23F3F4F6" w="13" h="13" />
+        </row>
+        <row w="28" h="24" radius="$radius-xs" align="middle-center">
+          <img src="https://api.iconify.design/lucide/pencil.svg?color=%236E737C" w="13" h="13" />
+        </row>
+        <row w="28" h="24" radius="$radius-xs" align="middle-center">
+          <img src="https://api.iconify.design/lucide/scissors.svg?color=%236E737C" w="13" h="13" />
+        </row>
+        <row w="28" h="24" radius="$radius-xs" align="middle-center">
+          <img src="https://api.iconify.design/lucide/zoom-in.svg?color=%236E737C" w="13" h="13" />
+        </row>
+        <rect w="1" h="20" fill="$hairline" />
+        <row w="28" h="24" radius="$radius-xs" fill="$accent-soft" align="middle-center">
+          <img src="https://api.iconify.design/lucide/magnet.svg?color=%23FFB224" w="13" h="13" />
+        </row>
+        <row w="28" h="24" radius="$radius-xs" align="middle-center">
+          <img src="https://api.iconify.design/lucide/timer.svg?color=%236E737C" w="13" h="13" />
+        </row>
+      </row>
+
+      <!-- transport + readouts -->
+      <row gap="10" align="middle-center">
+        <row w="30" h="26" radius="$radius-xs" align="middle-center">
+          <img src="https://api.iconify.design/lucide/skip-back.svg?color=%23A8ADB5" w="14" h="14" />
+        </row>
+        <row role="button" w="44" h="28" radius="$radius-sm" fill="$accent" align="middle-center">
+          <img src="https://api.iconify.design/lucide/play.svg?color=%230D0E10" w="14" h="14" />
+        </row>
+        <row w="30" h="26" radius="$radius-xs" align="middle-center">
+          <img src="https://api.iconify.design/lucide/square.svg?color=%23A8ADB5" w="12" h="12" />
+        </row>
+        <row w="30" h="26" radius="$radius-xs" align="middle-center">
+          <ellipse w="10" h="10" fill="$red" />
+        </row>
+        <row w="30" h="26" radius="$radius-xs" fill="$accent-soft" align="middle-center">
+          <img src="https://api.iconify.design/lucide/repeat.svg?color=%23FFB224" w="13" h="13" />
+        </row>
+        <rect w="1" h="24" fill="$hairline" />
+        <row h="36" p="0 14" radius="$radius-sm" fill="$well" gap="12" align="middle-center">
+          <text text-style="Mono/Big" value="7.1.2" fill="$accent" />
+          <rect w="1" h="18" fill="$hairline" />
+          <text text-style="Mono/Big" value="0:00:11.6" fill="$ink" />
+        </row>
+        <row h="36" p="0 12" radius="$radius-sm" fill="$well" gap="6" align="middle-center">
+          <text text-style="Mono/Big" value="124.00" fill="$ink" />
+          <text text-style="Mono/Tiny" value="BPM" fill="$muted" />
+        </row>
+        <row h="36" p="0 12" radius="$radius-sm" fill="$well" gap="10" align="middle-center">
+          <text text-style="Mono" value="4/4" fill="$body" />
+          <rect w="1" h="14" fill="$hairline" />
+          <text text-style="Mono" value="E MIN" fill="$accent" />
+        </row>
+      </row>
+
+      <!-- system -->
+      <row gap="14" align="middle-left">
+        <row gap="6" align="middle-left">
+          <text text-style="Tiny" value="Q" fill="$muted" />
+          <row h="22" p="0 8" radius="$radius-xs" fill="$surface-overlay" align="middle-center">
+            <text text-style="Mono" value="1/16" fill="$body" />
+          </row>
+        </row>
+        <row gap="6" align="middle-left">
+          <img src="https://api.iconify.design/lucide/cpu.svg?color=%236E737C" w="13" h="13" />
+          <text text-style="Mono" value="38%" fill="$body" />
+          <frame w="44" h="4" radius="2" fill="$surface-overlay">
+            <rect x="0" y="0" w="17" h="4" fill="$green" />
+          </frame>
+        </row>
+        <row gap="6" align="middle-left">
+          <text text-style="Tiny" value="MASTER" fill="$muted" letter-spacing="6%" />
+          <frame w="70" h="6" radius="3" fill="$surface-overlay">
+            <rect x="0" y="0" w="52" h="6" fill="linear-gradient(90deg, #3DD68C 0%, #3DD68C 70%, #FFB224 100%)" />
+          </frame>
+          <text text-style="Mono" value="-6.2 dB" fill="$body" />
+        </row>
+      </row>
+    </row>
+
+    <!-- ───────────── Body: browser + arrangement ───────────── -->
+    <row w="fill" align="top-left">
+
+      <!-- Browser -->
+      <col role="sidebar" w="260" h="fill" fill="$surface" border-right="1 $hairline" p="12" gap="12">
+        <row w="fill" gap="auto" align="middle-left">
+          <text text-style="Tiny" value="BROWSER" fill="$muted" letter-spacing="10%" />
+          <img src="https://api.iconify.design/lucide/plus.svg?color=%236E737C" w="13" h="13" />
+        </row>
+        <row w="fill" h="30" radius="$radius-sm" fill="$surface-overlay" p="0 10" gap="8" align="middle-left">
+          <img src="https://api.iconify.design/lucide/search.svg?color=%236E737C" w="13" h="13" />
+          <text text-style="Caption" value="Search sounds…" fill="$muted" />
+        </row>
+        <col gap="2" w="fill">
+          <row w="fill" h="28" p="0 8" radius="$radius-xs" fill="$surface-overlay" gap="8" align="middle-left">
+            <img src="https://api.iconify.design/lucide/drum.svg?color=%23FFB224" w="13" h="13" />
+            <text text-style="Label" value="Drums" fill="$ink" />
+          </row>
+          <row w="fill" h="28" p="0 8" radius="$radius-xs" gap="8" align="middle-left">
+            <img src="https://api.iconify.design/lucide/speaker.svg?color=%236E737C" w="13" h="13" />
+            <text text-style="Label" value="Bass &amp; 808s" fill="$body" />
+          </row>
+          <row w="fill" h="28" p="0 8" radius="$radius-xs" gap="8" align="middle-left">
+            <img src="https://api.iconify.design/lucide/keyboard-music.svg?color=%236E737C" w="13" h="13" />
+            <text text-style="Label" value="Synths" fill="$body" />
+          </row>
+          <row w="fill" h="28" p="0 8" radius="$radius-xs" gap="8" align="middle-left">
+            <img src="https://api.iconify.design/lucide/sparkles.svg?color=%236E737C" w="13" h="13" />
+            <text text-style="Label" value="FX &amp; Foley" fill="$body" />
+          </row>
+        </col>
+        <line fill="$hairline-soft" />
+        <row w="fill" gap="auto" align="middle-left">
+          <text text-style="Tiny" value="SAMPLES" fill="$muted" letter-spacing="10%" />
+          <text text-style="Mono/Tiny" value="128 files" fill="$muted" />
+        </row>
+        <col gap="2" w="fill">
+          <instance component="comp-browser-item" sample="808_Knock_C1.wav" meta="Drums · one-shot" dur="0:01"
+            icon="https://api.iconify.design/lucide/audio-lines.svg?color=%23FFB224" />
+          <instance component="comp-browser-item" sample="Breakbeat_Loop_92.wav" meta="Drums · loop" dur="0:07" />
+          <instance component="comp-browser-item" sample="Vinyl_Crackle_Bed.wav" meta="Foley · loop" dur="0:16" />
+          <instance component="comp-browser-item" sample="Juno60_Pad_Em.wav" meta="Synth · sample" dur="0:09" />
+          <instance component="comp-browser-item" sample="Tape_Stop_FX.wav" meta="FX · one-shot" dur="0:02" />
+        </col>
+      </col>
+
+      <!-- Track headers -->
+      <col w="220" fill="$surface" border-right="1 $hairline">
+        <row w="fill" h="32" p="0 10" gap="auto" align="middle-left" border-bottom="1 $hairline-soft">
+          <text text-style="Tiny" value="TRACKS" fill="$muted" letter-spacing="10%" />
+          <img src="https://api.iconify.design/lucide/plus.svg?color=%236E737C" w="13" h="13" />
+        </row>
+        <instance component="comp-track-header" track-name="Drums" track-kind="Audio · Stereo"
+          accent="$tr-drums" icon="https://api.iconify.design/lucide/drum.svg?color=%23F2555A" />
+        <instance component="comp-track-header" track-name="Bass" track-kind="MIDI · Moog Sub 37"
+          accent="$tr-bass" armed="false" icon="https://api.iconify.design/lucide/audio-waveform.svg?color=%239D7BFF" />
+        <instance component="comp-track-header" track-name="Keys" track-kind="MIDI · Juno-60"
+          accent="$tr-keys" armed="false" icon="https://api.iconify.design/lucide/piano.svg?color=%234FC1FF" />
+        <instance component="comp-track-header" track-name="Guitar" track-kind="Audio · DI Mono"
+          accent="$tr-gtr" armed="false" icon="https://api.iconify.design/lucide/guitar.svg?color=%23FF8A5C" />
+        <instance component="comp-track-header" track-name="Lead Vox" track-kind="Audio · U87"
+          accent="$tr-vox" icon="https://api.iconify.design/lucide/mic.svg?color=%233DD68C" />
+        <instance component="comp-track-header" track-name="FX Return" track-kind="Audio · Resample"
+          accent="$tr-fx" armed="false" icon="https://api.iconify.design/lucide/sparkles.svg?color=%23FF7AB2" />
+      </col>
+
+      <!-- Arrangement: ruler + lanes on a unit grid -->
+      <grid unit="4" w="960" h="440" fill="$bg" clip="true">
+
+        <!-- ruler background + loop region -->
+        <rect gc="1/240" gr="1/8" fill="$surface" />
+        <rect gc="65/128" gr="1/8" fill="#FFB22414" border-top="2 $accent" />
+        <rect gc="1/240" gr="9" h="1" fill="$hairline" />
+
+        <!-- bar numbers -->
+        <text gc="3" gr="3" text-style="Mono/Tiny" value="1" fill="$muted" />
+        <text gc="19" gr="3" text-style="Mono/Tiny" value="2" fill="$muted" />
+        <text gc="35" gr="3" text-style="Mono/Tiny" value="3" fill="$muted" />
+        <text gc="51" gr="3" text-style="Mono/Tiny" value="4" fill="$muted" />
+        <text gc="67" gr="3" text-style="Mono/Tiny" value="5" fill="#FFB224AA" />
+        <text gc="83" gr="3" text-style="Mono/Tiny" value="6" fill="#FFB224AA" />
+        <text gc="99" gr="3" text-style="Mono/Tiny" value="7" fill="#FFB224AA" />
+        <text gc="115" gr="3" text-style="Mono/Tiny" value="8" fill="#FFB224AA" />
+        <text gc="131" gr="3" text-style="Mono/Tiny" value="9" fill="$muted" />
+        <text gc="147" gr="3" text-style="Mono/Tiny" value="10" fill="$muted" />
+        <text gc="163" gr="3" text-style="Mono/Tiny" value="11" fill="$muted" />
+        <text gc="179" gr="3" text-style="Mono/Tiny" value="12" fill="$muted" />
+        <text gc="195" gr="3" text-style="Mono/Tiny" value="13" fill="$muted" />
+        <text gc="211" gr="3" text-style="Mono/Tiny" value="14" fill="$muted" />
+        <text gc="227" gr="3" text-style="Mono/Tiny" value="15" fill="$muted" />
+
+        <!-- bar gridlines -->
+        <rect gc="17" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="33" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="49" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="65" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="81" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="97" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="113" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="129" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="145" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="161" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="177" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="193" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="209" gr="9/110" w="1" fill="#FFFFFF07" />
+        <rect gc="225" gr="9/110" w="1" fill="#FFFFFF07" />
+
+        <!-- lane dividers -->
+        <rect gc="1/240" gr="26" h="1" fill="$hairline-soft" />
+        <rect gc="1/240" gr="43" h="1" fill="$hairline-soft" />
+        <rect gc="1/240" gr="60" h="1" fill="$hairline-soft" />
+        <rect gc="1/240" gr="77" h="1" fill="$hairline-soft" />
+        <rect gc="1/240" gr="94" h="1" fill="$hairline-soft" />
+
+        <!-- Drums -->
+        <col gc="1/128" gr="11/23" radius="$radius-sm" clip="true" fill="#F2555A2B" border="1 #F2555A40">
+          <row w="fill" h="16" p="0 8" fill="#F2555ADD" align="middle-left">
+            <text text-style="ClipName" value="Breakbeat 92" fill="#16090A" truncate="true" />
+          </row>
+        </col>
+        <col gc="129/224" gr="11/23" radius="$radius-sm" clip="true" fill="#F2555A2B" border="1 #F2555A40">
+          <row w="fill" h="16" p="0 8" fill="#F2555ADD" align="middle-left">
+            <text text-style="ClipName" value="Drum Fill + Out" fill="#16090A" truncate="true" />
+          </row>
+        </col>
+
+        <!-- Bass -->
+        <col gc="33/128" gr="28/40" radius="$radius-sm" clip="true" fill="#9D7BFF2B" border="1 #9D7BFF40">
+          <row w="fill" h="16" p="0 8" fill="#9D7BFFDD" align="middle-left">
+            <text text-style="ClipName" value="Moog Sub" fill="#100A1C" truncate="true" />
+          </row>
+        </col>
+        <col gc="161/224" gr="28/40" radius="$radius-sm" clip="true" fill="#9D7BFF2B" border="1 #9D7BFF40">
+          <row w="fill" h="16" p="0 8" fill="#9D7BFFDD" align="middle-left">
+            <text text-style="ClipName" value="Sub Drop" fill="#100A1C" truncate="true" />
+          </row>
+        </col>
+
+        <!-- Keys -->
+        <col gc="1/80" gr="45/57" radius="$radius-sm" clip="true" fill="#4FC1FF2B" border="1 #4FC1FF40">
+          <row w="fill" h="16" p="0 8" fill="#4FC1FFDD" align="middle-left">
+            <text text-style="ClipName" value="Juno Pad Em" fill="#08131A" truncate="true" />
+          </row>
+        </col>
+        <col gc="97/176" gr="45/57" radius="$radius-sm" clip="true" fill="#4FC1FF2B" border="1 #4FC1FF40">
+          <row w="fill" h="16" p="0 8" fill="#4FC1FFDD" align="middle-left">
+            <text text-style="ClipName" value="Rhodes Comp" fill="#08131A" truncate="true" />
+          </row>
+        </col>
+
+        <!-- Guitar -->
+        <col gc="65/144" gr="62/74" radius="$radius-sm" clip="true" fill="#FF8A5C2B" border="1 #FF8A5C40">
+          <row w="fill" h="16" p="0 8" fill="#FF8A5CDD" align="middle-left">
+            <text text-style="ClipName" value="Tele Riff DI" fill="#1A0D06" truncate="true" />
+          </row>
+        </col>
+        <col gc="193/224" gr="62/74" radius="$radius-sm" clip="true" fill="#FF8A5C2B" border="1 #FF8A5C40">
+          <row w="fill" h="16" p="0 8" fill="#FF8A5CDD" align="middle-left">
+            <text text-style="ClipName" value="Outro Swells" fill="#1A0D06" truncate="true" />
+          </row>
+        </col>
+
+        <!-- Lead Vox -->
+        <col gc="97/128" gr="79/91" radius="$radius-sm" clip="true" fill="#3DD68C2B" border="1 #3DD68C40">
+          <row w="fill" h="16" p="0 8" fill="#3DD68CDD" align="middle-left">
+            <text text-style="ClipName" value="Ad-libs" fill="#06140D" truncate="true" />
+          </row>
+          <row p="6 8" gap="3" align="bottom-left" h="fill">
+            <rect w="3" h="6" fill="#3DD68C99" />
+            <rect w="3" h="14" fill="#3DD68C99" />
+            <rect w="3" h="8" fill="#3DD68C99" />
+            <rect w="3" h="18" fill="#3DD68C99" />
+            <rect w="3" h="11" fill="#3DD68C99" />
+            <rect w="3" h="20" fill="#3DD68C99" />
+            <rect w="3" h="9" fill="#3DD68C99" />
+            <rect w="3" h="16" fill="#3DD68C99" />
+            <rect w="3" h="7" fill="#3DD68C99" />
+            <rect w="3" h="13" fill="#3DD68C99" />
+            <rect w="3" h="18" fill="#3DD68C99" />
+            <rect w="3" h="10" fill="#3DD68C99" />
+          </row>
+        </col>
+        <col gc="129/208" gr="79/91" radius="$radius-sm" clip="true" fill="#3DD68C2B" border="1 #3DD68C40">
+          <row w="fill" h="16" p="0 8" fill="#3DD68CDD" align="middle-left">
+            <text text-style="ClipName" value="Lead Vox — Take 7" fill="#06140D" truncate="true" />
+          </row>
+        </col>
+
+        <!-- FX -->
+        <col gc="113/128" gr="96/108" radius="$radius-sm" clip="true" fill="#FF7AB22B" border="1 #FF7AB240">
+          <row w="fill" h="16" p="0 6" fill="#FF7AB2DD" align="middle-left">
+            <text text-style="ClipName" value="Riser" fill="#190910" truncate="true" />
+          </row>
+          <row p="6 6" gap="3" align="bottom-left" h="fill">
+            <rect w="3" h="4" fill="#FF7AB299" />
+            <rect w="3" h="7" fill="#FF7AB299" />
+            <rect w="3" h="10" fill="#FF7AB299" />
+            <rect w="3" h="13" fill="#FF7AB299" />
+            <rect w="3" h="16" fill="#FF7AB299" />
+            <rect w="3" h="19" fill="#FF7AB299" />
+          </row>
+        </col>
+        <col gc="177/192" gr="96/108" radius="$radius-sm" clip="true" fill="#FF7AB22B" border="1 #FF7AB240">
+          <row w="fill" h="16" p="0 6" fill="#FF7AB2DD" align="middle-left">
+            <text text-style="ClipName" value="Tape Stop" fill="#190910" truncate="true" />
+          </row>
+          <row p="6 6" gap="3" align="bottom-left" h="fill">
+            <rect w="3" h="19" fill="#FF7AB299" />
+            <rect w="3" h="15" fill="#FF7AB299" />
+            <rect w="3" h="11" fill="#FF7AB299" />
+            <rect w="3" h="8" fill="#FF7AB299" />
+            <rect w="3" h="5" fill="#FF7AB299" />
+            <rect w="3" h="3" fill="#FF7AB299" />
+          </row>
+        </col>
+
+        <!-- playhead -->
+        <rect gc="97" gr="1/110" w="2" fill="$accent" />
+        <rect gc="96" gr="1" w="12" h="12" radius="3" rotation="45" fill="$accent" />
+      </grid>
+    </row>
+
+    <!-- ───────────── Mixer ───────────── -->
+    <col w="fill" fill="$surface" border-top="1 $hairline">
+      <row w="fill" h="38" p="0 16" gap="auto" align="middle-left" border-bottom="1 $hairline-soft">
+        <row gap="4" align="middle-left">
+          <row h="24" p="0 12" radius="5" fill="$surface-overlay" align="middle-center">
+            <text text-style="Tiny" value="MIXER" fill="$ink" letter-spacing="6%" />
+          </row>
+          <row h="24" p="0 12" radius="5" align="middle-center">
+            <text text-style="Tiny" value="PIANO ROLL" fill="$muted" letter-spacing="6%" />
+          </row>
+          <row h="24" p="0 12" radius="5" align="middle-center">
+            <text text-style="Tiny" value="AUTOMATION" fill="$muted" letter-spacing="6%" />
+          </row>
+        </row>
+        <row gap="10" align="middle-left">
+          <img src="https://api.iconify.design/lucide/headphones.svg?color=%236E737C" w="14" h="14" />
+          <img src="https://api.iconify.design/lucide/sliders-horizontal.svg?color=%236E737C" w="14" h="14" />
+          <text text-style="Mono/Tiny" value="9 CHANNELS" fill="$muted" />
+        </row>
+      </row>
+
+      <row w="fill" p="12 16" gap="8" align="top-left">
+
+        <!-- Drums -->
+        <col w="fill" p="10" radius="$radius-md" fill="$surface-raised" border="1 $hairline-soft" gap="8" align="top-center">
+          <row gap="8" align="middle-center">
+            <frame w="24" h="24">
+              <ellipse x="0" y="0" w="24" h="24" fill="$surface-overlay" border="1 $hairline-strong" />
+              <rect x="11" y="3" w="2" h="7" radius="1" fill="$ink" />
+            </frame>
+            <text text-style="Mono/Tiny" value="C" fill="$muted" />
+          </row>
+          <row gap="12" align="top-left">
+            <frame w="22" h="110">
+              <rect x="10" y="0" w="2" h="110" radius="1" fill="$hairline-strong" />
+              <rect x="1" y="30" w="20" h="11" radius="3" fill="#D2D6DC" />
+            </frame>
+            <frame w="10" h="110" radius="3" fill="$well" clip="true">
+              <rect x="0" y="24" w="10" h="86" fill="linear-gradient(180deg, #FFB224 0%, #3DD68C 30%, #3DD68C 100%)" />
+            </frame>
+          </row>
+          <text text-style="Mono" value="-2.1" fill="$ink" />
+          <row gap="4">
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="M" fill="$muted" />
+            </row>
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="S" fill="$muted" />
+            </row>
+          </row>
+          <row w="fill" h="20" radius="$radius-xs" fill="#F2555A26" align="middle-center">
+            <text text-style="Tiny" value="DRUMS" fill="$tr-drums" letter-spacing="6%" />
+          </row>
+        </col>
+
+        <!-- Bass -->
+        <col w="fill" p="10" radius="$radius-md" fill="$surface-raised" border="1 $hairline-soft" gap="8" align="top-center">
+          <row gap="8" align="middle-center">
+            <frame w="24" h="24">
+              <ellipse x="0" y="0" w="24" h="24" fill="$surface-overlay" border="1 $hairline-strong" />
+              <rect x="11" y="3" w="2" h="7" radius="1" fill="$ink" />
+            </frame>
+            <text text-style="Mono/Tiny" value="C" fill="$muted" />
+          </row>
+          <row gap="12" align="top-left">
+            <frame w="22" h="110">
+              <rect x="10" y="0" w="2" h="110" radius="1" fill="$hairline-strong" />
+              <rect x="1" y="38" w="20" h="11" radius="3" fill="#D2D6DC" />
+            </frame>
+            <frame w="10" h="110" radius="3" fill="$well" clip="true">
+              <rect x="0" y="38" w="10" h="72" fill="linear-gradient(180deg, #3DD68C 0%, #3DD68C 100%)" />
+            </frame>
+          </row>
+          <text text-style="Mono" value="-4.6" fill="$ink" />
+          <row gap="4">
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="M" fill="$muted" />
+            </row>
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="S" fill="$muted" />
+            </row>
+          </row>
+          <row w="fill" h="20" radius="$radius-xs" fill="#9D7BFF26" align="middle-center">
+            <text text-style="Tiny" value="BASS" fill="$tr-bass" letter-spacing="6%" />
+          </row>
+        </col>
+
+        <!-- Keys -->
+        <col w="fill" p="10" radius="$radius-md" fill="$surface-raised" border="1 $hairline-soft" gap="8" align="top-center">
+          <row gap="8" align="middle-center">
+            <frame w="24" h="24">
+              <ellipse x="0" y="0" w="24" h="24" fill="$surface-overlay" border="1 $hairline-strong" />
+              <rect x="11" y="3" w="2" h="7" radius="1" fill="$ink" rotation="-40" />
+            </frame>
+            <text text-style="Mono/Tiny" value="L12" fill="$muted" />
+          </row>
+          <row gap="12" align="top-left">
+            <frame w="22" h="110">
+              <rect x="10" y="0" w="2" h="110" radius="1" fill="$hairline-strong" />
+              <rect x="1" y="48" w="20" h="11" radius="3" fill="#D2D6DC" />
+            </frame>
+            <frame w="10" h="110" radius="3" fill="$well" clip="true">
+              <rect x="0" y="52" w="10" h="58" fill="linear-gradient(180deg, #3DD68C 0%, #3DD68C 100%)" />
+            </frame>
+          </row>
+          <text text-style="Mono" value="-7.9" fill="$ink" />
+          <row gap="4">
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="M" fill="$muted" />
+            </row>
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="S" fill="$muted" />
+            </row>
+          </row>
+          <row w="fill" h="20" radius="$radius-xs" fill="#4FC1FF26" align="middle-center">
+            <text text-style="Tiny" value="KEYS" fill="$tr-keys" letter-spacing="6%" />
+          </row>
+        </col>
+
+        <!-- Guitar -->
+        <col w="fill" p="10" radius="$radius-md" fill="$surface-raised" border="1 $hairline-soft" gap="8" align="top-center">
+          <row gap="8" align="middle-center">
+            <frame w="24" h="24">
+              <ellipse x="0" y="0" w="24" h="24" fill="$surface-overlay" border="1 $hairline-strong" />
+              <rect x="11" y="3" w="2" h="7" radius="1" fill="$ink" rotation="50" />
+            </frame>
+            <text text-style="Mono/Tiny" value="R16" fill="$muted" />
+          </row>
+          <row gap="12" align="top-left">
+            <frame w="22" h="110">
+              <rect x="10" y="0" w="2" h="110" radius="1" fill="$hairline-strong" />
+              <rect x="1" y="44" w="20" h="11" radius="3" fill="#D2D6DC" />
+            </frame>
+            <frame w="10" h="110" radius="3" fill="$well" clip="true">
+              <rect x="0" y="46" w="10" h="64" fill="linear-gradient(180deg, #3DD68C 0%, #3DD68C 100%)" />
+            </frame>
+          </row>
+          <text text-style="Mono" value="-6.4" fill="$ink" />
+          <row gap="4">
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="M" fill="$muted" />
+            </row>
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="S" fill="$muted" />
+            </row>
+          </row>
+          <row w="fill" h="20" radius="$radius-xs" fill="#FF8A5C26" align="middle-center">
+            <text text-style="Tiny" value="GUITAR" fill="$tr-gtr" letter-spacing="6%" />
+          </row>
+        </col>
+
+        <!-- Lead Vox (solo active) -->
+        <col w="fill" p="10" radius="$radius-md" fill="$surface-raised" border="1 $hairline-soft" gap="8" align="top-center">
+          <row gap="8" align="middle-center">
+            <frame w="24" h="24">
+              <ellipse x="0" y="0" w="24" h="24" fill="$surface-overlay" border="1 $hairline-strong" />
+              <rect x="11" y="3" w="2" h="7" radius="1" fill="$ink" />
+            </frame>
+            <text text-style="Mono/Tiny" value="C" fill="$muted" />
+          </row>
+          <row gap="12" align="top-left">
+            <frame w="22" h="110">
+              <rect x="10" y="0" w="2" h="110" radius="1" fill="$hairline-strong" />
+              <rect x="1" y="26" w="20" h="11" radius="3" fill="#D2D6DC" />
+            </frame>
+            <frame w="10" h="110" radius="3" fill="$well" clip="true">
+              <rect x="0" y="18" w="10" h="92" fill="linear-gradient(180deg, #F2555A 0%, #FFB224 18%, #3DD68C 45%, #3DD68C 100%)" />
+            </frame>
+          </row>
+          <text text-style="Mono" value="-1.2" fill="$ink" />
+          <row gap="4">
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="M" fill="$muted" />
+            </row>
+            <row w="20" h="16" radius="4" fill="$accent-soft" border="1 $accent" align="middle-center">
+              <text text-style="Tiny" value="S" fill="$accent" />
+            </row>
+          </row>
+          <row w="fill" h="20" radius="$radius-xs" fill="#3DD68C26" align="middle-center">
+            <text text-style="Tiny" value="LEAD VOX" fill="$tr-vox" letter-spacing="6%" />
+          </row>
+        </col>
+
+        <!-- FX (muted) -->
+        <col w="fill" p="10" radius="$radius-md" fill="$surface-raised" border="1 $hairline-soft" gap="8" align="top-center">
+          <row gap="8" align="middle-center">
+            <frame w="24" h="24">
+              <ellipse x="0" y="0" w="24" h="24" fill="$surface-overlay" border="1 $hairline-strong" />
+              <rect x="11" y="3" w="2" h="7" radius="1" fill="$ink" rotation="25" />
+            </frame>
+            <text text-style="Mono/Tiny" value="R8" fill="$muted" />
+          </row>
+          <row gap="12" align="top-left">
+            <frame w="22" h="110">
+              <rect x="10" y="0" w="2" h="110" radius="1" fill="$hairline-strong" />
+              <rect x="1" y="62" w="20" h="11" radius="3" fill="#D2D6DC" />
+            </frame>
+            <frame w="10" h="110" radius="3" fill="$well" clip="true">
+              <rect x="0" y="84" w="10" h="26" fill="linear-gradient(180deg, #3DD68C 0%, #3DD68C 100%)" opacity="0.45" />
+            </frame>
+          </row>
+          <text text-style="Mono" value="-12.5" fill="$muted" />
+          <row gap="4">
+            <row w="20" h="16" radius="4" fill="#F2555A26" border="1 $red" align="middle-center">
+              <text text-style="Tiny" value="M" fill="$red" />
+            </row>
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="S" fill="$muted" />
+            </row>
+          </row>
+          <row w="fill" h="20" radius="$radius-xs" fill="#FF7AB226" align="middle-center">
+            <text text-style="Tiny" value="FX" fill="$tr-fx" letter-spacing="6%" />
+          </row>
+        </col>
+
+        <!-- Return A -->
+        <col w="fill" p="10" radius="$radius-md" fill="$surface-raised" border="1 $hairline-soft" gap="8" align="top-center">
+          <row gap="8" align="middle-center">
+            <frame w="24" h="24">
+              <ellipse x="0" y="0" w="24" h="24" fill="$surface-overlay" border="1 $hairline-strong" />
+              <rect x="11" y="3" w="2" h="7" radius="1" fill="$ink" />
+            </frame>
+            <text text-style="Mono/Tiny" value="C" fill="$muted" />
+          </row>
+          <row gap="12" align="top-left">
+            <frame w="22" h="110">
+              <rect x="10" y="0" w="2" h="110" radius="1" fill="$hairline-strong" />
+              <rect x="1" y="54" w="20" h="11" radius="3" fill="#D2D6DC" />
+            </frame>
+            <frame w="10" h="110" radius="3" fill="$well" clip="true">
+              <rect x="0" y="64" w="10" h="46" fill="linear-gradient(180deg, #3DD68C 0%, #3DD68C 100%)" opacity="0.8" />
+            </frame>
+          </row>
+          <text text-style="Mono" value="-9.0" fill="$ink" />
+          <row gap="4">
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="M" fill="$muted" />
+            </row>
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="S" fill="$muted" />
+            </row>
+          </row>
+          <row w="fill" h="20" radius="$radius-xs" fill="$surface-overlay" align="middle-center">
+            <text text-style="Tiny" value="A · HALL VERB" fill="$body" letter-spacing="4%" />
+          </row>
+        </col>
+
+        <!-- Return B -->
+        <col w="fill" p="10" radius="$radius-md" fill="$surface-raised" border="1 $hairline-soft" gap="8" align="top-center">
+          <row gap="8" align="middle-center">
+            <frame w="24" h="24">
+              <ellipse x="0" y="0" w="24" h="24" fill="$surface-overlay" border="1 $hairline-strong" />
+              <rect x="11" y="3" w="2" h="7" radius="1" fill="$ink" rotation="-20" />
+            </frame>
+            <text text-style="Mono/Tiny" value="L6" fill="$muted" />
+          </row>
+          <row gap="12" align="top-left">
+            <frame w="22" h="110">
+              <rect x="10" y="0" w="2" h="110" radius="1" fill="$hairline-strong" />
+              <rect x="1" y="58" w="20" h="11" radius="3" fill="#D2D6DC" />
+            </frame>
+            <frame w="10" h="110" radius="3" fill="$well" clip="true">
+              <rect x="0" y="70" w="10" h="40" fill="linear-gradient(180deg, #3DD68C 0%, #3DD68C 100%)" opacity="0.8" />
+            </frame>
+          </row>
+          <text text-style="Mono" value="-10.4" fill="$ink" />
+          <row gap="4">
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="M" fill="$muted" />
+            </row>
+            <row w="20" h="16" radius="4" border="1 #3A3E46" align="middle-center">
+              <text text-style="Tiny" value="S" fill="$muted" />
+            </row>
+          </row>
+          <row w="fill" h="20" radius="$radius-xs" fill="$surface-overlay" align="middle-center">
+            <text text-style="Tiny" value="B · TAPE ECHO" fill="$body" letter-spacing="4%" />
+          </row>
+        </col>
+
+        <!-- Master -->
+        <col w="132" p="10" radius="$radius-md" fill="$surface-raised" border="1 $accent-soft" gap="8" align="top-center">
+          <row gap="8" align="middle-center">
+            <frame w="24" h="24">
+              <ellipse x="0" y="0" w="24" h="24" fill="$surface-overlay" border="1 $hairline-strong" />
+              <rect x="11" y="3" w="2" h="7" radius="1" fill="$accent" />
+            </frame>
+            <text text-style="Mono/Tiny" value="STEREO" fill="$muted" />
+          </row>
+          <row gap="10" align="top-left">
+            <frame w="22" h="110">
+              <rect x="10" y="0" w="2" h="110" radius="1" fill="$hairline-strong" />
+              <rect x="1" y="30" w="20" h="11" radius="3" fill="$accent" />
+            </frame>
+            <frame w="10" h="110" radius="3" fill="$well" clip="true">
+              <rect x="0" y="20" w="10" h="90" fill="linear-gradient(180deg, #FFB224 0%, #3DD68C 25%, #3DD68C 100%)" />
+            </frame>
+            <frame w="10" h="110" radius="3" fill="$well" clip="true">
+              <rect x="0" y="26" w="10" h="84" fill="linear-gradient(180deg, #FFB224 0%, #3DD68C 22%, #3DD68C 100%)" />
+            </frame>
+          </row>
+          <text text-style="Mono" value="-6.2" fill="$ink" />
+          <row w="fill" h="20" radius="$radius-xs" fill="$accent-soft" align="middle-center">
+            <text text-style="Tiny" value="MASTER" fill="$accent" letter-spacing="8%" />
+          </row>
+        </col>
+      </row>
+    </col>
+
+    <!-- ───────────── Status bar ───────────── -->
+    <row w="fill" h="26" p="0 16" gap="auto" align="middle-left" fill="$surface" border-top="1 $hairline">
+      <text text-style="Caption" value="Ready · Autosaved 2 min ago" fill="$muted" />
+      <text text-style="Mono/Tiny" value="48 kHz · 24-bit · 128 smp buffer · 5.8 ms" fill="$muted" />
+    </row>
+  </col>
+</gui>

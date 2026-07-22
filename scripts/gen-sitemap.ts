@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url'
 import { specSlugs } from '../lib/spec-data'
 import { kitModules } from '../lib/kit-data'
 import { guideEntries as guides } from '../lib/guides-data'
+import { examples } from '../lib/examples-data'
 import { SITE_URL, canonicalPath } from '../utils/site-url'
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -22,6 +23,10 @@ const out = join(here, '../public/sitemap.xml')
 // lastmod accurate — Bing discounts sitemaps whose lastmod changes on every
 // deploy without a real content change.
 const SITE_UPDATED = '2026-07-07'
+
+// When the examples library was published — a real freshness date so crawlers
+// treat these URLs as newly added. Bump when the library changes materially.
+const EXAMPLES_ADDED = '2026-07-22'
 
 interface Entry { loc: string; changefreq: string; priority: string; lastmod: string }
 
@@ -51,7 +56,14 @@ const guideEntries: Entry[] = guides.map(g => ({
   loc: `/guides/${g.slug}`, changefreq: 'monthly', priority: '0.8', lastmod: g.dateModified
 }))
 
-const all = [...staticTop, ...specEntries, ...kitEntries, ...guideEntries]
+const examplesTop: Entry[] = [
+  { loc: '/examples', changefreq: 'weekly', priority: '0.8', lastmod: EXAMPLES_ADDED }
+]
+const exampleEntries: Entry[] = examples.map(e => ({
+  loc: `/examples/${e.slug}`, changefreq: 'monthly', priority: '0.7', lastmod: EXAMPLES_ADDED
+}))
+
+const all = [...staticTop, ...specEntries, ...kitEntries, ...guideEntries, ...examplesTop, ...exampleEntries]
 
 const xml = [
   '<?xml version="1.0" encoding="UTF-8"?>',
