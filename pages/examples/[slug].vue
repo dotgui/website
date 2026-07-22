@@ -181,8 +181,8 @@ useHead({
 
 .exd-expand {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  bottom: 12px;
+  left: 12px;
   z-index: 2;
   width: 34px;
   height: 34px;
