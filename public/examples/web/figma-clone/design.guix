@@ -1,0 +1,562 @@
+<gui version="0.2" name="FigmaClone">
+  <tokens>
+    <!-- Figma Color Palette -->
+    <color name="bg-canvas" value="#1E1E1E" />
+    <color name="bg-panel" value="#2C2C2C" />
+    <color name="bg-panel-elevated" value="#333333" />
+    <color name="border" value="#3E3E3E" />
+    <color name="brand-blue" value="#0C8CE9" />
+    <color name="brand-blue-bg" value="#0C8CE91F" />
+    <color name="text-primary" value="#FFFFFF" />
+    <color name="text-secondary" value="#B3B3B3" />
+    <color name="text-tertiary" value="#808080" />
+    <color name="accent-green" value="#0ACF83" />
+    <color name="accent-purple" value="#A259FF" />
+    <color name="white" value="#FFFFFF" />
+    
+    <!-- Nested PostHog Canvas Tokens -->
+    <color name="ph-bg" value="#eeefe9" />
+    <color name="ph-surface" value="#ffffff" />
+    <color name="ph-surface-soft" value="#e5e7e0" />
+    <color name="ph-border" value="#bfc1b7" />
+    <color name="ph-primary" value="#f7a501" />
+    <color name="ph-on-primary" value="#23251d" />
+    <color name="ph-ink" value="#23251d" />
+    <color name="ph-body" value="#4d4f46" />
+    <color name="ph-text-secondary" value="#6c6e63" />
+    <color name="ph-accent-blue" value="#2c84e0" />
+    <color name="ph-accent-blue-soft" value="#dceaf6" />
+    <color name="ph-success" value="#2c8c66" />
+  </tokens>
+
+  <styles>
+    <!-- Figma UI Typography -->
+    <text-style name="PanelHeader" font-family="Inter" font-size="11" font-weight="700" line-height="16" letter-spacing="0.5" />
+    <text-style name="LayerText" font-family="Inter" font-size="12" font-weight="500" line-height="18" />
+    <text-style name="LayerTextActive" font-family="Inter" font-size="12" font-weight="600" line-height="18" />
+    <text-style name="ToolbarText" font-family="Inter" font-size="13" font-weight="600" line-height="18" />
+    <text-style name="InspectorLabel" font-family="Inter" font-size="11" font-weight="600" line-height="16" />
+    <text-style name="InspectorValue" font-family="Inter" font-size="11" font-weight="500" line-height="16" />
+    <text-style name="InspectorTitle" font-family="Inter" font-size="11" font-weight="700" line-height="16" letter-spacing="0.5" />
+  </styles>
+
+  <fonts>
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <!-- Web Desktop Main Layout Container (Width strictly 1440px, height strictly 900px) -->
+  <col w="1440" h="900" fill="$bg-canvas">
+
+    <!-- 1. Top Nav Toolbar (Height 48px, spans 1440px) -->
+    <row role="toolbar" w="1440" h="48" fill="$bg-panel" border="0 0 1 0 $border" align="middle-left" p="0 16" gap="16">
+      
+      <!-- Figma Logo & Main Menu -->
+      <img src="https://api.iconify.design/logos/figma.svg" w="16" h="24" />
+      <img src="https://api.iconify.design/lucide/chevron-down.svg?color=%23B3B3B3" w="14" h="14" />
+
+      <!-- Left tools cluster -->
+      <row gap="12" align="middle-left">
+        <!-- Pointer tool (active) -->
+        <row w="28" h="28" radius="6" fill="$brand-blue-bg" align="middle-center">
+          <img src="https://api.iconify.design/lucide/mouse-pointer-2.svg?color=%230C8CE9&amp;fill=%230C8CE9" w="16" h="16" />
+        </row>
+        <!-- Region/Frame tool -->
+        <row w="28" h="28" radius="6" align="middle-center">
+          <img src="https://api.iconify.design/lucide/frame.svg?color=%23B3B3B3" w="16" h="16" />
+        </row>
+        <!-- Shape tools -->
+        <row w="28" h="28" radius="6" align="middle-center" gap="2">
+          <img src="https://api.iconify.design/lucide/square.svg?color=%23B3B3B3" w="16" h="16" />
+          <img src="https://api.iconify.design/lucide/chevron-down.svg?color=%23808080" w="10" h="10" />
+        </row>
+        <!-- Pen tool -->
+        <row w="28" h="28" radius="6" align="middle-center">
+          <img src="https://api.iconify.design/lucide/pen-tool.svg?color=%23B3B3B3" w="16" h="16" />
+        </row>
+        <!-- Text tool -->
+        <row w="28" h="28" radius="6" align="middle-center">
+          <img src="https://api.iconify.design/lucide/type.svg?color=%23B3B3B3" w="16" h="16" />
+        </row>
+        <!-- Hand/Pan tool -->
+        <row w="28" h="28" radius="6" align="middle-center">
+          <img src="https://api.iconify.design/lucide/hand.svg?color=%23B3B3B3" w="16" h="16" />
+        </row>
+        <!-- Comments tool -->
+        <row w="28" h="28" radius="6" align="middle-center">
+          <img src="https://api.iconify.design/lucide/message-square.svg?color=%23B3B3B3" w="16" h="16" />
+        </row>
+      </row>
+
+      <col w="fill" />
+
+      <!-- Center Project Title -->
+      <row gap="6" align="middle-center">
+        <text font-family="Inter" font-size="12" font-weight="600" value="PostHog Web Analytics Redesign" color="$text-primary" />
+        <text font-family="Inter" font-size="12" font-weight="500" value="/" color="$text-tertiary" />
+        <text font-family="Inter" font-size="12" font-weight="500" value="Dashboard V1" color="$text-secondary" />
+        <img src="https://api.iconify.design/lucide/chevron-down.svg?color=%23B3B3B3" w="12" h="12" />
+      </row>
+
+      <col w="fill" />
+
+      <!-- Right collaborators & controls -->
+      <row gap="12" align="middle-left">
+        <!-- Avatars -->
+        <row gap="-6" align="middle-left">
+          <row role="avatar" w="24" h="24" radius="12" fill="#A259FF" border="2 $bg-panel" align="middle-center">
+            <text font-family="Inter" font-size="11" font-weight="700" value="J" color="$white" />
+          </row>
+          <row role="avatar" w="24" h="24" radius="12" fill="#0ACF83" border="2 $bg-panel" align="middle-center">
+            <text font-family="Inter" font-size="11" font-weight="700" value="D" color="$white" />
+          </row>
+        </row>
+
+        <!-- Share Button (Blue Pill) -->
+        <row role="button" fill="$brand-blue" p="6 14" radius="6" align="middle-center">
+          <text font-family="Inter" font-size="12" font-weight="600" value="Share" color="$white" />
+        </row>
+
+        <!-- Dev Mode Switcher -->
+        <row w="28" h="28" radius="6" align="middle-center">
+          <img src="https://api.iconify.design/lucide/code.svg?color=%23B3B3B3" w="16" h="16" />
+        </row>
+
+        <!-- Zoom factor -->
+        <row gap="4" align="middle-center" p="0 4">
+          <text font-family="Inter" font-size="12" font-weight="500" value="100%" color="$text-secondary" />
+          <img src="https://api.iconify.design/lucide/chevron-down.svg?color=%23B3B3B3" w="12" h="12" />
+        </row>
+      </row>
+
+    </row>
+
+    <!-- 2. Main Workspace Row (Left Panel + Central Canvas + Right Panel, Height 852px) -->
+    <row w="1440" h="852" gap="0">
+      
+      <!-- LEFT SIDEBAR: Layers & Pages (240px wide, border-right) -->
+      <col role="sidebar" w="240" h="852" fill="$bg-panel" border="0 1 0 0 $border">
+        
+        <!-- Pages Section -->
+        <row w="240" p="12 16" align="middle-left" border="0 0 1 0 $border" gap="6">
+          <text text-style="PanelHeader" value="PAGES" color="$text-secondary" />
+          <col w="fill" />
+          <text font-family="Inter" font-size="11" font-weight="500" value="Page 1" color="$text-primary" />
+          <img src="https://api.iconify.design/lucide/chevron-down.svg?color=%23B3B3B3" w="12" h="12" />
+        </row>
+
+        <!-- Layers Header -->
+        <row w="240" p="12 16 6 16" align="middle-left">
+          <text text-style="PanelHeader" value="LAYERS" color="$text-secondary" />
+          <col w="fill" />
+          <img src="https://api.iconify.design/lucide/plus.svg?color=%23B3B3B3" w="14" h="14" />
+        </row>
+
+        <!-- Layers Tree List -->
+        <col role="tree" w="240" gap="2" p="0 0">
+          
+          <!-- Layer 1: Frame "Mobile Frame" (Selected Active Layer) -->
+          <row w="240" h="32" fill="$brand-blue-bg" p="0 16" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/frame.svg?color=%230C8CE9" w="14" h="14" />
+            <text text-style="LayerTextActive" value="Mobile Frame" color="$brand-blue" />
+            <col w="fill" />
+            <img src="https://api.iconify.design/lucide/eye.svg?color=%230C8CE9" w="14" h="14" />
+          </row>
+
+          <!-- Layer 2: Group "iPhone Status Bar" (Indented child) -->
+          <row w="240" h="32" p="0 16 0 32" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/folder.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="iPhone Status Bar" color="$text-primary" />
+          </row>
+
+          <!-- Layer 3: Group "Header Bar (posthog)" -->
+          <row w="240" h="32" p="0 16 0 32" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/folder.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Header Bar (posthog)" color="$text-primary" />
+          </row>
+
+          <!-- Layer 4: Group "Dashboard Feed" -->
+          <row w="240" h="32" p="0 16 0 32" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/folder.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Dashboard Feed" color="$text-primary" />
+          </row>
+
+          <!-- Layer 5: Card "Live Activity" (Nested inside Feed) -->
+          <row w="240" h="32" p="0 16 0 48" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/folder.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Live Activity Card" color="$text-secondary" />
+          </row>
+
+          <!-- Layer 6: Card "Product Analytics" (Nested inside Feed) -->
+          <row w="240" h="32" p="0 16 0 48" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/folder.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Product Analytics Card" color="$text-secondary" />
+          </row>
+
+          <!-- Layer 7: Row "Dynamic Bar Chart" (Nested inside Product Card) -->
+          <row w="240" h="32" p="0 16 0 64" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/bar-chart-2.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Dynamic Bar Chart" color="$text-tertiary" />
+          </row>
+
+          <!-- Layer 8: Card "Conversion Funnel" (Nested inside Feed) -->
+          <row w="240" h="32" p="0 16 0 48" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/folder.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Conversion Funnel Card" color="$text-secondary" />
+          </row>
+
+          <!-- Layer 9: Card "Top Referrers" (Nested inside Feed) -->
+          <row w="240" h="32" p="0 16 0 48" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/folder.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Top Referrers Card" color="$text-secondary" />
+          </row>
+
+          <!-- Layer 10: Row "Docs Tip Banner" (Nested inside Feed) -->
+          <row w="240" h="32" p="0 16 0 48" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/sun.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Docs Tip Banner" color="$text-secondary" />
+          </row>
+
+          <!-- Layer 11: Row "Hedgehog Mascot Card" (Nested inside Feed) -->
+          <row w="240" h="32" p="0 16 0 48" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/smile.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Hedgehog Mascot Card" color="$text-secondary" />
+          </row>
+
+          <!-- Layer 12: Group "Bottom Navigation Tab Bar" -->
+          <row w="240" h="32" p="0 16 0 32" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/folder.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Bottom Nav Tab Bar" color="$text-primary" />
+          </row>
+
+        </col>
+
+      </col>
+
+      <!-- CENTER VIEWPORT CANVAS: Figma Editing Grid space (960px wide, absolute frame) -->
+      <frame w="960" h="852" clip="true">
+        
+        <!-- Active Frame: "Mobile Frame" (iOS design canvas) -->
+        <!-- Placed at x="285" y="80" (offset centered in the 960x852 frame) -->
+        <!-- PostHog Mobile Analytics Screen (Height strictly 640px inside the clipped frame, scrollable layout represented) -->
+        <frame w="390" h="640" x="285" y="80" fill="$ph-bg" radius="16" shadow="0 10 30 #00000040" clip="true">
+          
+          <!-- 1. iPhone 14/15 Status Bar inside the editor -->
+          <row w="390" h="36" p="0 24" align="middle-left" gap="auto" fill="$ph-bg">
+            <text value="9:41" font-family="Inter" font-size="12" font-weight="600" color="$ph-ink" />
+            <row gap="6" align="middle-right">
+              <img src="https://api.iconify.design/lucide/signal.svg?color=%2323251d" w="14" h="10" />
+              <img src="https://api.iconify.design/lucide/wifi.svg?color=%2323251d" w="14" h="10" />
+              <img src="https://api.iconify.design/lucide/battery.svg?color=%2323251d" w="16" h="10" />
+            </row>
+          </row>
+
+          <!-- 2. PostHog Navigation Header inside the editor -->
+          <row w="390" h="48" p="0 16" align="middle-left" gap="auto" fill="$ph-bg" border="0 0 1 0 $ph-border">
+            <row gap="6" align="middle-left">
+              <text value="🦔" font-family="Inter" font-size="14" line-height="16" />
+              <text value="posthog" font-family="Inter" font-size="14" font-weight="700" color="$ph-ink" />
+            </row>
+            <row p="4 10" fill="$ph-surface-soft" radius="999" align="middle-center" border="1 $ph-border" gap="2">
+              <text value="Last 7 days" font-family="Inter" font-size="11" font-weight="600" color="$ph-ink" line-height="14" />
+              <img src="https://api.iconify.design/lucide/chevron-down.svg?color=%2323251d" w="10" h="10" />
+            </row>
+          </row>
+
+          <!-- 3. DASHBOARDS CONTENT FEED (Clamped h="472px" with vertical scrolling content visible) -->
+          <col w="390" h="472" p="12" gap="12" x="0" y="84" abs="true" clip="true">
+
+            <!-- === CARD 1: Live active visitor activity === -->
+            <col w="366" p="12" fill="$ph-surface" radius="6" border="1 $ph-border" gap="8">
+              <text value="LIVE ACTIVITY" font-family="Inter" font-size="11" font-weight="700" color="$ph-body" letter-spacing="0.5" />
+              <row gap="8" align="middle-left" w="342">
+                <ellipse fill="$ph-success" w="8" h="8" />
+                <row gap="4" align="baseline">
+                  <text value="142" font-family="Inter" font-size="20" font-weight="800" color="$ph-ink" />
+                  <text value="visitors active on site" font-family="Inter" font-size="12" font-weight="500" color="$ph-body" />
+                </row>
+              </row>
+            </col>
+
+            <!-- === CARD 2: Product Web Analytics Pageviews === -->
+            <col w="366" p="12" fill="$ph-surface" radius="6" border="1 $ph-border" gap="10">
+              <row w="342" gap="auto" align="middle-left">
+                <text value="Product Analytics" font-family="Inter" font-size="14" font-weight="700" color="$ph-ink" />
+                <!-- Tab switcher -->
+                <row gap="4" align="middle-right">
+                  <row p="3 8" fill="$ph-primary" radius="999" align="middle-center">
+                    <text value="Pageviews" font-family="Inter" font-size="11" font-weight="700" color="$ph-on-primary" line-height="12" />
+                  </row>
+                </row>
+              </row>
+              
+              <!-- Big Number details -->
+              <row gap="6" align="baseline" w="342">
+                <text value="12,842" font-family="Inter" font-size="20" font-weight="800" color="$ph-ink" />
+                <row p="1 5" fill="#e5f5eb" radius="999" align="middle-center" border="1 $ph-success">
+                  <text value="+14.2%" font-family="Inter" font-size="11" font-weight="700" color="$ph-success" line-height="11" />
+                </row>
+              </row>
+
+              <!-- Dynamic High-Fidelity Bar Chart -->
+              <row w="342" h="54" gap="8" align="bottom-left" p="4 0">
+                <rect fill="$ph-surface-soft" w="22" h="20" radius="2" />
+                <rect fill="$ph-surface-soft" w="22" h="25" radius="2" />
+                <rect fill="$ph-surface-soft" w="22" h="30" radius="2" />
+                <rect fill="$ph-primary" w="22" h="50" radius="2" />
+                <rect fill="$ph-primary" w="22" h="42" radius="2" />
+                <rect fill="$ph-primary" w="22" h="54" radius="2" />
+                <rect fill="$ph-surface-soft" w="22" h="32" radius="2" />
+                <rect fill="$ph-surface-soft" w="22" h="38" radius="2" />
+                <rect fill="$ph-surface-soft" w="22" h="40" radius="2" />
+                <rect fill="$ph-surface-soft" w="22" h="28" radius="2" />
+                <rect fill="$ph-surface-soft" w="22" h="18" radius="2" />
+              </row>
+            </col>
+
+            <!-- === CARD 3: Conversion Funnel === -->
+            <col w="366" p="12" fill="$ph-surface" radius="6" border="1 $ph-border" gap="10">
+              <col gap="2" w="342">
+                <text value="CONVERSION FUNNEL" font-family="Inter" font-size="11" font-weight="700" color="$ph-body" letter-spacing="0.5" />
+                <text value="User Acquisition Funnel" font-family="Inter" font-size="14" font-weight="700" color="$ph-ink" />
+              </col>
+
+              <!-- Funnel steps progress rows -->
+              <col w="342" gap="8">
+                <!-- Step 1 -->
+                <col gap="2" w="342">
+                  <row w="342" gap="auto" align="middle-left">
+                    <text value="1. Unique Visitors" font-family="Inter" font-size="12" font-weight="600" color="$ph-ink" />
+                    <text value="10,000 (100%)" font-family="Inter" font-size="11" font-weight="500" color="$ph-body" />
+                  </row>
+                  <frame w="342" h="6">
+                    <rect fill="$ph-surface-soft" w="342" h="6" radius="3" abs="true" x="0" y="0" />
+                    <rect fill="$ph-primary" w="342" h="6" radius="3" abs="true" x="0" y="0" />
+                  </frame>
+                </col>
+                <!-- Step 2 -->
+                <col gap="2" w="342">
+                  <row w="342" gap="auto" align="middle-left">
+                    <text value="2. Signups Created" font-family="Inter" font-size="12" font-weight="600" color="$ph-ink" />
+                    <text value="2,400 (24%)" font-family="Inter" font-size="11" font-weight="500" color="$ph-body" />
+                  </row>
+                  <frame w="342" h="6">
+                    <rect fill="$ph-surface-soft" w="342" h="6" radius="3" abs="true" x="0" y="0" />
+                    <rect fill="$ph-primary" w="82" h="6" radius="3" abs="true" x="0" y="0" />
+                  </frame>
+                </col>
+              </col>
+            </col>
+
+          </col>
+
+          <!-- 4. Fixed Bottom Tab Bar Navigation inside the editor -->
+          <col w="390" fill="$ph-surface" border="1 0 0 0 $ph-border" x="0" y="556" abs="true">
+            <row w="390" h="50" align="middle-left" gap="0">
+              <!-- Tab 1: Dashboards (Active - Yellow) -->
+              <col gap="2" align="middle-center" w="97" h="48">
+                <img src="https://api.iconify.design/lucide/line-chart.svg?color=%23f7a501" w="20" h="20" />
+                <text value="Dashboards" font-family="Inter" font-size="11" font-weight="700" color="$ph-ink" />
+              </col>
+              <!-- Tab 2: Replays -->
+              <col gap="2" align="middle-center" w="97" h="48">
+                <img src="https://api.iconify.design/lucide/video.svg?color=%236c6e63" w="20" h="20" />
+                <text value="Replays" font-family="Inter" font-size="11" font-weight="500" color="$ph-text-secondary" />
+              </col>
+              <!-- Tab 3: Flags -->
+              <col gap="2" align="middle-center" w="98" h="48">
+                <img src="https://api.iconify.design/lucide/flag.svg?color=%236c6e63" w="20" h="20" />
+                <text value="Flags" font-family="Inter" font-size="11" font-weight="500" color="$ph-text-secondary" />
+              </col>
+              <!-- Tab 4: Settings -->
+              <col gap="2" align="middle-center" w="98" h="48">
+                <img src="https://api.iconify.design/lucide/settings.svg?color=%236c6e63" w="20" h="20" />
+                <text value="Settings" font-family="Inter" font-size="11" font-weight="500" color="$ph-text-secondary" />
+              </col>
+            </row>
+            <!-- iPhone safe area line -->
+            <frame w="390" h="34" clip="true">
+              <rect fill="#23251d" w="120" h="4" radius="2" abs="true" x="135" y="15" />
+            </frame>
+          </col>
+
+        </frame>
+
+        <!-- FIGMA ACTIVE BOUNDING OUTLINE OVERLAY (Wrapped around the Mobile Frame) -->
+        <!-- Bounding outline starts at x="284" y="79" with size w="392" h="642" -->
+        <frame w="392" h="642" x="284" y="79" abs="true">
+          <!-- Figma active outline box -->
+          <rect border="1.5 $brand-blue" w="392" h="642" x="0" y="0" />
+          
+          <!-- Corner resizing nodes (6x6 small white squares with blue borders) -->
+          <rect fill="$white" border="1.5 $brand-blue" w="7" h="7" x="-3.5" y="-3.5" />
+          <rect fill="$white" border="1.5 $brand-blue" w="7" h="7" x="388.5" y="-3.5" />
+          <rect fill="$white" border="1.5 $brand-blue" w="7" h="7" x="-3.5" y="638.5" />
+          <rect fill="$white" border="1.5 $brand-blue" w="7" h="7" x="388.5" y="638.5" />
+          
+          <!-- Floating size tag badge below the bottom boundary -->
+          <row fill="$brand-blue" p="3 8" radius="4" x="120" y="648" align="middle-center" gap="0">
+            <text font-family="Inter" font-size="11" font-weight="600" value="Mobile Frame • 390 × 640" color="$white" />
+          </row>
+        </frame>
+
+        <!-- COLLABORATOR CURSOR 1: Jinson (Purple Accent) -->
+        <!-- Arrow cursor located at x="550" y="320" pointing at dynamic chart -->
+        <frame w="100" h="40" x="550" y="320" abs="true">
+          <!-- Filled Purple pointer mouse icon -->
+          <img src="https://api.iconify.design/lucide/mouse-pointer-2.svg?color=%23A259FF&amp;fill=%23A259FF" w="18" h="18" x="0" y="0" />
+          <!-- Floating name tag bubble offset -->
+          <row fill="#A259FF" p="3 8" radius="4" x="14" y="14" align="middle-center" gap="0">
+            <text font-family="Inter" font-size="11" font-weight="600" value="Jinson" color="$white" />
+          </row>
+        </frame>
+
+        <!-- COLLABORATOR CURSOR 2: Duo (Green Accent) -->
+        <!-- Arrow cursor located at x="440" y="180" pointing at date selector -->
+        <frame w="80" h="40" x="440" y="180" abs="true">
+          <!-- Filled Green pointer mouse icon -->
+          <img src="https://api.iconify.design/lucide/mouse-pointer-2.svg?color=%230ACF83&amp;fill=%230ACF83" w="18" h="18" x="0" y="0" />
+          <!-- Floating name tag bubble offset -->
+          <row fill="#0ACF83" p="3 8" radius="4" x="14" y="14" align="middle-center" gap="0">
+            <text font-family="Inter" font-size="11" font-weight="600" value="Duo" color="$white" />
+          </row>
+        </frame>
+
+      </frame>
+
+      <!-- RIGHT SIDEBAR: Properties Inspector Panel (240px wide, border-left) -->
+      <col role="sidebar" w="240" h="852" fill="$bg-panel" border="0 0 0 1 $border">
+        
+        <!-- Inspector Tabs Header (Design active) -->
+        <row w="240" h="40" border="0 0 1 0 $border" gap="0">
+          <!-- Design Tab -->
+          <col w="80" h="40" align="middle-center" border="0 0 2 0 $brand-blue">
+            <text font-family="Inter" font-size="11" font-weight="600" value="Design" color="$text-primary" />
+          </col>
+          <!-- Prototype Tab -->
+          <col w="80" h="40" align="middle-center">
+            <text font-family="Inter" font-size="11" font-weight="500" value="Prototype" color="$text-secondary" />
+          </col>
+          <!-- Inspect Tab -->
+          <col w="80" h="40" align="middle-center">
+            <text font-family="Inter" font-size="11" font-weight="500" value="Inspect" color="$text-secondary" />
+          </col>
+        </row>
+
+        <!-- Section 1: Alignment tools -->
+        <row w="240" p="12 16" border="0 0 1 0 $border" gap="auto" align="middle-center">
+          <img src="https://api.iconify.design/lucide/align-left.svg?color=%23B3B3B3" w="16" h="16" />
+          <img src="https://api.iconify.design/lucide/align-center.svg?color=%23B3B3B3" w="16" h="16" />
+          <img src="https://api.iconify.design/lucide/align-right.svg?color=%23B3B3B3" w="16" h="16" />
+          <img src="https://api.iconify.design/lucide/align-vertical-space-around.svg?color=%23B3B3B3" w="16" h="16" />
+          <img src="https://api.iconify.design/lucide/align-horizontal-space-around.svg?color=%23B3B3B3" w="16" h="16" />
+        </row>
+
+        <!-- Section 2: Position & Dimensions Inspector -->
+        <col w="240" p="16" border="0 0 1 0 $border" gap="12">
+          <!-- X & Y coordinates row -->
+          <row w="208" gap="16">
+            <row gap="6" align="middle-left" w="96">
+              <text text-style="InspectorLabel" value="X" color="$text-tertiary" />
+              <text text-style="InspectorValue" value="285" color="$text-primary" />
+            </row>
+            <row gap="6" align="middle-left" w="96">
+              <text text-style="InspectorLabel" value="Y" color="$text-tertiary" />
+              <text text-style="InspectorValue" value="80" color="$text-primary" />
+            </row>
+          </row>
+
+          <!-- W & H coordinates row -->
+          <row w="208" gap="16">
+            <row gap="6" align="middle-left" w="96">
+              <text text-style="InspectorLabel" value="W" color="$text-tertiary" />
+              <text text-style="InspectorValue" value="390" color="$text-primary" />
+            </row>
+            <row gap="6" align="middle-left" w="96">
+              <text text-style="InspectorLabel" value="H" color="$text-tertiary" />
+              <text text-style="InspectorValue" value="640" color="$text-primary" />
+            </row>
+          </row>
+
+          <!-- Constraints & Radius row -->
+          <row w="208" gap="16">
+            <row gap="6" align="middle-left" w="96">
+              <img src="https://api.iconify.design/lucide/rotate-cw.svg?color=%23808080" w="12" h="12" />
+              <text text-style="InspectorValue" value="0°" color="$text-primary" />
+            </row>
+            <row gap="6" align="middle-left" w="96">
+              <img src="https://api.iconify.design/lucide/corner-down-right.svg?color=%23808080" w="12" h="12" />
+              <text text-style="InspectorValue" value="16" color="$text-primary" />
+            </row>
+          </row>
+        </col>
+
+        <!-- Section 3: Layout Grid -->
+        <col w="240" p="16" border="0 0 1 0 $border" gap="8">
+          <row w="208" align="middle-left">
+            <text text-style="InspectorTitle" value="LAYOUT GRID" color="$text-secondary" />
+            <col w="fill" />
+            <img src="https://api.iconify.design/lucide/plus.svg?color=%23B3B3B3" w="14" h="14" />
+          </row>
+          <row w="208" h="28" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/grid.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Grid (10px)" color="$text-primary" />
+            <col w="fill" />
+            <img src="https://api.iconify.design/lucide/eye.svg?color=%23B3B3B3" w="14" h="14" />
+          </row>
+        </col>
+
+        <!-- Section 4: Fill Inspector -->
+        <col w="240" p="16" border="0 0 1 0 $border" gap="8">
+          <row w="208" align="middle-left">
+            <text text-style="InspectorTitle" value="FILL" color="$text-secondary" />
+            <col w="fill" />
+            <img src="https://api.iconify.design/lucide/plus.svg?color=%23B3B3B3" w="14" h="14" />
+          </row>
+          <!-- Hex block visualizer -->
+          <row w="208" h="32" gap="8" align="middle-left">
+            <!-- Cream square matching PostHog bg -->
+            <rect fill="$ph-bg" w="16" h="16" radius="3" border="1 $border" />
+            <text font-family="Inter" font-size="11" font-weight="600" value="EEEFE9" color="$text-primary" />
+            <text font-family="Inter" font-size="11" font-weight="500" value="100%" color="$text-secondary" />
+            <col w="fill" />
+            <img src="https://api.iconify.design/lucide/eye.svg?color=%23B3B3B3" w="14" h="14" />
+          </row>
+        </col>
+
+        <!-- Section 5: Stroke Inspector -->
+        <col w="240" p="16" border="0 0 1 0 $border" gap="8">
+          <row w="208" align="middle-left">
+            <text text-style="InspectorTitle" value="STROKE" color="$text-secondary" />
+            <col w="fill" />
+            <img src="https://api.iconify.design/lucide/plus.svg?color=%23B3B3B3" w="14" h="14" />
+          </row>
+          <row w="208" h="32" gap="8" align="middle-left">
+            <rect fill="$border" w="16" h="16" radius="3" />
+            <text font-family="Inter" font-size="11" font-weight="600" value="E5E5E5" color="$text-primary" />
+            <text font-family="Inter" font-size="11" font-weight="500" value="1" color="$text-secondary" />
+            <col w="fill" />
+            <img src="https://api.iconify.design/lucide/eye.svg?color=%23B3B3B3" w="14" h="14" />
+          </row>
+        </col>
+
+        <!-- Section 6: Effects (Shadows) -->
+        <col w="240" p="16" border="0 0 1 0 $border" gap="8">
+          <row w="208" align="middle-left">
+            <text text-style="InspectorTitle" value="EFFECTS" color="$text-secondary" />
+            <col w="fill" />
+            <img src="https://api.iconify.design/lucide/plus.svg?color=%23B3B3B3" w="14" h="14" />
+          </row>
+          <row w="208" h="28" align="middle-left" gap="8">
+            <img src="https://api.iconify.design/lucide/sun.svg?color=%23B3B3B3" w="14" h="14" />
+            <text text-style="LayerText" value="Drop Shadow" color="$text-primary" />
+            <col w="fill" />
+            <img src="https://api.iconify.design/lucide/settings.svg?color=%23B3B3B3" w="14" h="14" />
+          </row>
+        </col>
+
+      </col>
+
+    </row>
+
+  </col>
+</gui>

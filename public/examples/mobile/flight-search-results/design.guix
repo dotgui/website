@@ -1,0 +1,351 @@
+<gui version="1.0" name="FlightSearchResults">
+  <tokens>
+    <color name="bg" value="#FAF8F5" />
+    <color name="surface" value="#FFFFFF" />
+    <color name="surface-2" value="#F3EFE9" />
+    <color name="border" value="#EBE5DF" />
+    <color name="text-primary" value="#1C1816" />
+    <color name="text-secondary" value="#7A706B" />
+    <color name="text-tertiary" value="#B2A7A0" />
+    <color name="primary" value="#CE6D48" />
+    <color name="primary-light" value="#FDF1EC" />
+    <color name="accent" value="#4A6F5C" />
+    <color name="accent-light" value="#EEF5F1" />
+    <number name="radius-subtle" value="8" />
+    <number name="radius-card" value="16" />
+    <number name="radius-pill" value="999" />
+  </tokens>
+
+  <styles>
+    <text-style name="Nav/Title" font-family="SF Pro" font-size="17" font-weight="600" line-height="22" />
+    <text-style name="Nav/Sub" font-family="SF Pro" font-size="13" font-weight="400" line-height="18" />
+    <text-style name="Title/Card" font-family="SF Pro" font-size="18" font-weight="600" line-height="24" />
+    <text-style name="Body/Large" font-family="SF Pro" font-size="17" font-weight="600" line-height="22" />
+    <text-style name="Body/Medium" font-family="SF Pro" font-size="15" font-weight="500" line-height="20" />
+    <text-style name="Body/Regular" font-family="SF Pro" font-size="15" font-weight="400" line-height="20" />
+    <text-style name="Caption" font-family="SF Pro" font-size="13" font-weight="400" line-height="18" />
+    <text-style name="Caption/Semibold" font-family="SF Pro" font-size="13" font-weight="600" line-height="18" />
+    <text-style name="Micro" font-family="SF Pro" font-size="11" font-weight="600" line-height="14" />
+  </styles>
+
+  <fonts>
+    <font family="SF Pro" source="system" weights="400 500 600 700" styles="normal" />
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <!-- Root Canvas, standard scrolling column wide enough for standard 390 iOS screen width -->
+  <col w="390" fill="$bg">
+    <!-- Status Bar Spacer (Safe Area Top) -->
+    <col h="47" w="fill" />
+
+    <!-- Navigation Header -->
+    <row role="top-navigation-bar" p="12 16" align="middle-left" gap="auto" w="fill">
+      <!-- Left aligned segment (back button + search query info) -->
+      <row gap="12" align="middle-left">
+        <!-- Back circular button -->
+        <row role="button" p="10" fill="$surface" radius="$radius-pill" align="middle-center" w="40" h="40">
+          <img src="https://api.iconify.design/lucide/arrow-left.svg?color=%231c1816" w="18" h="18" />
+        </row>
+        <!-- Search query texts -->
+        <col gap="2">
+          <text value="Paris to Florence" text-style="Nav/Title" color="$text-primary" />
+          <text value="May 28 • 1 Traveler • Economy" text-style="Nav/Sub" color="$text-secondary" />
+        </col>
+      </row>
+
+      <!-- Right aligned segment (Edit/Filter button) -->
+      <row role="button" p="10" fill="$surface" radius="$radius-pill" align="middle-center" w="40" h="40">
+        <img src="https://api.iconify.design/lucide/sliders-horizontal.svg?color=%231c1816" w="18" h="18" />
+      </row>
+    </row>
+
+    <!-- Horizontal Date Carousel (Quick Select Cards) -->
+    <row role="carousel" gap="8" p="8 16" w="fill">
+      <!-- Wednesday, May 27 -->
+      <col p="10 12" radius="12" fill="$surface" align="middle-center" w="82" h="64" gap="4">
+        <text value="Wed, May 27" text-style="Micro" color="$text-secondary" />
+        <text value="€240" text-style="Caption/Semibold" color="$text-primary" />
+      </col>
+
+      <!-- Thursday, May 28 (Selected - Premium Brand Highlight) -->
+      <col p="10 12" radius="12" fill="$primary" align="middle-center" w="88" h="68" gap="4">
+        <text value="Thu, May 28" text-style="Micro" color="#FFFFFF" />
+        <text value="€185" text-style="Caption/Semibold" color="#FFFFFF" />
+        <!-- Accent indicator line inside the card -->
+        <shape type="rect" w="12" h="2" fill="#FFFFFF" radius="$radius-pill" />
+      </col>
+
+      <!-- Friday, May 29 -->
+      <col p="10 12" radius="12" fill="$surface" align="middle-center" w="82" h="64" gap="4">
+        <text value="Fri, May 29" text-style="Micro" color="$text-secondary" />
+        <text value="€210" text-style="Caption/Semibold" color="$text-primary" />
+      </col>
+
+      <!-- Saturday, May 30 -->
+      <col p="10 12" radius="12" fill="$surface" align="middle-center" w="82" h="64" gap="4">
+        <text value="Sat, May 30" text-style="Micro" color="$text-secondary" />
+        <text value="€320" text-style="Caption/Semibold" color="$text-primary" />
+      </col>
+    </row>
+
+    <!-- Filter Pills Selection -->
+    <row gap="8" p="12 16 4 16" w="fill">
+      <!-- Cheaper option pill (Active) -->
+      <row role="chip" p="6 12" fill="$primary-light" radius="$radius-pill" align="middle-center" gap="4">
+        <text value="Cheapest" text-style="Micro" color="$primary" />
+        <img src="https://api.iconify.design/lucide/check.svg?color=%23ce6d48" w="12" h="12" />
+      </row>
+
+      <!-- Direct only pill -->
+      <row role="chip" p="6 12" fill="$surface-2" radius="$radius-pill" align="middle-center" gap="4">
+        <text value="Direct only" text-style="Micro" color="$text-secondary" />
+      </row>
+
+      <!-- Fastest flight pill -->
+      <row role="chip" p="6 12" fill="$surface-2" radius="$radius-pill" align="middle-center" gap="4">
+        <text value="⏱️ Fastest" text-style="Micro" color="$text-secondary" />
+      </row>
+
+      <!-- Airlines filter pill -->
+      <row role="chip" p="6 12" fill="$surface-2" radius="$radius-pill" align="middle-center" gap="4">
+        <text value="Airlines" text-style="Micro" color="$text-secondary" />
+        <img src="https://api.iconify.design/lucide/chevron-down.svg?color=%237a706b" w="12" h="12" />
+      </row>
+    </row>
+
+    <!-- Search Results Header count -->
+    <row p="12 16 4 16" align="middle-left" gap="auto" w="fill">
+      <text value="3 flights found" text-style="Caption/Semibold" color="$text-secondary" />
+      <row gap="4" align="middle-right">
+        <text value="Sorted by price" text-style="Micro" color="$text-tertiary" />
+        <img src="https://api.iconify.design/lucide/arrow-down-narrow-wide.svg?color=%23b2a7a0" w="12" h="12" />
+      </row>
+    </row>
+
+    <!-- Flight Results Card List -->
+    <col p="8 16 32 16" gap="16" w="fill">
+
+      <!-- ================= CARD 1 (Air France - Best Value / Direct) ================= -->
+      <col role="card" fill="$surface" radius="$radius-card" p="16" gap="12" w="fill">
+        <!-- Badges row -->
+        <row gap="6" w="fill" align="middle-left">
+          <row p="4 8" fill="$accent-light" radius="$radius-pill" align="middle-center" gap="4">
+            <img src="https://api.iconify.design/lucide/check-circle-2.svg?color=%234a6f5c" w="12" h="12" />
+            <text value="Direct • On Time" text-style="Micro" color="$accent" />
+          </row>
+          <row p="4 8" fill="$primary-light" radius="$radius-pill" align="middle-center">
+            <text value="Best Value" text-style="Micro" color="$primary" />
+          </row>
+        </row>
+
+        <!-- Flight details timeline -->
+        <row w="fill" align="middle-left" gap="auto">
+          <!-- Origin -->
+          <col gap="4" w="60">
+            <text value="08:15" text-style="Body/Large" color="$text-primary" />
+            <text value="CDG" text-style="Caption/Semibold" color="$text-secondary" />
+            <text value="Paris" text-style="Micro" color="$text-tertiary" />
+          </col>
+
+          <!-- Middle timeline path -->
+          <col align="middle-center" gap="2" w="180">
+            <text value="1h 45m" text-style="Micro" color="$text-secondary" />
+            <!-- Beautiful custom SVG route indicator replaced with robust layouts & images -->
+            <row align="middle-center" w="120" h="16" gap="4">
+              <shape type="ellipse" w="6" h="6" fill="$accent" />
+              <shape type="line" w="36" h="1" stroke="$border" stroke-width="1.5" />
+              <img src="https://api.iconify.design/lucide/plane.svg?color=%23ce6d48" w="14" h="14" />
+              <shape type="line" w="36" h="1" stroke="$border" stroke-width="1.5" />
+              <shape type="ellipse" w="6" h="6" fill="$accent" />
+            </row>
+            <text value="Direct" text-style="Micro" color="$accent" />
+          </col>
+
+          <!-- Destination -->
+          <col gap="4" w="60" align="top-right">
+            <text value="10:00" text-style="Body/Large" color="$text-primary" />
+            <text value="FLR" text-style="Caption/Semibold" color="$text-secondary" />
+            <text value="Florence" text-style="Micro" color="$text-tertiary" />
+          </col>
+        </row>
+
+        <!-- Hairline Divider -->
+        <row h="1" fill="$border" w="fill" />
+
+        <!-- Footer: Airline Info, Price & Select -->
+        <row w="fill" align="middle-left" gap="auto">
+          <!-- Airline logo + name -->
+          <row gap="8" align="middle-left">
+            <row w="28" h="28" fill="$surface-2" radius="$radius-subtle" align="middle-center">
+              <img src="https://api.iconify.design/lucide/globe-2.svg?color=%23ce6d48" w="16" h="16" />
+            </row>
+            <col gap="1">
+              <text value="Air France" text-style="Caption/Semibold" color="$text-primary" />
+              <text value="AF 1062 • Airbus A320" text-style="Micro" color="$text-secondary" />
+            </col>
+          </row>
+
+          <!-- Price & CTA -->
+          <row gap="12" align="middle-right">
+            <col gap="1" align="top-right">
+              <text value="€185" text-style="Title/Card" color="$text-primary" />
+              <text value="one way" text-style="Micro" color="$text-tertiary" />
+            </col>
+            <row role="button" p="8 16" fill="$primary" radius="20" align="middle-center" w="72" h="36">
+              <text value="Select" text-style="Caption/Semibold" color="#FFFFFF" />
+            </row>
+          </row>
+        </row>
+      </col>
+
+      <!-- ================= CARD 2 (Lufthansa - Cheapest / 1 Stop) ================= -->
+      <col role="card" fill="$surface" radius="$radius-card" p="16" gap="12" w="fill">
+        <!-- Badges row -->
+        <row gap="6" w="fill" align="middle-left">
+          <row p="4 8" fill="$surface-2" radius="$radius-pill" align="middle-center" gap="4">
+            <text value="1 Stop • MUC" text-style="Micro" color="$text-secondary" />
+          </row>
+          <row p="4 8" fill="#FBF3E6" radius="$radius-pill" align="middle-center">
+            <text value="Cheapest" text-style="Micro" color="#C68A2E" />
+          </row>
+        </row>
+
+        <!-- Flight details timeline -->
+        <row w="fill" align="middle-left" gap="auto">
+          <!-- Origin -->
+          <col gap="4" w="60">
+            <text value="14:30" text-style="Body/Large" color="$text-primary" />
+            <text value="CDG" text-style="Caption/Semibold" color="$text-secondary" />
+            <text value="Paris" text-style="Micro" color="$text-tertiary" />
+          </col>
+
+          <!-- Middle timeline path -->
+          <col align="middle-center" gap="2" w="180">
+            <text value="3h 15m" text-style="Micro" color="$text-secondary" />
+            <row align="middle-center" w="120" h="16" gap="4">
+              <shape type="ellipse" w="6" h="6" fill="$text-tertiary" />
+              <shape type="line" w="36" h="1" stroke="$border" stroke-width="1.5" />
+              <shape type="ellipse" w="8" h="8" fill="#C68A2E" />
+              <shape type="line" w="36" h="1" stroke="$border" stroke-width="1.5" />
+              <shape type="ellipse" w="6" h="6" fill="$text-tertiary" />
+            </row>
+            <text value="Layover 55m in Munich" text-style="Micro" color="$text-secondary" />
+          </col>
+
+          <!-- Destination -->
+          <col gap="4" w="60" align="top-right">
+            <text value="17:45" text-style="Body/Large" color="$text-primary" />
+            <text value="FLR" text-style="Caption/Semibold" color="$text-secondary" />
+            <text value="Florence" text-style="Micro" color="$text-tertiary" />
+          </col>
+        </row>
+
+        <!-- Hairline Divider -->
+        <row h="1" fill="$border" w="fill" />
+
+        <!-- Footer: Airline Info, Price & Select -->
+        <row w="fill" align="middle-left" gap="auto">
+          <!-- Airline logo + name -->
+          <row gap="8" align="middle-left">
+            <row w="28" h="28" fill="#0A1C3F" radius="$radius-subtle" align="middle-center">
+              <img src="https://api.iconify.design/lucide/compass.svg?color=%23c68a2e" w="16" h="16" />
+            </row>
+            <col gap="1">
+              <text value="Lufthansa" text-style="Caption/Semibold" color="$text-primary" />
+              <text value="LH 2229 • Embraer 190" text-style="Micro" color="$text-secondary" />
+            </col>
+          </row>
+
+          <!-- Price & CTA -->
+          <row gap="12" align="middle-right">
+            <col gap="1" align="top-right">
+              <text value="€142" text-style="Title/Card" color="$text-primary" />
+              <text value="one way" text-style="Micro" color="$text-tertiary" />
+            </col>
+            <row role="button" p="8 16" fill="$primary" radius="20" align="middle-center" w="72" h="36">
+              <text value="Select" text-style="Caption/Semibold" color="#FFFFFF" />
+            </row>
+          </row>
+        </row>
+      </col>
+
+      <!-- ================= CARD 3 (ITA Airways - Fastest / Business Class) ================= -->
+      <col role="card" fill="$surface" radius="$radius-card" p="16" gap="12" w="fill">
+        <!-- Badges row -->
+        <row gap="6" w="fill" align="middle-left">
+          <row p="4 8" fill="$accent-light" radius="$radius-pill" align="middle-center" gap="4">
+            <text value="⏱️ 1h 40m (Fastest)" text-style="Micro" color="$accent" />
+          </row>
+          <row p="4 8" fill="$primary-light" radius="$radius-pill" align="middle-center">
+            <text value="Business Class" text-style="Micro" color="$primary" />
+          </row>
+        </row>
+
+        <!-- Flight details timeline -->
+        <row w="fill" align="middle-left" gap="auto">
+          <!-- Origin -->
+          <col gap="4" w="60">
+            <text value="19:05" text-style="Body/Large" color="$text-primary" />
+            <text value="CDG" text-style="Caption/Semibold" color="$text-secondary" />
+            <text value="Paris" text-style="Micro" color="$text-tertiary" />
+          </col>
+
+          <!-- Middle timeline path -->
+          <col align="middle-center" gap="2" w="180">
+            <text value="1h 40m" text-style="Micro" color="$text-secondary" />
+            <row align="middle-center" w="120" h="16" gap="4">
+              <shape type="ellipse" w="6" h="6" fill="$accent" />
+              <shape type="line" w="36" h="1" stroke="$border" stroke-width="1.5" />
+              <img src="https://api.iconify.design/lucide/plane.svg?color=%23ce6d48" w="14" h="14" />
+              <shape type="line" w="36" h="1" stroke="$border" stroke-width="1.5" />
+              <shape type="ellipse" w="6" h="6" fill="$accent" />
+            </row>
+            <text value="Direct" text-style="Micro" color="$accent" />
+          </col>
+
+          <!-- Destination -->
+          <col gap="4" w="60" align="top-right">
+            <text value="20:45" text-style="Body/Large" color="$text-primary" />
+            <text value="FLR" text-style="Caption/Semibold" color="$text-secondary" />
+            <text value="Florence" text-style="Micro" color="$text-tertiary" />
+          </col>
+        </row>
+
+        <!-- Hairline Divider -->
+        <row h="1" fill="$border" w="fill" />
+
+        <!-- Footer: Airline Info, Price & Select -->
+        <row w="fill" align="middle-left" gap="auto">
+          <!-- Airline logo + name -->
+          <row gap="8" align="middle-left">
+            <row w="28" h="28" fill="#007BC3" radius="$radius-subtle" align="middle-center">
+              <img src="https://api.iconify.design/lucide/navigation.svg?color=%23ffffff" w="16" h="16" />
+            </row>
+            <col gap="1">
+              <text value="ITA Airways" text-style="Caption/Semibold" color="$text-primary" />
+              <text value="AZ 356 • Airbus A319" text-style="Micro" color="$text-secondary" />
+            </col>
+          </row>
+
+          <!-- Price & CTA -->
+          <row gap="12" align="middle-right">
+            <col gap="1" align="top-right">
+              <text value="€260" text-style="Title/Card" color="$text-primary" />
+              <text value="one way" text-style="Micro" color="$text-tertiary" />
+            </col>
+            <row role="button" p="8 16" fill="$primary" radius="20" align="middle-center" w="72" h="36">
+              <text value="Select" text-style="Caption/Semibold" color="#FFFFFF" />
+            </row>
+          </row>
+        </row>
+      </col>
+
+    </col>
+
+    <!-- iOS Home Indicator Safe Area Bottom (offset spacer to resemble native phone overlay) -->
+    <col h="34" w="fill" align="middle-center" p="0 0 10 0">
+      <!-- Rounded line home indicator -->
+      <shape type="rect" w="134" h="5" fill="$border" radius="$radius-pill" />
+    </col>
+  </col>
+</gui>

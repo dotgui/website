@@ -1,0 +1,460 @@
+<gui version="0.2" name="WhoopDashboard">
+  <tokens>
+    <!-- Color Palette -->
+    <color name="bg" value="#08080C" />
+    <color name="surface" value="#111116" />
+    <color name="surface-elevated" value="#181822" />
+    <color name="border" value="#1F1F2C" />
+    <color name="text-primary" value="#FFFFFF" />
+    <color name="text-secondary" value="#9BA3B0" />
+    <color name="text-tertiary" value="#64748B" />
+    
+    <!-- Accent Colors -->
+    <color name="recovery-green" value="#00E676" />
+    <color name="recovery-green-bg" value="#00E67626" />
+    <color name="strain-orange" value="#FF5F1F" />
+    <color name="strain-orange-bg" value="#FF5F1F26" />
+    <color name="sleep-teal" value="#00E5FF" />
+    <color name="sleep-teal-bg" value="#00E5FF26" />
+    <color name="stress-purple" value="#AF52DE" />
+    <color name="stress-purple-bg" value="#AF52DE26" />
+    <color name="white" value="#FFFFFF" />
+
+    <!-- Spacing Scale -->
+    <number name="space-xs" value="4" />
+    <number name="space-sm" value="8" />
+    <number name="space-md" value="12" />
+    <number name="space-lg" value="16" />
+    <number name="space-xl" value="24" />
+    <number name="space-xxl" value="32" />
+
+    <!-- Corner Radius Scale -->
+    <number name="radius-subtle" value="8" />
+    <number name="radius-card" value="16" />
+    <number name="radius-pill" value="999" />
+  </tokens>
+
+  <styles>
+    <!-- Typography Scales (Optimized line-heights for breathing room) -->
+    <text-style name="Display" font-family="SF Pro" font-size="40" font-weight="700" line-height="52" />
+    <text-style name="LargeTitle" font-family="SF Pro" font-size="34" font-weight="700" line-height="42" />
+    <text-style name="Headline" font-family="SF Pro" font-size="17" font-weight="600" line-height="24" />
+    <text-style name="Body" font-family="SF Pro" font-size="17" font-weight="400" line-height="24" />
+    <text-style name="Subheadline" font-family="SF Pro" font-size="15" font-weight="400" line-height="22" />
+    <text-style name="Footnote" font-family="SF Pro" font-size="13" font-weight="400" line-height="20" />
+    <text-style name="Caption" font-family="SF Pro" font-size="12" font-weight="500" line-height="18" letter-spacing="0.4" />
+    <text-style name="Tiny" font-family="SF Pro" font-size="10" font-weight="600" line-height="16" letter-spacing="0.8" />
+  </styles>
+
+  <fonts>
+    <font family="SF Pro" source="system" weights="400 500 600 700" styles="normal" />
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <components>
+    <!-- Reusable Metric Widget Component -->
+    <component name="Widget/Metric" id="comp-metric">
+      <props>
+        <prop name="value" type="text" target="val-text" />
+        <prop name="label" type="text" target="lbl-text" />
+      </props>
+      <col gap="4" align="top-center">
+        <text id="val-text" value="--" font-family="SF Pro" font-size="18" font-weight="700" color="$text-primary" line-height="22" />
+        <text id="lbl-text" value="--" font-family="SF Pro" font-size="11" font-weight="500" color="$text-secondary" line-height="14" letter-spacing="0.4" />
+      </col>
+    </component>
+  </components>
+
+  <!-- iOS Root Layout Canvas (Width strictly 390px, heights flow cleanly for scroll) -->
+  <col w="390" fill="$bg">
+    
+    <!-- iOS Top Safe Area Spacer -->
+    <col h="47" />
+
+    <!-- Section 1: Navigation & Header Area -->
+    <row role="top-navigation-bar" w="fill" p="16 20 8 20" align="middle-left" gap="12">
+      <text text-style="LargeTitle" value="Today" color="$text-primary" />
+      
+      <!-- Date Switcher Pager -->
+      <row fill="$surface" p="4 12" radius="$radius-pill" align="middle-center" gap="8">
+        <img src="https://api.iconify.design/lucide/chevron-left.svg?color=%23FFFFFF" w="12" h="12" />
+        <text text-style="Footnote" value="TODAY, MAY 27" color="$text-primary" font-weight="600" />
+        <img src="https://api.iconify.design/lucide/chevron-right.svg?color=%23FFFFFF" w="12" h="12" />
+      </row>
+
+      <col w="fill" />
+
+      <!-- User Profile avatar matching iOS HIG -->
+      <img role="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=96&amp;h=96&amp;q=80" w="36" h="36" radius="18" fit="cover" />
+    </row>
+
+    <!-- Main Content Stream (Enforced w="fill" stretching) -->
+    <col w="fill" p="8 16 12 16" gap="16">
+
+      <!-- Pillar 1: Recovery Card (Conic progress ring) -->
+      <col role="card" w="fill" fill="$surface" radius="$radius-card" p="$space-lg" gap="$space-lg">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(135deg, #111116 0%, #0C1E14 100%)" />
+        </appearance>
+        
+        <row w="fill" gap="16" align="middle-left">
+          <!-- Conic progress ring for Recovery (92% = 331deg) -->
+          <frame w="80" h="80">
+            <ellipse fill="conic-gradient(from 0deg at 50% 50%, $recovery-green 0deg, $recovery-green 331deg, $border 331deg, $border 360deg)" w="80" h="80" x="0" y="0" />
+            <ellipse fill="$surface" w="66" h="66" x="7" y="7" />
+            <col w="80" h="80" x="0" y="0" align="middle-center">
+              <text value="92%" font-family="SF Pro" font-size="18" font-weight="700" color="$recovery-green" line-height="22" />
+            </col>
+          </frame>
+
+          <!-- Recovery Diagnostic Info -->
+          <col gap="4" w="fill">
+            <text text-style="Tiny" value="RECOVERY" color="$text-secondary" />
+            <row gap="8" align="middle-left" w="fill">
+              <text text-style="Headline" value="Peak Recovery" color="$white" />
+              <row fill="$recovery-green-bg" p="2 8" radius="$radius-pill">
+                <text text-style="Tiny" value="PEAK" color="$recovery-green" font-weight="700" />
+              </row>
+            </row>
+            <text text-style="Footnote" value="Autonomic nervous system is highly adapted and fully primed." color="$text-secondary" />
+          </col>
+        </row>
+
+        <!-- Vertical Spacing between Donut+Data and KPIs below -->
+        <col h="8" />
+        <line fill="$border" />
+        <col h="8" />
+
+        <!-- Sub-metrics Grid (HRV, RHR, Skin Temp) -->
+        <row w="fill" align="middle-center" gap="$space-md">
+          <col w="fill" align="top-center">
+            <instance component="comp-metric" value="74 ms" label="HRV" />
+          </col>
+          <line fill="$border" direction="vertical" h="28" />
+          <col w="fill" align="top-center">
+            <instance component="comp-metric" value="48 bpm" label="RHR" />
+          </col>
+          <line fill="$border" direction="vertical" h="28" />
+          <col w="fill" align="top-center">
+            <instance component="comp-metric" value="+0.2 °F" label="SKIN TEMP" />
+          </col>
+        </row>
+      </col>
+
+      <!-- Pillar 2: Strain Card (Conic progress ring + detailed Activity list) -->
+      <col role="card" w="fill" fill="$surface" radius="$radius-card" p="$space-lg" gap="$space-lg">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(135deg, #111116 0%, #20120D 100%)" />
+        </appearance>
+        
+        <row w="fill" gap="16" align="middle-left">
+          <!-- Conic progress ring for Strain (14.8/21 = 70.4% = 253deg) -->
+          <frame w="80" h="80">
+            <ellipse fill="conic-gradient(from 0deg at 50% 50%, $strain-orange 0deg, $strain-orange 253deg, $border 253deg, $border 360deg)" w="80" h="80" x="0" y="0" />
+            <ellipse fill="$surface" w="66" h="66" x="7" y="7" />
+            <col w="80" h="80" x="0" y="0" align="middle-center">
+              <text value="14.8" font-family="SF Pro" font-size="18" font-weight="700" color="$strain-orange" line-height="22" />
+            </col>
+          </frame>
+
+          <!-- Strain Info -->
+          <col gap="4" w="fill">
+            <text text-style="Tiny" value="DAY STRAIN" color="$text-secondary" />
+            <row gap="8" align="middle-left" w="fill">
+              <text text-style="Headline" value="Optimal Strain Achieved" color="$white" />
+              <row fill="$strain-orange-bg" p="2 8" radius="$radius-pill">
+                <text text-style="Tiny" value="HIGH" color="$strain-orange" font-weight="700" />
+              </row>
+            </row>
+            <text text-style="Footnote" value="Excellent workout stimulus. Target zone (12.0 - 16.5) achieved." color="$text-secondary" />
+          </col>
+        </row>
+
+        <!-- Vertical Spacing between Donut+Data and KPIs below -->
+        <col h="8" />
+        <line fill="$border" />
+        <col h="8" />
+
+        <!-- Sub-metrics Grid (Cals, Avg HR, Max HR) -->
+        <row w="fill" align="middle-center" gap="$space-md">
+          <col w="fill" align="top-center">
+            <instance component="comp-metric" value="942 kcal" label="ACT. CALS" />
+          </col>
+          <line fill="$border" direction="vertical" h="28" />
+          <col w="fill" align="top-center">
+            <instance component="comp-metric" value="134 bpm" label="AVG HR" />
+          </col>
+          <line fill="$border" direction="vertical" h="28" />
+          <col w="fill" align="top-center">
+            <instance component="comp-metric" value="182 bpm" label="MAX HR" />
+          </col>
+        </row>
+
+        <!-- Vertical Spacing before Activity Log -->
+        <col h="8" />
+        <line fill="$border" />
+        <col h="8" />
+
+        <!-- Rich Activity log details inside Strain -->
+        <col gap="10" w="fill">
+          <text text-style="Tiny" value="TODAY'S ACTIVITIES" color="$text-secondary" />
+          
+          <!-- Activity 1 -->
+          <row w="fill" fill="$surface-elevated" p="10 12" radius="$radius-subtle" align="middle-left" gap="10">
+            <row w="28" h="28" radius="14" fill="$strain-orange-bg" align="middle-center">
+              <img src="https://api.iconify.design/lucide/activity.svg?color=%23FF5F1F" w="14" h="14" />
+            </row>
+            <col gap="2">
+              <text font-family="SF Pro" font-size="14" font-weight="600" value="Morning Trail Running" color="$white" line-height="18" />
+              <text text-style="Footnote" value="45 mins • Avg HR 152 bpm" color="$text-secondary" />
+            </col>
+            <col w="fill" />
+            <col align="middle-right">
+              <text font-family="SF Pro" font-size="14" font-weight="700" value="9.4" color="$strain-orange" line-height="18" />
+              <text text-style="Tiny" value="STRAIN" color="$text-tertiary" />
+            </col>
+          </row>
+
+          <!-- Activity 2 -->
+          <row w="fill" fill="$surface-elevated" p="10 12" radius="$radius-subtle" align="middle-left" gap="10">
+            <row w="28" h="28" radius="14" fill="$strain-orange-bg" align="middle-center">
+              <img src="https://api.iconify.design/lucide/flame.svg?color=%23FF5F1F" w="14" h="14" />
+            </row>
+            <col gap="2">
+              <text font-family="SF Pro" font-size="14" font-weight="600" value="Strength Training" color="$white" line-height="18" />
+              <text text-style="Footnote" value="1h 10m • Avg HR 118 bpm" color="$text-secondary" />
+            </col>
+            <col w="fill" />
+            <col align="middle-right">
+              <text font-family="SF Pro" font-size="14" font-weight="700" value="11.2" color="$strain-orange" line-height="18" />
+              <text text-style="Tiny" value="STRAIN" color="$text-tertiary" />
+            </col>
+          </row>
+        </col>
+      </col>
+
+      <!-- Pillar 3: Sleep Card (Conic progress ring) -->
+      <col role="card" w="fill" fill="$surface" radius="$radius-card" p="$space-lg" gap="$space-lg">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(135deg, #111116 0%, #0B1E22 100%)" />
+        </appearance>
+        
+        <row w="fill" gap="16" align="middle-left">
+          <!-- Conic progress ring for Sleep (88% = 317deg) -->
+          <frame w="80" h="80">
+            <ellipse fill="conic-gradient(from 0deg at 50% 50%, $sleep-teal 0deg, $sleep-teal 317deg, $border 317deg, $border 360deg)" w="80" h="80" x="0" y="0" />
+            <ellipse fill="$surface" w="66" h="66" x="7" y="7" />
+            <col w="80" h="80" x="0" y="0" align="middle-center">
+              <text value="88%" font-family="SF Pro" font-size="18" font-weight="700" color="$sleep-teal" line-height="22" />
+            </col>
+          </frame>
+
+          <!-- Sleep Info -->
+          <col gap="4" w="fill">
+            <text text-style="Tiny" value="SLEEP PERFORMANCE" color="$text-secondary" />
+            <row gap="8" align="middle-left" w="fill">
+              <text text-style="Headline" value="8h 12m Duration" color="$white" />
+              <row fill="$sleep-teal-bg" p="2 8" radius="$radius-pill">
+                <text text-style="Tiny" value="OPTIMAL" color="$sleep-teal" font-weight="700" />
+              </row>
+            </row>
+            <text text-style="Footnote" value="High restorative sleep. Sleeping consistency is at 94%." color="$text-secondary" />
+          </col>
+        </row>
+
+        <!-- Vertical Spacing between Donut+Data and KPIs below -->
+        <col h="8" />
+        <line fill="$border" />
+        <col h="8" />
+
+        <!-- Sub-metrics Grid (Duration, REM, Deep) -->
+        <row w="fill" align="middle-center" gap="$space-md">
+          <col w="fill" align="top-center">
+            <instance component="comp-metric" value="8h 12m" label="DURATION" />
+          </col>
+          <line fill="$border" direction="vertical" h="28" />
+          <col w="fill" align="top-center">
+            <instance component="comp-metric" value="2h 14m" label="REM" />
+          </col>
+          <line fill="$border" direction="vertical" h="28" />
+          <col w="fill" align="top-center">
+            <instance component="comp-metric" value="1h 56m" label="DEEP" />
+          </col>
+        </row>
+      </col>
+
+      <!-- Section 4: Stress Monitor -->
+      <col role="card" w="fill" fill="$surface" radius="$radius-card" p="$space-lg" gap="$space-md">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(135deg, #111116 0%, #170F1C 100%)" />
+        </appearance>
+
+        <row w="fill" align="middle-left">
+          <col gap="2">
+            <text text-style="Tiny" value="STRESS MONITOR" color="$text-secondary" />
+            <text text-style="Headline" value="Stress Level: Stable" color="$white" />
+          </col>
+          <col w="fill" />
+          <row fill="$stress-purple-bg" p="6 12" radius="$radius-pill" align="middle-center">
+            <text text-style="Tiny" value="2.1 / 4.0" color="$stress-purple" font-weight="700" />
+          </row>
+        </row>
+
+        <!-- Spacers and line -->
+        <col h="6" />
+        <line fill="$border" />
+        <col h="6" />
+
+        <!-- Stress indicator layout -->
+        <row w="fill" gap="12" align="middle-left">
+          <col gap="4" w="fill">
+            <text text-style="Footnote" value="Your stress is stable. High-stress spikes detected at 10:15 AM (during meeting) but quickly normalized via deep breathing techniques." color="$text-secondary" />
+            <row gap="6" align="middle-left" pt="4">
+              <ellipse fill="$stress-purple" w="8" h="8" />
+              <text text-style="Tiny" value="12 MINS OF HIGH STRESS DETECTED" color="$stress-purple" font-weight="600" />
+            </row>
+          </col>
+        </row>
+      </col>
+
+      <!-- Section 5: Weekly Trends -->
+      <col role="card" w="fill" fill="$surface" radius="$radius-card" p="$space-lg" gap="$space-lg">
+        <col gap="2" w="fill">
+          <text text-style="Tiny" value="WEEKLY SUMMARY" color="$text-secondary" />
+          <text text-style="Headline" value="Strain &amp; Recovery Trends" color="$white" />
+        </col>
+
+        <line fill="$border" />
+
+        <!-- 7-Day Custom Bar Chart (Recovery & Strain bars side-by-side) -->
+        <row w="fill" gap="auto" align="bottom-center" h="130" p="4 0 0 0">
+          
+          <!-- Mon -->
+          <col gap="8" align="middle-center">
+            <row gap="4" align="bottom-center" h="100">
+              <rect w="10" h="45" fill="$recovery-green" radius="4" />
+              <rect w="10" h="70" fill="$strain-orange" radius="4" />
+            </row>
+            <text text-style="Tiny" value="M" color="$text-secondary" />
+          </col>
+
+          <!-- Tue -->
+          <col gap="8" align="middle-center">
+            <row gap="4" align="bottom-center" h="100">
+              <rect w="10" h="30" fill="$recovery-green" radius="4" />
+              <rect w="10" h="85" fill="$strain-orange" radius="4" />
+            </row>
+            <text text-style="Tiny" value="T" color="$text-secondary" />
+          </col>
+
+          <!-- Wed -->
+          <col gap="8" align="middle-center">
+            <row gap="4" align="bottom-center" h="100">
+              <rect w="10" h="80" fill="$recovery-green" radius="4" />
+              <rect w="10" h="50" fill="$strain-orange" radius="4" />
+            </row>
+            <text text-style="Tiny" value="W" color="$text-secondary" />
+          </col>
+
+          <!-- Thu -->
+          <col gap="8" align="middle-center">
+            <row gap="4" align="bottom-center" h="100">
+              <rect w="10" h="90" fill="$recovery-green" radius="4" />
+              <rect w="10" h="65" fill="$strain-orange" radius="4" />
+            </row>
+            <text text-style="Tiny" value="T" color="$text-secondary" />
+          </col>
+
+          <!-- Fri -->
+          <col gap="8" align="middle-center">
+            <row gap="4" align="bottom-center" h="100">
+              <rect w="10" h="75" fill="$recovery-green" radius="4" />
+              <rect w="10" h="45" fill="$strain-orange" radius="4" />
+            </row>
+            <text text-style="Tiny" value="F" color="$text-secondary" />
+          </col>
+
+          <!-- Sat -->
+          <col gap="8" align="middle-center">
+            <row gap="4" align="bottom-center" h="100">
+              <rect w="10" h="50" fill="$recovery-green" radius="4" />
+              <rect w="10" h="95" fill="$strain-orange" radius="4" />
+            </row>
+            <text text-style="Tiny" value="S" color="$text-secondary" />
+          </col>
+
+          <!-- Sun -->
+          <col gap="8" align="middle-center">
+            <row gap="4" align="bottom-center" h="100">
+              <rect w="10" h="85" fill="$recovery-green" radius="4" />
+              <rect w="10" h="30" fill="$strain-orange" radius="4" />
+            </row>
+            <text text-style="Tiny" value="S" color="$text-secondary" />
+          </col>
+          
+        </row>
+      </col>
+
+      <!-- Section 6: WHOOP Coach Insights Card -->
+      <col role="card" w="fill" fill="$surface" radius="$radius-card" p="$space-lg" gap="12">
+        <row align="middle-left" w="fill">
+          <row gap="6" align="middle-left">
+            <img src="https://api.iconify.design/lucide/sparkles.svg?color=%2300E676" w="14" h="14" />
+            <text text-style="Tiny" value="WHOOP COACH" color="$recovery-green" font-weight="600" />
+          </row>
+          <col w="fill" />
+          <text text-style="Tiny" value="AI ADVISOR" color="$text-tertiary" />
+        </row>
+        
+        <text text-style="Headline" value="Primed for high cardiovascular strain." color="$text-primary" />
+        
+        <text text-style="Footnote" color="$text-secondary" line-height="18">
+          <segment value="Your recovery is at " color="$text-secondary" />
+          <segment value="92% (Peak)" color="$recovery-green" font-weight="600" />
+          <segment value=" today. Your heart rate variability is higher than your weekly average. Your cardiovascular system is completely adapted and primed for intense training. Make sure to target " color="$text-secondary" />
+          <segment value="12.0 to 16.5 Strain" color="$strain-orange" font-weight="600" />
+          <segment value=" to maximize training stimulus and accelerate athletic adaptability." color="$text-secondary" />
+        </text>
+      </col>
+
+      <col h="12" />
+
+    </col>
+
+    <!-- Section 7: iOS Fixed-Style Bottom Tab Bar Spacer -->
+    <row role="tab-bar" w="390" h="83" fill="$surface" p="10 24 34 24" gap="auto" align="middle-center" border="1 $border">
+      
+      <!-- Tab 1: Today (Active) -->
+      <col gap="4" align="middle-center" w="50">
+        <img src="https://api.iconify.design/lucide/layout-dashboard.svg?color=%23FFFFFF" w="20" h="20" />
+        <text text-style="Tiny" value="Today" color="$text-primary" font-weight="600" />
+      </col>
+
+      <!-- Tab 2: Strain (Inactive) -->
+      <col gap="4" align="middle-center" w="50">
+        <img src="https://api.iconify.design/lucide/flame.svg?color=%2364748B" w="20" h="20" />
+        <text text-style="Tiny" value="Strain" color="$text-tertiary" />
+      </col>
+
+      <!-- Tab 3: Recovery (Inactive) -->
+      <col gap="4" align="middle-center" w="50">
+        <img src="https://api.iconify.design/lucide/heart-pulse.svg?color=%2364748B" w="20" h="20" />
+        <text text-style="Tiny" value="Recovery" color="$text-tertiary" />
+      </col>
+
+      <!-- Tab 4: Sleep (Inactive) -->
+      <col gap="4" align="middle-center" w="50">
+        <img src="https://api.iconify.design/lucide/moon.svg?color=%2364748B" w="20" h="20" />
+        <text text-style="Tiny" value="Sleep" color="$text-tertiary" />
+      </col>
+
+      <!-- Tab 5: Coach (Inactive) -->
+      <col gap="4" align="middle-center" w="50">
+        <img src="https://api.iconify.design/lucide/sparkles.svg?color=%2364748B" w="20" h="20" />
+        <text text-style="Tiny" value="Coach" color="$text-tertiary" />
+      </col>
+      
+    </row>
+
+  </col>
+</gui>

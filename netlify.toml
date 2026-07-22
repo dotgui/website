@@ -12,3 +12,12 @@
 
 [build.environment]
   NODE_VERSION = "22"
+
+# Serve the raw .guix example sources as UTF-8 text so "View raw" displays the
+# markup in-browser (like GitHub's raw view) instead of downloading a binary.
+# Their extension is unknown to Netlify's mime table, which defaults to
+# application/octet-stream.
+[[headers]]
+  for = "/examples/*/*/design.guix"
+  [headers.values]
+    Content-Type = "text/plain; charset=utf-8"

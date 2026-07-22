@@ -1,0 +1,449 @@
+<gui version="0.2" name="DotGuiLandingPage">
+  <tokens>
+    <!-- Premium Space Obsidian Color Palette -->
+    <color name="bg" value="#050507" />
+    <color name="surface" value="#0C0C10" />
+    <color name="surface-2" value="#12121A" />
+    <color name="border" value="#FFFFFF0D" />
+    <color name="border-strong" value="#FFFFFF1D" />
+    <color name="text-primary" value="#FAFAFC" />
+    <color name="text-secondary" value="#A0A0AB" />
+    <color name="text-tertiary" value="#52525B" />
+    
+    <!-- Accent Color: Ice Cyan (Calibrated Saturation) -->
+    <color name="primary" value="#00D2FF" />
+    <color name="primary-glow" value="#00D2FF1A" />
+    <color name="accent-purple" value="#7A3DFF" />
+    <color name="accent-purple-glow" value="#7A3DFF1A" />
+    
+    <!-- Sizing & Radii Scales -->
+    <number name="radius-sm" value="6" />
+    <number name="radius-md" value="12" />
+    <number name="radius-lg" value="20" />
+    <number name="radius-pill" value="999" />
+  </tokens>
+
+  <styles>
+    <!-- Typography System -->
+    <text-style name="Display/Hero" font-family="Outfit" font-size="64" font-weight="700" line-height="72" letter-spacing="-1.5" />
+    <text-style name="Display/Section" font-family="Outfit" font-size="44" font-weight="600" line-height="52" letter-spacing="-1.0" />
+    <text-style name="Display/Title" font-family="Outfit" font-size="22" font-weight="600" line-height="28" letter-spacing="-0.5" />
+    <text-style name="Display/Subtitle" font-family="Inter" font-size="18" font-weight="400" line-height="28" />
+    
+    <text-style name="Body/Large" font-family="Inter" font-size="16" font-weight="400" line-height="26" />
+    <text-style name="Body/Regular" font-family="Inter" font-size="14" font-weight="400" line-height="22" />
+    <text-style name="Body/Strong" font-family="Inter" font-size="14" font-weight="600" line-height="22" />
+    
+    <text-style name="Caption" font-family="Inter" font-size="12" font-weight="400" line-height="16" />
+    <text-style name="Micro" font-family="Outfit" font-size="11" font-weight="600" line-height="14" letter-spacing="1.5" />
+  </styles>
+
+  <fonts>
+    <font family="Outfit" source="google" weights="300 400 500 600 700" styles="normal" />
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+    <font family="JetBrains Mono" source="google" weights="400 500" styles="normal" />
+  </fonts>
+
+  <components>
+    <!-- Navigation Link Component -->
+    <component name="Nav/Link" id="comp-nav-link">
+      <props>
+        <prop name="label" type="text" target="lbl" />
+      </props>
+      <row role="hyperlink" p="6 12" radius="$radius-sm" align="middle-center">
+        <text id="lbl" value="Link" font-family="Inter" font-size="14" font-weight="500" color="$text-secondary" />
+      </row>
+    </component>
+
+    <!-- Button Primary Component -->
+    <component name="Button/Primary" id="comp-btn-primary">
+      <props>
+        <prop name="label" type="text" target="lbl" />
+      </props>
+      <row role="button" fill="$primary" radius="$radius-pill" p="12 24" align="middle-center" gap="8">
+        <text id="lbl" value="Action" font-family="Inter" font-size="14" font-weight="600" color="#050507" />
+        <img src="https://HoIRqRkDGmVPwUtwUwj.supabase.co/storage/v1/object/public/assets/assets/arrow-right.svg" w="14" h="14" abs="true" x="0" y="0" /> <!-- Fallback or empty, use Iconify instead -->
+        <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23050507" w="14" h="14" />
+      </row>
+    </component>
+
+    <!-- Button Secondary Component -->
+    <component name="Button/Secondary" id="comp-btn-secondary">
+      <props>
+        <prop name="label" type="text" target="lbl" />
+      </props>
+      <row role="button" fill="none" border="1 $border-strong" radius="$radius-pill" p="12 24" align="middle-center" gap="8">
+        <text id="lbl" value="Action" font-family="Inter" font-size="14" font-weight="600" color="$text-primary" />
+      </row>
+    </component>
+
+    <!-- Anatomy Card Component -->
+    <component name="Anatomy/Card" id="comp-anat-card">
+      <props>
+        <prop name="step" type="text" target="step-lbl" />
+        <prop name="title" type="text" target="title-lbl" />
+        <prop name="desc" type="text" target="desc-lbl" />
+        <prop name="icon" type="text" target="icon-img" />
+      </props>
+      <col role="card" fill="linear-gradient(135deg, #ffffff0a 0%, #ffffff02 100%)" border="1 $border" radius="$radius-lg" p="32" gap="20" align="top-left" w="376">
+        <appearance>
+          <effect type="glass" radius="20" />
+        </appearance>
+        <row w="fill" align="middle-left" gap="auto">
+          <row w="48" h="48" fill="#ffffff0A" border="1 $border-strong" radius="12" align="middle-center">
+            <img id="icon-img" src="https://api.iconify.design/lucide/file-text.svg?color=%2300D2FF" w="22" h="22" />
+          </row>
+          <text id="step-lbl" value="01" font-family="Outfit" font-size="12" font-weight="700" color="$primary" letter-spacing="1" />
+        </row>
+        <col gap="8" align="top-left">
+          <text id="title-lbl" value="File Name" text-style="Display/Title" color="$text-primary" />
+          <text id="desc-lbl" value="Description goes here." text-style="Body/Regular" color="$text-secondary" />
+        </col>
+      </col>
+    </component>
+
+    <!-- Feature Tile Component -->
+    <component name="Feature/Tile" id="comp-feat-tile">
+      <props>
+        <prop name="title" type="text" target="title-lbl" />
+        <prop name="desc" type="text" target="desc-lbl" />
+        <prop name="icon" type="text" target="icon-img" />
+      </props>
+      <col role="card" gap="16" align="top-left" w="360">
+        <row w="40" h="40" fill="#ffffff05" border="1 $border" radius="8" align="middle-center">
+          <img id="icon-img" src="https://api.iconify.design/lucide/check.svg?color=%2300D2FF" w="18" h="18" />
+        </row>
+        <col gap="8" align="top-left">
+          <text id="title-lbl" value="Feature Title" font-family="Outfit" font-size="18" font-weight="600" color="$text-primary" />
+          <text id="desc-lbl" value="Feature description text goes here." text-style="Body/Regular" color="$text-secondary" />
+        </col>
+      </col>
+    </component>
+  </components>
+
+  <!-- Root Canvas (Web Desktop: 1440w, Height hugs children) -->
+  <col w="1440" fill="$bg" align="top-center">
+
+    <!-- ==================== HEADER / NAVIGATION ==================== -->
+    <row role="top-navigation-bar" w="fill" h="80" p="0 120" align="middle-left" gap="auto" fill="$bg">
+      <row gap="8" align="middle-left">
+        <ellipse fill="$primary" w="12" h="12" />
+        <text value=".gui" font-family="Outfit" font-size="22" font-weight="700" color="$text-primary" letter-spacing="-0.5" />
+      </row>
+      
+      <row gap="8" align="middle-center">
+        <instance component="comp-nav-link" label="Blueprint" />
+        <instance component="comp-nav-link" label="Anatomy" />
+        <instance component="comp-nav-link" label="Specification" />
+        <instance component="comp-nav-link" label="Design System" />
+      </row>
+
+      <row gap="16" align="middle-right">
+        <instance component="comp-btn-secondary" label="Read the Spec" />
+        <instance component="comp-btn-primary" label="Get Started" />
+      </row>
+    </row>
+
+    <!-- ==================== HERO SECTION (Frame with ambient glows) ==================== -->
+    <frame w="1440" h="680" fill="$bg" clip="true">
+      <!-- Glow background layers (Signature Move) -->
+      <ellipse w="600" h="600" fill="radial-gradient(circle at 50% 50%, #00D2FF13 0%, #05050700 70%)" abs="true" x="420" y="-150" />
+      <ellipse w="500" h="500" fill="radial-gradient(circle at 50% 50%, #7A3DFF0D 0%, #05050700 70%)" abs="true" x="720" y="-100" />
+      
+      <!-- Grid/Column Container for Hero Text -->
+      <col w="1200" gap="32" align="top-center" abs="true" x="120" y="120">
+        <!-- Badge -->
+        <row role="badge" fill="#ffffff08" border="1 $border-strong" radius="$radius-pill" p="8 16" align="middle-center" gap="8" w="fit">
+          <text value="THE INTERFACE ARCHIVE STANDARD" text-style="Micro" color="$text-secondary" />
+          <ellipse w="6" h="6" fill="$primary" />
+        </row>
+
+        <!-- Main Title -->
+        <col gap="0" align="top-center">
+          <text value="A Renderer-Safe Interface" text-style="Display/Hero" color="$text-primary" align="center" />
+          <text value="Packaging Standard" text-style="Display/Hero" color="$primary" align="center" />
+        </col>
+
+        <!-- Subtitle -->
+        <text value="A .gui file is a self-contained, validated interface package designed for agentic coding. It bridges the gap between AI generation and absolute visual fidelity." text-style="Display/Subtitle" color="$text-secondary" align="center" w="820" />
+
+        <!-- Hero CTAs -->
+        <row gap="16" align="middle-center">
+          <instance component="comp-btn-primary" label="Explore the Standard" />
+          <instance component="comp-btn-secondary" label="Download SDK" />
+        </row>
+      </col>
+
+      <!-- Bottom border line -->
+      <line fill="$border" abs="true" x="120" y="679" w="1200" h="1" />
+    </frame>
+
+    <!-- ==================== ANATOMY SECTION ==================== -->
+    <col w="1440" p="96 120" gap="64" align="top-center">
+      <!-- Section Header -->
+      <col gap="12" align="top-center" w="1200">
+        <text value="STRUCTURED PORATBILITY" text-style="Micro" color="$primary" />
+        <text value="Inside the .gui Package" text-style="Display/Section" color="$text-primary" />
+        <text value="Every interface is compiled into a lightweight ZIP archive. By packaging design tokens, markup, and assets together, layouts remain robust and portable." text-style="Display/Subtitle" color="$text-secondary" align="center" w="780" />
+      </col>
+
+      <!-- 3-Column Cards Row -->
+      <row w="1200" gap="36" align="top-center">
+        <instance component="comp-anat-card" step="01 / BLUEPRINT" title="design.guix" desc="The core UI blueprint. An XML document utilizing layout flow rules (col, row, grid) and token references. Eliminates complex CSS layouts." icon="https://api.iconify.design/lucide/code-2.svg?color=%2300D2FF" />
+        <instance component="comp-anat-card" step="02 / SNAPSHOT" title="preview.webp" desc="Pre-compiled visual evidence. Built-in thumbnail preview guarantees instant representation and layout verification across renderers." icon="https://api.iconify.design/lucide/eye.svg?color=%2300D2FF" />
+        <instance component="comp-anat-card" step="03 / VAULT" title="assets/" desc="Self-contained local assets. Packs SVGs, icons, and branded images directly into the bundle. Zero external connection breakages." icon="https://api.iconify.design/lucide/folder-archive.svg?color=%2300D2FF" />
+      </row>
+
+      <!-- Section separator -->
+      <line fill="$border" w="1200" h="1" />
+    </col>
+
+    <!-- ==================== CODE ISLAND SHOWCASE ==================== -->
+    <row w="1440" p="32 120 96 120" align="top-center" gap="80">
+      
+      <!-- Left Info Column -->
+      <col w="520" gap="24" align="top-left">
+        <text value="MARKUP SANITY" text-style="Micro" color="$primary" />
+        <text value="Flow Layouts Made Deterministic" text-style="Display/Section" color="$text-primary" />
+        <text value="Traditional HTML and CSS are filled with legacy layouts and ambient bugs. The .gui standard replaces this complexity with a constrained layout engine: columns flow vertically, rows flow horizontally, and grids follow track templates." text-style="Body/Large" color="$text-secondary" />
+        
+        <col gap="16" w="fill">
+          <row gap="12" align="top-left">
+            <row w="24" h="24" radius="12" fill="$primary-glow" border="1 $primary" align="middle-center">
+              <img src="https://api.iconify.design/lucide/check.svg?color=%2300D2FF" w="12" h="12" />
+            </row>
+            <col gap="4" w="480">
+              <text value="Tokenized Hierarchy" text-style="Body/Strong" color="$text-primary" />
+              <text value="Spacing, colors, and typography map directly to design system tokens." text-style="Body/Regular" color="$text-secondary" />
+            </col>
+          </row>
+          <row gap="12" align="top-left">
+            <row w="24" h="24" radius="12" fill="$primary-glow" border="1 $primary" align="middle-center">
+              <img src="https://api.iconify.design/lucide/check.svg?color=%2300D2FF" w="12" h="12" />
+            </row>
+            <col gap="4" w="480">
+              <text value="No Spacer Elements" text-style="Body/Strong" color="$text-primary" />
+              <text value="Spacing is governed by gap and padding attributes on parents, keeping markup clean." text-style="Body/Regular" color="$text-secondary" />
+            </col>
+          </row>
+        </col>
+      </col>
+
+      <!-- Right Code Window (Signature Move) -->
+      <col w="600" fill="#0C0C10" border="1 $border-strong" radius="$radius-md" p="0" clip="true">
+        <!-- Editor Header -->
+        <row w="fill" h="44" fill="#0A0A0E" border-bottom="1 $border" p="0 16" align="middle-left" gap="auto">
+          <!-- Window buttons -->
+          <row gap="8" align="middle-left">
+            <ellipse w="10" h="10" fill="#FF5F56" />
+            <ellipse w="10" h="10" fill="#FFBD2E" />
+            <ellipse w="10" h="10" fill="#27C93F" />
+          </row>
+          <!-- Active Tab -->
+          <row fill="#12121A" border="1 $border" radius="6 6 0 0" p="8 16" align="middle-center" h="44">
+            <text value="design.guix" font-family="JetBrains Mono" font-size="12" font-weight="500" color="$text-primary" />
+          </row>
+          <row gap="12" align="middle-right">
+            <img src="https://api.iconify.design/lucide/copy.svg?color=%23A0A0AB" w="14" h="14" />
+          </row>
+        </row>
+        
+        <!-- Editor Content -->
+        <col p="24" gap="6" w="fill" align="top-left">
+          <!-- Line 1 -->
+          <row gap="0">
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#52525B" value="01  " />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&lt;" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#E06C75" value="gui" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" version" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="0.2"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" name" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="LandingPage"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&gt;" />
+          </row>
+          <!-- Line 2 -->
+          <row gap="0">
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#52525B" value="02    " />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&lt;" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#E06C75" value="tokens" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&gt;" />
+          </row>
+          <!-- Line 3 -->
+          <row gap="0">
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#52525B" value="03      " />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&lt;" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#E06C75" value="color" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" name" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="primary"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" value" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="#00D2FF"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value=" /&gt;" />
+          </row>
+          <!-- Line 4 -->
+          <row gap="0">
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#52525B" value="04    " />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&lt;/" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#E06C75" value="tokens" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&gt;" />
+          </row>
+          <!-- Line 5 -->
+          <row gap="0">
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#52525B" value="05    " />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&lt;" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#E06C75" value="col" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" w" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="1440"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" fill" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="#070709"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&gt;" />
+          </row>
+          <!-- Line 6 -->
+          <row gap="0">
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#52525B" value="06      " />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&lt;" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#E06C75" value="row" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" w" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="fill"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" gap" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="auto"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&gt;" />
+          </row>
+          <!-- Line 7 -->
+          <row gap="0">
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#52525B" value="07        " />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&lt;" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#E06C75" value="text" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" value" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="Overview"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" color" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="#FFFFFF"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value=" /&gt;" />
+          </row>
+          <!-- Line 8 -->
+          <row gap="0">
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#52525B" value="08        " />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&lt;" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#E06C75" value="rect" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" fill" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="$primary"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" w" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="120"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#D19A66" value=" h" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#98C379" value='="40"' />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value=" /&gt;" />
+          </row>
+          <!-- Line 9 -->
+          <row gap="0">
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#52525B" value="09      " />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&lt;/" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#E06C75" value="row" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&gt;" />
+          </row>
+          <!-- Line 10 -->
+          <row gap="0">
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#52525B" value="10    " />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&lt;/" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#E06C75" value="col" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&gt;" />
+          </row>
+          <!-- Line 11 -->
+          <row gap="0">
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#52525B" value="11  " />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&lt;/" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#E06C75" value="gui" />
+            <text font-family="JetBrains Mono" font-size="12" line-height="18" color="#A0A0AB" value="&gt;" />
+          </row>
+        </col>
+      </col>
+
+    </row>
+
+    <!-- ==================== WHY .GUI? SECTION (Grid of features) ==================== -->
+    <col w="1440" p="96 120" gap="64" align="top-center" fill="$surface">
+      <!-- Section Header -->
+      <col gap="12" align="top-center" w="1200">
+        <text value="ENGINEERED FOR PROGRESS" text-style="Micro" color="$primary" />
+        <text value="The Interface Engine for AI Workflows" text-style="Display/Section" color="$text-primary" />
+        <text value="Standardized specifications reduce token length and guarantee layout accuracy. Designed from the ground up to prevent visual hallucinations." text-style="Display/Subtitle" color="$text-secondary" align="center" w="780" />
+      </col>
+
+      <!-- 3-Column Features -->
+      <row w="1200" gap="60" align="top-center">
+        <instance component="comp-feat-tile" title="Absolute Determinism" desc="Omits fragile CSS sizing algorithms. Everything is laid out using clear vertical columns, horizontal rows, or responsive grids that render consistently." icon="https://api.iconify.design/lucide/shield-check.svg?color=%2300D2FF" />
+        <instance component="comp-feat-tile" title="Cascading Mode Axes" desc="Native design token system supports cascading axes for light and dark themes. Swapping appearances doesn't require rebuilding any code structures." icon="https://api.iconify.design/lucide/sun-moon.svg?color=%2300D2FF" />
+        <instance component="comp-feat-tile" title="AI-Native Authoring" desc="Lightweight, highly structured XML schema is designed to prevent LLM errors. Short tag syntax reduces compile overhead and generation times." icon="https://api.iconify.design/lucide/terminal.svg?color=%2300D2FF" />
+      </row>
+    </col>
+
+    <!-- ==================== CALL TO ACTION BANNER ==================== -->
+    <col w="1440" p="96 120" align="top-center">
+      <col w="1200" fill="linear-gradient(135deg, #00D2FF14 0%, #7A3DFF05 100%)" border="1 $border-strong" radius="$radius-lg" p="64" gap="24" align="top-center">
+        <text value="Standardize Your AI-Authored UIs" font-family="Outfit" font-size="36" font-weight="600" color="$text-primary" align="center" />
+        <text value="Ready to compile, package, and deploy portable interfaces? Explore our command-line compiler." text-style="Display/Subtitle" color="$text-secondary" align="center" w="700" />
+        <row gap="16" align="middle-center" p="8 0 0 0">
+          <instance component="comp-btn-primary" label="Get Started Now" />
+          <instance component="comp-btn-secondary" label="Read Documentation" />
+        </row>
+      </col>
+    </col>
+
+    <!-- ==================== FOOTER ==================== -->
+    <col w="1440" p="80 120" gap="48" align="top-center" fill="$bg">
+      <line fill="$border" w="1200" h="1" />
+      
+      <!-- Sitemap structure -->
+      <row w="fill" align="top-left" gap="auto">
+        <!-- Brand Info -->
+        <col gap="16" w="320">
+          <row gap="8" align="middle-left">
+            <ellipse fill="$primary" w="10" h="10" />
+            <text value=".gui" font-family="Outfit" font-size="20" font-weight="700" color="$text-primary" letter-spacing="-0.5" />
+          </row>
+          <text value="An open interface archiving standard for agentic coding. Packaged for visual determinism and modular portability." font-family="Inter" font-size="13" color="$text-secondary" line-height="20" />
+          <text value="© 2026 .gui standard • Open-source interface specification." font-family="Outfit" font-size="11" font-weight="500" color="$text-tertiary" />
+        </col>
+
+        <!-- Columns -->
+        <col gap="16" w="180">
+          <text value="SPECIFICATION" font-family="Outfit" font-size="11" font-weight="600" color="$primary" letter-spacing="2" />
+          <text value="XML Schema v0.2" font-family="Inter" font-size="13" color="$text-secondary" />
+          <text value="Layout API" font-family="Inter" font-size="13" color="$text-secondary" />
+          <text value="Token Cascades" font-family="Inter" font-size="13" color="$text-secondary" />
+          <text value="Components" font-family="Inter" font-size="13" color="$text-secondary" />
+        </col>
+
+        <col gap="16" w="180">
+          <text value="PLATFORMS" font-family="Outfit" font-size="11" font-weight="600" color="$primary" letter-spacing="2" />
+          <text value="Web Desktop" font-family="Inter" font-size="13" color="$text-secondary" />
+          <text value="Web Mobile" font-family="Inter" font-size="13" color="$text-secondary" />
+          <text value="Native iOS" font-family="Inter" font-size="13" color="$text-secondary" />
+          <text value="Native Android" font-family="Inter" font-size="13" color="$text-secondary" />
+        </col>
+
+        <col gap="16" w="180">
+          <text value="RESOURCES" font-family="Outfit" font-size="11" font-weight="600" color="$primary" letter-spacing="2" />
+          <text value="Compiler SDK" font-family="Inter" font-size="13" color="$text-secondary" />
+          <text value="Figma Exporter" font-family="Inter" font-size="13" color="$text-secondary" />
+          <text value="Validation Guide" font-family="Inter" font-size="13" color="$text-secondary" />
+          <text value="GitHub Repository" font-family="Inter" font-size="13" color="$text-secondary" />
+        </col>
+      </row>
+
+      <!-- Bottom border line and socials -->
+      <line fill="$border" w="1200" h="1" />
+
+      <row w="fill" align="middle-left" gap="auto">
+        <row gap="32" align="middle-left">
+          <text value="License Terms" font-family="Outfit" font-size="11" font-weight="500" color="$text-tertiary" />
+          <text value="Privacy Policy" font-family="Outfit" font-size="11" font-weight="500" color="$text-tertiary" />
+          <text value="Security Registry" font-family="Outfit" font-size="11" font-weight="500" color="$text-tertiary" />
+        </row>
+        <row gap="16" align="middle-right">
+          <img src="https://api.iconify.design/lucide/github.svg?color=%23A0A0AB" w="16" h="16" />
+          <img src="https://api.iconify.design/lucide/twitter.svg?color=%23A0A0AB" w="16" h="16" />
+        </row>
+      </row>
+    </col>
+
+  </col>
+</gui>

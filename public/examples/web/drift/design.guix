@@ -1,0 +1,256 @@
+<gui version="0.2" name="Drift">
+  <tokens>
+    <color name="bg" value="#ECEAE5" />
+    <color name="surface" value="#E4E1DA" />
+    <color name="surface-2" value="#DAD6CD" />
+    <color name="border" value="#CDC8BD" />
+    <color name="text" value="#23211D" />
+    <color name="muted" value="#6C6860" />
+    <color name="faint" value="#9C978C" />
+    <color name="accent" value="#3F7D74" />
+    <color name="accent-dim" value="#5F9A90" />
+  </tokens>
+  <fonts>
+    <font family="Space Grotesk" source="google" weights="400 500 600 700" styles="normal" />
+    <font family="Space Mono" source="google" weights="400 700" styles="normal" />
+  </fonts>
+
+  <col w="1440" fill="$bg">
+
+    <!-- NAV -->
+    <col w="fill" h="72" fill="#ECEAE5CC" border-bottom="1 $border" align="top-center" role="top-navigation-bar">
+      <row w="1180" h="fill" p="0 56" align="middle-center" gap="auto">
+        <row gap="10" align="middle-left">
+          <rect w="10" h="10" radius="3" fill="$accent" />
+          <text value="Drift" font-family="Space Grotesk" font-size="16" font-weight="600" letter-spacing="-0.16" color="$text" />
+        </row>
+        <row gap="32" align="middle-center" role="navigation-menu">
+          <text value="Product" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+          <text value="Pricing" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+          <text value="Docs" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+          <text value="Changelog" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+        </row>
+        <row gap="24" align="middle-center">
+          <text value="Sign in" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+          <text value="Start free" font-family="Space Grotesk" font-size="13" font-weight="500" color="$accent" border-bottom="1 $accent-dim" pb="2" role="hyperlink" />
+        </row>
+      </row>
+    </col>
+
+    <!-- HERO -->
+    <col w="fill" align="top-center">
+      <appearance>
+        <fill type="image" src="assets/wave.png" fit="cover" />
+      </appearance>
+      <col w="1180" p="96 56 0">
+        <col w="620" gap="22">
+          <row gap="8" align="middle-left" p="5 12" radius="99" fill="$surface" border="1 $border" role="badge">
+            <ellipse w="6" h="6" fill="$accent" />
+            <text value="v3.0 — Realtime event streams" font-family="Space Mono" font-size="12" color="$muted" />
+          </row>
+          <text font-family="Space Grotesk" font-size="54" font-weight="600" line-height="57" letter-spacing="-1.5">
+            <segment value="Analytics that move " font-family="Space Grotesk" font-size="54" font-weight="600" color="$text" />
+            <segment value="at the speed of your product." font-family="Space Grotesk" font-size="54" font-weight="600" color="$faint" />
+          </text>
+          <text w="480" value="Drift captures every signal across your stack and turns raw events into decisions — without dashboards you have to babysit." font-family="Space Grotesk" font-size="17" line-height="27" color="$muted" />
+          <row gap="24" align="middle-left" pt="12">
+            <row gap="6" align="middle-center">
+              <text value="Start free" font-family="Space Grotesk" font-size="13" font-weight="500" color="$accent" border-bottom="1 $accent-dim" pb="2" role="hyperlink" />
+            </row>
+            <row gap="6" align="middle-center">
+              <text value="View live demo" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+              <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%236C6860" w="14" h="14" />
+            </row>
+          </row>
+        </col>
+        <row gap="48" align="bottom-left" pt="240" pb="80">
+          <col gap="4">
+            <text font-family="Space Mono" font-size="28" font-weight="600" letter-spacing="-0.56">
+              <segment value="2.4" font-family="Space Mono" font-size="28" font-weight="600" color="$accent" />
+              <segment value="B" font-family="Space Mono" font-size="28" font-weight="600" color="$text" />
+            </text>
+            <text value="Events / day" font-family="Space Grotesk" font-size="13" color="$faint" />
+          </col>
+          <col gap="4">
+            <text font-family="Space Mono" font-size="28" font-weight="600" letter-spacing="-0.56">
+              <segment value="40" font-family="Space Mono" font-size="28" font-weight="600" color="$accent" />
+              <segment value="ms" font-family="Space Mono" font-size="28" font-weight="600" color="$text" />
+            </text>
+            <text value="Query latency" font-family="Space Grotesk" font-size="13" color="$faint" />
+          </col>
+          <col gap="4">
+            <text font-family="Space Mono" font-size="28" font-weight="600" letter-spacing="-0.56">
+              <segment value="99.99" font-family="Space Mono" font-size="28" font-weight="600" color="$accent" />
+              <segment value="%" font-family="Space Mono" font-size="28" font-weight="600" color="$text" />
+            </text>
+            <text value="Uptime SLA" font-family="Space Grotesk" font-size="13" color="$faint" />
+          </col>
+        </row>
+      </col>
+    </col>
+
+    <!-- FEATURES -->
+    <col w="fill" align="top-center">
+      <col w="1180" p="0 56 96" gap="56">
+        <col gap="14">
+          <text value="WHY DRIFT" font-family="Space Mono" font-size="12" letter-spacing="1.68" color="$accent" />
+          <text w="520" value="Built for teams that ship daily." font-family="Space Grotesk" font-size="34" font-weight="600" line-height="39" letter-spacing="-0.68" color="$text" />
+          <text w="480" value="A focused toolkit — no bloat, no setup ceremony. Just the signals that actually change what you build next." font-family="Space Grotesk" font-size="16" line-height="26" color="$muted" />
+        </col>
+        <grid cols="3" gap="1" w="fill" fill="$border" border="1 $border" radius="14" clip>
+          <col h="200" p="32 28" fill="$surface" gap="auto" role="card">
+            <row w="38" h="38" radius="9" fill="$surface-2" border="1 $border" align="middle-center">
+              <img src="https://api.iconify.design/lucide/activity.svg?color=%233F7D74" w="18" h="18" />
+            </row>
+            <col gap="8">
+              <text value="Live event streams" font-family="Space Grotesk" font-size="16" font-weight="600" color="$text" />
+              <text value="Watch data flow in real time with sub-50ms ingestion across every region." font-family="Space Grotesk" font-size="14" line-height="22" color="$muted" />
+            </col>
+          </col>
+          <col h="200" p="32 28" fill="$surface" gap="auto" role="card">
+            <row w="38" h="38" radius="9" fill="$surface-2" border="1 $border" align="middle-center">
+              <img src="https://api.iconify.design/lucide/layout-dashboard.svg?color=%233F7D74" w="18" h="18" />
+            </row>
+            <col gap="8">
+              <text value="Composable views" font-family="Space Grotesk" font-size="16" font-weight="600" color="$text" />
+              <text value="Build queries as code, version them, and share saved boards with your team." font-family="Space Grotesk" font-size="14" line-height="22" color="$muted" />
+            </col>
+          </col>
+          <col h="200" p="32 28" fill="$surface" gap="auto" role="card">
+            <row w="38" h="38" radius="9" fill="$surface-2" border="1 $border" align="middle-center">
+              <img src="https://api.iconify.design/lucide/target.svg?color=%233F7D74" w="18" h="18" />
+            </row>
+            <col gap="8">
+              <text value="Anomaly alerts" font-family="Space Grotesk" font-size="16" font-weight="600" color="$text" />
+              <text value="Models learn your baselines and ping you the moment something drifts." font-family="Space Grotesk" font-size="14" line-height="22" color="$muted" />
+            </col>
+          </col>
+          <col h="200" p="32 28" fill="$surface" gap="auto" role="card">
+            <row w="38" h="38" radius="9" fill="$surface-2" border="1 $border" align="middle-center">
+              <img src="https://api.iconify.design/lucide/terminal.svg?color=%233F7D74" w="18" h="18" />
+            </row>
+            <col gap="8">
+              <text value="SQL-native" font-family="Space Grotesk" font-size="16" font-weight="600" color="$text" />
+              <text value="Query the warehouse you already have. No new schema, no migration." font-family="Space Grotesk" font-size="14" line-height="22" color="$muted" />
+            </col>
+          </col>
+          <col h="200" p="32 28" fill="$surface" gap="auto" role="card">
+            <row w="38" h="38" radius="9" fill="$surface-2" border="1 $border" align="middle-center">
+              <img src="https://api.iconify.design/lucide/lock.svg?color=%233F7D74" w="18" h="18" />
+            </row>
+            <col gap="8">
+              <text value="Privacy by default" font-family="Space Grotesk" font-size="16" font-weight="600" color="$text" />
+              <text value="PII redaction, regional residency, and SOC 2 Type II out of the box." font-family="Space Grotesk" font-size="14" line-height="22" color="$muted" />
+            </col>
+          </col>
+          <col h="200" p="32 28" fill="$surface" gap="auto" role="card">
+            <row w="38" h="38" radius="9" fill="$surface-2" border="1 $border" align="middle-center">
+              <img src="https://api.iconify.design/lucide/history.svg?color=%233F7D74" w="18" h="18" />
+            </row>
+            <col gap="8">
+              <text value="Time-travel" font-family="Space Grotesk" font-size="16" font-weight="600" color="$text" />
+              <text value="Replay any metric to any point in history and diff the deltas instantly." font-family="Space Grotesk" font-size="14" line-height="22" color="$muted" />
+            </col>
+          </col>
+        </grid>
+      </col>
+    </col>
+
+    <!-- SHOWCASE -->
+    <col w="fill" border-top="1 $border" align="top-center">
+      <col w="1180" p="96 56" gap="48">
+        <text value="THE WORKSPACE" font-family="Space Mono" font-size="12" letter-spacing="1.68" color="$accent" />
+        <grid cols="1fr 1.1fr" gap="64" align="middle-center" w="fill">
+          <col w="fill" gap="16">
+            <text w="420" value="One surface for the whole signal." font-family="Space Grotesk" font-size="30" font-weight="600" line-height="35" letter-spacing="-0.6" color="$text" />
+            <text w="460" value="Stop stitching tabs together. Drift puts streams, funnels, and alerts in a single calm interface." font-family="Space Grotesk" font-size="16" line-height="26" color="$muted" />
+            <col w="fill" gap="18" pt="14">
+              <row w="fill" gap="14" align="top-left">
+                <row w="20" h="20" radius="6" fill="$surface-2" border="1 $border" align="middle-center">
+                  <img src="https://api.iconify.design/lucide/check.svg?color=%233F7D74" w="11" h="11" />
+                </row>
+                <text w="fill" line-height="21">
+                  <segment value="Unified timeline" font-family="Space Grotesk" font-size="14" font-weight="500" color="$text" />
+                  <segment value=" — every event, deploy, and incident on one axis." font-family="Space Grotesk" font-size="14" color="$muted" />
+                </text>
+              </row>
+              <row w="fill" gap="14" align="top-left">
+                <row w="20" h="20" radius="6" fill="$surface-2" border="1 $border" align="middle-center">
+                  <img src="https://api.iconify.design/lucide/check.svg?color=%233F7D74" w="11" h="11" />
+                </row>
+                <text w="fill" line-height="21">
+                  <segment value="Keyboard-first" font-family="Space Grotesk" font-size="14" font-weight="500" color="$text" />
+                  <segment value=" — jump, filter, and pivot without touching a mouse." font-family="Space Grotesk" font-size="14" color="$muted" />
+                </text>
+              </row>
+              <row w="fill" gap="14" align="top-left">
+                <row w="20" h="20" radius="6" fill="$surface-2" border="1 $border" align="middle-center">
+                  <img src="https://api.iconify.design/lucide/check.svg?color=%233F7D74" w="11" h="11" />
+                </row>
+                <text w="fill" line-height="21">
+                  <segment value="Shareable links" font-family="Space Grotesk" font-size="14" font-weight="500" color="$text" />
+                  <segment value=" — any view becomes a permalink your team can open." font-family="Space Grotesk" font-size="14" color="$muted" />
+                </text>
+              </row>
+            </col>
+          </col>
+          <col w="fill" p="8" fill="$surface" border="1 $border" radius="14" clip>
+            <row gap="6" p="12 14">
+              <ellipse w="10" h="10" fill="$border" />
+              <ellipse w="10" h="10" fill="$border" />
+              <ellipse w="10" h="10" fill="$border" />
+            </row>
+            <img src="https://v3b.fal.media/files/b/0a9c4b08/S9BPMYIDNNhzBg3wmYCA3_1dwM0crc.png" w="fill" h="360" fit="cover" radius="9" />
+          </col>
+        </grid>
+      </col>
+    </col>
+
+    <!-- FOOTER -->
+    <col w="fill" border-top="1 $border" align="top-center">
+      <col w="1180" p="64 56 40" gap="56">
+        <row w="fill" gap="auto" align="top-left" wrap>
+          <col w="280" gap="16">
+            <row gap="10" align="middle-left">
+              <rect w="10" h="10" radius="3" fill="$accent" />
+              <text value="Drift" font-family="Space Grotesk" font-size="16" font-weight="600" color="$text" />
+            </row>
+            <text value="Realtime product analytics for teams that build fast and decide faster." font-family="Space Grotesk" font-size="14" line-height="22" color="$muted" />
+          </col>
+          <row gap="64" align="top-left">
+            <col gap="11" role="navigation-menu">
+              <text value="PRODUCT" font-family="Space Mono" font-size="12" letter-spacing="0.96" color="$faint" pb="5" />
+              <text value="Features" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+              <text value="Integrations" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+              <text value="Pricing" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+              <text value="Changelog" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+            </col>
+            <col gap="11" role="navigation-menu">
+              <text value="COMPANY" font-family="Space Mono" font-size="12" letter-spacing="0.96" color="$faint" pb="5" />
+              <text value="About" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+              <text value="Careers" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+              <text value="Blog" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+              <text value="Contact" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+            </col>
+            <col gap="11" role="navigation-menu">
+              <text value="RESOURCES" font-family="Space Mono" font-size="12" letter-spacing="0.96" color="$faint" pb="5" />
+              <text value="Docs" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+              <text value="API" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+              <text value="Status" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+              <text value="Security" font-family="Space Grotesk" font-size="14" color="$muted" role="hyperlink" />
+            </col>
+          </row>
+        </row>
+        <row w="fill" gap="auto" align="middle-center" pt="28" border-top="1 $border">
+          <text value="© 2026 Drift Labs, Inc. All rights reserved." font-family="Space Grotesk" font-size="13" color="$faint" />
+          <row gap="18" align="middle-center">
+            <text value="Twitter" font-family="Space Grotesk" font-size="13" color="$muted" role="hyperlink" />
+            <text value="GitHub" font-family="Space Grotesk" font-size="13" color="$muted" role="hyperlink" />
+            <text value="LinkedIn" font-family="Space Grotesk" font-size="13" color="$muted" role="hyperlink" />
+          </row>
+        </row>
+      </col>
+    </col>
+
+  </col>
+</gui>

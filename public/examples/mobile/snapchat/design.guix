@@ -1,0 +1,178 @@
+<gui version="0.2" name="SnapchatCamera">
+  <tokens>
+    <color name="brand-yellow" value="#FFFC00" />
+    <color name="bg-dark" value="#0C0A09" />
+    <color name="hud-glass" value="#0000005C" />
+    <color name="hud-glass-border" value="#FFFFFF26" />
+    <color name="text-primary" value="#FFFFFF" />
+    <color name="text-secondary" value="#A1A1AA" />
+    <color name="chat-badge" value="#00A8FF" />
+    <color name="stories-badge" value="#9D4EDD" />
+  </tokens>
+  
+  <styles>
+    <text-style name="HUD/Label" font-family="SF Pro" font-size="14" font-weight="600" line-height="18" />
+    <text-style name="HUD/Sub" font-family="SF Pro" font-size="11" font-weight="500" line-height="14" />
+    <text-style name="Bar/Clock" font-family="SF Pro" font-size="15" font-weight="600" line-height="20" />
+  </styles>
+
+  <fonts>
+    <font family="SF Pro" source="system" weights="400 500 600 700" styles="normal" />
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <frame w="390" h="844" fill="$bg-dark" clip>
+    <!-- 1. Fullscreen Camera Feed Background -->
+    <img src="assets/camera_bg.png" w="390" h="844" x="0" y="0" fit="cover" name="Camera Feed Background" />
+    
+    <!-- 2. Dark Gradient Vignettes for Legibility / Contrast -->
+    <!-- Top Vignette (Ensures top status bar and search bar are legible) -->
+    <rect w="390" h="140" x="0" y="0" fill="linear-gradient(180deg, #00000080 0%, #00000000 100%)" name="Top Vignette Overlay" />
+    <!-- Bottom Vignette (Ensures capture elements and navigation are legible) -->
+    <rect w="390" h="240" x="0" y="604" fill="linear-gradient(0deg, #00000099 0%, #00000000 100%)" name="Bottom Vignette Overlay" />
+
+    <!-- 3. Neon Overlay Filters (Visual lens effects) -->
+    <img src="https://api.iconify.design/lucide/glasses.svg?color=%23fffc00" w="100" h="40" x="145" y="380" opacity="0.85" name="Active Lens Sunglasses Overlay" />
+    <img src="https://api.iconify.design/lucide/sparkle.svg?color=%23ff3b30" w="16" h="16" x="235" y="365" opacity="0.9" name="Red Lens Sparkle" />
+    <img src="https://api.iconify.design/lucide/sparkle.svg?color=%2300a8ff" w="20" h="20" x="135" y="420" opacity="0.9" name="Blue Lens Sparkle" />
+
+    <!-- 4. iOS Status Bar -->
+    <row x="0" y="12" w="fill" p="0 20" gap="auto" align="middle-center" name="iOS Status Bar">
+      <text value="9:41" font-family="SF Pro" font-size="15" font-weight="600" color="#FFFFFF" />
+      <row gap="6" align="middle-right">
+        <img src="https://api.iconify.design/lucide/signal.svg?color=%23ffffff" w="17" h="17" />
+        <img src="https://api.iconify.design/lucide/wifi.svg?color=%23ffffff" w="17" h="17" />
+        <img src="https://api.iconify.design/lucide/battery.svg?color=%23ffffff" w="22" h="13" />
+      </row>
+    </row>
+
+    <!-- 5. Top Header & Search HUD -->
+    <!-- Bitmoji Profile Button (Yellow Ring implies Unread Story) -->
+    <frame role="avatar" x="16" y="52" w="40" h="40" clip name="Profile Avatar shortcut">
+      <ellipse fill="$brand-yellow" w="40" h="40" border="2 $brand-yellow" />
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&amp;h=80&amp;fit=crop" w="36" h="36" x="2" y="2" radius="18" />
+    </frame>
+
+    <!-- Snapchat Styled Search Bar -->
+    <row role="search-bar" x="68" y="52" w="200" h="40" radius="20" fill="$hud-glass" border="1 $hud-glass-border" align="middle-left" p="0 14" gap="8" name="Search HUD Input">
+      <img src="https://api.iconify.design/lucide/search.svg?color=%23ffffff" w="18" h="18" opacity="0.8" />
+      <text value="Search" font-family="SF Pro" font-size="14" font-weight="500" color="#FFFFFFB3" />
+    </row>
+
+    <!-- Add Friend Button -->
+    <row role="button" x="280" y="52" w="40" h="40" radius="20" fill="$hud-glass" border="1 $hud-glass-border" align="middle-center" name="Add Friend Button">
+      <img src="https://api.iconify.design/lucide/user-plus.svg?color=%23ffffff" w="20" h="20" />
+    </row>
+
+    <!-- Flip Camera Button -->
+    <row role="button" x="334" y="52" w="40" h="40" radius="20" fill="$hud-glass" border="1 $hud-glass-border" align="middle-center" name="Flip Camera Button">
+      <img src="https://api.iconify.design/lucide/rotate-cw.svg?color=%23ffffff" w="20" h="20" />
+    </row>
+
+    <!-- 6. Right Action HUD Column Menu -->
+    <col x="334" y="104" w="40" gap="12" align="middle-center" name="Camera Quick Settings Menu">
+      <row w="40" h="40" radius="20" fill="$hud-glass" border="1 $hud-glass-border" align="middle-center" name="Flash Control">
+        <img src="https://api.iconify.design/lucide/zap.svg?color=%23ffffff" w="20" h="20" />
+      </row>
+      <row w="40" h="40" radius="20" fill="$hud-glass" border="1 $hud-glass-border" align="middle-center" name="Sound Control">
+        <img src="https://api.iconify.design/lucide/music.svg?color=%23ffffff" w="20" h="20" />
+      </row>
+      <row w="40" h="40" radius="20" fill="$hud-glass" border="1 $hud-glass-border" align="middle-center" name="Lenses Control">
+        <img src="https://api.iconify.design/lucide/sparkles.svg?color=%23ffffff" w="20" h="20" />
+      </row>
+      <row w="40" h="40" radius="20" fill="$hud-glass" border="1 $hud-glass-border" align="middle-center" name="Timer Control">
+        <img src="https://api.iconify.design/lucide/timer.svg?color=%23ffffff" w="20" h="20" />
+      </row>
+      <row w="40" h="40" radius="20" fill="$hud-glass" border="1 $hud-glass-border" align="middle-center" name="Grid Layout Control">
+        <img src="https://api.iconify.design/lucide/grid.svg?color=%23ffffff" w="20" h="20" />
+      </row>
+      <row w="40" h="40" radius="20" fill="$hud-glass" border="1 $hud-glass-border" align="middle-center" name="More Controls Menu">
+        <img src="https://api.iconify.design/lucide/chevron-down.svg?color=%23ffffff" w="20" h="20" />
+      </row>
+    </col>
+
+    <!-- 7. Active Filter Label -->
+    <row x="120" y="605" w="150" h="28" radius="14" fill="$hud-glass" border="1 $hud-glass-border" align="middle-center" gap="6" name="Active Lens Tag">
+      <ellipse fill="$brand-yellow" w="6" h="6" />
+      <text value="Neon Glasses" font-family="SF Pro" font-size="12" font-weight="600" color="#FFFFFF" />
+    </row>
+
+    <!-- 8. Shutter Button & Lens Carousel Area -->
+    <!-- Memories / Gallery Button (Left) -->
+    <frame role="button" x="35" y="670" w="40" h="40" clip name="Memories Shortcut Button">
+      <rect fill="$hud-glass" border="2 #FFFFFF" w="40" h="40" radius="10" />
+      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&amp;h=80&amp;fit=crop" w="36" h="36" x="2" y="2" radius="8" />
+    </frame>
+
+    <!-- Lens Inactive Left -->
+    <frame x="95" y="668" w="44" h="44" clip name="Lenses Carousel Left Option">
+      <ellipse fill="$hud-glass" border="1 $hud-glass-border" w="44" h="44" />
+      <img src="https://api.iconify.design/lucide/palette.svg?color=%23ffffff" w="22" h="22" x="11" y="11" />
+    </frame>
+
+    <!-- Shutter Button / Active Lens (Center) -->
+    <frame role="button" x="155" y="650" w="80" h="80" name="Shutter Button">
+      <ellipse fill="none" border="6 #FFFFFF" w="80" h="80" />
+      <ellipse fill="#FFFFFF8C" w="62" h="62" x="9" y="9" />
+      <img src="https://api.iconify.design/lucide/sparkles.svg?color=%23fffc00" w="32" h="32" x="24" y="24" />
+    </frame>
+
+    <!-- Lens Inactive Right -->
+    <frame x="251" y="668" w="44" h="44" clip name="Lenses Carousel Right Option">
+      <ellipse fill="$hud-glass" border="1 $hud-glass-border" w="44" h="44" />
+      <img src="https://api.iconify.design/lucide/smile.svg?color=%23ffffff" w="22" h="22" x="11" y="11" />
+    </frame>
+
+    <!-- Lens Explorer Button (Right) -->
+    <frame role="button" x="315" y="670" w="40" h="40" clip name="Lens Explorer Button">
+      <ellipse fill="$hud-glass" border="2 #FFFFFF" w="40" h="40" />
+      <img src="https://api.iconify.design/lucide/compass.svg?color=%23ffffff" w="22" h="22" x="9" y="9" />
+    </frame>
+
+    <!-- 9. Glassmorphic Bottom Navigation Bar -->
+    <frame x="0" y="744" w="390" h="100" clip name="Bottom Navigation Tab Bar">
+      <appearance>
+        <fill type="color" value="#0000005C" />
+        <effect type="background-blur" radius="20" />
+      </appearance>
+      
+      <!-- Nav Tabs Row -->
+      <row role="tab-bar" x="0" y="10" w="fill" h="56" gap="auto" align="middle-center" p="0 24" name="Tab Navigation Buttons">
+        <!-- Map Tab -->
+        <col gap="2" align="middle-center" name="Map Navigation Item">
+          <img src="https://api.iconify.design/lucide/map-pin.svg?color=%23ffffff" w="24" h="24" opacity="0.6" />
+        </col>
+
+        <!-- Chat Tab with Unread Badge -->
+        <frame w="40" h="40" name="Chat Navigation Item">
+          <img src="https://api.iconify.design/lucide/message-square.svg?color=%23ffffff" w="24" h="24" x="8" y="8" opacity="0.6" />
+          <frame role="badge" x="24" y="2" w="18" h="18" name="Unread Chat Indicator Badge">
+            <ellipse fill="$chat-badge" w="18" h="18" border="2 #0000004D" />
+            <text value="3" font-family="SF Pro" font-size="10" font-weight="700" color="#FFFFFF" x="6" y="2" />
+          </frame>
+        </frame>
+
+        <!-- Camera Tab (Active) -->
+        <col gap="2" align="middle-center" name="Camera Navigation Item (Active)">
+          <row w="36" h="36" radius="18" fill="$brand-yellow" align="middle-center">
+            <img src="https://api.iconify.design/lucide/camera.svg?color=%23000000" w="20" h="20" />
+          </row>
+        </col>
+
+        <!-- Stories Tab with Purple Active Indicator Dot -->
+        <frame w="40" h="40" name="Stories Navigation Item">
+          <img src="https://api.iconify.design/lucide/users.svg?color=%23ffffff" w="24" h="24" x="8" y="8" opacity="0.6" />
+          <ellipse fill="$stories-badge" w="8" h="8" x="26" y="6" border="1 #0000004D" name="Unread Story Dot Indicator" />
+        </frame>
+
+        <!-- Spotlight Tab -->
+        <col gap="2" align="middle-center" name="Spotlight Navigation Item">
+          <img src="https://api.iconify.design/lucide/play.svg?color=%23ffffff" w="24" h="24" opacity="0.6" />
+        </col>
+      </row>
+
+      <!-- iOS Home Indicator -->
+      <rect fill="#FFFFFF5C" w="140" h="5" radius="3" x="125" y="86" name="iOS Home Indicator Bar" />
+    </frame>
+  </frame>
+</gui>

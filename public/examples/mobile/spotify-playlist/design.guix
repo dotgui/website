@@ -1,0 +1,230 @@
+<gui version="1.0" name="SpotifyPlaylist">
+  <tokens>
+    <color name="bg" value="#09080B" />
+    <color name="surface" value="#131118" />
+    <color name="surface-2" value="#211E29" />
+    <color name="border" value="#1E1C24" />
+    <color name="text-primary" value="#FFFFFF" />
+    <color name="text-secondary" value="#9C98A6" />
+    <color name="text-tertiary" value="#5B5764" />
+    <color name="primary" value="#1ED760" />
+    <color name="accent" value="#8B5CF6" />
+    <number name="radius-subtle" value="4" />
+    <number name="radius-card" value="12" />
+    <number name="radius-pill" value="999" />
+  </tokens>
+
+  <styles>
+    <text-style name="Nav/Title" font-family="SF Pro" font-size="16" font-weight="600" line-height="20" />
+    <text-style name="Title/Playlist" font-family="SF Pro" font-size="24" font-weight="700" line-height="30" />
+    <text-style name="Title/Song" font-family="SF Pro" font-size="15" font-weight="600" line-height="20" />
+    <text-style name="Body" font-family="SF Pro" font-size="13" font-weight="400" line-height="18" />
+    <text-style name="Body/Bold" font-family="SF Pro" font-size="13" font-weight="600" line-height="18" />
+    <text-style name="Caption" font-family="SF Pro" font-size="12" font-weight="400" line-height="16" />
+    <text-style name="Micro" font-family="SF Pro" font-size="11" font-weight="500" line-height="14" />
+  </styles>
+
+  <fonts>
+    <font family="SF Pro" source="system" weights="400 500 600 700" styles="normal" />
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <!-- Root Canvas, standard scrolling column for 390 width native screen -->
+  <col w="390" fill="$bg">
+    <!-- Combined Seamless Blended Gradient Header (Safe Area Spacer + NavHeader + Playlist Header Card) -->
+    <col w="fill" fill="linear-gradient(180deg, #3E247E 0%, #09080B 100%)" p="0 0 12 0">
+      <!-- Status Bar Spacer (Safe Area Top) -->
+      <col h="47" w="fill" />
+
+      <!-- Navigation Header -->
+      <row role="top-navigation-bar" p="12 16" align="middle-left" gap="auto" w="fill">
+        <!-- Back button -->
+        <row p="8" align="middle-center" w="32" h="32" radius="$radius-pill" fill="$surface">
+          <img src="https://api.iconify.design/lucide/arrow-left.svg?color=%23ffffff" w="18" h="18" />
+        </row>
+        <!-- Center text context -->
+        <text value="Playlist" text-style="Nav/Title" color="$text-primary" />
+        <!-- More menu -->
+        <row p="8" align="middle-center" w="32" h="32" radius="$radius-pill" fill="$surface">
+          <img src="https://api.iconify.design/lucide/more-vertical.svg?color=%23ffffff" w="18" h="18" />
+        </row>
+      </row>
+
+      <!-- Playlist Header Banner Details -->
+      <row p="16 16 8 16" gap="16" align="middle-left" w="fill">
+        <!-- Large Cover art image -->
+        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&amp;fit=crop&amp;w=240&amp;q=80" w="120" h="120" radius="$radius-card" fit="cover" />
+        
+        <!-- Playlist meta details -->
+        <col gap="6" w="222">
+          <text value="PLAYLIST" text-style="Micro" color="$primary" />
+          <text value="Late Night Reverie" text-style="Title/Playlist" color="$text-primary" />
+          <text value="Curated by Spotify • 48 songs, 2h 45m" text-style="Body" color="$text-secondary" />
+          <text value="Deep atmospheric electronic soundscapes for focused minds." text-style="Caption" color="$text-secondary" />
+        </col>
+      </row>
+    </col>
+
+    <!-- Playlist Play & Action Controls Row -->
+    <row p="8 16" align="middle-left" gap="auto" w="fill">
+      <row gap="18" align="middle-left">
+        <!-- Liked heart icon (Active in green) -->
+        <img src="https://api.iconify.design/lucide/heart.svg?color=%231ed760" w="22" h="22" />
+        <!-- Offline download status (Active green circle) -->
+        <img src="https://api.iconify.design/lucide/arrow-down-circle.svg?color=%231ed760" w="22" h="22" />
+        <!-- Shuffle controls -->
+        <img src="https://api.iconify.design/lucide/shuffle.svg?color=%239c98a6" w="22" h="22" />
+      </row>
+
+      <!-- Prominent play button -->
+      <row role="button" w="52" h="52" radius="26" fill="$primary" align="middle-center">
+        <img src="https://api.iconify.design/lucide/play.svg?color=%2309080b" w="24" h="24" />
+      </row>
+    </row>
+
+    <!-- Tracks List -->
+    <col p="12 16" gap="12" w="fill">
+
+      <!-- ================= TRACK 1 (Midnight City - Playing Active State) ================= -->
+      <row w="fill" gap="12" align="middle-left" p="8" radius="$radius-card" fill="$surface">
+        <!-- Equalizer animation speaker instead of number -->
+        <row w="16" h="16" align="middle-center">
+          <img src="https://api.iconify.design/lucide/volume-2.svg?color=%231ed760" w="14" h="14" />
+        </row>
+        <!-- Album cover -->
+        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&amp;fit=crop&amp;w=80&amp;q=80" w="40" h="40" radius="6" fit="cover" />
+        
+        <!-- Track details -->
+        <col gap="2" w="220">
+          <text value="Midnight City" text-style="Title/Song" color="$primary" />
+          <text value="M83" text-style="Body" color="$text-secondary" />
+        </col>
+        
+        <!-- Duration & Actions -->
+        <row gap="8" align="middle-right" w="50">
+          <text value="4:03" text-style="Caption" color="$text-secondary" />
+          <img src="https://api.iconify.design/lucide/more-vertical.svg?color=%239c98a6" w="16" h="16" />
+        </row>
+      </row>
+
+      <!-- ================= TRACK 2 (Intro) ================= -->
+      <row w="fill" gap="12" align="middle-left" p="8" radius="$radius-card">
+        <row w="16" h="16" align="middle-center">
+          <text value="2" text-style="Body" color="$text-secondary" />
+        </row>
+        <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&amp;fit=crop&amp;w=80&amp;q=80" w="40" h="40" radius="6" fit="cover" />
+        
+        <col gap="2" w="220">
+          <text value="Intro" text-style="Title/Song" color="$text-primary" />
+          <text value="The xx" text-style="Body" color="$text-secondary" />
+        </col>
+        
+        <row gap="8" align="middle-right" w="50">
+          <text value="2:08" text-style="Caption" color="$text-secondary" />
+          <img src="https://api.iconify.design/lucide/more-vertical.svg?color=%239c98a6" w="16" h="16" />
+        </row>
+      </row>
+
+      <!-- ================= TRACK 3 (Nightcall) ================= -->
+      <row w="fill" gap="12" align="middle-left" p="8" radius="$radius-card">
+        <row w="16" h="16" align="middle-center">
+          <text value="3" text-style="Body" color="$text-secondary" />
+        </row>
+        <img src="https://images.unsplash.com/photo-1507838153414-b4b713384a76?auto=format&amp;fit=crop&amp;w=80&amp;q=80" w="40" h="40" radius="6" fit="cover" />
+        
+        <col gap="2" w="220">
+          <text value="Nightcall" text-style="Title/Song" color="$text-primary" />
+          <text value="Kavinsky" text-style="Body" color="$text-secondary" />
+        </col>
+        
+        <row gap="8" align="middle-right" w="50">
+          <text value="4:18" text-style="Caption" color="$text-secondary" />
+          <img src="https://api.iconify.design/lucide/more-vertical.svg?color=%239c98a6" w="16" h="16" />
+        </row>
+      </row>
+
+      <!-- ================= TRACK 4 (After Hours) ================= -->
+      <row w="fill" gap="12" align="middle-left" p="8" radius="$radius-card">
+        <row w="16" h="16" align="middle-center">
+          <text value="4" text-style="Body" color="$text-secondary" />
+        </row>
+        <img src="https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?auto=format&amp;fit=crop&amp;w=80&amp;q=80" w="40" h="40" radius="6" fit="cover" />
+        
+        <col gap="2" w="220">
+          <text value="After Hours" text-style="Title/Song" color="$text-primary" />
+          <text value="The Weeknd" text-style="Body" color="$text-secondary" />
+        </col>
+        
+        <row gap="8" align="middle-right" w="50">
+          <text value="6:01" text-style="Caption" color="$text-secondary" />
+          <img src="https://api.iconify.design/lucide/more-vertical.svg?color=%239c98a6" w="16" h="16" />
+        </row>
+      </row>
+
+      <!-- ================= TRACK 5 (Resonance) ================= -->
+      <row w="fill" gap="12" align="middle-left" p="8" radius="$radius-card">
+        <row w="16" h="16" align="middle-center">
+          <text value="5" text-style="Body" color="$text-secondary" />
+        </row>
+        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&amp;fit=crop&amp;w=80&amp;q=80" w="40" h="40" radius="6" fit="cover" />
+        
+        <col gap="2" w="220">
+          <text value="Resonance" text-style="Title/Song" color="$text-primary" />
+          <text value="HOME" text-style="Body" color="$text-secondary" />
+        </col>
+        
+        <row gap="8" align="middle-right" w="50">
+          <text value="3:32" text-style="Caption" color="$text-secondary" />
+          <img src="https://api.iconify.design/lucide/more-vertical.svg?color=%239c98a6" w="16" h="16" />
+        </row>
+      </row>
+    </col>
+
+    <!-- Bottom Spacing margin before the sticky drawer -->
+    <col h="12" w="fill" />
+
+    <!-- ================= STICKY FLOATING PLAYER DRAWER ================= -->
+    <col p="0 16 16 16" w="fill">
+      <col fill="$surface-2" radius="$radius-card" p="12 12 10 12" gap="8" w="fill">
+        <!-- Top Metadata & controls -->
+        <row w="fill" align="middle-left" gap="auto">
+          <!-- Album art + title -->
+          <row gap="10" align="middle-left">
+            <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&amp;fit=crop&amp;w=80&amp;q=80" w="38" h="38" radius="6" fit="cover" />
+            <col gap="2">
+              <text value="Midnight City" text-style="Title/Song" color="$text-primary" />
+              <text value="M83 • Late Night Reverie" text-style="Micro" color="$text-secondary" />
+            </col>
+          </row>
+          
+          <!-- Speaker Cast + Pause button -->
+          <row gap="16" align="middle-right">
+            <img src="https://api.iconify.design/lucide/monitor-speaker.svg?color=%231ed760" w="20" h="20" />
+            <!-- Circular Solid White Pause circular card -->
+            <row role="button" w="32" h="32" radius="16" fill="#FFFFFF" align="middle-center">
+              <img src="https://api.iconify.design/lucide/pause.svg?color=%2309080b" w="16" h="16" />
+            </row>
+          </row>
+        </row>
+        
+        <!-- Beautiful custom music progress bar -->
+        <row w="fill" align="middle-center" gap="8">
+          <text value="1:24" text-style="Micro" color="$text-secondary" />
+          
+          <!-- Slider Track -->
+          <row role="slider" w="258" h="4" fill="$text-tertiary" radius="$radius-pill" align="middle-left">
+            <!-- Active Green Playback Time Line -->
+            <shape type="rect" w="108" h="4" fill="$primary" radius="$radius-pill" />
+          </row>
+          
+          <text value="4:03" text-style="Micro" color="$text-secondary" />
+        </row>
+      </col>
+    </col>
+
+    <!-- iOS Home Indicator Safe Area Bottom -->
+    <col h="34" w="fill" align="middle-center" p="0 0 10 0">
+      <shape type="rect" w="134" h="5" fill="$border" radius="$radius-pill" />
+    </col>
+  </col>
+</gui>

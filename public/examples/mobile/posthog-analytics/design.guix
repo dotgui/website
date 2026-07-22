@@ -1,0 +1,284 @@
+<gui version="0.2" name="PostHog Mobile Analytics">
+  <tokens>
+    <!-- PostHog Core Palette (notion.md-style guidelines for PostHog) -->
+    <color name="bg" value="#eeefe9" /> <!-- Warm Cream continuous canvas background -->
+    <color name="surface" value="#ffffff" /> <!-- Flat white card surface -->
+    <color name="surface-soft" value="#e5e7e0" /> <!-- Button secondary / sub-nav gray -->
+    <color name="border" value="#bfc1b7" /> <!-- Hairline card border -->
+    <color name="border-soft" value="#dcdfd2" />
+    
+    <!-- Chromatic Focus Accent (scarce yellow CTA) -->
+    <color name="primary" value="#f7a501" /> <!-- Saturated PostHog Yellow-Orange -->
+    <color name="on-primary" value="#23251d" /> <!-- Deep olive text on yellow -->
+    
+    <!-- Text Colors -->
+    <color name="ink" value="#23251d" /> <!-- Deep olive-charcoal near-black -->
+    <color name="body" value="#4d4f46" /> <!-- Olive-gray default paragraph text -->
+    <color name="text-secondary" value="#6c6e63" /> <!-- Muted labels -->
+    
+    <!-- Semantic & Docs Banners -->
+    <color name="accent-blue" value="#2c84e0" />
+    <color name="accent-blue-soft" value="#dceaf6" /> <!-- Docs Blue tip banner fill -->
+    <color name="success" value="#2c8c66" /> <!-- Glowing green for live active indicators -->
+    <color name="tint-mint" value="#dcece4" /> <!-- Soft mint tint behind success/positive pills -->
+    <color name="danger" value="#cd4239" />
+    
+    <!-- Sizing & Radii (Sober geometry) -->
+    <number name="radius-sm" value="4" />
+    <number name="radius-md" value="6" /> <!-- PostHog's signature 6px card/input radius -->
+    <number name="radius-lg" value="8" />
+    <number name="radius-pill" value="9999" />
+    
+    <!-- Spacing -->
+    <number name="space-xs" value="4" />
+    <number name="space-sm" value="8" />
+    <number name="space-md" value="12" />
+    <number name="space-lg" value="16" />
+    <number name="space-xl" value="24" />
+  </tokens>
+
+  <styles>
+    <text-style name="HeaderBrand" font-family="IBM Plex Sans" font-size="16" font-weight="700" line-height="20" letter-spacing="-0.3" />
+    <text-style name="Headline/Large" font-family="IBM Plex Sans" font-size="24" font-weight="800" line-height="30" letter-spacing="-0.6" />
+    <text-style name="Heading/Card" font-family="IBM Plex Sans" font-size="18" font-weight="700" line-height="24" />
+    <text-style name="Body" font-family="IBM Plex Sans" font-size="15" font-weight="400" line-height="22" />
+    <text-style name="Body/Strong" font-family="IBM Plex Sans" font-size="15" font-weight="600" line-height="22" />
+    <text-style name="Eyebrow" font-family="IBM Plex Sans" font-size="11" font-weight="700" line-height="15" letter-spacing="0.5" />
+    <text-style name="Caption" font-family="IBM Plex Sans" font-size="13" font-weight="500" line-height="17" />
+    <text-style name="Time" font-family="IBM Plex Sans" font-size="15" font-weight="600" line-height="18" />
+  </styles>
+
+  <fonts>
+    <font family="IBM Plex Sans" source="google" weights="400 500 600 700 800" styles="normal" />
+  </fonts>
+
+  <!-- Root Canvas: Scrollable mobile canvas on warm cream background -->
+  <col w="390" fill="$bg">
+    
+    <!-- 1. iPhone 14/15 Status Bar (olive elements) -->
+    <row w="390" h="47" p="0 24" align="middle-left" gap="auto" fill="$bg">
+      <text value="9:41" text-style="Time" color="$ink" />
+      <row gap="6" align="middle-right">
+        <img src="https://api.iconify.design/lucide/signal.svg?color=%2323251d" w="17" h="11" />
+        <img src="https://api.iconify.design/lucide/wifi.svg?color=%2323251d" w="17" h="11" />
+        <img src="https://api.iconify.design/lucide/battery.svg?color=%2323251d" w="20" h="11" />
+      </row>
+    </row>
+
+    <!-- 2. PostHog Navigation Header (1px bottom border) -->
+    <row role="top-navigation-bar" w="390" h="52" p="0 16" align="middle-left" gap="auto" fill="$bg" border-bottom="1 $border">
+      <row gap="8" align="middle-left">
+        <!-- Hedgehog emoji logo + brand text -->
+        <text value="🦔" font-family="IBM Plex Sans" font-size="18" line-height="20" />
+        <text value="posthog" text-style="HeaderBrand" color="$ink" />
+      </row>
+      <!-- Date Selector pill chip -->
+      <row role="chip" p="6 14" fill="$surface-soft" radius="$radius-pill" align="middle-center" stroke="$border" stroke-width="1" gap="4">
+        <text value="Last 7 days" font-family="IBM Plex Sans" font-size="13" font-weight="600" color="$ink" line-height="16" />
+        <img src="https://api.iconify.design/lucide/chevron-down.svg?color=%2323251d" w="14" h="14" />
+      </row>
+    </row>
+
+    <!-- 3. DASHBOARDS CONTENT FEED CONTAINER (extra bottom padding for tab bar) -->
+    <col w="390" p="16 16 96 16" gap="16">
+
+      <!-- === CARD 1: Live active visitor activity === -->
+      <col role="card" w="358" p="16" fill="$surface" radius="$radius-md" stroke="$border" stroke-width="1" gap="12">
+        <text value="LIVE ACTIVITY" text-style="Eyebrow" color="$body" w="326" />
+        <row gap="10" align="middle-left" w="326">
+          <ellipse fill="$success" w="10" h="10" />
+          <row gap="4" align="baseline">
+            <text value="142" text-style="Headline/Large" color="$ink" />
+            <text value="visitors active on site" text-style="Body" color="$body" />
+          </row>
+        </row>
+      </col>
+
+      <!-- === CARD 2: Product Web Analytics Pageviews === -->
+      <col role="card" w="358" p="16" fill="$surface" radius="$radius-md" stroke="$border" stroke-width="1" gap="14">
+        <row w="326" gap="auto" align="middle-left">
+          <text value="Product Analytics" text-style="Heading/Card" color="$ink" />
+          <!-- Tab switchers -->
+          <row role="segmented-control" gap="4" align="middle-right">
+            <row p="4 10" fill="$primary" radius="$radius-pill" align="middle-center">
+              <text value="Pageviews" font-family="IBM Plex Sans" font-size="12" font-weight="700" color="$on-primary" line-height="14" />
+            </row>
+            <row p="4 10" fill="none" radius="$radius-pill" align="middle-center">
+              <text value="Uniques" font-family="IBM Plex Sans" font-size="12" font-weight="600" color="$body" line-height="14" />
+            </row>
+          </row>
+        </row>
+        
+        <!-- Big Number details -->
+        <row gap="8" align="baseline" w="326">
+          <text value="12,842" text-style="Headline/Large" color="$ink" />
+          <row p="2 6" fill="$tint-mint" radius="$radius-pill" align="middle-center" stroke="$success" stroke-width="1">
+            <text value="+14.2%" font-family="IBM Plex Sans" font-size="11" font-weight="700" color="$success" line-height="13" />
+          </row>
+        </row>
+
+        <!-- Dynamic High-Fidelity Bar Chart -->
+        <row w="326" h="80" gap="10" align="bottom-left" p="8 0">
+          <rect fill="$surface-soft" w="20" h="30" radius="$radius-sm" />
+          <rect fill="$surface-soft" w="20" h="40" radius="$radius-sm" />
+          <rect fill="$surface-soft" w="20" h="50" radius="$radius-sm" />
+          <rect fill="$primary" w="20" h="75" radius="$radius-sm" />
+          <rect fill="$primary" w="20" h="65" radius="$radius-sm" />
+          <rect fill="$primary" w="20" h="80" radius="$radius-sm" />
+          <rect fill="$surface-soft" w="20" h="45" radius="$radius-sm" />
+          <rect fill="$surface-soft" w="20" h="55" radius="$radius-sm" />
+          <rect fill="$surface-soft" w="20" h="60" radius="$radius-sm" />
+          <rect fill="$surface-soft" w="20" h="48" radius="$radius-sm" />
+          <rect fill="$surface-soft" w="20" h="35" radius="$radius-sm" />
+        </row>
+        
+        <!-- Timeline Labels -->
+        <row w="326" gap="auto" align="middle-left">
+          <text value="May 20" text-style="Caption" color="$text-secondary" />
+          <text value="May 26" text-style="Caption" color="$text-secondary" />
+        </row>
+      </col>
+
+      <!-- === CARD 3: Conversion Funnel === -->
+      <col role="card" w="358" p="16" fill="$surface" radius="$radius-md" stroke="$border" stroke-width="1" gap="14">
+        <col gap="4" w="326">
+          <text value="CONVERSION FUNNEL" text-style="Eyebrow" color="$body" w="326" />
+          <text value="User Acquisition Funnel" text-style="Heading/Card" color="$ink" w="326" />
+        </col>
+
+        <!-- Funnel steps progress rows -->
+        <col w="326" gap="12">
+          <!-- Step 1 -->
+          <col gap="4" w="326">
+            <row w="326" gap="auto" align="middle-left">
+              <text value="1. Unique Visitors" text-style="Body/Strong" color="$ink" />
+              <text value="10,000 (100%)" text-style="Body" color="$body" />
+            </row>
+            <frame w="326" h="8">
+              <rect fill="$surface-soft" w="326" h="8" radius="4" abs="true" x="0" y="0" />
+              <rect fill="$primary" w="326" h="8" radius="4" abs="true" x="0" y="0" />
+            </frame>
+          </col>
+
+          <!-- Step 2 -->
+          <col gap="4" w="326">
+            <row w="326" gap="auto" align="middle-left">
+              <text value="2. Signups Created" text-style="Body/Strong" color="$ink" />
+              <text value="2,400 (24%)" text-style="Body" color="$body" />
+            </row>
+            <frame w="326" h="8">
+              <rect fill="$surface-soft" w="326" h="8" radius="4" abs="true" x="0" y="0" />
+              <rect fill="$primary" w="78" h="8" radius="4" abs="true" x="0" y="0" />
+            </frame>
+          </col>
+
+          <!-- Step 3 -->
+          <col gap="4" w="326">
+            <row w="326" gap="auto" align="middle-left">
+              <text value="3. Product Installed" text-style="Body/Strong" color="$ink" />
+              <text value="1,200 (12%)" text-style="Body" color="$body" />
+            </row>
+            <frame w="326" h="8">
+              <rect fill="$surface-soft" w="326" h="8" radius="4" abs="true" x="0" y="0" />
+              <rect fill="$primary" w="39" h="8" radius="4" abs="true" x="0" y="0" />
+            </frame>
+          </col>
+        </col>
+      </col>
+
+      <!-- === CARD 4: Referrer Traffic === -->
+      <col role="card" w="358" p="16" fill="$surface" radius="$radius-md" stroke="$border" stroke-width="1" gap="12">
+        <text value="TOP REFERRERS" text-style="Eyebrow" color="$body" w="326" />
+        
+        <col w="326" gap="10">
+          <!-- Item 1: Google -->
+          <col gap="4" w="326">
+            <row w="326" gap="auto" align="middle-left">
+              <text value="google.com" text-style="Body/Strong" color="$ink" />
+              <text value="5,842 (45%)" text-style="Body" color="$body" />
+            </row>
+            <frame w="326" h="6">
+              <rect fill="$surface-soft" w="326" h="6" radius="3" abs="true" x="0" y="0" />
+              <rect fill="$ink" w="146" h="6" radius="3" abs="true" x="0" y="0" />
+            </frame>
+          </col>
+          <!-- Item 2: GitHub -->
+          <col gap="4" w="326">
+            <row w="326" gap="auto" align="middle-left">
+              <text value="github.com" text-style="Body/Strong" color="$ink" />
+              <text value="3,204 (25%)" text-style="Body" color="$body" />
+            </row>
+            <frame w="326" h="6">
+              <rect fill="$surface-soft" w="326" h="6" radius="3" abs="true" x="0" y="0" />
+              <rect fill="$ink" w="81" h="6" radius="3" abs="true" x="0" y="0" />
+            </frame>
+          </col>
+          <!-- Item 3: Twitter -->
+          <col gap="4" w="326">
+            <row w="326" gap="auto" align="middle-left">
+              <text value="t.co (Twitter)" text-style="Body/Strong" color="$ink" />
+              <text value="1,842 (14%)" text-style="Body" color="$body" />
+            </row>
+            <frame w="326" h="6">
+              <rect fill="$surface-soft" w="326" h="6" radius="3" abs="true" x="0" y="0" />
+              <rect fill="$ink" w="45" h="6" radius="3" abs="true" x="0" y="0" />
+            </frame>
+          </col>
+        </col>
+      </col>
+
+      <!-- === CARD 5: PostHog Docs-style Blue Tip Banner === -->
+      <row role="banner" w="358" p="12 16" fill="$accent-blue-soft" radius="$radius-md" stroke="$accent-blue" stroke-width="1" gap="10" align="top-left">
+        <text value="💡" font-family="IBM Plex Sans" font-size="16" line-height="20" />
+        <text text-style="Body" color="$ink" w="302">
+          <segment value="Tip: Group session replays by referral source to understand high-value user paths." font-family="IBM Plex Sans" font-size="13" font-weight="500" color="$ink" />
+        </text>
+      </row>
+
+      <!-- === CARD 6: Hedgehog Mascot footer note card === -->
+      <row role="card" w="358" p="16" fill="$surface" radius="$radius-md" stroke="$border" stroke-width="1" gap="14" align="middle-left">
+        <text value="🦔" font-family="IBM Plex Sans" font-size="28" line-height="34" />
+        <col gap="2" w="284">
+          <text value="PostHog Pro Active" font-family="IBM Plex Sans" font-size="14" font-weight="700" color="$ink" />
+          <text value="Self-hosted analytics server is running smoothly." font-family="IBM Plex Sans" font-size="13" font-weight="400" color="$body" />
+        </col>
+      </row>
+
+    </col>
+
+    <!-- 4. Fixed Bottom Tab Bar Navigation (sits flat, matching PostHog design) -->
+    <col w="390" fill="$surface" border-top="1 $border">
+      
+      <!-- Tab icons -->
+      <row role="tab-bar" w="390" h="50" align="middle-left">
+        <!-- Tab 1: Dashboards (Active - PostHog Yellow) -->
+        <col gap="2" align="middle-center" w="97" h="48">
+          <img src="https://api.iconify.design/lucide/line-chart.svg?color=%23f7a501" w="24" h="24" />
+          <text value="Dashboards" font-family="IBM Plex Sans" font-size="10" font-weight="700" color="$primary" />
+        </col>
+        <!-- Tab 2: Replays -->
+        <col gap="2" align="middle-center" w="97" h="48">
+          <img src="https://api.iconify.design/lucide/video.svg?color=%236c6e63" w="24" h="24" />
+          <text value="Replays" font-family="IBM Plex Sans" font-size="10" font-weight="500" color="$body" />
+        </col>
+        <!-- Tab 3: Flags -->
+        <col gap="2" align="middle-center" w="98" h="48">
+          <img src="https://api.iconify.design/lucide/flag.svg?color=%236c6e63" w="24" h="24" />
+          <text value="Flags" font-family="IBM Plex Sans" font-size="10" font-weight="500" color="$body" />
+        </col>
+        <!-- Tab 4: Settings -->
+        <col gap="2" align="middle-center" w="98" h="48">
+          <img src="https://api.iconify.design/lucide/settings.svg?color=%236c6e63" w="24" h="24" />
+          <text value="Settings" font-family="IBM Plex Sans" font-size="10" font-weight="500" color="$body" />
+        </col>
+      </row>
+
+      <!-- iPhone safe area spacer at the bottom -->
+      <frame w="390" h="34" clip="true">
+        <rect fill="#23251d" w="140" h="5" radius="3" abs="true" x="125" y="15" />
+      </frame>
+
+    </col>
+
+  </col>
+</gui>

@@ -1,0 +1,125 @@
+<gui version="0.2" name="Lindholm Chair">
+  <tokens>
+    <color name="bg" value="#F4F1EC" />
+    <color name="surface" value="#FFFFFF" />
+    <color name="ink" value="#2C2925" />
+    <color name="muted" value="#8C857B" />
+    <color name="line" value="#E6E1D8" />
+    <color name="accent" value="#6B6258" />
+    <color name="sand" value="#DED6C8" />
+    <color name="desc" value="#6F6960" />
+    <color name="gold" value="#C7A16B" />
+  </tokens>
+  <fonts>
+    <font family="SF Pro Display" source="system" weights="400 600" styles="normal" />
+  </fonts>
+
+  <!-- No scroll in .gui: the canvas expands to ALL content. A viewport-fixed
+       bar must re-anchor to the BOTTOM of this expanded screen, not its old
+       viewport y. So: content-hugging col root + bar as the last flow child. -->
+  <col w="402" fill="$bg" align="top-center">
+
+      <!-- TOP BAR -->
+      <row w="fill" h="56" p="0 20" gap="auto" align="middle-center">
+        <row w="40" h="40" radius="999" fill="$surface" border="1 $line" align="middle-center">
+          <img src="https://api.iconify.design/lucide/chevron-left.svg?color=%232c2925" w="19" h="19" />
+        </row>
+        <row w="40" h="40" radius="999" fill="$surface" border="1 $line" align="middle-center">
+          <img src="https://api.iconify.design/lucide/heart.svg?color=%232c2925" w="19" h="19" />
+        </row>
+      </row>
+
+      <!-- HERO -->
+      <frame w="362" h="393" radius="26" clip fill="$sand">
+        <img abs x="0" y="0" w="362" h="393" src="assets/hero.png" fit="cover" />
+        <row abs x="151" y="369" gap="7" align="middle-center">
+          <rect w="22" h="7" radius="4" fill="#FFFFFF" />
+          <ellipse w="7" h="7" fill="#FFFFFF8C" />
+          <ellipse w="7" h="7" fill="#FFFFFF8C" />
+          <ellipse w="7" h="7" fill="#FFFFFF8C" />
+        </row>
+      </frame>
+
+      <!-- INFO -->
+      <col w="fill" p="24 24 0">
+        <text value="LOUNGE SEATING" font-family="SF Pro Display" font-size="12" font-weight="600" letter-spacing="1.92" text-case="uppercase" color="$muted" />
+        <row w="fill" gap="auto" align="top-left" pt="8">
+          <text w="210" value="Lindholm Lounge Chair" font-family="SF Pro Display" font-size="28" font-weight="600" letter-spacing="-0.28" line-height="32" color="$ink" />
+          <text value="$640" font-family="SF Pro Display" font-size="24" font-weight="600" color="$ink" />
+        </row>
+        <row gap="6" align="middle-center" pt="12">
+          <text value="★★★★★" font-family="SF Pro Display" font-size="13" letter-spacing="1" color="$gold" />
+          <text value="4.9 · 218 reviews" font-family="SF Pro Display" font-size="13" color="$muted" />
+        </row>
+        <text w="fill" pt="18" value="A quiet sculptural form in solid oak, paired with a softly tailored linen seat. Designed for slow mornings and unhurried evenings." font-family="SF Pro Display" font-size="14" line-height="24" color="$desc" />
+        <row gap="12" pt="22" align="middle-left">
+          <row w="40" h="40" radius="999" border="2 $accent" align="middle-center">
+            <ellipse w="30" h="30" fill="#DED6C8" />
+          </row>
+          <row w="40" h="40" radius="999" align="middle-center">
+            <ellipse w="32" h="32" fill="#A8998A" />
+          </row>
+          <row w="40" h="40" radius="999" align="middle-center">
+            <ellipse w="32" h="32" fill="#6F6960" />
+          </row>
+          <row w="40" h="40" radius="999" align="middle-center">
+            <ellipse w="32" h="32" fill="#3A352F" />
+          </row>
+        </row>
+      </col>
+
+      <!-- SPECS -->
+      <col w="fill" p="28 24 28">
+        <col w="fill" fill="$surface" border="1 $line" radius="20" p="6 18">
+          <row w="fill" p="15 0" gap="auto" align="middle-center" border-bottom="1 $line">
+            <row gap="10" align="middle-center">
+              <img src="https://api.iconify.design/lucide/layers.svg?color=%236b6258" w="17" h="17" />
+              <text value="Material" font-family="SF Pro Display" font-size="14" color="$muted" />
+            </row>
+            <text value="Solid Oak · Linen" font-family="SF Pro Display" font-size="14" font-weight="600" color="$ink" />
+          </row>
+          <row w="fill" p="15 0" gap="auto" align="middle-center" border-bottom="1 $line">
+            <row gap="10" align="middle-center">
+              <img src="https://api.iconify.design/lucide/maximize-2.svg?color=%236b6258" w="17" h="17" />
+              <text value="Dimensions" font-family="SF Pro Display" font-size="14" color="$muted" />
+            </row>
+            <text value="74 × 68 × 81 cm" font-family="SF Pro Display" font-size="14" font-weight="600" color="$ink" />
+          </row>
+          <row w="fill" p="15 0" gap="auto" align="middle-center" border-bottom="1 $line">
+            <row gap="10" align="middle-center">
+              <img src="https://api.iconify.design/lucide/shield.svg?color=%236b6258" w="17" h="17" />
+              <text value="Weight" font-family="SF Pro Display" font-size="14" color="$muted" />
+            </row>
+            <text value="9.2 kg" font-family="SF Pro Display" font-size="14" font-weight="600" color="$ink" />
+          </row>
+          <row w="fill" p="15 0" gap="auto" align="middle-center" border-bottom="1 $line">
+            <row gap="10" align="middle-center">
+              <img src="https://api.iconify.design/lucide/package.svg?color=%236b6258" w="17" h="17" />
+              <text value="Delivery" font-family="SF Pro Display" font-size="14" color="$muted" />
+            </row>
+            <text value="2–3 weeks" font-family="SF Pro Display" font-size="14" font-weight="600" color="$ink" />
+          </row>
+          <row w="fill" p="15 0" gap="auto" align="middle-center">
+            <row gap="10" align="middle-center">
+              <img src="https://api.iconify.design/lucide/shield-check.svg?color=%236b6258" w="17" h="17" />
+              <text value="Warranty" font-family="SF Pro Display" font-size="14" color="$muted" />
+            </row>
+            <text value="10 years" font-family="SF Pro Display" font-size="14" font-weight="600" color="$ink" />
+          </row>
+        </col>
+      </col>
+    <!-- BOTTOM BAR (was position:fixed → now bottom of the expanded screen) -->
+    <row w="fill" fill="#F4F1ECD9" border-top="1 $line" p="14 20 26" gap="14" align="middle-center">
+      <row h="54" fill="$surface" border="1 $line" radius="16" p="0 14" gap="14" align="middle-center" role="stepper">
+        <text value="−" font-family="SF Pro Display" font-size="20" color="$ink" />
+        <text value="1" font-family="SF Pro Display" font-size="16" font-weight="600" color="$ink" />
+        <text value="+" font-family="SF Pro Display" font-size="20" color="$ink" />
+      </row>
+      <row w="fill" h="54" radius="16" fill="$ink" gap="9" align="middle-center" role="button">
+        <img src="https://api.iconify.design/lucide/shopping-cart.svg?color=%23ffffff" w="18" h="18" />
+        <text value="Add to Cart" font-family="SF Pro Display" font-size="15" font-weight="600" color="#FFFFFF" />
+      </row>
+    </row>
+
+  </col>
+</gui>

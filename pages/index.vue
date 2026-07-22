@@ -370,7 +370,7 @@
       <div class="wrap foot-links">
         <span>.gui:the open file format for user interfaces</span>
         <span class="r">
-          <NuxtLink to="/spec">spec</NuxtLink><NuxtLink to="/cli">cli</NuxtLink><NuxtLink to="/kit">kit</NuxtLink><NuxtLink to="/embed">embed</NuxtLink><NuxtLink to="/figma">figma</NuxtLink><NuxtLink to="/faq">faq</NuxtLink><a href="/llms.txt">llms.txt</a><a href="https://github.com/dotgui/core" target="_blank" rel="noopener">github</a>
+          <NuxtLink to="/spec">spec</NuxtLink><NuxtLink to="/cli">cli</NuxtLink><NuxtLink to="/kit">kit</NuxtLink><NuxtLink to="/embed">embed</NuxtLink><NuxtLink to="/figma">figma</NuxtLink><NuxtLink to="/examples">examples</NuxtLink><NuxtLink to="/faq">faq</NuxtLink><a href="/llms.txt">llms.txt</a><a href="https://github.com/dotgui/core" target="_blank" rel="noopener">github</a>
         </span>
       </div>
       <p class="gridhint">these aren't pixels anymore:hover the grid and read them</p>
@@ -1036,6 +1036,11 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
   .hub-head { position: static; display: block; margin: 4px 0 10px; }
   .hub-node, .hub-center { position: static; width: 100%; transform: none; margin-bottom: 10px; box-shadow: none; }
   .hub-center { margin: 16px 0; }
+}
+
+@media (max-width: 600px) {
+  .foot-links { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .foot-links .r { flex-direction: column; align-items: flex-start; gap: 12px; }
 }
 </style>
 

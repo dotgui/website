@@ -1,11 +1,14 @@
 import { specSlugs } from './lib/spec-data'
 import { guideSlugs } from './lib/guides-data'
+import { exampleSlugs, examples } from './lib/examples-data'
 import { SITE_URL } from './utils/site-url'
 
 // Per-element spec pages, prerendered to static HTML for SEO/GEO.
 const specRoutes = specSlugs.map(slug => `/spec/${slug}`)
 // Per-guide pages, same treatment.
 const guideRoutes = guideSlugs.map(slug => `/guides/${slug}`)
+// Per-example detail pages — prerendered so the .gui source is in the HTML.
+const exampleRoutes = examples.map(e => `/examples/${e.category}/${e.slug}`)
 
 export default defineNuxtConfig({
   // Render real HTML so search engines and AI crawlers see content, not an
@@ -28,7 +31,14 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
-      routes: ['/', '/spec', '/spec/roles', '/spec/quality', '/cli', '/kit', '/embed', '/figma', '/faq', '/guides', ...specRoutes, ...guideRoutes]
+      routes: ['/', '/spec', '/spec/roles', '/spec/quality', '/cli', '/kit', '/embed', '/figma', '/faq', '/guides', '/examples', ...specRoutes, ...guideRoutes, ...exampleRoutes]
+    }
+  },
+  vue: {
+    // <gui-embed> is a custom element registered client-side by @dotgui/embed;
+    // tell the Vue compiler not to treat it as an unknown Vue component.
+    compilerOptions: {
+      isCustomElement: (tag) => tag === 'gui-embed'
     }
   },
   routeRules: {
@@ -42,6 +52,8 @@ export default defineNuxtConfig({
     '/faq': { prerender: true },
     '/guides': { prerender: true },
     '/guides/**': { prerender: true },
+    '/examples': { prerender: true },
+    '/examples/**': { prerender: true },
     // CodeMirror + panzoom editor  no SEO value, keep it a client-only SPA.
     '/playground': { ssr: false }
   },

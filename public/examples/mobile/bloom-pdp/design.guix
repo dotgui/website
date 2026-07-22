@@ -1,0 +1,62 @@
+<gui version="0.2" name="Bloom/PDP">
+  <tokens>
+    <color name="bg" value="#FBFDF7" /><color name="surface" value="#FFFFFF" /><color name="surface-variant" value="#E8F0DE" />
+    <color name="ink" value="#1A1C17" /><color name="text-2" value="#45483E" /><color name="outline" value="#C3C8B6" />
+    <color name="primary" value="#3F6B2E" /><color name="primary-cont" value="#C0EDA0" /><color name="on-cont" value="#0C2000" />
+    <number name="r-md" value="20" /><number name="r-lg" value="24" />
+  </tokens>
+  <fonts><font family="Roboto" source="google" weights="400 500 600 700" styles="normal" /></fonts>
+  <col w="412" fill="$bg">
+    <col w="fill">
+      <img src="https://picsum.photos/seed/monstera/824/720" w="412" h="360" fit="cover" />
+      <row w="fill" p="52 16 0" gap="auto" align="middle-center" abs>
+        <row w="40" h="40" radius="20" fill="#FFFFFFCC" align="middle-center"><img src="https://api.iconify.design/lucide/arrow-left.svg?color=%231A1C17" w="20" h="20" /></row>
+        <row gap="10" align="middle-center">
+          <row w="40" h="40" radius="20" fill="#FFFFFFCC" align="middle-center"><img src="https://api.iconify.design/lucide/share-2.svg?color=%231A1C17" w="18" h="18" /></row>
+          <row w="40" h="40" radius="20" fill="#FFFFFFCC" align="middle-center"><img src="https://api.iconify.design/lucide/heart.svg?color=%233F6B2E" w="18" h="18" /></row>
+        </row>
+      </row>
+    </col>
+    <col w="fill" p="20 18 8" gap="6">
+      <row w="fill" gap="auto" align="middle-center">
+        <col gap="2"><text value="Monstera Deliciosa" font-family="Roboto" font-size="24" font-weight="600" color="$ink" /><text value="Swiss cheese plant" font-family="Roboto" font-size="14" font-weight="400" color="$text-2" /></col>
+        <text value="$32" font-family="Roboto" font-size="24" font-weight="700" color="$ink" />
+      </row>
+      <row role="chip" p="4 10" radius="999" fill="$surface-variant" align="middle-center"><img src="https://api.iconify.design/lucide/star.svg?color=%233F6B2E" w="13" h="13" /><text value="  4.9  (132 reviews)" font-family="Roboto" font-size="13" font-weight="500" color="$on-cont" /></row>
+    </col>
+    <row w="fill" p="6 18 8" gap="8" align="middle-left" wrap>
+      <row role="chip" p="7 13" radius="999" fill="$surface-variant" align="middle-center"><text value="Bright indirect" font-family="Roboto" font-size="13" color="$on-cont" /></row>
+      <row role="chip" p="7 13" radius="999" fill="$surface-variant" align="middle-center"><text value="Water weekly" font-family="Roboto" font-size="13" color="$on-cont" /></row>
+      <row role="chip" p="7 13" radius="999" fill="$surface-variant" align="middle-center"><text value="Pet-unsafe" font-family="Roboto" font-size="13" color="$on-cont" /></row>
+      <row role="chip" p="7 13" radius="999" fill="$surface-variant" align="middle-center"><text value="Easy care" font-family="Roboto" font-size="13" color="$on-cont" /></row>
+    </row>
+    <col w="fill" p="8 18" gap="10">
+      <text value="Size" font-family="Roboto" font-size="15" font-weight="600" color="$ink" />
+      <row role="segmented-control" w="fill" gap="10" align="middle-center">
+        <col w="fill" p="12 0" radius="$r-md" fill="$surface" border="1 $outline" align="middle-center"><text value="Small" font-family="Roboto" font-size="13" font-weight="500" color="$text-2" /><text value="$24" font-family="Roboto" font-size="12" color="$text-2" /></col>
+        <col w="fill" p="12 0" radius="$r-md" fill="$primary-cont" border="1 $primary" align="middle-center"><text value="Medium" font-family="Roboto" font-size="13" font-weight="600" color="$on-cont" /><text value="$32" font-family="Roboto" font-size="12" color="$on-cont" /></col>
+        <col w="fill" p="12 0" radius="$r-md" fill="$surface" border="1 $outline" align="middle-center"><text value="Large" font-family="Roboto" font-size="13" font-weight="500" color="$text-2" /><text value="$48" font-family="Roboto" font-size="12" color="$text-2" /></col>
+      </row>
+    </col>
+    <col w="fill" p="8 18" gap="8">
+      <text value="About this plant" font-family="Roboto" font-size="15" font-weight="600" color="$ink" />
+      <text w="fill" value="A vigorous climber with iconic split leaves. Forgiving, fast-growing, and happiest in a bright spot out of direct sun." font-family="Roboto" font-size="14" font-weight="400" line-height="22" color="$text-2" />
+      <text role="hyperlink" value="Read more" font-family="Roboto" font-size="14" font-weight="600" color="$primary" />
+    </col>
+    <col w="fill" p="8 18 16">
+      <col role="card" w="fill" p="16" gap="12" radius="$r-md" fill="$surface-variant">
+        <row gap="10" align="middle-center"><img src="https://api.iconify.design/lucide/flower-2.svg?color=%233F6B2E" w="20" h="20" /><text value="Hand-glazed ceramic pot included" font-family="Roboto" font-size="14" color="$on-cont" /></row>
+        <row gap="10" align="middle-center"><img src="https://api.iconify.design/lucide/book-open.svg?color=%233F6B2E" w="20" h="20" /><text value="Printed care card" font-family="Roboto" font-size="14" color="$on-cont" /></row>
+        <row gap="10" align="middle-center"><img src="https://api.iconify.design/lucide/shield-check.svg?color=%233F6B2E" w="20" h="20" /><text value="30-day happy-plant guarantee" font-family="Roboto" font-size="14" color="$on-cont" /></row>
+      </col>
+    </col>
+    <row w="fill" p="14 18 28" gap="12" align="middle-center" fill="$surface" border-top="1 $outline">
+      <row gap="0" radius="999" border="1 $outline" align="middle-center">
+        <row w="42" h="42" align="middle-center"><img src="https://api.iconify.design/lucide/minus.svg?color=%2345483E" w="18" h="18" /></row>
+        <text value="1" font-family="Roboto" font-size="16" font-weight="600" color="$ink" w="28" align="center" />
+        <row w="42" h="42" align="middle-center"><img src="https://api.iconify.design/lucide/plus.svg?color=%2345483E" w="18" h="18" /></row>
+      </row>
+      <row role="button" w="fill" h="52" radius="999" fill="$primary" align="middle-center"><text value="Add to cart · $32" font-family="Roboto" font-size="15" font-weight="600" color="#FFFFFF" /></row>
+    </row>
+  </col>
+</gui>

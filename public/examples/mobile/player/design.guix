@@ -1,0 +1,162 @@
+<gui version="0.2" name="Now Playing">
+  <tokens>
+    <color name="dust" value="#241F1C" />
+    <color name="dust-2" value="#2E2823" />
+    <color name="dust-3" value="#3A322C" />
+    <color name="cream" value="#F3E9D8" />
+    <color name="cream-dim" value="#CABBA4" />
+    <color name="oxblood" value="#8C2F2A" />
+    <color name="oxblood-bright" value="#B5413A" />
+    <color name="ink" value="#16110F" />
+    <color name="line" value="#F3E9D817" />
+  </tokens>
+  <fonts>
+    <font family="Quicksand" source="google" weights="400 500 600 700" styles="normal" />
+  </fonts>
+
+  <!-- No scroll in .gui: expand to all content. sticky header → FIRST flow child;
+       fixed nav → LAST flow child (a sized frame so the FAB can overhang it). -->
+  <col w="402" fill="$dust">
+
+    <!-- HEADER (was position:sticky top → first child) -->
+    <col w="fill" p="14 22" fill="#241F1CD1" border-bottom="1 $line">
+      <row w="fill" gap="auto" align="middle-center">
+        <col gap="5">
+          <text value="LISTENING ROOM" font-family="Quicksand" font-size="10" font-weight="600" letter-spacing="3" text-case="uppercase" color="$oxblood-bright" />
+          <text value="Now Playing" font-family="Quicksand" font-size="21" font-weight="700" letter-spacing="-0.3" color="$cream" />
+        </col>
+        <row w="40" h="40" radius="999" fill="linear-gradient(150deg, #8C2F2A 0%, #5E1F1C 100%)" border="1 #F3E9D826" align="middle-center">
+          <text value="RM" font-family="Quicksand" font-size="14" font-weight="700" color="$cream" />
+        </row>
+      </row>
+    </col>
+
+    <!-- STREAM -->
+    <col w="fill" p="22 22 16">
+
+      <!-- NOW PLAYING CARD -->
+      <col w="fill" border="1 $line" radius="28" p="18">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(165deg, #3A322C 0%, #2E2823 100%)" />
+          <effect type="drop-shadow" x="0" y="24" radius="50" color="#000000B3" />
+        </appearance>
+
+        <row gap="8" align="middle-center" pb="16">
+          <ellipse w="8" h="8" fill="$oxblood-bright" />
+          <text value="STREAMING · LOSSLESS" font-family="Quicksand" font-size="10" font-weight="600" letter-spacing="2.5" text-case="uppercase" color="$cream-dim" />
+        </row>
+
+        <frame w="322" h="322" radius="20" clip>
+          <appearance>
+            <effect type="drop-shadow" x="0" y="18" radius="36" color="#000000A6" />
+          </appearance>
+          <img abs x="0" y="0" w="322" h="322" src="assets/cover.webp" fit="cover" />
+        </frame>
+
+        <col pt="18">
+          <text value="Velvet Static" font-family="Quicksand" font-size="23" font-weight="700" letter-spacing="-0.4" color="$cream" />
+          <text pt="5" value="Marlowe Quinn — Paper Lanterns" font-family="Quicksand" font-size="14" font-weight="500" color="$cream-dim" />
+        </col>
+
+        <col w="fill" pt="18">
+          <frame w="fill" h="5" radius="99" fill="#F3E9D81F" clip>
+            <rect abs x="0" y="0" w="135" h="5" radius="99" fill="linear-gradient(90deg, #8C2F2A 0%, #B5413A 100%)" />
+          </frame>
+          <row w="fill" pt="7" gap="auto" align="middle-center">
+            <text value="1:42" font-family="Quicksand" font-size="11" font-weight="600" letter-spacing="0.5" color="$cream-dim" />
+            <text value="4:05" font-family="Quicksand" font-size="11" font-weight="600" letter-spacing="0.5" color="$cream-dim" />
+          </row>
+        </col>
+
+        <row w="fill" pt="18" p="18 6 0" gap="auto" align="middle-center" role="toolbar">
+          <img src="https://api.iconify.design/lucide/shuffle.svg?color=%23f3e9d8" w="20" h="20" opacity="0.55" />
+          <img src="https://api.iconify.design/lucide/skip-back.svg?color=%23f3e9d8" w="26" h="26" opacity="0.85" />
+          <row w="60" h="60" radius="999" fill="$cream" align="middle-center" role="button">
+            <img src="https://api.iconify.design/lucide/pause.svg?color=%2316110f" w="22" h="22" />
+          </row>
+          <img src="https://api.iconify.design/lucide/skip-forward.svg?color=%23f3e9d8" w="26" h="26" opacity="0.85" />
+          <img src="https://api.iconify.design/lucide/repeat.svg?color=%23f3e9d8" w="20" h="20" opacity="0.55" />
+        </row>
+      </col>
+
+      <!-- UP NEXT -->
+      <row w="fill" pt="30" pb="14" gap="auto" align="bottom-left">
+        <text value="Up Next" font-family="Quicksand" font-size="16" font-weight="700" letter-spacing="-0.2" color="$cream" />
+        <text value="Clear" font-family="Quicksand" font-size="12" font-weight="600" color="$oxblood-bright" role="hyperlink" />
+      </row>
+
+      <col w="fill" gap="10">
+        <row w="fill" gap="13" align="middle-center" fill="$dust-2" border="1 $line" radius="18" p="10 12" role="card">
+          <frame w="50" h="50" radius="13" clip>
+            <img abs x="0" y="0" w="50" h="50" src="assets/q1.webp" fit="cover" />
+          </frame>
+          <col w="fill" gap="2">
+            <text w="fill" truncate value="Amber Hours" font-family="Quicksand" font-size="14" font-weight="600" color="$cream" />
+            <text w="fill" truncate value="Sable Wren" font-family="Quicksand" font-size="12" font-weight="500" color="$cream-dim" />
+          </col>
+          <text value="3:28" font-family="Quicksand" font-size="11" font-weight="600" color="$cream-dim" />
+        </row>
+        <row w="fill" gap="13" align="middle-center" fill="$dust-2" border="1 $line" radius="18" p="10 12" role="card">
+          <frame w="50" h="50" radius="13" clip>
+            <img abs x="0" y="0" w="50" h="50" src="assets/q2.webp" fit="cover" />
+          </frame>
+          <col w="fill" gap="2">
+            <text w="fill" truncate value="Low Tide Letters" font-family="Quicksand" font-size="14" font-weight="600" color="$cream" />
+            <text w="fill" truncate value="The Hollows" font-family="Quicksand" font-size="12" font-weight="500" color="$cream-dim" />
+          </col>
+          <text value="5:11" font-family="Quicksand" font-size="11" font-weight="600" color="$cream-dim" />
+        </row>
+        <row w="fill" gap="13" align="middle-center" fill="$dust-2" border="1 $line" radius="18" p="10 12" role="card">
+          <frame w="50" h="50" radius="13" clip>
+            <img abs x="0" y="0" w="50" h="50" src="assets/q3.webp" fit="cover" />
+          </frame>
+          <col w="fill" gap="2">
+            <text w="fill" truncate value="Paper Lanterns" font-family="Quicksand" font-size="14" font-weight="600" color="$cream" />
+            <text w="fill" truncate value="Marlowe Quinn" font-family="Quicksand" font-size="12" font-weight="500" color="$cream-dim" />
+          </col>
+          <text value="2:54" font-family="Quicksand" font-size="11" font-weight="600" color="$cream-dim" />
+        </row>
+        <row w="fill" gap="13" align="middle-center" fill="$dust-2" border="1 $line" radius="18" p="10 12" role="card">
+          <frame w="50" h="50" radius="13" clip>
+            <img abs x="0" y="0" w="50" h="50" src="assets/q4.webp" fit="cover" />
+          </frame>
+          <col w="fill" gap="2">
+            <text w="fill" truncate value="Slow Cinema" font-family="Quicksand" font-size="14" font-weight="600" color="$cream" />
+            <text w="fill" truncate value="Elias Brook" font-family="Quicksand" font-size="12" font-weight="500" color="$cream-dim" />
+          </col>
+          <text value="4:46" font-family="Quicksand" font-size="11" font-weight="600" color="$cream-dim" />
+        </row>
+      </col>
+    </col>
+
+    <!-- NAV (was position:fixed bottom; FAB overhangs → sized frame, FAB abs above bar) -->
+    <frame w="402" h="106">
+      <row abs x="0" y="22" w="402" h="84" p="0 26" fill="#1E1A17E6" border-top="1 $line" gap="80" align="middle-center" role="tab-bar">
+        <row w="fill" gap="auto" align="middle-center">
+          <col gap="4" align="middle-center">
+            <img src="https://api.iconify.design/lucide/home.svg?color=%23f3e9d8" w="22" h="22" />
+            <text value="Home" font-family="Quicksand" font-size="9" font-weight="600" letter-spacing="0.5" color="$cream" />
+          </col>
+          <col gap="4" align="middle-center">
+            <img src="https://api.iconify.design/lucide/search.svg?color=%23cabba4" w="22" h="22" />
+            <text value="Search" font-family="Quicksand" font-size="9" font-weight="600" letter-spacing="0.5" color="$cream-dim" />
+          </col>
+        </row>
+        <row w="fill" gap="auto" align="middle-center">
+          <col gap="4" align="middle-center">
+            <img src="https://api.iconify.design/lucide/menu.svg?color=%23cabba4" w="22" h="22" />
+            <text value="Library" font-family="Quicksand" font-size="9" font-weight="600" letter-spacing="0.5" color="$cream-dim" />
+          </col>
+          <col gap="4" align="middle-center">
+            <img src="https://api.iconify.design/lucide/user.svg?color=%23cabba4" w="22" h="22" />
+            <text value="Profile" font-family="Quicksand" font-size="9" font-weight="600" letter-spacing="0.5" color="$cream-dim" />
+          </col>
+        </row>
+      </row>
+      <row abs x="169" y="0" w="64" h="64" radius="999" fill="linear-gradient(150deg, #B5413A 0%, #8C2F2A 100%)" border="4 $dust" align="middle-center" role="button">
+        <img src="https://api.iconify.design/lucide/play.svg?color=%23f3e9d8" w="26" h="26" />
+      </row>
+    </frame>
+
+  </col>
+</gui>

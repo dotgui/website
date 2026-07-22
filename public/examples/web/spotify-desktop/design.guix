@@ -1,0 +1,520 @@
+<gui version="0.2" name="SpotifyDesktop">
+  <tokens>
+    <!-- Spotify Premium Dark Brand Palette -->
+    <color name="bg-base" value="#000000" />
+    <color name="bg-main" value="#121212" />
+    <color name="surface-card" value="#181818" />
+    <color name="surface-card-hover" value="#242424" />
+    <color name="surface-elevated" value="#282828" />
+    <color name="accent-green" value="#1DB954" />
+    
+    <!-- Text Colors -->
+    <color name="text-primary" value="#FFFFFF" />
+    <color name="text-secondary" value="#B3B3B3" />
+    <color name="text-muted" value="#727272" />
+    <color name="border-hairline" value="#202020" />
+
+    <!-- Radii -->
+    <number name="radius-sm" value="4" />
+    <number name="radius-md" value="8" />
+    <number name="radius-full" value="9999" />
+  </tokens>
+
+  <styles>
+    <!-- Spotify Typography Style Scale -->
+    <text-style name="Sidebar/Item" font-family="Inter" font-size="14" font-weight="600" line-height="20" />
+    <text-style name="Sidebar/LibraryHeader" font-family="Inter" font-size="14" font-weight="600" line-height="20" />
+    <text-style name="Sidebar/Pill" font-family="Inter" font-size="12" font-weight="500" line-height="16" />
+    <text-style name="Sidebar/CardTitle" font-family="Inter" font-size="13" font-weight="600" line-height="18" />
+    <text-style name="Sidebar/CardDesc" font-family="Inter" font-size="11" font-weight="400" line-height="16" />
+
+    <text-style name="Dashboard/Greeting" font-family="Inter" font-size="28" font-weight="600" line-height="34" letter-spacing="-0.6" />
+    <text-style name="Dashboard/SectionHeader" font-family="Inter" font-size="20" font-weight="600" line-height="26" letter-spacing="-0.4" />
+    <text-style name="Dashboard/QuickTitle" font-family="Inter" font-size="13" font-weight="600" line-height="18" />
+    
+    <text-style name="AlbumCard/Title" font-family="Inter" font-size="13" font-weight="600" line-height="16" />
+    <text-style name="AlbumCard/Desc" font-family="Inter" font-size="11" font-weight="400" line-height="14" />
+
+    <text-style name="Rightbar/Header" font-family="Inter" font-size="15" font-weight="600" line-height="20" />
+    <text-style name="Rightbar/SectionHeader" font-family="Inter" font-size="13" font-weight="600" line-height="18" />
+    <text-style name="Rightbar/Text" font-family="Inter" font-size="11" font-weight="400" line-height="15" />
+
+    <text-style name="Player/TrackTitle" font-family="Inter" font-size="14" font-weight="600" line-height="18" />
+    <text-style name="Player/TrackArtist" font-family="Inter" font-size="12" font-weight="400" line-height="16" />
+    <text-style name="Player/Time" font-family="Inter" font-size="11" font-weight="400" line-height="14" />
+  </styles>
+
+  <fonts>
+    <font family="Inter" source="google" weights="400 500 600" styles="normal" />
+  </fonts>
+
+  <!-- Root Canvas (Fixed Desktop Frame: 1440w x 900h) -->
+  <frame w="1440" h="900" fill="$bg-base" clip="true">
+
+    <!-- ==================== LEFT SIDEBAR NAVIGATION ==================== -->
+    <col role="sidebar" w="240" h="112" fill="$bg-main" radius="$radius-md" p="16 20" gap="16" abs="true" x="8" y="8">
+      <!-- Home (Active) -->
+      <row w="fill" gap="16" align="middle-left">
+        <img src="https://api.iconify.design/lucide/home.svg?color=%23ffffff" w="22" h="22" />
+        <text value="Home" text-style="Sidebar/Item" color="$text-primary" />
+      </row>
+      
+      <!-- Search (Inactive) -->
+      <row w="fill" gap="16" align="middle-left">
+        <img src="https://api.iconify.design/lucide/search.svg?color=%23b3b3b3" w="22" h="22" />
+        <text value="Search" text-style="Sidebar/Item" color="$text-secondary" />
+      </row>
+    </col>
+
+    <!-- ==================== LEFT SIDEBAR LIBRARY ==================== -->
+    <col role="navigation-menu" w="240" h="674" fill="$bg-main" radius="$radius-md" p="14" gap="12" abs="true" x="8" y="128">
+      <!-- Library Header -->
+      <row w="fill" gap="auto" align="middle-left">
+        <row gap="10" align="middle-left">
+          <img src="https://api.iconify.design/lucide/library.svg?color=%23b3b3b3" w="22" h="22" />
+          <text value="Your Library" text-style="Sidebar/LibraryHeader" color="$text-secondary" />
+        </row>
+        <row gap="10" align="middle-right">
+          <img src="https://api.iconify.design/lucide/plus.svg?color=%23b3b3b3" w="18" h="18" />
+          <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23b3b3b3" w="18" h="18" />
+        </row>
+      </row>
+
+      <!-- Filter Pills -->
+      <row w="fill" gap="6" align="middle-left">
+        <row role="chip" fill="$surface-card-hover" radius="10" p="4 10" align="middle-center">
+          <text value="Playlists" text-style="Sidebar/Pill" color="$text-primary" />
+        </row>
+        <row role="chip" fill="$surface-card-hover" radius="10" p="4 10" align="middle-center">
+          <text value="Artists" text-style="Sidebar/Pill" color="$text-primary" />
+        </row>
+      </row>
+
+      <!-- Scrollable list representation (Tightly packed with 7 items) -->
+      <col w="fill" gap="8">
+        
+        <!-- List Item 1: Liked Songs -->
+        <row w="fill" gap="10" align="middle-left" p="2" radius="$radius-sm">
+          <!-- Liked Songs Gradient Thumbnail -->
+          <frame w="38" h="38" fill="linear-gradient(135deg, #450af5 0%, #c4efd9 100%)" radius="$radius-sm">
+            <img src="https://api.iconify.design/lucide/heart.svg?color=%23ffffff" w="16" h="16" abs="true" x="11" y="11" />
+          </frame>
+          <col gap="1">
+            <text value="Liked Songs" text-style="Sidebar/CardTitle" color="$text-primary" />
+            <row gap="4" align="middle-left">
+              <img src="https://api.iconify.design/lucide/pin.svg?color=%231db954" w="10" h="10" />
+              <text value="Playlist • 420 songs" text-style="Sidebar/CardDesc" color="$text-secondary" />
+            </row>
+          </col>
+        </row>
+
+        <!-- List Item 2: Discover Weekly -->
+        <row w="fill" gap="10" align="middle-left" p="2">
+          <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="38" h="38" radius="$radius-sm" fit="cover" />
+          <col gap="1">
+            <text value="Nevermind – Nirvana" text-style="Sidebar/CardTitle" color="$text-primary" />
+            <text value="Album • 1991" text-style="Sidebar/CardDesc" color="$text-secondary" />
+          </col>
+        </row>
+
+        <!-- List Item 3: Chill Lofi Beats -->
+        <row w="fill" gap="10" align="middle-left" p="2">
+          <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="38" h="38" radius="$radius-sm" fit="cover" />
+          <col gap="1">
+            <text value="Jagged Little Pill" text-style="Sidebar/CardTitle" color="$text-primary" />
+            <text value="Album • Alanis Morissette" text-style="Sidebar/CardDesc" color="$text-secondary" />
+          </col>
+        </row>
+
+        <!-- List Item 4: Release Radar -->
+        <row w="fill" gap="10" align="middle-left" p="2">
+          <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="38" h="38" radius="$radius-sm" fit="cover" />
+          <col gap="1">
+            <text value="Ready to Die – Biggie" text-style="Sidebar/CardTitle" color="$text-primary" />
+            <text value="Album • 1994" text-style="Sidebar/CardDesc" color="$text-secondary" />
+          </col>
+        </row>
+
+        <!-- List Item 5: Lofi Coding Mix -->
+        <row w="fill" gap="10" align="middle-left" p="2">
+          <img src="https://images.unsplash.com/photo-1598387846148-47e82ee120cc?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="38" h="38" radius="$radius-sm" fit="cover" />
+          <col gap="1">
+            <text value="All Eyez on Me" text-style="Sidebar/CardTitle" color="$text-primary" />
+            <text value="Album • 2Pac" text-style="Sidebar/CardDesc" color="$text-secondary" />
+          </col>
+        </row>
+
+        <!-- List Item 6: Next.js Radio -->
+        <row w="fill" gap="10" align="middle-left" p="2">
+          <img src="https://images.unsplash.com/photo-1470229538611-16ba8c7ffbd7?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="38" h="38" radius="$radius-sm" fit="cover" />
+          <col gap="1">
+            <text value="Spiceworld – Spice Girls" text-style="Sidebar/CardTitle" color="$text-primary" />
+            <text value="Album • 1997" text-style="Sidebar/CardDesc" color="$text-secondary" />
+          </col>
+        </row>
+
+        <!-- List Item 7: Auto Layout Sessions -->
+        <row w="fill" gap="10" align="middle-left" p="2">
+          <img src="https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="38" h="38" radius="$radius-sm" fit="cover" />
+          <col gap="1">
+            <text value="90's Hip Hop Mix" text-style="Sidebar/CardTitle" color="$text-primary" />
+            <text value="Playlist • Jinson Johny" text-style="Sidebar/CardDesc" color="$text-secondary" />
+          </col>
+        </row>
+
+      </col>
+    </col>
+
+    <!-- ==================== CENTRAL MUSIC CONTENT AREA ==================== -->
+    <col w="888" h="794" fill="$bg-main" radius="$radius-md" abs="true" x="256" y="8" clip="true" gap="0">
+      
+      <!-- Top Action bar -->
+      <row role="toolbar" w="fill" h="60" p="12 24" align="middle-left" gap="auto">
+        <!-- Navigation Chevrons -->
+        <row gap="8" align="middle-left">
+          <row w="28" h="28" fill="#000000B3" radius="14" align="middle-center">
+            <img src="https://api.iconify.design/lucide/chevron-left.svg?color=%23ffffff" w="18" h="18" />
+          </row>
+          <row w="28" h="28" fill="#000000B3" radius="14" align="middle-center">
+            <img src="https://api.iconify.design/lucide/chevron-right.svg?color=%23ffffff" w="18" h="18" />
+          </row>
+        </row>
+
+        <!-- User Controls -->
+        <row gap="12" align="middle-right">
+          <!-- Premium Badge -->
+          <row role="badge" fill="$text-primary" radius="12" p="4 12" align="middle-center">
+            <text value="Explore Premium" font-family="Inter" font-size="12" font-weight="600" color="#000000" />
+          </row>
+          <!-- Profile Profile -->
+          <row role="avatar" fill="#000000B3" radius="14" p="2" gap="8" align="middle-left">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="24" h="24" radius="12" fit="cover" />
+          </row>
+        </row>
+      </row>
+
+      <!-- Inner Dashboard Scroll flow (Tightly Packed with minimal padding) -->
+      <col w="fill" h="734" clip="true" p="0 24 24 24" gap="24">
+        
+        <!-- Section 1: Good Evening Quick Play Grid (Curated Vibrant Pics, No hover buttons) -->
+        <col w="fill" gap="12">
+          <text value="Good evening" text-style="Dashboard/Greeting" color="$text-primary" />
+          
+          <grid cols="268 268 268" gap="12" w="828">
+            
+            <!-- Quick item 1 -->
+            <row role="card" w="fill" fill="$surface-card" radius="$radius-sm" gap="12" align="middle-left" clip="true" gc="1" gr="1" h="56">
+              <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" w="56" h="56" fit="cover" />
+              <text value="Teen Spirit – Nirvana" text-style="Dashboard/QuickTitle" color="$text-primary" />
+            </row>
+
+            <!-- Quick item 2 -->
+            <row role="card" w="fill" fill="$surface-card" radius="$radius-sm" gap="12" align="middle-left" clip="true" gc="2" gr="1" h="56">
+              <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" w="56" h="56" fit="cover" />
+              <text value="Waterfalls – TLC" text-style="Dashboard/QuickTitle" color="$text-primary" />
+            </row>
+
+            <!-- Quick item 3 -->
+            <row role="card"  w="fill" fill="$surface-card" radius="$radius-sm" gap="12" align="middle-left" clip="true" gc="3" gr="1" h="56">
+              <img src="https://images.unsplash.com/photo-1470229538611-16ba8c7ffbd7?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" w="56" h="56" fit="cover" />
+              <text value="Wannabe – Spice Girls" text-style="Dashboard/QuickTitle" color="$text-primary" />
+            </row>
+
+            <!-- Quick item 4 -->
+            <row role="card" w="fill" fill="$surface-card" radius="$radius-sm" gap="12" align="middle-left" clip="true" gc="1" gr="2" h="56">
+              <img src="https://images.unsplash.com/photo-1598387846148-47e82ee120cc?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" w="56" h="56" fit="cover" />
+              <text value="California Love – 2Pac" text-style="Dashboard/QuickTitle" color="$text-primary" />
+            </row>
+
+            <!-- Quick item 5 -->
+            <row role="card" w="fill" fill="$surface-card" radius="$radius-sm" gap="12" align="middle-left" clip="true" gc="2" gr="2" h="56">
+              <frame w="56" h="56" fill="linear-gradient(135deg, #450af5 0%, #c4efd9 100%)">
+                <img src="https://api.iconify.design/lucide/heart.svg?color=%23ffffff" w="24" h="24" abs="true" x="16" y="16" />
+              </frame>
+              <text value="Liked Songs" text-style="Dashboard/QuickTitle" color="$text-primary" />
+            </row>
+
+            <!-- Quick item 6 -->
+            <row role="card" w="fill" fill="$surface-card" radius="$radius-sm" gap="12" align="middle-left" clip="true" gc="3" gr="2" h="56">
+              <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&amp;fit=crop&amp;w=100&amp;h=100&amp;q=80" w="56" h="56" fit="cover" />
+              <text value="Hypnotize – Biggie" text-style="Dashboard/QuickTitle" color="$text-primary" />
+            </row>
+
+          </grid>
+        </col>
+
+        <!-- Section 2: Recently Played Curated Cards (Curated Vibrant Pics: 156px wide each) -->
+        <col w="fill" gap="12">
+          <row w="fill" gap="auto" align="bottom-left">
+            <text value="Recently Played" text-style="Dashboard/SectionHeader" color="$text-primary" />
+            <text value="Show all" font-family="Inter" font-size="12" font-weight="600" color="$text-secondary" />
+          </row>
+
+          <row gap="12" align="top-left">
+            <!-- Card 1 -->
+            <col role="card" w="156" fill="$surface-card" p="12" radius="$radius-md" gap="8" align="top-left">
+              <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=132&amp;h=132&amp;q=80" w="132" h="132" radius="$radius-md" fit="cover" />
+              <col gap="2">
+                <text value="Nevermind" text-style="AlbumCard/Title" color="$text-primary" />
+                <text value="Nirvana • 1991" text-style="AlbumCard/Desc" color="$text-secondary" />
+              </col>
+            </col>
+
+            <!-- Card 2 -->
+            <col role="card" w="156" fill="$surface-card" p="12" radius="$radius-md" gap="8" align="top-left">
+              <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&amp;fit=crop&amp;w=132&amp;h=132&amp;q=80" w="132" h="132" radius="$radius-md" fit="cover" />
+              <col gap="2">
+                <text value="CrazySexyCool" text-style="AlbumCard/Title" color="$text-primary" />
+                <text value="TLC • 1994" text-style="AlbumCard/Desc" color="$text-secondary" />
+              </col>
+            </col>
+
+            <!-- Card 3 -->
+            <col role="card" w="156" fill="$surface-card" p="12" radius="$radius-md" gap="8" align="top-left">
+              <img src="https://images.unsplash.com/photo-1470229538611-16ba8c7ffbd7?auto=format&amp;fit=crop&amp;w=132&amp;h=132&amp;q=80" w="132" h="132" radius="$radius-md" fit="cover" />
+              <col gap="2">
+                <text value="Spice" text-style="AlbumCard/Title" color="$text-primary" />
+                <text value="Spice Girls • 1996" text-style="AlbumCard/Desc" color="$text-secondary" />
+              </col>
+            </col>
+
+            <!-- Card 4 -->
+            <col role="card" w="156" fill="$surface-card" p="12" radius="$radius-md" gap="8" align="top-left">
+              <img src="https://images.unsplash.com/photo-1598387846148-47e82ee120cc?auto=format&amp;fit=crop&amp;w=132&amp;h=132&amp;q=80" w="132" h="132" radius="$radius-md" fit="cover" />
+              <col gap="2">
+                <text value="All Eyez on Me" text-style="AlbumCard/Title" color="$text-primary" />
+                <text value="2Pac • 1996" text-style="AlbumCard/Desc" color="$text-secondary" />
+              </col>
+            </col>
+
+            <!-- Card 5 -->
+            <col role="card" w="156" fill="$surface-card" p="12" radius="$radius-md" gap="8" align="top-left">
+              <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&amp;fit=crop&amp;w=132&amp;h=132&amp;q=80" w="132" h="132" radius="$radius-md" fit="cover" />
+              <col gap="2">
+                <text value="Ready to Die" text-style="AlbumCard/Title" color="$text-primary" />
+                <text value="The Notorious B.I.G. • 1994" text-style="AlbumCard/Desc" color="$text-secondary" />
+              </col>
+            </col>
+
+          </row>
+        </col>
+
+        <!-- Section 3: Made For Jinson Category -->
+        <col w="fill" gap="12">
+          <row w="fill" gap="auto" align="bottom-left">
+            <text value="Made for Jinson" text-style="Dashboard/SectionHeader" color="$text-primary" />
+            <text value="Show all" font-family="Inter" font-size="12" font-weight="600" color="$text-secondary" />
+          </row>
+
+          <row gap="12" align="top-left">
+            <!-- Card 1 -->
+            <col role="card" w="156" fill="$surface-card" p="12" radius="$radius-md" gap="8" align="top-left" >
+              <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=132&amp;h=132&amp;q=80" w="132" h="132" radius="$radius-md" fit="cover" />
+              <col gap="2">
+                <text value="Jinson's 90s Mix" text-style="AlbumCard/Title" color="$text-primary" />
+                <text value="Nirvana · TLC · 2Pac" text-style="AlbumCard/Desc" color="$text-secondary" />
+              </col>
+            </col>
+
+            <!-- Card 2 -->
+            <col role="card" w="156" fill="$surface-card" p="12" radius="$radius-md" gap="8" align="top-left">
+              <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&amp;fit=crop&amp;w=132&amp;h=132&amp;q=80" w="132" h="132" radius="$radius-md" fit="cover" />
+              <col gap="2">
+                <text value="Jinson's R&amp;amp;B Mix" text-style="AlbumCard/Title" color="$text-primary" />
+                <text value="TLC · Mariah · Whitney" text-style="AlbumCard/Desc" color="$text-secondary" />
+              </col>
+            </col>
+
+            <!-- Card 3 -->
+            <col role="card" w="156" fill="$surface-card" p="12" radius="$radius-md" gap="8" align="top-left">
+              <img src="https://images.unsplash.com/photo-1470229538611-16ba8c7ffbd7?auto=format&amp;fit=crop&amp;w=132&amp;h=132&amp;q=80" w="132" h="132" radius="$radius-md" fit="cover" />
+              <col gap="2">
+                <text value="Jinson's Pop Mix" text-style="AlbumCard/Title" color="$text-primary" />
+                <text value="Spice Girls · Backstreet Boys" text-style="AlbumCard/Desc" color="$text-secondary" />
+              </col>
+            </col>
+
+            <!-- Card 4 -->
+            <col role="card" w="156" fill="$surface-card" p="12" radius="$radius-md" gap="8" align="top-left">
+              <img src="https://images.unsplash.com/photo-1598387846148-47e82ee120cc?auto=format&amp;fit=crop&amp;w=132&amp;h=132&amp;q=80" w="132" h="132" radius="$radius-md" fit="cover" />
+              <col gap="2">
+                <text value="Jinson's Hip-Hop Mix" text-style="AlbumCard/Title" color="$text-primary" />
+                <text value="2Pac · Biggie · Jay-Z" text-style="AlbumCard/Desc" color="$text-secondary" />
+              </col>
+            </col>
+
+            <!-- Card 5 -->
+            <col role="card" w="156" fill="$surface-card" p="12" radius="$radius-md" gap="8" align="top-left">
+              <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&amp;fit=crop&amp;w=132&amp;h=132&amp;q=80" w="132" h="132" radius="$radius-md" fit="cover" />
+              <col gap="2">
+                <text value="Jinson's Grunge Mix" text-style="AlbumCard/Title" color="$text-primary" />
+                <text value="Nirvana · Pearl Jam · STP" text-style="AlbumCard/Desc" color="$text-secondary" />
+              </col>
+            </col>
+
+          </row>
+        </col>
+
+      </col>
+    </col>
+
+    <!-- ==================== RIGHT SIDEBAR: NOW PLAYING VIEW ==================== -->
+    <col role="sidebar" w="280" h="794" fill="$bg-main" radius="$radius-md" p="16" gap="12" abs="true" x="1152" y="8" clip="true">
+      <!-- Rightbar Header -->
+      <row w="fill" gap="auto" align="middle-left">
+        <text value="Now Playing" text-style="Rightbar/Header" color="$text-primary" />
+        <row gap="10" align="middle-right">
+          <img src="https://api.iconify.design/lucide/more-horizontal.svg?color=%23b3b3b3" w="18" h="18" />
+          <img src="https://api.iconify.design/lucide/x.svg?color=%23b3b3b3" w="18" h="18" />
+        </row>
+      </row>
+
+      <!-- Vibrant Abstract fluid-art Cover -->
+      <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=248&amp;h=248&amp;q=80" w="248" h="248" radius="$radius-md" fit="cover" />
+
+      <!-- Song Details -->
+      <row w="fill" gap="auto" align="middle-left">
+        <col gap="2">
+          <text value="Smells Like Teen Spirit" text-style="Sidebar/CardTitle" color="$text-primary" />
+          <text value="Nirvana • Nevermind" text-style="Sidebar/CardDesc" color="$text-secondary" />
+        </col>
+        <img src="https://api.iconify.design/lucide/heart.svg?color=%231db954" w="20" h="20" />
+      </row>
+
+      <!-- Mini Artist Bio Card -->
+      <col w="fill" fill="$surface-elevated" radius="$radius-md" p="12" gap="8">
+        <text value="About the artist" text-style="Rightbar/SectionHeader" color="$text-primary" />
+        <text value="Jinson Johny is the creator of the .gui visual layout standard, transforming how design maps directly to binary layout specification packages." text-style="Rightbar/Text" color="$text-secondary" line-height="15" />
+      </col>
+
+      <!-- Expanded Next in Queue section (4 song items) -->
+      <col w="fill" gap="8" pt="4">
+        <row w="fill" gap="auto" align="middle-left">
+          <text value="Next in queue" text-style="Rightbar/SectionHeader" color="$text-primary" />
+          <text value="Open queue" text-style="Rightbar/Text" color="$accent-green" />
+        </row>
+        
+        <!-- Queue Item 1 -->
+        <row w="fill" gap="8" align="middle-left" p="4" radius="$radius-sm" fill="$surface-elevated">
+          <img src="https://images.unsplash.com/photo-1511678892159-0c2a5e3ad4bf?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="36" h="36" radius="4" fit="cover" />
+          <col gap="1" w="140">
+            <text value="Smells Like Teen Spirit" font-family="Inter" font-size="12" font-weight="600" color="$text-primary" truncate="true" />
+            <text value="Nirvana" font-family="Inter" font-size="11" font-weight="400" color="$text-secondary" truncate="true" />
+          </col>
+          <row w="fill" align="middle-right" pr="4">
+            <text value="5:01" text-style="Rightbar/Text" color="$text-secondary" />
+          </row>
+        </row>
+
+        <!-- Queue Item 2 -->
+        <row w="fill" gap="8" align="middle-left" p="4" radius="$radius-sm">
+          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="36" h="36" radius="4" fit="cover" />
+          <col gap="1" w="140">
+            <text value="Waterfalls" font-family="Inter" font-size="12" font-weight="600" color="$text-primary" truncate="true" />
+            <text value="TLC" font-family="Inter" font-size="11" font-weight="400" color="$text-secondary" truncate="true" />
+          </col>
+          <row w="fill" align="middle-right" pr="4">
+            <text value="4:40" text-style="Rightbar/Text" color="$text-secondary" />
+          </row>
+        </row>
+
+        <!-- Queue Item 3 -->
+        <row w="fill" gap="8" align="middle-left" p="4" radius="$radius-sm">
+          <img src="https://images.unsplash.com/photo-1499382569865-45bcb8b3bc71?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="36" h="36" radius="4" fit="cover" />
+          <col gap="1" w="140">
+            <text value="No Diggity" font-family="Inter" font-size="12" font-weight="600" color="$text-primary" truncate="true" />
+            <text value="Blackstreet" font-family="Inter" font-size="11" font-weight="400" color="$text-secondary" truncate="true" />
+          </col>
+          <row w="fill" align="middle-right" pr="4">
+            <text value="4:02" text-style="Rightbar/Text" color="$text-secondary" />
+          </row>
+        </row>
+
+        <!-- Queue Item 4 -->
+        <row w="fill" gap="8" align="middle-left" p="4" radius="$radius-sm">
+          <img src="https://images.unsplash.com/photo-1549388604-817d15aaab94?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="36" h="36" radius="4" fit="cover" />
+          <col gap="1" w="140">
+            <text value="Wannabe" font-family="Inter" font-size="12" font-weight="600" color="$text-primary" truncate="true" />
+            <text value="Spice Girls" font-family="Inter" font-size="11" font-weight="400" color="$text-secondary" truncate="true" />
+          </col>
+          <row w="fill" align="middle-right" pr="4">
+            <text value="3:18" text-style="Rightbar/Text" color="$text-secondary" />
+          </row>
+        </row>
+
+      </col>
+
+    </col>
+
+    <!-- ==================== PERSISTENT BOTTOM PLAYER BAR ==================== -->
+    <row w="1440" h="90" fill="$bg-base" abs="true" x="0" y="810" p="0 16" align="middle-left" gap="auto">
+      
+      <!-- Left Track Descriptor -->
+      <row gap="16" align="middle-left" w="340">
+        <!-- Thumbnail -->
+        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&amp;fit=crop&amp;w=80&amp;h=80&amp;q=80" w="56" h="56" radius="$radius-sm" fit="cover" />
+        
+        <!-- Titles -->
+        <col gap="2">
+          <text value="Smells Like Teen Spirit" text-style="Player/TrackTitle" color="$text-primary" />
+          <text value="Nirvana • Nevermind" text-style="Player/TrackArtist" color="$text-secondary" />
+        </col>
+        
+        <!-- Liked heart + picture-in-picture -->
+        <row gap="12" align="middle-left" pl="8">
+          <img src="https://api.iconify.design/lucide/heart.svg?color=%231db954" w="18" h="18" />
+          <img src="https://api.iconify.design/lucide/pip.svg?color=%23b3b3b3" w="18" h="18" />
+        </row>
+      </row>
+
+      <!-- Center Playback Controls -->
+      <col gap="8" align="middle-center" w="760">
+        <!-- Control buttons -->
+        <row gap="24" align="middle-center">
+          <img src="https://api.iconify.design/lucide/shuffle.svg?color=%23b3b3b3" w="18" h="18" />
+          <img src="https://api.iconify.design/lucide/skip-back.svg?color=%23b3b3b3" w="18" h="18" />
+          
+          <!-- Circular Play button -->
+          <row role="button" w="36" h="36" radius="18" fill="$text-primary" align="middle-center">
+            <img src="https://api.iconify.design/lucide/pause.svg?color=%23000000" w="16" h="16" />
+          </row>
+          
+          <img src="https://api.iconify.design/lucide/skip-forward.svg?color=%23b3b3b3" w="18" h="18" />
+          <img src="https://api.iconify.design/lucide/repeat.svg?color=%23b3b3b3" w="18" h="18" />
+        </row>
+
+        <!-- Progress Slider -->
+        <row gap="10" align="middle-center">
+          <text value="2:17" text-style="Player/Time" color="$text-secondary" />
+          
+          <!-- Slider tracks -->
+          <frame role="slider" w="400" h="4">
+            <!-- Active slider -->
+            <rect w="400" h="4" radius="2" fill="$text-secondary" abs="true" x="0" y="0" />
+            <rect w="184" h="4" radius="2" fill="$accent-green" abs="true" x="0" y="0" />
+            <ellipse w="10" h="10" fill="$text-primary" abs="true" x="179" y="-3" />
+          </frame>
+          
+          <text value="5:01" text-style="Player/Time" color="$text-secondary" />
+        </row>
+      </col>
+
+      <!-- Right System volume controls -->
+      <row gap="16" align="middle-right" w="340">
+        <img src="https://api.iconify.design/lucide/mic-2.svg?color=%23b3b3b3" w="18" h="18" />
+        <img src="https://api.iconify.design/lucide/list-music.svg?color=%23b3b3b3" w="18" h="18" />
+        <img src="https://api.iconify.design/lucide/speaker.svg?color=%23b3b3b3" w="18" h="18" />
+        
+        <!-- Volume slider bar -->
+        <frame w="90" h="4">
+          <rect w="90" h="4" radius="2" fill="$text-secondary" abs="true" x="0" y="0" />
+          <rect w="60" h="4" radius="2" fill="$text-primary" abs="true" x="0" y="0" />
+        </frame>
+        
+        <img src="https://api.iconify.design/lucide/maximize-2.svg?color=%23b3b3b3" w="18" h="18" />
+      </row>
+
+    </row>
+
+  </frame>
+</gui>

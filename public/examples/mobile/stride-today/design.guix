@@ -1,0 +1,77 @@
+<gui version="0.2" name="Stride/Today">
+  <tokens>
+    <color name="bg" value="#FBFDF6" />
+    <color name="surface" value="#FFFFFF" />
+    <color name="surface-variant" value="#E8F0DE" />
+    <color name="ink" value="#1A1C18" />
+    <color name="text-2" value="#44483D" />
+    <color name="outline" value="#C4C8BA" />
+    <color name="primary" value="#3F6B2E" />
+    <color name="primary-cont" value="#CDEDA3" />
+    <color name="on-cont" value="#0C2000" />
+    <color name="accent" value="#386663" />
+    <number name="r-md" value="20" />
+    <number name="r-lg" value="28" />
+  </tokens>
+  <fonts><font family="Roboto" source="google" weights="400 500 600 700" styles="normal" /></fonts>
+  <col w="412" fill="$bg">
+    <row w="fill" p="48 20 12" gap="auto" align="middle-center">
+      <text value="Today" font-family="Roboto" font-size="26" font-weight="600" color="$ink" />
+      <img src="https://i.pravatar.cc/80?img=14" w="38" h="38" radius="19" fit="cover" />
+    </row>
+    <col w="fill" p="6 16 10">
+      <col role="card" w="fill" radius="$r-lg" p="26 24" gap="18" fill="$primary-cont" align="top-center">
+        <ellipse w="150" h="150" fill="$primary-cont" border="12 $primary" />
+        <col gap="3" align="top-center">
+          <text value="6.2 / 8.0 km" font-family="Roboto" font-size="26" font-weight="700" color="$on-cont" />
+          <text value="Morning run · 32:14" font-family="Roboto" font-size="14" font-weight="400" color="$text-2" />
+        </col>
+        <row role="button" h="44" p="0 26" radius="999" fill="$primary" align="middle-center">
+          <text value="Start run" font-family="Roboto" font-size="15" font-weight="600" color="#FFFFFF" />
+        </row>
+      </col>
+    </col>
+    <row role="segmented-control" w="fill" p="6 16 8" gap="8" align="middle-center">
+      <col w="fill" p="10 0" radius="999" fill="$surface" border="1 $outline" align="middle-center"><text value="M" font-family="Roboto" font-size="13" font-weight="500" color="$text-2" /></col>
+      <col w="fill" p="10 0" radius="999" fill="$surface" border="1 $outline" align="middle-center"><text value="T" font-family="Roboto" font-size="13" font-weight="500" color="$text-2" /></col>
+      <col w="fill" p="10 0" radius="999" fill="$surface" border="1 $outline" align="middle-center"><text value="W" font-family="Roboto" font-size="13" font-weight="500" color="$text-2" /></col>
+      <col w="fill" p="10 0" radius="999" fill="$primary" align="middle-center"><text value="T" font-family="Roboto" font-size="13" font-weight="600" color="#FFFFFF" /></col>
+      <col w="fill" p="10 0" radius="999" fill="$surface" border="1 $outline" align="middle-center"><text value="F" font-family="Roboto" font-size="13" font-weight="500" color="$text-2" /></col>
+      <col w="fill" p="10 0" radius="999" fill="$surface" border="1 $outline" align="middle-center"><text value="S" font-family="Roboto" font-size="13" font-weight="500" color="$text-2" /></col>
+      <col w="fill" p="10 0" radius="999" fill="$surface" border="1 $outline" align="middle-center"><text value="S" font-family="Roboto" font-size="13" font-weight="500" color="$text-2" /></col>
+    </row>
+    <row w="fill" p="8 16" gap="10" align="top-center">
+      <col role="card" w="fill" gap="4" p="16" radius="$r-md" fill="$surface-variant" align="top-left">
+        <text value="5:11" font-family="Roboto" font-size="22" font-weight="700" color="$ink" />
+        <text value="pace /km" font-family="Roboto" font-size="12" font-weight="400" color="$text-2" />
+      </col>
+      <col role="card" w="fill" gap="4" p="16" radius="$r-md" fill="$surface-variant" align="top-left">
+        <text value="480" font-family="Roboto" font-size="22" font-weight="700" color="$ink" />
+        <text value="calories" font-family="Roboto" font-size="12" font-weight="400" color="$text-2" />
+      </col>
+      <col role="card" w="fill" gap="4" p="16" radius="$r-md" fill="$surface-variant" align="top-left">
+        <text value="12" font-family="Roboto" font-size="22" font-weight="700" color="$ink" />
+        <text value="day streak" font-family="Roboto" font-size="12" font-weight="400" color="$text-2" />
+      </col>
+    </row>
+    <col w="fill" p="10 16 8" gap="10">
+      <text value="Recent runs" font-family="Roboto" font-size="18" font-weight="600" color="$ink" />
+      <row role="card" w="fill" p="14" gap="14" radius="$r-md" fill="$surface" border="1 $outline" align="middle-center">
+        <img src="https://picsum.photos/seed/route1/120/120" w="56" h="56" radius="14" fit="cover" />
+        <col gap="3" w="fill"><text value="Riverside Loop" font-family="Roboto" font-size="15" font-weight="600" color="$ink" /><text value="5.4 km · 5:02 /km · Tue" font-family="Roboto" font-size="13" font-weight="400" color="$text-2" /></col>
+        <img src="https://api.iconify.design/lucide/chevron-right.svg?color=%23C4C8BA" w="20" h="20" />
+      </row>
+      <row role="card" w="fill" p="14" gap="14" radius="$r-md" fill="$surface" border="1 $outline" align="middle-center">
+        <img src="https://picsum.photos/seed/route2/120/120" w="56" h="56" radius="14" fit="cover" />
+        <col gap="3" w="fill"><text value="Hill Repeats" font-family="Roboto" font-size="15" font-weight="600" color="$ink" /><text value="6.8 km · 5:24 /km · Sun" font-family="Roboto" font-size="13" font-weight="400" color="$text-2" /></col>
+        <img src="https://api.iconify.design/lucide/chevron-right.svg?color=%23C4C8BA" w="20" h="20" />
+      </row>
+    </col>
+    <row role="tab-bar" w="fill" h="80" p="12 24 24" gap="auto" align="top-center" fill="$surface" border-top="1 $outline">
+      <col gap="3" align="top-center"><img src="https://api.iconify.design/lucide/activity.svg?color=%233F6B2E" w="24" h="24" /><text value="Today" font-family="Roboto" font-size="11" font-weight="500" color="$primary" /></col>
+      <col gap="3" align="top-center"><img src="https://api.iconify.design/lucide/map.svg?color=%2344483D" w="24" h="24" /><text value="Activity" font-family="Roboto" font-size="11" font-weight="400" color="$text-2" /></col>
+      <col gap="3" align="top-center"><img src="https://api.iconify.design/lucide/calendar.svg?color=%2344483D" w="24" h="24" /><text value="Plans" font-family="Roboto" font-size="11" font-weight="400" color="$text-2" /></col>
+      <col gap="3" align="top-center"><img src="https://api.iconify.design/lucide/users.svg?color=%2344483D" w="24" h="24" /><text value="Club" font-family="Roboto" font-size="11" font-weight="400" color="$text-2" /></col>
+    </row>
+  </col>
+</gui>

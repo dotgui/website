@@ -1,0 +1,289 @@
+<gui version="0.2" name="Now Playing">
+  <mode name="theme" values="light dark" default="light" />
+
+  <tokens>
+    <!-- Mode-varying warm surfaces (the "room" the device sits in) -->
+    <color name="bg"     theme-light="#ECE3D1" theme-dark="#15110D" />
+    <color name="panel"  theme-light="#F6F0E2" theme-dark="#221D17" />
+    <color name="ink"    theme-light="#2A2018" theme-dark="#F2EADA" />
+    <color name="ink-2"  theme-light="#8C7C62" theme-dark="#A2937A" />
+    <color name="hair"   theme-light="#DCD0B9" theme-dark="#332C24" />
+
+    <!-- Constant device hardware (reads the same in any light) -->
+    <color name="cream"   value="#ECE4D2" />
+    <color name="cream-2" value="#B4A88F" />
+    <color name="groove"  value="#12100C" />
+    <color name="ring"    value="#000000" />
+
+    <number name="r-art"   value="18" />
+    <number name="r-panel" value="22" />
+    <number name="r-deck"  value="26" />
+    <number name="r-pill"  value="999" />
+  </tokens>
+
+  <styles>
+    <text-style name="Serif/Title" font-family="Playfair Display" font-size="27" font-weight="700" line-height="32" />
+    <text-style name="Serif/Head"  font-family="Playfair Display" font-size="19" font-weight="600" line-height="24" />
+    <text-style name="Eyebrow"     font-family="SF Pro" font-size="11" font-weight="600" line-height="14" letter-spacing="1.4" />
+    <text-style name="Body"        font-family="SF Pro" font-size="15" font-weight="400" line-height="20" />
+    <text-style name="Label"       font-family="SF Pro" font-size="13" font-weight="600" line-height="16" />
+    <text-style name="Time"        font-family="SF Pro" font-size="12" font-weight="600" line-height="14" letter-spacing="0.3" />
+    <text-style name="Caption"     font-family="SF Pro" font-size="11" font-weight="500" line-height="14" />
+  </styles>
+
+  <fonts>
+    <font family="SF Pro" source="system" weights="400 500 600 700" styles="normal" />
+    <font family="Inter" source="google" weights="400 500 600 700" styles="normal" />
+    <font family="Playfair Display" source="google" weights="600 700" styles="normal" />
+  </fonts>
+
+  <col w="390" fill="$bg" pb="34" gap="22">
+
+    <!-- Status bar -->
+    <row w="fill" p="16 22 0" align="middle-center" gap="auto">
+      <text value="9:41" font-family="SF Pro" font-size="15" font-weight="600" color="$ink" />
+      <row gap="6" align="middle-center">
+        <text text-style="Caption" value="100%" color="$ink-2" />
+        <row gap="2" align="middle-center">
+          <row w="22" h="11" radius="3" border="1 $ink-2" p="2" align="middle-left">
+            <rect w="15" h="6" radius="1" fill="$ink" />
+          </row>
+          <rect w="2" h="4" radius="1" fill="$ink-2" />
+        </row>
+      </row>
+    </row>
+
+    <!-- Header: round metal buttons flanking a serif title -->
+    <row role="top-navigation-bar" w="fill" p="2 16 0" align="middle-center" gap="auto">
+      <col role="button" w="40" h="40" radius="$r-pill" align="middle-center" fill="linear-gradient(180deg, #524A40 0%, #322C25 100%)">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(180deg, #524A40 0%, #322C25 100%)" />
+          <effect type="drop-shadow" x="0" y="4" radius="10" spread="0" color="#00000055" />
+          <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF26" />
+        </appearance>
+        <img src="https://api.iconify.design/mdi/chevron-down.svg?color=%23ECE4D2" w="22" h="22" />
+      </col>
+      <col gap="2" align="middle-center">
+        <text text-style="Eyebrow" text-case="uppercase" value="Playing From" color="$ink-2" align="center" />
+        <text value="Reading Room" font-family="SF Pro" font-size="14" font-weight="600" color="$ink" align="center" />
+      </col>
+      <col role="button" w="40" h="40" radius="$r-pill" align="middle-center" fill="linear-gradient(180deg, #524A40 0%, #322C25 100%)">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(180deg, #524A40 0%, #322C25 100%)" />
+          <effect type="drop-shadow" x="0" y="4" radius="10" spread="0" color="#00000055" />
+          <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF26" />
+        </appearance>
+        <img src="https://api.iconify.design/mdi/playlist-music.svg?color=%23ECE4D2" w="22" h="22" />
+      </col>
+    </row>
+
+    <!-- Drawn vinyl disc + tonearm: grooves, sheen, paper label, spindle hole -->
+    <col w="fill" p="6 16 2" align="middle-center">
+      <frame w="340" h="336">
+      <col x="10" y="6" w="320" h="320" radius="$r-pill" align="middle-center" fill="radial-gradient(circle at 50% 36%, #2C2823 0%, #100E0B 58%, #050403 100%)" border="1 #FFFFFF14">
+        <appearance>
+          <fill type="radial-gradient" value="radial-gradient(circle at 50% 36%, #2C2823 0%, #100E0B 58%, #050403 100%)" />
+          <fill type="linear-gradient" value="linear-gradient(125deg, #FFFFFF21 0%, #FFFFFF00 34%, #FFFFFF00 66%, #FFFFFF14 100%)" />
+          <effect type="drop-shadow" x="0" y="22" radius="46" spread="-8" color="#00000073" />
+          <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF2E" />
+        </appearance>
+        <col w="278" h="278" radius="$r-pill" fill="none" border="1 #FFFFFF12" align="middle-center">
+          <col w="236" h="236" radius="$r-pill" fill="none" border="1 #FFFFFF0D" align="middle-center">
+            <col w="194" h="194" radius="$r-pill" fill="none" border="1 #FFFFFF12" align="middle-center">
+              <col w="154" h="154" radius="$r-pill" fill="none" border="1 #FFFFFF0D" align="middle-center">
+                <!-- Paper center label -->
+                <col w="128" h="128" radius="$r-pill" align="middle-center" gap="9" p="14" fill="linear-gradient(180deg, #D24A2C 0%, #A82E16 100%)">
+                  <appearance>
+                    <fill type="linear-gradient" value="linear-gradient(180deg, #D24A2C 0%, #A82E16 100%)" />
+                    <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF45" />
+                    <effect type="drop-shadow" x="0" y="3" radius="8" spread="-2" color="#0000005C" />
+                  </appearance>
+                  <text font-family="SF Pro" font-size="11" font-weight="700" letter-spacing="1.2" text-case="uppercase" value="Dog-Eared" color="#F6EFDD" align="center" />
+                  <col w="13" h="13" radius="$r-pill" fill="#15110D" align="middle-center">
+                    <appearance>
+                      <fill type="color" value="#15110D" />
+                      <effect type="inner-shadow" x="0" y="1" radius="1" spread="0" color="#000000A6" />
+                    </appearance>
+                  </col>
+                  <text font-family="SF Pro" font-size="9" font-weight="600" letter-spacing="0.8" text-case="uppercase" value="Margin Notes" color="#F2D9CE" align="center" />
+                </col>
+              </col>
+            </col>
+          </col>
+        </col>
+      </col>
+
+      <!-- Tonearm: pivot mount, silver arm, headshell, stylus on the grooves -->
+      <col x="282" y="6" w="36" h="36" radius="$r-pill" align="middle-center" fill="radial-gradient(circle at 50% 32%, #CFC8BB 0%, #5C5449 100%)">
+        <appearance>
+          <fill type="radial-gradient" value="radial-gradient(circle at 50% 32%, #CFC8BB 0%, #5C5449 100%)" />
+          <effect type="drop-shadow" x="0" y="3" radius="8" spread="-1" color="#0000006E" />
+          <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF59" />
+        </appearance>
+        <rect w="12" h="12" radius="$r-pill" fill="#2A2622" />
+      </col>
+      <rect x="207" y="59" w="109" h="8" radius="4" rotation="134" fill="linear-gradient(160deg, #DAD4C8 0%, #9A9286 52%, #6A6358 100%)">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(160deg, #DAD4C8 0%, #9A9286 52%, #6A6358 100%)" />
+          <effect type="drop-shadow" x="0" y="2" radius="6" spread="-1" color="#00000066" />
+          <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF66" />
+        </appearance>
+      </rect>
+      <rect x="211" y="92" w="27" h="19" radius="4" rotation="134" fill="linear-gradient(180deg, #2C2722 0%, #15110D 100%)">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(180deg, #2C2722 0%, #15110D 100%)" />
+          <effect type="drop-shadow" x="0" y="2" radius="5" spread="-1" color="#0000007A" />
+          <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF2E" />
+        </appearance>
+      </rect>
+      <rect x="219" y="98" w="9" h="9" radius="$r-pill" fill="#D8D2C6" />
+      </frame>
+    </col>
+
+    <!-- Track info -->
+    <col w="fill" p="2 24 0" gap="5" align="middle-center">
+      <row w="fill" align="middle-center" gap="10">
+        <text text-style="Serif/Title" value="Dog-Eared" color="$ink" align="center" w="fill" pl="32" />
+        <img src="https://api.iconify.design/mdi/heart-outline.svg?color=%23C23A1E" w="22" h="22" />
+      </row>
+      <text text-style="Body" value="Margin Notes  &#183;  Chapter &amp; Verse" color="$ink-2" align="center" />
+    </col>
+
+    <!-- Control deck: constant dark brushed metal -->
+    <col w="fill" p="0 16">
+      <col w="fill" radius="$r-deck" p="20 18 22" gap="20">
+        <appearance>
+          <fill type="linear-gradient" value="linear-gradient(180deg, #524A40 0%, #352F28 52%, #211C17 100%)" />
+          <effect type="drop-shadow" x="0" y="12" radius="28" spread="-4" color="#0000006E" />
+          <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF24" />
+          <effect type="inner-shadow" x="0" y="-2" radius="2" spread="0" color="#0000005C" />
+        </appearance>
+
+        <!-- Scrubber -->
+        <col w="fill" gap="9">
+          <row role="slider" w="fill" h="20" align="middle-left">
+            <frame w="150" h="6" radius="3">
+              <appearance>
+                <fill type="linear-gradient" value="linear-gradient(180deg, #E2552F 0%, #B5331A 100%)" />
+                <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF4D" />
+              </appearance>
+            </frame>
+            <col w="20" h="20" radius="$r-pill" fill="radial-gradient(circle at 50% 32%, #9A8E7C 0%, #3A332B 100%)">
+              <appearance>
+                <fill type="radial-gradient" value="radial-gradient(circle at 50% 32%, #9A8E7C 0%, #3A332B 100%)" />
+                <effect type="drop-shadow" x="0" y="2" radius="4" spread="0" color="#00000080" />
+                <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF40" />
+              </appearance>
+            </col>
+            <frame w="fill" h="6" radius="3" fill="$groove">
+              <appearance>
+                <fill type="color" value="#12100C" />
+                <effect type="inner-shadow" x="0" y="1" radius="2" spread="0" color="#00000099" />
+              </appearance>
+            </frame>
+          </row>
+          <row w="fill" align="middle-center" gap="auto">
+            <text text-style="Time" value="1:42" color="$cream-2" />
+            <text text-style="Time" value="-3:05" color="$cream-2" />
+          </row>
+        </col>
+
+        <!-- Transport -->
+        <row w="fill" p="2 4" align="middle-center" gap="auto">
+          <img src="https://api.iconify.design/mdi/shuffle.svg?color=%23B4A88F" w="22" h="22" />
+          <img src="https://api.iconify.design/mdi/skip-previous.svg?color=%23ECE4D2" w="36" h="36" />
+          <col role="button" w="80" h="80" radius="$r-pill" align="middle-center" fill="linear-gradient(180deg, #D24A2C 0%, #A82E16 100%)">
+            <appearance>
+              <fill type="linear-gradient" value="linear-gradient(180deg, #D24A2C 0%, #A82E16 100%)" />
+              <effect type="drop-shadow" x="0" y="6" radius="16" spread="-2" color="#00000080" />
+              <effect type="inner-shadow" x="0" y="2" radius="0" spread="0" color="#FFFFFF59" />
+              <effect type="inner-shadow" x="0" y="-3" radius="3" spread="0" color="#00000066" />
+            </appearance>
+            <img src="https://api.iconify.design/mdi/pause.svg?color=%23F6EFDD" w="38" h="38" />
+          </col>
+          <img src="https://api.iconify.design/mdi/skip-next.svg?color=%23ECE4D2" w="36" h="36" />
+          <img src="https://api.iconify.design/mdi/repeat.svg?color=%23B4A88F" w="22" h="22" />
+        </row>
+
+        <!-- Volume -->
+        <row w="fill" pt="2" align="middle-center" gap="12">
+          <img src="https://api.iconify.design/mdi/volume-low.svg?color=%23B4A88F" w="18" h="18" />
+          <row role="slider" w="fill" h="20" align="middle-left">
+            <frame w="118" h="6" radius="3">
+              <appearance>
+                <fill type="linear-gradient" value="linear-gradient(180deg, #C9BEA8 0%, #9A8E78 100%)" />
+                <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF55" />
+              </appearance>
+            </frame>
+            <col w="20" h="20" radius="$r-pill" fill="radial-gradient(circle at 50% 32%, #9A8E7C 0%, #3A332B 100%)">
+              <appearance>
+                <fill type="radial-gradient" value="radial-gradient(circle at 50% 32%, #9A8E7C 0%, #3A332B 100%)" />
+                <effect type="drop-shadow" x="0" y="2" radius="4" spread="0" color="#00000080" />
+                <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF40" />
+              </appearance>
+            </col>
+            <frame w="fill" h="6" radius="3" fill="$groove">
+              <appearance>
+                <fill type="color" value="#12100C" />
+                <effect type="inner-shadow" x="0" y="1" radius="2" spread="0" color="#00000099" />
+              </appearance>
+            </frame>
+          </row>
+          <img src="https://api.iconify.design/mdi/volume-high.svg?color=%23ECE4D2" w="22" h="22" />
+        </row>
+      </col>
+    </col>
+
+    <!-- Up Next shelf (a nod to the Books library) -->
+    <col w="fill" p="0 16">
+      <col w="fill" fill="$panel" radius="$r-panel" p="18 18 20" gap="14" border="1 $hair">
+        <row w="fill" align="middle-center" gap="auto">
+          <text text-style="Serif/Head" value="Up Next" color="$ink" />
+          <text text-style="Label" value="Queue" color="$ink-2" />
+        </row>
+        <row w="fill" gap="14" align="top-left">
+          <col w="98" gap="8" align="top-left">
+            <frame w="98" h="98" radius="12">
+              <appearance>
+                <fill type="image" src="https://images.unsplash.com/photo-1580656449278-e8381933522c?w=320&amp;q=80&amp;auto=format&amp;fit=crop" fit="cover" />
+                <effect type="drop-shadow" x="0" y="6" radius="12" spread="-2" color="#0000004D" />
+                <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF33" />
+              </appearance>
+            </frame>
+            <col gap="1" align="top-left">
+              <text text-style="Label" value="Foreword" color="$ink" />
+              <text text-style="Caption" value="Margin Notes" color="$ink-2" />
+            </col>
+          </col>
+          <col w="98" gap="8" align="top-left">
+            <frame w="98" h="98" radius="12">
+              <appearance>
+                <fill type="image" src="https://images.unsplash.com/photo-1535992165812-68d1861aa71e?w=320&amp;q=80&amp;auto=format&amp;fit=crop" fit="cover" />
+                <effect type="drop-shadow" x="0" y="6" radius="12" spread="-2" color="#0000004D" />
+                <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF33" />
+              </appearance>
+            </frame>
+            <col gap="1" align="top-left">
+              <text text-style="Label" value="Spine &amp; Thread" color="$ink" />
+              <text text-style="Caption" value="The Bindery" color="$ink-2" />
+            </col>
+          </col>
+          <col w="98" gap="8" align="top-left">
+            <frame w="98" h="98" radius="12">
+              <appearance>
+                <fill type="image" src="https://images.unsplash.com/photo-1669801158950-f663cf15298c?w=320&amp;q=80&amp;auto=format&amp;fit=crop" fit="cover" />
+                <effect type="drop-shadow" x="0" y="6" radius="12" spread="-2" color="#0000004D" />
+                <effect type="inner-shadow" x="0" y="1" radius="0" spread="0" color="#FFFFFF33" />
+              </appearance>
+            </frame>
+            <col gap="1" align="top-left">
+              <text text-style="Label" value="Footnotes" color="$ink" />
+              <text text-style="Caption" value="Onionskin" color="$ink-2" />
+            </col>
+          </col>
+        </row>
+      </col>
+    </col>
+
+  </col>
+</gui>

@@ -1,0 +1,329 @@
+<gui version="0.2" name="NexusEvent">
+  <tokens>
+    <color name="bg" value="#08090b" />
+    <color name="surface" value="#111317" />
+    <color name="surface-elevated" value="#1a1d24" />
+    <color name="primary" value="#e0a96d" />
+    <color name="primary-soft" value="#e0a96d18" />
+    <color name="text-primary" value="#f3f4f6" />
+    <color name="text-secondary" value="#858e99" />
+    <color name="border" value="#ffffff12" />
+    <color name="border-bright" value="#ffffff22" />
+    <number name="radius-sm" value="6" />
+    <number name="radius-md" value="10" />
+    <number name="radius-lg" value="20" />
+    <number name="space-xs" value="4" />
+    <number name="space-sm" value="8" />
+    <number name="space-md" value="16" />
+    <number name="space-lg" value="24" />
+    <number name="space-xl" value="48" />
+  </tokens>
+
+  <styles>
+    <text-style name="Hero/Title" font-family="EB Garamond" font-size="72" font-weight="400" line-height="76" letter-spacing="-1.5" />
+    <text-style name="Hero/Subtitle" font-family="Outfit" font-size="20" font-weight="400" line-height="30" />
+    <text-style name="Heading/H2" font-family="Outfit" font-size="32" font-weight="600" line-height="40" letter-spacing="-0.5" />
+    <text-style name="Heading/H3" font-family="Outfit" font-size="22" font-weight="600" line-height="30" />
+    <text-style name="Body/Regular" font-family="Outfit" font-size="15" font-weight="400" line-height="24" />
+    <text-style name="Body/Large" font-family="Outfit" font-size="17" font-weight="400" line-height="26" />
+    <text-style name="Label/Bold" font-family="Outfit" font-size="13" font-weight="600" line-height="18" letter-spacing="1.5" />
+    <text-style name="Label/Muted" font-family="Outfit" font-size="13" font-weight="400" line-height="18" />
+    <text-style name="Data/Mono" font-family="JetBrains Mono" font-size="14" font-weight="400" line-height="20" />
+  </styles>
+
+  <fonts>
+    <font family="EB Garamond" source="google" weights="400 500" styles="normal italic" />
+    <font family="Outfit" source="google" weights="400 500 600 700" styles="normal" />
+    <font family="JetBrains Mono" source="google" weights="400 500" styles="normal" />
+  </fonts>
+
+  <components>
+    <component name="TicketRow" id="comp-ticket-row">
+      <props>
+        <prop name="tier" type="text" target="txt-tier" />
+        <prop name="access" type="text" target="txt-access" />
+        <prop name="spots" type="text" target="txt-spots" />
+        <prop name="price" type="text" target="txt-price" />
+        <prop name="qty" type="text" target="txt-qty" />
+      </props>
+      <row role="card" w="fill" p="28 32" fill="$surface" border="1 $border" radius="$radius-md" align="middle-left" gap="auto">
+        <!-- Left side: info -->
+        <row gap="32" align="middle-left">
+          <col w="480" gap="8">
+            <text id="txt-tier" value="GENERAL ACCESS" font-family="Outfit" font-size="18" font-weight="600" color="$text-primary" />
+            <text id="txt-access" value="Access to main stage and exhibition hall." font-family="Outfit" font-size="14" font-weight="400" color="$text-secondary" />
+          </col>
+        </row>
+        <!-- Middle: details -->
+        <row gap="48" align="middle-left">
+          <row gap="8" align="middle-left" w="180">
+            <ellipse fill="$primary" w="6" h="6" />
+            <text id="txt-spots" value="42 seats left" font-family="JetBrains Mono" font-size="13" font-weight="400" color="$text-secondary" />
+          </row>
+          <row w="160" align="middle-left">
+            <text id="txt-price" value="$299" font-family="JetBrains Mono" font-size="24" font-weight="500" color="$primary" />
+            <text value="/ ticket" font-family="Outfit" font-size="14" font-weight="400" color="$text-secondary" pl="4" />
+          </row>
+        </row>
+        <!-- Right: selector -->
+        <row w="160" gap="16" align="middle-right">
+          <row gap="16" p="8 16" fill="$surface-elevated" border="1 $border" radius="999" align="middle-left">
+            <text value="−" font-family="Outfit" font-size="16" font-weight="600" color="$text-secondary" />
+            <text id="txt-qty" value="0" font-family="JetBrains Mono" font-size="16" font-weight="600" color="$text-primary" />
+            <text value="+" font-family="Outfit" font-size="16" font-weight="600" color="$primary" />
+          </row>
+        </row>
+      </row>
+    </component>
+  </components>
+
+  <col w="1440" fill="$bg">
+    <!-- Ambient Radial Glows (Background visual depth) -->
+    <ellipse fill="radial-gradient(circle, #e0a96d12 0%, #e0a96d00 70%)" w="700" h="700" abs="true" x="-200" y="-100" />
+    <ellipse fill="radial-gradient(circle, #e0a96d0d 0%, #e0a96d00 70%)" w="500" h="500" abs="true" x="1100" y="200" />
+
+    <!-- Nav Header -->
+    <row role="top-navigation-bar" h="80" p="0 80" align="middle-left" gap="auto" w="fill" fill="$bg" border="0 0 1 0 $border">
+      <row gap="12" align="middle-left">
+        <row w="28" h="28" radius="4" fill="$primary" align="middle-center">
+          <text value="N" font-family="Outfit" font-size="16" font-weight="700" color="$bg" />
+        </row>
+        <text value="NEXUS" font-family="Outfit" font-size="18" font-weight="700" color="$text-primary" letter-spacing="1" />
+      </row>
+      <row gap="32" align="middle-left">
+        <text text-style="Label/Muted" value="Schedule" color="$text-secondary" />
+        <text text-style="Label/Muted" value="Speakers" color="$text-secondary" />
+        <text text-style="Label/Muted" value="Venues" color="$text-secondary" />
+        <text text-style="Label/Muted" value="Workshops" color="$text-secondary" />
+      </row>
+      <row gap="24" align="middle-left">
+        <row gap="8" align="middle-left" p="6 12" radius="999" fill="$primary-soft" border="1 $primary">
+          <ellipse fill="#f05252" w="6" h="6" />
+          <text value="Oct 12-14 • Tokyo" font-family="Outfit" font-size="12" font-weight="600" color="$primary" />
+        </row>
+        <row h="36" p="0 16" radius="$radius-sm" fill="$primary" align="middle-center">
+          <text text-style="Label/Bold" value="Book Now" color="$bg" />
+        </row>
+      </row>
+    </row>
+
+    <!-- Hero Area (Asymmetric Grid) -->
+    <row p="80 80 64 80" gap="64" w="fill" align="top-left">
+      <!-- Left Hero Column (65% width) -->
+      <col w="720" gap="32">
+        <text text-style="Label/Bold" value="ANNUAL DESIGN SUMMIT" color="$primary" />
+        <text text-style="Hero/Title" color="$text-primary">
+          <segment value="The Space Between " font-family="EB Garamond" />
+          <segment value="Form" font-family="EB Garamond" color="$primary" />
+          <segment value=" &amp; Matter" font-family="EB Garamond" />
+        </text>
+        <text text-style="Hero/Subtitle" color="$text-secondary" w="580" value="Nexus 2026 brings together 500 visionaries for three days of immersive keynotes, collaborative design sprints, and spatial installation workshops in Shibuya, Tokyo." />
+        
+        <!-- Design Stats (Aligned horizontally) -->
+        <row gap="48" align="middle-left" pt="16">
+          <col gap="4">
+            <text value="18+" font-family="Outfit" font-size="36" font-weight="700" color="$text-primary" />
+            <text value="Keynote Speakers" font-family="Outfit" font-size="13" font-weight="400" color="$text-secondary" />
+          </col>
+          <col gap="4">
+            <text value="3000m²" font-family="Outfit" font-size="36" font-weight="700" color="$text-primary" />
+            <text value="Spatial Installation" font-family="Outfit" font-size="13" font-weight="400" color="$text-secondary" />
+          </col>
+          <col gap="4">
+            <text value="500" font-family="Outfit" font-size="36" font-weight="700" color="$text-primary" />
+            <text value="Attendee Cap" font-family="Outfit" font-size="13" font-weight="400" color="$text-secondary" />
+          </col>
+        </row>
+      </col>
+
+      <!-- Right Hero Column (Reservation Card - 35% width) -->
+      <col role="card" w="480" fill="$surface" radius="$radius-lg" p="32" gap="24" border="1 $border" name="CheckoutSummary">
+        <col gap="8">
+          <text text-style="Heading/H3" value="Reservation Summary" color="$text-primary" />
+          <text text-style="Label/Muted" value="Secure your seat before the public ticket sale ends." color="$text-secondary" />
+        </col>
+        <col gap="16" w="fill">
+          <row w="fill" gap="auto" align="middle-left">
+            <text text-style="Label/Muted" value="General Access Ticket × 1" color="$text-primary" />
+            <text font-family="JetBrains Mono" font-size="15" font-weight="500" color="$text-primary" value="$299.00" />
+          </row>
+          <row w="fill" gap="auto" align="middle-left">
+            <text text-style="Label/Muted" value="Spatial Lab Pass × 1" color="$text-primary" />
+            <text font-family="JetBrains Mono" font-size="15" font-weight="500" color="$text-primary" value="$449.00" />
+          </row>
+          <line fill="$border" />
+          <row w="fill" gap="auto" align="middle-left">
+            <text text-style="Label/Muted" value="Subtotal" color="$text-secondary" />
+            <text font-family="JetBrains Mono" font-size="15" font-weight="400" color="$text-secondary" value="$748.00" />
+          </row>
+          <row w="fill" gap="auto" align="middle-left">
+            <text text-style="Label/Muted" value="Taxes &amp; Fees (10%)" color="$text-secondary" />
+            <text font-family="JetBrains Mono" font-size="15" font-weight="400" color="$text-secondary" value="$74.80" />
+          </row>
+          <line fill="$border" />
+          <row w="fill" gap="auto" align="middle-left">
+            <text text-style="Heading/H3" value="Total" color="$text-primary" />
+            <text font-family="JetBrains Mono" font-size="24" font-weight="600" color="$primary" value="$822.80" />
+          </row>
+        </col>
+        <row w="fill" h="44" radius="$radius-sm" fill="$surface-elevated" border="1 $border" p="0 16" align="middle-left" gap="auto">
+          <text text-style="Label/Muted" value="Discount Code" color="$text-secondary" />
+          <text text-style="Label/Bold" value="APPLY" color="$primary" />
+        </row>
+        <row w="fill" h="48" radius="$radius-sm" fill="$primary" align="middle-center">
+          <text text-style="Label/Bold" value="PROCEED TO CHECKOUT" color="$bg" />
+        </row>
+        <row gap="8" align="middle-center" w="fill">
+          <img src="https://api.iconify.design/lucide/shield-check.svg?color=%23858e99" w="14" h="14" />
+          <text font-family="Outfit" font-size="11" font-weight="400" value="SSL Secured and Encrypted Transactions" color="$text-secondary" />
+        </row>
+      </col>
+    </row>
+
+    <!-- Ticket Section -->
+    <col p="80 80 48 80" gap="16" w="fill">
+      <text text-style="Label/Bold" value="CHOOSE YOUR EXPERIENCE" color="$primary" />
+      <row w="fill" gap="auto" align="bottom-left">
+        <text text-style="Heading/H2" value="Select Tickets" color="$text-primary" />
+        <text text-style="Body/Regular" value="Prices increase after August 15th." color="$text-secondary" />
+      </row>
+    </col>
+
+    <!-- Ticket List Deck (Using Reusable TicketRow Component) -->
+    <col p="0 80 64 80" gap="16" w="fill">
+      <instance component="comp-ticket-row" tier="GENERAL ACCESS" access="Access to main stage lectures and general exhibition halls." spots="124 seats left" price="$299" qty="1" />
+      <instance component="comp-ticket-row" tier="SPATIAL LAB PASS" access="Access to all keynotes and a hands-on architectural design workshop." spots="42 seats left" price="$449" qty="1" />
+      <instance component="comp-ticket-row" tier="VIP PATRON ACCESS" access="Full access + backstage speaker lounge entry + speakers private dinner invitation." spots="15 seats left" price="$799" qty="0" />
+    </col>
+
+    <!-- Keynote Speakers Section -->
+    <col p="80 80 48 80" gap="16" w="fill">
+      <text text-style="Label/Bold" value="EXPERT PANELISTS" color="$primary" />
+      <row w="fill" gap="auto" align="bottom-left">
+        <text text-style="Heading/H2" value="Keynote Speakers" color="$text-primary" />
+        <text text-style="Body/Regular" value="Visionaries defining the next design paradigm." color="$text-secondary" />
+      </row>
+    </col>
+
+    <!-- Speakers Asymmetric Card Grid -->
+    <row p="0 80 80 80" gap="40" w="fill" align="top-left">
+      <!-- Asymmetric Editorial Quote Card -->
+      <col role="card" w="230" h="440" fill="linear-gradient(135deg, #111317 0%, #15181e 100%)" radius="$radius-md" border="1 $border" p="32" gap="auto" justify="space-between">
+        <text value="“" font-family="EB Garamond" font-size="64" font-weight="400" color="$primary" line-height="24" />
+        <text value="Design is not what we make, but the space we reveal." font-family="EB Garamond" font-size="24" font-weight="400" line-height="34" color="$text-primary" />
+        <text text-style="Label/Bold" value="NEXUS MANIFESTO" color="$primary" />
+      </col>
+
+      <!-- Speaker Card 1 -->
+      <col role="card" w="310" h="440" fill="$surface" radius="$radius-md" border="1 $border" clip="true" gap="0">
+        <frame w="310" h="240">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&amp;fit=crop&amp;w=310&amp;h=240&amp;q=80" w="310" h="240" fit="cover" />
+          <row abs="true" x="16" y="16" p="4 10" radius="999" fill="#08090b80" border="1 $border" align="middle-center">
+            <text value="KEYNOTE" font-family="Outfit" font-size="10" font-weight="600" color="$primary" letter-spacing="1.2" />
+          </row>
+        </frame>
+        <col p="20" gap="8" w="fill">
+          <text value="Lead Architect, FormLab" font-family="Outfit" font-size="12" font-weight="500" color="$primary" letter-spacing="1" />
+          <text value="Marcus Vane" font-family="Outfit" font-size="20" font-weight="600" color="$text-primary" />
+          <text value="Topic: The geometry of empty spaces and physical interfaces." font-family="Outfit" font-size="13" font-weight="400" color="$text-secondary" line-height="18" />
+        </col>
+      </col>
+
+      <!-- Speaker Card 2 -->
+      <col role="card" w="310" h="440" fill="$surface" radius="$radius-md" border="1 $border" clip="true" gap="0">
+        <frame w="310" h="240">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&amp;fit=crop&amp;w=310&amp;h=240&amp;q=80" w="310" h="240" fit="cover" />
+          <row abs="true" x="16" y="16" p="4 10" radius="999" fill="#08090b80" border="1 $border" align="middle-center">
+            <text value="EXHIBITION" font-family="Outfit" font-size="10" font-weight="600" color="$primary" letter-spacing="1.2" />
+          </row>
+        </frame>
+        <col p="20" gap="8" w="fill">
+          <text value="Director, Spatial Narrative" font-family="Outfit" font-size="12" font-weight="500" color="$primary" letter-spacing="1" />
+          <text value="Elena Rostova" font-family="Outfit" font-size="20" font-weight="600" color="$text-primary" />
+          <text value="Topic: Holographic projections and light mapping in urban locations." font-family="Outfit" font-size="13" font-weight="400" color="$text-secondary" line-height="18" />
+        </col>
+      </col>
+
+      <!-- Speaker Card 3 -->
+      <col role="card" w="310" h="440" fill="$surface" radius="$radius-md" border="1 $border" clip="true" gap="0">
+        <frame w="310" h="240">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&amp;fit=crop&amp;w=310&amp;h=240&amp;q=80" w="310" h="240" fit="cover" />
+          <row abs="true" x="16" y="16" p="4 10" radius="999" fill="#08090b80" border="1 $border" align="middle-center">
+            <text value="PANEL" font-family="Outfit" font-size="10" font-weight="600" color="$primary" letter-spacing="1.2" />
+          </row>
+        </frame>
+        <col p="20" gap="8" w="fill">
+          <text value="Interaction Lead, Kinesis Studio" font-family="Outfit" font-size="12" font-weight="500" color="$primary" letter-spacing="1" />
+          <text value="Kenji Sato" font-family="Outfit" font-size="20" font-weight="600" color="$text-primary" />
+          <text value="Topic: Haptic feedback loops in physical design frameworks." font-family="Outfit" font-size="13" font-weight="400" color="$text-secondary" line-height="18" />
+        </col>
+      </col>
+    </row>
+
+    <!-- Venue Showcase Section -->
+    <row p="80 80 80 80" gap="64" w="fill" align="middle-left">
+      <col w="450" gap="24">
+        <text text-style="Label/Bold" value="THE VENUE" color="$primary" />
+        <text text-style="Heading/H2" value="Shibuya Spatial Lab" color="$text-primary" />
+        <text text-style="Body/Regular" color="$text-secondary" w="450" value="Located in Shibuya's newest architectural marvel, the Spatial Lab features 360-degree projection mapping, spatial audio arrays, and dynamic lighting rigs designed for spatial research." />
+        <row gap="12" align="middle-left">
+          <img src="https://api.iconify.design/lucide/map-pin.svg?color=%23e0a96d" w="18" h="18" />
+          <text text-style="Label/Muted" value="Tokyo Midtown Shibuya, Space 7B" color="$text-primary" />
+        </row>
+      </col>
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&amp;fit=crop&amp;w=650&amp;h=360&amp;q=80" w="650" h="360" fit="cover" radius="$radius-lg" />
+    </row>
+
+    <!-- Brand Footer -->
+    <col p="80 80 64 80" gap="64" w="fill" fill="$surface" border="1 0 0 0 $border">
+      <!-- Upper Footer -->
+      <row w="fill" gap="auto" align="top-left">
+        <!-- Col 1 -->
+        <col w="320" gap="16">
+          <text value="NEXUS" font-family="Outfit" font-size="20" font-weight="700" color="$text-primary" letter-spacing="1" />
+          <text text-style="Body/Regular" color="$text-secondary" value="Nexus is a global collaborative platform exploring the boundaries between digital design, physical interfaces, and spatial architecture." />
+        </col>
+        
+        <!-- Col 2 -->
+        <col w="200" gap="12">
+          <text text-style="Label/Bold" value="SUMMIT" color="$primary" />
+          <text text-style="Label/Muted" value="Schedule" color="$text-secondary" />
+          <text text-style="Label/Muted" value="Speakers" color="$text-secondary" />
+          <text text-style="Label/Muted" value="Venues" color="$text-secondary" />
+          <text text-style="Label/Muted" value="Workshops" color="$text-secondary" />
+        </col>
+
+        <!-- Col 3 -->
+        <col w="200" gap="12">
+          <text text-style="Label/Bold" value="RESOURCES" color="$primary" />
+          <text text-style="Label/Muted" value="Brand Kit" color="$text-secondary" />
+          <text text-style="Label/Muted" value="Press Office" color="$text-secondary" />
+          <text text-style="Label/Muted" value="Ticket Terms" color="$text-secondary" />
+          <text text-style="Label/Muted" value="Privacy Policy" color="$text-secondary" />
+        </col>
+
+        <!-- Col 4 -->
+        <col w="320" gap="12">
+          <text text-style="Label/Bold" value="STAY UPDATED" color="$primary" />
+          <text text-style="Label/Muted" value="Join our newsletter for event announcements." color="$text-secondary" />
+          <row h="40" w="fill" fill="$surface-elevated" radius="$radius-sm" border="1 $border" p="0 12" align="middle-left" gap="auto">
+            <text text-style="Label/Muted" value="email@nexus.design" color="$text-secondary" />
+            <img src="https://api.iconify.design/lucide/arrow-right.svg?color=%23e0a96d" w="16" h="16" />
+          </row>
+        </col>
+      </row>
+
+      <line fill="$border" />
+
+      <!-- Lower Footer -->
+      <row w="fill" gap="auto" align="middle-left">
+        <text font-family="Outfit" font-size="13" font-weight="400" value="© 2026 Nexus Design Group. All rights reserved." color="$text-secondary" />
+        <row gap="24" align="middle-left">
+          <img src="https://api.iconify.design/lucide/twitter.svg?color=%23858e99" w="18" h="18" />
+          <img src="https://api.iconify.design/lucide/instagram.svg?color=%23858e99" w="18" h="18" />
+          <img src="https://api.iconify.design/lucide/dribbble.svg?color=%23858e99" w="18" h="18" />
+        </row>
+      </row>
+    </col>
+  </col>
+</gui>
