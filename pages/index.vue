@@ -264,44 +264,49 @@
       </div>
     </section>
 
-    <section class="hairtop">
+    <section class="hairtop library">
       <div class="wrap">
         <p class="kicker reveal">THE LIBRARY</p>
         <h2 class="reveal">The proof is in the files.</h2>
-        <div class="plates">
-          <div class="plate reveal">
-            <div class="canvas" style="background:var(--canvas);border:1px solid var(--hairline)">
-              <p style="font-size:13px;font-weight:600;margin-bottom:14px">Portfolio</p>
-              <div style="display:flex;gap:8px;align-items:flex-end;height:90px">
-                <i style="width:26px;height:42px;background:var(--blue);border-radius:3px"></i>
-                <i style="width:26px;height:64px;background:var(--blue);border-radius:3px"></i>
-                <i style="width:26px;height:50px;background:var(--blue);border-radius:3px"></i>
-                <i style="width:26px;height:88px;background:var(--ink);border-radius:3px"></i>
-                <i style="width:26px;height:70px;background:var(--blue);border-radius:3px"></i>
-              </div>
-              <p style="font-size:11px;font-weight:500;color:var(--green);margin-top:10px">+2.4% today</p>
-            </div>
-            <div class="cap"><span>stocks.gui</span><b>score 97</b></div>
-          </div>
-          <div class="plate reveal">
-            <div class="canvas" style="background:var(--dark)">
-              <i style="display:block;width:118px;height:118px;background:var(--purple);border-radius:9px;margin-bottom:14px"></i>
-              <p style="font-size:13px;font-weight:600;color:#fafaf7">Night Drive</p>
-              <p style="font-size:11px;color:#8a8578;margin-top:3px">Solar State:3:42</p>
-            </div>
-            <div class="cap"><span>player.gui · dark</span><b>score 91</b></div>
-          </div>
-          <div class="plate reveal">
-            <div class="canvas" style="background:var(--canvas);border:1px solid var(--hairline)">
-              <p style="font-size:13px;font-weight:600;margin-bottom:12px">Order summary</p>
-              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--body);padding:4px 0"><span>Ceramic mug ×2</span><span style="color:var(--ink)">$36</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--body);padding:4px 0;border-bottom:1px solid var(--hairline)"><span>Shipping</span><span style="color:var(--ink)">$5</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;padding:8px 0"><span>Total</span><span>$41</span></div>
-              <i style="display:block;width:140px;height:26px;background:var(--orange);border-radius:6px"></i>
-            </div>
-            <div class="cap"><span>checkout.gui</span><b>score 88</b></div>
+        <p class="lede reveal">Real <code>.gui</code> files — every one is plain text you can read, preview, and download. Some are ambitious clones of complex, well-known interfaces (Spotify, Figma, Instagram and more). They're here to show the format can carry a serious, real-world design end to end — not to reproduce anyone's product.</p>
+      </div>
+
+      <div class="marquee reveal" aria-hidden="true">
+        <div class="marquee-row">
+          <div class="marquee-track">
+            <NuxtLink
+              v-for="(ex, i) in [...libraryRowTop, ...libraryRowTop]"
+              :key="`t-${i}`"
+              :to="`/examples/${ex.slug}`"
+              class="tile"
+              :class="{ 'is-web': ex.category === 'web' }"
+            >
+              <img :src="ex.preview" :alt="`${ex.title} — .gui preview`" loading="lazy" />
+              <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
+            </NuxtLink>
           </div>
         </div>
+        <div class="marquee-row">
+          <div class="marquee-track reverse">
+            <NuxtLink
+              v-for="(ex, i) in [...libraryRowBottom, ...libraryRowBottom]"
+              :key="`b-${i}`"
+              :to="`/examples/${ex.slug}`"
+              class="tile"
+              :class="{ 'is-web': ex.category === 'web' }"
+            >
+              <img :src="ex.preview" :alt="`${ex.title} — .gui preview`" loading="lazy" />
+              <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <NuxtLink class="library-cta reveal" to="/examples">
+          View all {{ libraryCount }} examples
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </NuxtLink>
       </div>
     </section>
 
@@ -394,6 +399,16 @@
 </template>
 
 <script setup lang="ts">
+import { examples } from '~/lib/examples-data'
+
+// Real preview tiles for the "proof is in the files" marquee. Split across two
+// rows that scroll in opposite directions; each row is duplicated in the
+// template so the CSS loop is seamless.
+const libraryTiles = examples.filter((e) => e.preview)
+const libraryRowTop = libraryTiles.filter((_, i) => i % 2 === 0)
+const libraryRowBottom = libraryTiles.filter((_, i) => i % 2 === 1)
+const libraryCount = libraryTiles.length
+
 const SITE_URL = 'https://dotgui.org'
 // Canonical homepage URL (trailing slash) for structured-data identity refs.
 const HOME_URL = canonicalUrl('/')
@@ -1132,12 +1147,25 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .prod h3 { font-family: var(--display); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; margin: auto 0 10px; padding-top: 90px; }
 .prod p { font-size: 13.5px; line-height: 1.65; }
 
-/* gallery */
-.plates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 44px; }
-.plate { background: var(--card); border: 1px solid var(--hairline); border-radius: 16px; padding: 14px 14px 12px; }
-.plate .canvas { height: 195px; border-radius: 10px; padding: 16px; overflow: hidden; }
-.plate .cap { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 12px; }
-.plate .cap b { font-weight: 400; color: var(--ink); }
+/* gallery — moving marquee of real example previews */
+.library .lede { max-width: 640px; }
+.marquee { margin: 40px 0 4px; display: flex; flex-direction: column; gap: 18px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.marquee-row { overflow: hidden; }
+.marquee-track { display: flex; gap: 18px; width: max-content; animation: marquee 60s linear infinite; }
+.marquee-track.reverse { animation-direction: reverse; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.tile { position: relative; flex: 0 0 auto; height: 190px; border-radius: 14px; overflow: hidden; border: 1px solid var(--hairline); background: var(--card); display: block; }
+.tile img { height: 100%; width: auto; display: block; object-fit: cover; }
+.tile.is-web img { width: 320px; object-fit: cover; object-position: top; }
+.tile-cap { position: absolute; left: 10px; bottom: 10px; display: flex; align-items: baseline; padding: 4px 9px; border-radius: 999px; background: rgba(20,19,15,0.72); color: #fff; font-family: var(--mono); font-size: 11px; letter-spacing: -0.01em; opacity: 0; transition: opacity .2s ease; }
+.tile-cap b { font-weight: 400; opacity: 0.6; }
+.tile:hover .tile-cap { opacity: 1; }
+.tile:hover { border-color: var(--ink); }
+.library-cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 26px; font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--hairline); padding-bottom: 3px; transition: border-color .2s ease, gap .2s ease; }
+.library-cta:hover { border-color: var(--ink); gap: 12px; }
+.library-cta svg { width: 17px; height: 17px; }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
 
 /* closing + grid finale */
 .closing { text-align: center; padding: 120px 0 76px; border-top: 1px solid var(--hairline); }
