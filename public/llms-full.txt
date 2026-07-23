@@ -3333,7 +3333,7 @@ A Figma file is only fully readable inside Figma — the app, the API, or an exp
 
 ## .gui doesn’t require Figma
 
-The [Figma plugin](https://dotgui.org/figma/) exports any Figma layer tree to a `.gui` file — auto-layout, fills, gradients, effects, and tokens carried over as a 1:1 mapping of Figma’s own layer model, not approximated. That makes Figma **one entry point among several**, not a requirement. An agent can write a `.gui` file directly from a prompt with no design tool touched at any point — see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent/).
+The [Figma plugin](https://dotgui.org/figma/) (coming soon — currently in review) will export any Figma layer tree to a `.gui` file — auto-layout, fills, gradients, effects, and tokens carried over as a 1:1 mapping of Figma’s own layer model, not approximated. That makes Figma **one entry point among several**, not a requirement. Today, an agent can already write a `.gui` file directly from a prompt with no design tool touched at any point — see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent/).
 
 ## The loop, not a one-way export
 
@@ -3346,8 +3346,8 @@ Figma’s own AI integration path runs through MCP (Model Context Protocol) — 
 **FAQ**
 
 - **Do I need Figma to create a .gui file?** No. An AI agent with the dotgui skill installed (via gui setup) can write a .gui file directly from a prompt — Figma is one entry point among several, not a requirement.
-- **What gets preserved when exporting a Figma design to .gui?** Auto-layout, fills, gradients, effects, and design tokens — a 1:1 mapping of Figma’s own layer model, not an approximation.
-- **Can I open a .gui file back in Figma after an agent edits it?** That’s the point of the format: the same file is legible to a design tool and an agent, so it can move in either direction instead of only exporting once.
+- **What gets preserved when exporting a Figma design to .gui?** The Figma plugin is coming soon (in review). Once live, it will preserve auto-layout, fills, gradients, effects, and design tokens — a 1:1 mapping of Figma’s own layer model, not an approximation.
+- **Can I open a .gui file back in Figma after an agent edits it?** That’s the eventual point of the format: the same file is legible to a design tool and an agent, so it can move in either direction. The Figma plugin that enables this is coming soon.
 - **Does reading a .gui file require an MCP connection to Figma?** No. Once a design is exported to .gui, it’s a static file — no live connection, API calls, or access to Figma’s servers required to read it.
 
 ---
