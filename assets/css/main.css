@@ -114,7 +114,7 @@ body { min-height: 100vh; }
   animation: fadeDown 700ms var(--ease-out) both;
 }
 .site-nav .wrap { display: flex; align-items: center; justify-content: space-between; width: 100%; }
-.nav-logo { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-size: 23px; font-weight: 700; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
+.nav-logo { display: flex; align-items: center; gap: 10px; padding-right: 24px; font-family: var(--display); font-size: 23px; font-weight: 700; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
 .nav-logo i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
 .nav-links { display: flex; align-items: center; gap: 30px; }
 .nav-links a {

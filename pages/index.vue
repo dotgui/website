@@ -13,20 +13,34 @@
         </a>
         <NuxtLink class="btn-ghost" to="/spec">Read the spec</NuxtLink>
       </div>
-      <div class="herofig reveal" ref="herofigEl">
-        <div class="hf-bar">
-          <i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>
-          <span class="hf-name"><b>oscillate.gui</b> · one file</span>
-        </div>
-        <img class="hf-render" src="/samples/hero-render.webp" alt="A music-production DAW interface rendered from a .gui file" />
-        <div class="hf-code"><pre v-html="heroCodeHtml"></pre></div>
-        <div class="hf-handle" ref="hfHandleEl">
-          <div class="hf-grip">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
+      <div class="herofig-frame reveal">
+        <figcaption class="hf-annot annot-code">
+          <span class="annot-text">reads like code</span>
+          <svg class="annot-arrow" viewBox="0 0 62 40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21 C 20 11, 36 12, 53 20" />
+            <path d="M44 11 L 55 20 L 43 27" />
+          </svg>
+        </figcaption>
+        <div class="herofig" ref="herofigEl">
+          <div class="hf-bar">
+            <i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>
+            <span class="hf-name"><b>oscillate.gui</b> · one file</span>
+          </div>
+          <img class="hf-render" src="/samples/hero-render.webp" alt="A music-production DAW interface rendered from a .gui file" />
+          <div class="hf-code"><pre v-html="heroCodeHtml"></pre></div>
+          <div class="hf-handle" ref="hfHandleEl">
+            <div class="hf-grip">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg>
+            </div>
           </div>
         </div>
-        <span class="hf-tag code">reads like code</span>
-        <span class="hf-tag pix">renders like a picture</span>
+        <figcaption class="hf-annot annot-pix">
+          <svg class="annot-arrow" viewBox="0 0 62 40" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M59 21 C 42 11, 26 12, 9 20" />
+            <path d="M18 11 L 7 20 L 19 27" />
+          </svg>
+          <span class="annot-text">renders like a picture</span>
+        </figcaption>
       </div>
       <p class="fmt-cap reveal">the same file:drag to skim between its markup and the pixels it renders. the way SVG made graphics text, .gui makes interfaces text.</p>
     </header>
@@ -92,7 +106,7 @@
         <div class="head">
           <p class="kicker reveal">THE LOOP</p>
           <h2 class="reveal">The same file, tool to tool.</h2>
-          <p class="lede reveal">Ask an agent for a screen and it writes the file. Open it in a browser. Drop it into Figma, nudge a color, send it back. Every tool reads and writes the one <b>home.gui</b>:the design moves as data, not as a fresh screenshot or rewrite at each step.</p>
+          <p class="lede reveal">Ask an agent for a screen and it writes the file. Open it in a browser. Soon, drop it into Figma, nudge a color, send it back. Every tool reads and writes the one <b>home.gui</b>:the design moves as data, not as a fresh screenshot or rewrite at each step.</p>
         </div>
 
         <div class="stage reveal">
@@ -126,7 +140,7 @@
             </div>
 
             <div class="station figma" ref="stFigmaEl">
-              <div class="st-label"><span class="dot"></span>FIGMA</div>
+              <div class="st-label"><span class="dot"></span>FIGMA<span class="soon-tag">soon</span></div>
               <div class="figma-chrome"><i style="background:var(--orange)"></i><i style="background:var(--purple)"></i><i style="background:var(--green)"></i></div>
               <div class="fig-ui">
                 <div class="fig-frame">
@@ -170,7 +184,7 @@
           <span class="hub-head r">RENDERS &amp; TRANSLATES TO</span>
 
           <div class="hub-node l" style="top:68px"><span class="nd" style="background:var(--green)"></span>AI agents<span class="verb">writes</span></div>
-          <div class="hub-node l" style="top:168px"><span class="nd" style="background:var(--orange)"></span>Figma<span class="verb">exports</span></div>
+          <div class="hub-node l" style="top:168px"><span class="nd" style="background:var(--orange)"></span>Figma<span class="verb">exports · soon</span></div>
           <div class="hub-node l" style="top:268px"><span class="nd" style="background:var(--blue)"></span>Code editor<span class="verb">edits</span></div>
           <div class="hub-node l" style="top:368px"><span class="nd" style="background:var(--muted)"></span>A text editor<span class="verb">by hand</span></div>
 
@@ -244,7 +258,7 @@
           <NuxtLink class="prod reveal" to="/embed" style="background:var(--green);color:#fff">
             <div class="top"><span class="pkg" style="color:#cdebd8">@dotgui/embed</span><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></div>
             <h3>One script renders it</h3>
-            <p style="color:#dcf2e4">A CDN script and a gui-embed element render any .gui on any page. The Figma plugin moves files in and out of design tools.</p>
+            <p style="color:#dcf2e4">A CDN script and a gui-embed element render any .gui on any page. A Figma plugin to move files in and out of design tools is coming soon.</p>
           </NuxtLink>
         </div>
       </div>
@@ -362,7 +376,6 @@
       <div class="wrap">
         <h2 class="reveal">Design, written down.</h2>
         <p class="mono-sub reveal">open format · deterministic toolchain · yours to keep</p>
-        <NuxtLink class="btn-install reveal" to="/cli">npm i -g @dotgui/cli</NuxtLink>
       </div>
     </div>
 
@@ -373,15 +386,8 @@
           <NuxtLink to="/spec">spec</NuxtLink><NuxtLink to="/cli">cli</NuxtLink><NuxtLink to="/kit">kit</NuxtLink><NuxtLink to="/embed">embed</NuxtLink><NuxtLink to="/figma">figma</NuxtLink><NuxtLink to="/examples">examples</NuxtLink><NuxtLink to="/faq">faq</NuxtLink><a href="/llms.txt">llms.txt</a><a href="https://github.com/dotgui/core" target="_blank" rel="noopener">github</a>
         </span>
       </div>
-      <p class="gridhint">these aren't pixels anymore:hover the grid and read them</p>
       <div class="gridwall" ref="gridwallEl">
-        <span class="seed" style="left:150px;top:50px;background:var(--purple)"></span>
-        <span class="seed" style="left:500px;top:150px;background:var(--blue)"></span>
-        <span class="seed" style="left:350px;top:250px;background:var(--yellow)"></span>
-        <span class="seed" style="right:250px;top:100px;background:var(--green)"></span>
-        <span class="seed" style="right:450px;top:300px;background:var(--orange)"></span>
-        <span class="seed" style="right:100px;top:200px;background:var(--blue)"></span>
-        <span class="wordmark">.gui<i></i></span>
+        <span class="wordmark">.gui</span>
       </div>
     </footer>
   </div>
@@ -538,21 +544,65 @@ onMounted(() => {
   document.querySelectorAll('.home-v3 .reveal').forEach(el => revealIO.observe(el))
   cleanups.push(() => revealIO.disconnect())
 
-  // ── hero split: drag / click to skim between markup and pixels ──
+  // ── hero split: scroll drives the reveal (picture → code); drag / click
+  //    still works as a manual override once the user grabs the handle ──
   const fig = herofigEl.value
   const handle = hfHandleEl.value
   if (fig && handle) {
+    const PIC = 8    // % of code shown at the "picture" end
+    const CODE = 72  // % of code shown at the "code" end
     let dragging = false
-    const codeTag = fig.querySelector('.hf-tag.code') as HTMLElement | null
-    const pixTag = fig.querySelector('.hf-tag.pix') as HTMLElement | null
-    const setFromX = (clientX: number) => {
-      const r = fig.getBoundingClientRect()
-      const p = Math.max(9, Math.min(91, ((clientX - r.left) / r.width) * 100))
+    let manual = false          // once the user drags, stop scroll-driving
+
+    const applySplit = (p: number) => {
       fig.style.setProperty('--split', p.toFixed(2) + '%')
-      if (codeTag) codeTag.style.opacity = p < 20 ? '0' : '1'
-      if (pixTag) pixTag.style.opacity = p > 80 ? '0' : '1'
+      // focus: 0 = picture in focus (blur code), 1 = code in focus (blur picture)
+      const f = Math.max(0, Math.min(1, (p - PIC) / (CODE - PIC)))
+      fig.style.setProperty('--focus', f.toFixed(3))
     }
-    const onDown = (e: PointerEvent) => { dragging = true; handle.setPointerCapture(e.pointerId); e.preventDefault() }
+
+    // start at the picture end so the render is the first impression
+    applySplit(PIC)
+
+    // scroll-linked reveal
+    if (!reduced) {
+      let ticking = false
+      const onScroll = () => {
+        if (manual || ticking) return
+        ticking = true
+        requestAnimationFrame(() => {
+          ticking = false
+          // Progress tracks the page scrolling the figure from its resting
+          // spot up to the top of the viewport: 0 at load (picture), 1 when
+          // the figure reaches the top (code). Starts at the picture end
+          // regardless of where the figure sits on the page.
+          const r = fig.getBoundingClientRect()
+          const figTopAbs = r.top + window.scrollY
+          const denom = Math.max(1, figTopAbs * 0.9)
+          let t = window.scrollY / denom
+          t = Math.max(0, Math.min(1, t))
+          applySplit(PIC + t * (CODE - PIC))
+        })
+      }
+      window.addEventListener('scroll', onScroll, { passive: true })
+      window.addEventListener('resize', onScroll)
+      onScroll()
+      cleanups.push(() => {
+        window.removeEventListener('scroll', onScroll)
+        window.removeEventListener('resize', onScroll)
+      })
+    } else {
+      applySplit(44) // reduced motion: show a static balanced split
+    }
+
+    // manual drag / click override
+    const setFromX = (clientX: number) => {
+      manual = true
+      const r = fig.getBoundingClientRect()
+      const p = Math.max(PIC, Math.min(94, ((clientX - r.left) / r.width) * 100))
+      applySplit(p)
+    }
+    const onDown = (e: PointerEvent) => { dragging = true; manual = true; handle.setPointerCapture(e.pointerId); e.preventDefault() }
     const onMove = (e: PointerEvent) => { if (dragging) setFromX(e.clientX) }
     const onUp = () => { dragging = false }
     const onFigDown = (e: PointerEvent) => {
@@ -713,7 +763,7 @@ onMounted(() => {
   // ── pixel grid finale ──
   const wall = gridwallEl.value
   if (wall) {
-    const CELL = 50
+    const CELL = 38
     const tokens = ['<col>', '<row>', '<rect>', '<text>', '<img>', '<grid>', '<frame>', '</col>', '</row>', 'gap', 'role', 'w', 'h', 'p', 'radius', 'fill', 'align', 'mode']
     const colors = ['var(--blue)', 'var(--yellow)', 'var(--orange)', 'var(--green)', 'var(--purple)']
     const buildGrid = () => {
@@ -729,22 +779,76 @@ onMounted(() => {
     buildGrid()
     addEventListener('resize', buildGrid)
     cleanups.push(() => removeEventListener('resize', buildGrid))
+
+    // Flash a single cell with a random token — shared by hover and the
+    // ambient matrix rain. `head` renders a brighter leading drop.
+    const flash = (c: number, r: number, hold = 900, head = false, alpha = 1) => {
+      const h = document.createElement('span'); h.className = 'hovercell'
+      h.style.left = (c * CELL) + 'px'; h.style.top = (r * CELL) + 'px'
+      const col = colors[Math.floor(Math.random() * colors.length)]
+      h.textContent = tokens[Math.floor(Math.random() * tokens.length)]
+      h.style.color = 'color-mix(in srgb, ' + col + ' ' + Math.round(alpha * 100) + '%, transparent)'
+      h.style.background = 'color-mix(in srgb, ' + col + ' ' + (Math.round((head ? 15 : 7) * alpha)) + '%, transparent)'
+      if (head) h.style.fontWeight = '600'
+      wall.appendChild(h)
+      requestAnimationFrame(() => h.classList.add('show'))
+      setTimeout(() => { h.classList.remove('show'); setTimeout(() => h.remove(), 600) }, hold)
+    }
+
     let last: string | null = null
     const onMove = (e: MouseEvent) => {
       const rect = wall.getBoundingClientRect()
       const c = Math.floor((e.clientX - rect.left) / CELL), r = Math.floor((e.clientY - rect.top) / CELL)
       const key = c + ',' + r; if (key === last) return; last = key
-      const h = document.createElement('span'); h.className = 'hovercell'
-      h.style.left = (c * CELL) + 'px'; h.style.top = (r * CELL) + 'px'
-      const col = colors[Math.floor(Math.random() * colors.length)]
-      h.textContent = tokens[Math.floor(Math.random() * tokens.length)]
-      h.style.color = col; h.style.background = 'color-mix(in srgb, ' + col + ' 12%, transparent)'
-      wall.appendChild(h)
-      requestAnimationFrame(() => h.classList.add('show'))
-      setTimeout(() => { h.classList.remove('show'); setTimeout(() => h.remove(), 600) }, 900)
+      flash(c, r)
     }
     wall.addEventListener('mousemove', onMove)
     cleanups.push(() => wall.removeEventListener('mousemove', onMove))
+
+    // Ambient matrix rain: each column runs its own drop that falls top to
+    // bottom, lighting one cell at a time and leaving a fading trail. Pauses
+    // when the tab is hidden and is disabled under reduced-motion.
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (!reduce) {
+      let alive = true
+      const dropInColumn = (c: number) => {
+        if (!alive) return
+        const rows = Math.ceil(wall.clientHeight / CELL)
+        const speed = 120 + Math.random() * 120  // ms per row
+        const trail = 500 + Math.random() * 300  // how long each cell lingers (shorter = fainter trail)
+        let r = 0
+        const step = () => {
+          if (!alive) return
+          const cols = Math.ceil(wall.clientWidth / CELL)
+          if (c >= cols) { setTimeout(() => dropInColumn(c), 3000); return } // column now off-screen
+          if (document.hidden) { setTimeout(step, 200); return }
+          // Solid for the top ~45% of the fall, then fade to nothing — the
+          // last two rows are always fully transparent (hard zero).
+          const zeroFrom = rows - 2            // last two rows: nothing at all
+          const solidUntil = rows * 0.45
+          const alpha = r >= zeroFrom ? 0
+            : r <= solidUntil ? 1
+            : Math.max(0, 1 - (r - solidUntil) / (zeroFrom - solidUntil))
+          if (alpha > 0.05) flash(c, r, trail, true, alpha)
+          r++
+          if (r < rows) {
+            setTimeout(step, speed)
+          } else {
+            setTimeout(() => dropInColumn(c), 4000 + Math.random() * 9000) // long rest between drops
+          }
+        }
+        step()
+      }
+      const startRain = () => {
+        const cols = Math.ceil(wall.clientWidth / CELL)
+        for (let c = 0; c < cols; c++) {
+          // Only a few columns rain at a time; the rest join later, spread out.
+          setTimeout(() => dropInColumn(c), Math.random() * 12000)
+        }
+      }
+      setTimeout(startRain, 400)
+      cleanups.push(() => { alive = false })
+    }
   }
 
   onBeforeUnmount(() => cleanups.forEach(fn => fn()))
@@ -774,6 +878,7 @@ onMounted(() => {
   background: var(--canvas);
   color: var(--ink);
   font-family: var(--sans);
+  overflow-x: clip;
 }
 .wrap { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
 
@@ -793,13 +898,20 @@ onMounted(() => {
 
 /* hero:floating formats field */
 /* hero:the file that is also a picture (drag-to-skim split) */
-.herofig { --split: 44%; position: relative; max-width: 1000px; margin: 52px auto 16px; border-radius: 16px; overflow: hidden; border: 1px solid var(--hairline); box-shadow: 0 44px 110px -34px rgba(16,16,16,.36), 0 8px 24px rgba(16,16,16,.10); background: #0c0e10; aspect-ratio: 1440 / 900; touch-action: none; user-select: none; }
+.herofig-frame { position: relative; max-width: 1000px; margin: 52px auto 16px; }
+.herofig { --split: 8%; --focus: 0; position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--hairline); box-shadow: 0 44px 110px -34px rgba(16,16,16,.36), 0 8px 24px rgba(16,16,16,.10); background: #0c0e10; aspect-ratio: 1440 / 900; touch-action: none; user-select: none; }
 .hf-bar { position: absolute; inset: 0 0 auto 0; height: 40px; z-index: 7; display: flex; align-items: center; gap: 8px; padding: 0 15px; background: rgba(12,14,16,.72); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,.07); }
 .hf-bar i { width: 11px; height: 11px; border-radius: 50%; }
 .hf-name { margin-left: 8px; font-family: var(--mono); font-size: 12.5px; color: #b9c0bc; }
 .hf-name b { color: #fff; font-weight: 600; }
-.hf-render { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; }
-.hf-code { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--split)) 0 0); background: #0c0e10; padding: 54px 0 0 34px; overflow: hidden; }
+.hf-render { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left;
+  /* recede as code takes focus: soften + desaturate, keep it bright */
+  filter: blur(calc(var(--focus) * 2.5px)) grayscale(var(--focus));
+  transition: filter 180ms linear; }
+.hf-code { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--split)) 0 0); background: #0c0e10; padding: 54px 0 0 34px; overflow: hidden;
+  /* recede while the picture is in focus: soften + desaturate the syntax */
+  filter: blur(calc((1 - var(--focus)) * 2.5px)) grayscale(calc(1 - var(--focus)));
+  transition: filter 180ms linear; }
 .hf-code pre { margin: 0; font-family: var(--mono); font-size: 12.5px; line-height: 1.62; color: #c3ccc6; white-space: pre; text-align: left; }
 .hf-code :deep(.t) { color: #6ea8fe; }
 .hf-code :deep(.a) { color: #e8a765; }
@@ -809,9 +921,27 @@ onMounted(() => {
 .hf-handle { position: absolute; top: 40px; bottom: 0; left: var(--split); width: 2px; transform: translateX(-1px); z-index: 6; background: linear-gradient(#3DD68C, #4FC1FF); cursor: ew-resize; box-shadow: 0 0 12px rgba(61,214,140,.5); }
 .hf-grip { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border-radius: 50%; background: rgba(12,14,16,.9); border: 1px solid rgba(255,255,255,.28); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 22px rgba(0,0,0,.5); }
 .hf-grip svg { width: 20px; height: 20px; stroke: #fff; }
-.hf-tag { position: absolute; bottom: 22px; z-index: 6; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .03em; padding: 6px 11px; border-radius: 999px; backdrop-filter: blur(6px); pointer-events: none; transition: opacity 200ms ease; }
-.hf-tag.code { left: 26px; background: rgba(12,14,16,.62); color: #7ec98a; border: 1px solid rgba(126,201,138,.32); }
-.hf-tag.pix { right: 26px; background: rgba(255,255,255,.88); color: var(--ink); border: 1px solid rgba(16,16,16,.1); }
+/* hand-drawn sketch annotations. default (mobile/tablet): stacked under the
+   figure, arrows pointing up at it. */
+.hf-annot { display: flex; flex-direction: column; align-items: center; gap: 2px; font-family: "Caveat", cursive; font-weight: 700; font-size: 24px; line-height: 1.05; color: #5a544a; pointer-events: none; text-align: center; }
+.hf-annot .annot-arrow { width: 34px; height: 34px; flex-shrink: 0; order: -1; }
+.annot-code .annot-arrow { transform: rotate(-90deg); }
+.annot-pix  .annot-arrow { transform: rotate(90deg); }
+.annot-code .annot-text { color: #3e8f57; }
+.annot-pix  .annot-text { color: #b0632e; }
+.herofig-frame { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 16px 44px; }
+.herofig-frame .herofig { flex: 1 1 100%; order: -1; }
+/* wide desktop: hang the notes in the side gutters, arrows pointing inward.
+   text stays on one line; the arrow sits beneath it aimed at the figure. */
+@media (min-width: 1360px) {
+  .herofig-frame { display: block; }
+  .herofig-frame .herofig { flex: none; }
+  .hf-annot { position: absolute; z-index: 8; flex-direction: column; gap: 4px; font-size: 25px; }
+  .hf-annot .annot-text { white-space: nowrap; }
+  .hf-annot .annot-arrow { order: 0; width: 44px; height: 26px; transform: none; }
+  .annot-code { right: 100%; top: 60%; margin-right: 14px; transform: rotate(-4deg); align-items: flex-end; }
+  .annot-pix  { left: 100%; top: 24%; margin-left: 14px; transform: rotate(3deg); align-items: flex-start; }
+}
 .fmt-cap { text-align: center; font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 2px; }
 @media (max-width: 720px) {
   .hf-code { padding-left: 20px; }
@@ -896,6 +1026,7 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .station { background: var(--card); border: 1px solid var(--hairline); border-radius: 16px; padding: 18px; height: 330px; position: relative; overflow: hidden; transition: border-color 400ms, box-shadow 400ms, transform 400ms; }
 .station .st-label { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 14px; }
 .station .st-label .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--hairline); transition: background 400ms; }
+.station .st-label .soon-tag { margin-left: 6px; padding: 1px 6px; border-radius: 999px; background: var(--orange); color: #fff; font-size: 8.5px; letter-spacing: 0.06em; text-transform: uppercase; }
 .station.active { border-color: var(--ink); box-shadow: 0 14px 40px rgba(16,16,16,.10); transform: translateY(-3px); }
 .station.active .st-label { color: var(--ink); }
 .station.agent.active .dot { background: var(--term-green); }
@@ -1018,11 +1149,12 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .foot-links a { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; }
 .gridhint { font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: center; padding: 14px 0 10px; }
 .gridwall { position: relative; height: 400px; border-top: 1px solid var(--hairline); cursor: crosshair; }
-.gridwall :deep(.gridcell) { position: absolute; width: 50px; height: 50px; border-right: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
-.gridwall .seed { position: absolute; width: 50px; height: 50px; }
-.gridwall .wordmark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52%); font-family: var(--display); font-weight: 700; font-size: clamp(150px, 20vw, 280px); letter-spacing: -0.05em; color: var(--ink); line-height: 1; pointer-events: none; }
-.gridwall .wordmark i { display: inline-block; width: .13em; height: .13em; background: var(--orange); border-radius: .028em; font-style: normal; margin-left: .05em; }
-.gridwall :deep(.hovercell) { position: absolute; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 9px; pointer-events: none; opacity: 0; transition: opacity 500ms; white-space: nowrap; z-index: 2; }
+.gridwall :deep(.gridcell) { position: absolute; width: 38px; height: 38px; border-right: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+.gridwall .seed { position: absolute; width: 38px; height: 38px; }
+.gridwall .wordmark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52%); font-family: var(--display); font-weight: 700; font-size: clamp(150px, 20vw, 280px); letter-spacing: -0.05em; line-height: 1; pointer-events: none;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--ink) 14%, transparent) 0%, color-mix(in srgb, var(--ink) 4%, transparent) 55%, transparent 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; }
+.gridwall :deep(.hovercell) { position: absolute; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 8px; pointer-events: none; opacity: 0; transition: opacity 500ms; white-space: nowrap; z-index: 2; }
 .gridwall :deep(.hovercell.show) { opacity: 1; transition: opacity 80ms; }
 
 @media (max-width: 900px) {

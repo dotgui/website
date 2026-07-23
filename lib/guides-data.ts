@@ -118,7 +118,7 @@ export const guideEntries: GuideEntry[] = [
     body: [
       { type: 'p', text: 'A Figma file is only fully readable inside Figma — the app, the API, or an export. It’s an excellent design environment, but the file itself is not a portable artifact you can open in a text editor, diff in git, or hand to an agent without going through Figma’s servers. <strong>A <code>.gui</code> file is plain text.</strong> Unzip it and <code>design.guix</code> is readable XML — open it in any editor, <code>git diff</code> it line by line, generate it from a script with no design tool involved at all.' },
       { type: 'h2', text: '.gui doesn’t require Figma' },
-      { type: 'p', text: 'The <a href="/figma">Figma plugin</a> exports any Figma layer tree to a <code>.gui</code> file — auto-layout, fills, gradients, effects, and tokens carried over as a 1:1 mapping of Figma’s own layer model, not approximated. That makes Figma <strong>one entry point among several</strong>, not a requirement. An agent can write a <code>.gui</code> file directly from a prompt with no design tool touched at any point — see <a href="/guides/prompting-your-agent">Prompting your agent</a>.' },
+      { type: 'p', text: 'The <a href="/figma">Figma plugin</a> (coming soon — currently in review) will export any Figma layer tree to a <code>.gui</code> file — auto-layout, fills, gradients, effects, and tokens carried over as a 1:1 mapping of Figma’s own layer model, not approximated. That makes Figma <strong>one entry point among several</strong>, not a requirement. Today, an agent can already write a <code>.gui</code> file directly from a prompt with no design tool touched at any point — see <a href="/guides/prompting-your-agent">Prompting your agent</a>.' },
       { type: 'h2', text: 'The loop, not a one-way export' },
       { type: 'p', text: 'Because the same file is legible to both a design tool and an agent, it can move in either direction: an agent writes <code>home.gui</code>, a designer opens it in Figma to nudge a color, the file goes back to the agent to wire up. Every stop in that loop reads and writes the same file — nothing gets re-derived from a screenshot at each step. That loop is the actual point; Figma export is one leg of it, not the whole story.' },
       { type: 'h2', text: 'No live connection required' },
@@ -126,8 +126,8 @@ export const guideEntries: GuideEntry[] = [
     ],
     faq: [
       { q: 'Do I need Figma to create a .gui file?', a: 'No. An AI agent with the dotgui skill installed (via gui setup) can write a .gui file directly from a prompt — Figma is one entry point among several, not a requirement.' },
-      { q: 'What gets preserved when exporting a Figma design to .gui?', a: 'Auto-layout, fills, gradients, effects, and design tokens — a 1:1 mapping of Figma’s own layer model, not an approximation.' },
-      { q: 'Can I open a .gui file back in Figma after an agent edits it?', a: 'That’s the point of the format: the same file is legible to a design tool and an agent, so it can move in either direction instead of only exporting once.' },
+      { q: 'What gets preserved when exporting a Figma design to .gui?', a: 'The Figma plugin is coming soon (in review). Once live, it will preserve auto-layout, fills, gradients, effects, and design tokens — a 1:1 mapping of Figma’s own layer model, not an approximation.' },
+      { q: 'Can I open a .gui file back in Figma after an agent edits it?', a: 'That’s the eventual point of the format: the same file is legible to a design tool and an agent, so it can move in either direction. The Figma plugin that enables this is coming soon.' },
       { q: 'Does reading a .gui file require an MCP connection to Figma?', a: 'No. Once a design is exported to .gui, it’s a static file — no live connection, API calls, or access to Figma’s servers required to read it.' }
     ],
     related: ['vs-screenshots', 'vs-css', 'prompting-your-agent']

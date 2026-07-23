@@ -47,7 +47,7 @@ import { siteFaq } from '~/lib/site-faq'
 const productFaqs = [
   { name: 'Kit', to: '/kit#faq', sub: 'the reference engine' },
   { name: 'CLI', to: '/cli#faq', sub: 'the command-line toolchain' },
-  { name: 'Figma', to: '/figma#faq', sub: 'export designs to .gui' },
+  { name: 'Figma', to: '/figma#faq', sub: 'export designs to .gui — coming soon' },
   { name: 'Embed', to: '/embed#faq', sub: 'render .gui in the browser' },
   { name: 'Quality', to: '/spec/quality', sub: 'the CCAC scoring model' }
 ]

@@ -1,13 +1,15 @@
 <template>
   <DocShell title="Figma" overview="/figma" :groups="navGroups">
     <header id="figma-top" class="doc-header">
-      <p class="doc-eyebrow">dotgui for Figma · plugin</p>
+      <p class="doc-eyebrow">dotgui for Figma · plugin <span class="badge-soon">Coming soon</span></p>
       <h1 class="doc-title">Export any Figma screen as a .gui file</h1>
       <p class="doc-desc">
-        The dotgui Figma plugin exports any layer:a frame, component, group, or single
-        shape:as a <code>.gui</code> file. The export provides <strong>high-fidelity coverage (~95%)</strong> of
+        The dotgui Figma plugin will export any layer:a frame, component, group, or single
+        shape:as a <code>.gui</code> file, with <strong>high-fidelity coverage (~95%)</strong> of
         Figma's layer model: auto-layout, fills, gradients, effects, and tokens
-        are preserved with documented limitations (gradient strokes, some effect types, heavily overridden instances).
+        preserved, with documented limitations (gradient strokes, some effect types, heavily overridden instances).
+        The plugin is <strong>in review with the Figma Community</strong> and not yet available:until it ships,
+        an AI agent can already write <code>.gui</code> files directly from a prompt, no design tool required.
       </p>
     </header>
 
@@ -46,7 +48,7 @@
       <h2 class="cat-label">Roadmap</h2>
       <p class="cat-lead">Round-trip is the goal.</p>
       <p class="cat-note">
-        Export is shipping today. The round-trip:<code>gui pull &lt;figma-url&gt;</code>
+        Export ships first, once the plugin clears review. The round-trip:<code>gui pull &lt;figma-url&gt;</code>
         and <code>gui push home.gui &lt;figma-url&gt;</code> from the CLI:is on the
         roadmap, closing the loop: design in Figma, iterate with your agent, push back to
         Figma without losing fidelity.
@@ -67,7 +69,7 @@
 
 <script setup lang="ts">
 const steps = [
-  { n: '01', text: 'Install the dotgui plugin from the Figma Community.' },
+  { n: '01', text: 'Install the dotgui plugin from the Figma Community (coming soon — the plugin is in review).' },
   { n: '02', text: 'Select any visible layer:frames, components, groups, or individual shapes.' },
   { n: '03', text: 'Export. Small selections produce inline .gui XML; larger ones download as a packaged .gui with an assets/ folder.' },
   { n: '04', text: 'Render it with the kit, embed it on a page, or hand it to your agent as structured context.' }
@@ -100,21 +102,21 @@ const faq = [
   },
   {
     q: 'Can I import a .gui file back into Figma?',
-    a: 'Not yet:export is shipping today, and the pull/push round-trip via the CLI is on the roadmap.'
+    a: 'Not yet. The plugin is in review with the Figma Community; export ships first once it is live, and the pull/push round-trip via the CLI is on the roadmap.'
   }
 ]
 
 usePageSeo({
   path: '/figma',
-  title: 'dotgui Figma plugin:export Figma designs to .gui',
-  description: 'Export any Figma frame, component, or layer as an open .gui file. A 1:1 mapping of Figma\'s layer model:auto-layout, fills, gradients, effects, and tokens preserved:ready for AI agents and any renderer.'
+  title: 'dotgui Figma plugin (coming soon):export Figma designs to .gui',
+  description: 'A Figma plugin, coming soon, to export any frame, component, or layer as an open .gui file. A 1:1 mapping of Figma\'s layer model:auto-layout, fills, gradients, effects, and tokens preserved:ready for AI agents and any renderer.'
 })
 
 useProductSchema({
   path: '/figma',
   name: 'dotgui Figma plugin',
   crumb: 'figma',
-  description: 'A Figma plugin that exports any layer as a .gui file:a 1:1, token-preserving mapping of Figma\'s layer model into the open .gui format.',
+  description: 'A Figma plugin, coming soon, that exports any layer as a .gui file:a 1:1, token-preserving mapping of Figma\'s layer model into the open .gui format.',
   faq
 })
 </script>
@@ -128,6 +130,18 @@ useProductSchema({
   text-transform: uppercase;
   color: var(--text-dim);
   margin-bottom: 12px;
+}
+.badge-soon {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--orange, #f59e0b);
+  color: #fff;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
 }
 .doc-title {
   font-family: var(--display);

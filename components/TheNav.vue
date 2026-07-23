@@ -1,7 +1,7 @@
 <template>
   <nav class="site-nav" :class="{ 'is-open': open }">
     <div class="wrap">
-      <NuxtLink class="nav-logo" to="/" @click="open = false">.gui <i style="background:var(--blue)"></i><i style="background:var(--yellow)"></i><i style="background:var(--orange)"></i></NuxtLink>
+      <NuxtLink class="nav-logo" to="/" @click="open = false">.gui</NuxtLink>
       <button
         class="nav-toggle"
         type="button"

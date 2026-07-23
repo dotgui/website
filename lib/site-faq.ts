@@ -36,7 +36,7 @@ export const siteFaq: SiteFaq[] = [
   },
   {
     q: "How do I export a Figma design to .gui?",
-    a: "Use the dotgui Figma plugin. Select any layer:frame, component, group, or shape:and export it as a .gui file. The plugin provides high-fidelity export (~95% coverage) of Figma’s layer model: auto-layout, fills, gradients, effects, and tokens are preserved. Known limitations: gradient strokes are not emitted, some effect types are documented as comments, and heavily overridden instances (≥75%) are detached to inline trees."
+    a: "The dotgui Figma plugin is coming soon — it is currently in review with the Figma Community. Once live, you will select any layer:frame, component, group, or shape:and export it as a .gui file, with high-fidelity coverage (~95%) of Figma’s layer model: auto-layout, fills, gradients, effects, and tokens preserved. Known limitations: gradient strokes are not emitted, some effect types are documented as comments, and heavily overridden instances (≥75%) are detached to inline trees. In the meantime, an AI agent can write a .gui file directly from a prompt without any design tool."
   },
   {
     q: 'Is .gui free and open?',

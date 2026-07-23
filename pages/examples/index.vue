@@ -184,7 +184,6 @@ useHead({
   justify-content: center;
   transition: border-color 180ms var(--ease-out), transform 180ms var(--ease-out);
 }
-.ex-thumb.is-web { aspect-ratio: 4 / 3; }
 .ex-card:hover .ex-thumb { border-color: var(--muted-soft); transform: translateY(-2px); }
 .ex-thumb-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
 .ex-thumb-fallback {

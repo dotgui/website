@@ -35,10 +35,6 @@
         "value": "#FBFDF7"
       },
       {
-        "name": "surface",
-        "value": "#FFFFFF"
-      },
-      {
         "name": "surface-variant",
         "value": "#E8F0DE"
       },
@@ -61,11 +57,15 @@
       {
         "name": "primary-cont",
         "value": "#C0EDA0"
+      },
+      {
+        "name": "on-cont",
+        "value": "#0C2000"
       }
     ],
     "download": "/examples/bloom-pdp/download",
     "raw": "/examples/bloom-pdp/raw",
-    "preview": ""
+    "preview": "/examples/bloom-pdp/preview.webp"
   },
   {
     "slug": "flight-results-mobile",
@@ -77,16 +77,8 @@
         "value": "#07070A"
       },
       {
-        "name": "surface",
-        "value": "#12121A"
-      },
-      {
         "name": "surface-elevated",
         "value": "#1A1A26"
-      },
-      {
-        "name": "border",
-        "value": "#22222F"
       },
       {
         "name": "primary",
@@ -119,14 +111,6 @@
         "value": "#FAF8F5"
       },
       {
-        "name": "surface",
-        "value": "#FFFFFF"
-      },
-      {
-        "name": "surface-2",
-        "value": "#F3EFE9"
-      },
-      {
         "name": "border",
         "value": "#EBE5DF"
       },
@@ -145,6 +129,10 @@
       {
         "name": "primary",
         "value": "#CE6D48"
+      },
+      {
+        "name": "accent",
+        "value": "#4A6F5C"
       }
     ],
     "download": "/examples/flight-search-results/download",
@@ -159,14 +147,6 @@
       {
         "name": "bg",
         "value": "#FAF5EF"
-      },
-      {
-        "name": "surface",
-        "value": "#FFFFFF"
-      },
-      {
-        "name": "surface-elevated",
-        "value": "#FFFDF9"
       },
       {
         "name": "border",
@@ -187,6 +167,14 @@
       {
         "name": "primary-orange",
         "value": "#FE7B47"
+      },
+      {
+        "name": "sleep-blue",
+        "value": "#396A93"
+      },
+      {
+        "name": "focus-yellow",
+        "value": "#D97706"
       }
     ],
     "download": "/examples/headspace-clone/download",
@@ -227,8 +215,8 @@
         "value": "#A78BFA"
       },
       {
-        "name": "timeline-bg",
-        "value": "#0F0F13"
+        "name": "playhead-red",
+        "value": "#EF4444"
       }
     ],
     "download": "/examples/video-editor/download",
@@ -249,10 +237,6 @@
         "value": "#121212"
       },
       {
-        "name": "surface-2",
-        "value": "#1F1F1F"
-      },
-      {
         "name": "border",
         "value": "#262626"
       },
@@ -271,6 +255,10 @@
       {
         "name": "text-highlight",
         "value": "#E5E5E5"
+      },
+      {
+        "name": "primary",
+        "value": "#0095F6"
       }
     ],
     "download": "/examples/instagram-clone/download",
@@ -307,17 +295,13 @@
         "value": "#6B6258"
       },
       {
-        "name": "sand",
-        "value": "#DED6C8"
-      },
-      {
-        "name": "desc",
-        "value": "#6F6960"
+        "name": "gold",
+        "value": "#C7A16B"
       }
     ],
     "download": "/examples/chair/download",
     "raw": "/examples/chair/raw",
-    "preview": ""
+    "preview": "/examples/chair/preview.webp"
   },
   {
     "slug": "meridian-flight-results",
@@ -341,10 +325,6 @@
       {
         "name": "dust",
         "value": "#241F1C"
-      },
-      {
-        "name": "dust-2",
-        "value": "#2E2823"
       },
       {
         "name": "dust-3",
@@ -373,7 +353,7 @@
     ],
     "download": "/examples/player/download",
     "raw": "/examples/player/raw",
-    "preview": ""
+    "preview": "/examples/player/preview.webp"
   },
   {
     "slug": "skeuomorphic-music",
@@ -415,10 +395,6 @@
         "value": "#ffffff"
       },
       {
-        "name": "surface-soft",
-        "value": "#e5e7e0"
-      },
-      {
         "name": "border",
         "value": "#bfc1b7"
       },
@@ -437,6 +413,10 @@
       {
         "name": "on-primary",
         "value": "#23251d"
+      },
+      {
+        "name": "body",
+        "value": "#4d4f46"
       }
     ],
     "download": "/examples/posthog-flights/download",
@@ -457,10 +437,6 @@
         "value": "#ffffff"
       },
       {
-        "name": "surface-soft",
-        "value": "#e5e7e0"
-      },
-      {
         "name": "border",
         "value": "#bfc1b7"
       },
@@ -479,6 +455,10 @@
       {
         "name": "body",
         "value": "#4d4f46"
+      },
+      {
+        "name": "text-secondary",
+        "value": "#6c6e63"
       }
     ],
     "download": "/examples/posthog-analytics/download",
@@ -541,16 +521,8 @@
         "value": "#0C0A09"
       },
       {
-        "name": "hud-glass",
-        "value": "#0000005C"
-      },
-      {
         "name": "hud-glass-border",
         "value": "#FFFFFF26"
-      },
-      {
-        "name": "text-primary",
-        "value": "#FFFFFF"
       },
       {
         "name": "text-secondary",
@@ -579,16 +551,8 @@
         "value": "#09080B"
       },
       {
-        "name": "surface",
-        "value": "#131118"
-      },
-      {
         "name": "surface-2",
         "value": "#211E29"
-      },
-      {
-        "name": "border",
-        "value": "#1E1C24"
       },
       {
         "name": "text-primary",
@@ -605,6 +569,10 @@
       {
         "name": "primary",
         "value": "#1ED760"
+      },
+      {
+        "name": "accent",
+        "value": "#8B5CF6"
       }
     ],
     "download": "/examples/spotify-playlist/download",
@@ -619,10 +587,6 @@
       {
         "name": "bg",
         "value": "#FBFDF6"
-      },
-      {
-        "name": "surface",
-        "value": "#FFFFFF"
       },
       {
         "name": "surface-variant",
@@ -647,6 +611,10 @@
       {
         "name": "primary-cont",
         "value": "#CDEDA3"
+      },
+      {
+        "name": "on-cont",
+        "value": "#0C2000"
       }
     ],
     "download": "/examples/stride-today/download",
@@ -663,16 +631,8 @@
         "value": "#08080C"
       },
       {
-        "name": "surface",
-        "value": "#111116"
-      },
-      {
         "name": "surface-elevated",
         "value": "#181822"
-      },
-      {
-        "name": "border",
-        "value": "#1F1F2C"
       },
       {
         "name": "text-primary",
@@ -689,6 +649,14 @@
       {
         "name": "recovery-green",
         "value": "#00E676"
+      },
+      {
+        "name": "strain-orange",
+        "value": "#FF5F1F"
+      },
+      {
+        "name": "sleep-teal",
+        "value": "#00E5FF"
       }
     ],
     "download": "/examples/whoop-dashboard/download",
@@ -705,10 +673,6 @@
         "value": "#050507"
       },
       {
-        "name": "surface",
-        "value": "#0C0C10"
-      },
-      {
         "name": "surface-2",
         "value": "#12121A"
       },
@@ -717,20 +681,20 @@
         "value": "#FFFFFF0D"
       },
       {
-        "name": "border-strong",
-        "value": "#FFFFFF1D"
-      },
-      {
-        "name": "text-primary",
-        "value": "#FAFAFC"
-      },
-      {
         "name": "text-secondary",
         "value": "#A0A0AB"
       },
       {
         "name": "text-tertiary",
         "value": "#52525B"
+      },
+      {
+        "name": "primary",
+        "value": "#00D2FF"
+      },
+      {
+        "name": "accent-purple",
+        "value": "#7A3DFF"
       }
     ],
     "download": "/examples/dotgui-landing-page/download",
@@ -745,10 +709,6 @@
       {
         "name": "bg",
         "value": "#ECEAE5"
-      },
-      {
-        "name": "surface",
-        "value": "#E4E1DA"
       },
       {
         "name": "surface-2",
@@ -773,11 +733,15 @@
       {
         "name": "accent",
         "value": "#3F7D74"
+      },
+      {
+        "name": "accent-dim",
+        "value": "#5F9A90"
       }
     ],
     "download": "/examples/drift/download",
     "raw": "/examples/drift/raw",
-    "preview": ""
+    "preview": "/examples/drift/preview.webp"
   },
   {
     "slug": "echelon-atelier-events",
@@ -789,24 +753,8 @@
         "value": "#F5EFE5"
       },
       {
-        "name": "cream-deep",
-        "value": "#EFE6D8"
-      },
-      {
-        "name": "paper",
-        "value": "#FBF7F0"
-      },
-      {
         "name": "espresso",
         "value": "#261C14"
-      },
-      {
-        "name": "espresso-soft",
-        "value": "#322519"
-      },
-      {
-        "name": "ink",
-        "value": "#2E2418"
       },
       {
         "name": "body",
@@ -815,6 +763,22 @@
       {
         "name": "taupe",
         "value": "#9C8E7B"
+      },
+      {
+        "name": "hairline",
+        "value": "#E3D8C6"
+      },
+      {
+        "name": "hairline-dark",
+        "value": "#3E3225"
+      },
+      {
+        "name": "gold",
+        "value": "#BE9663"
+      },
+      {
+        "name": "gold-deep",
+        "value": "#A87F4D"
       }
     ],
     "download": "/examples/echelon-atelier-events/download",
@@ -835,10 +799,6 @@
         "value": "#2C2C2C"
       },
       {
-        "name": "bg-panel-elevated",
-        "value": "#333333"
-      },
-      {
         "name": "border",
         "value": "#3E3E3E"
       },
@@ -847,16 +807,20 @@
         "value": "#0C8CE9"
       },
       {
-        "name": "brand-blue-bg",
-        "value": "#0C8CE91F"
-      },
-      {
         "name": "text-primary",
         "value": "#FFFFFF"
       },
       {
         "name": "text-secondary",
         "value": "#B3B3B3"
+      },
+      {
+        "name": "text-tertiary",
+        "value": "#808080"
+      },
+      {
+        "name": "accent-green",
+        "value": "#0ACF83"
       }
     ],
     "download": "/examples/figma-clone/download",
@@ -873,16 +837,8 @@
         "value": "#07070A"
       },
       {
-        "name": "surface",
-        "value": "#12121A"
-      },
-      {
         "name": "surface-elevated",
         "value": "#1A1A26"
-      },
-      {
-        "name": "border",
-        "value": "#22222F"
       },
       {
         "name": "primary",
@@ -897,8 +853,8 @@
         "value": "#10B981"
       },
       {
-        "name": "text-primary",
-        "value": "#F3F4F6"
+        "name": "text-muted",
+        "value": "#9CA3AF"
       }
     ],
     "download": "/examples/flight-results/download",
@@ -915,10 +871,6 @@
         "value": "#08090b"
       },
       {
-        "name": "surface",
-        "value": "#111317"
-      },
-      {
         "name": "surface-elevated",
         "value": "#1a1d24"
       },
@@ -927,20 +879,12 @@
         "value": "#e0a96d"
       },
       {
-        "name": "primary-soft",
-        "value": "#e0a96d18"
-      },
-      {
         "name": "text-primary",
         "value": "#f3f4f6"
       },
       {
         "name": "text-secondary",
         "value": "#858e99"
-      },
-      {
-        "name": "border",
-        "value": "#ffffff12"
       }
     ],
     "download": "/examples/design-event-booking/download",
@@ -957,32 +901,32 @@
         "value": "#0D0E10"
       },
       {
-        "name": "surface",
-        "value": "#131418"
-      },
-      {
         "name": "surface-raised",
         "value": "#191B1F"
-      },
-      {
-        "name": "surface-overlay",
-        "value": "#22242A"
-      },
-      {
-        "name": "well",
-        "value": "#08090B"
       },
       {
         "name": "hairline",
         "value": "#272A30"
       },
       {
-        "name": "hairline-soft",
-        "value": "#1E2025"
-      },
-      {
         "name": "hairline-strong",
         "value": "#3A3E46"
+      },
+      {
+        "name": "ink",
+        "value": "#F3F4F6"
+      },
+      {
+        "name": "body",
+        "value": "#A8ADB5"
+      },
+      {
+        "name": "muted",
+        "value": "#6E737C"
+      },
+      {
+        "name": "accent",
+        "value": "#FFB224"
       }
     ],
     "download": "/examples/music-production-daw/download",
@@ -1005,27 +949,11 @@
       {
         "name": "ink",
         "value": "#2c2826"
-      },
-      {
-        "name": "ink-2",
-        "value": "#2c282699"
-      },
-      {
-        "name": "beige-2",
-        "value": "#ebdcd0B3"
-      },
-      {
-        "name": "line",
-        "value": "#2c28261A"
-      },
-      {
-        "name": "terra-line",
-        "value": "#ebdcd033"
       }
     ],
     "download": "/examples/premium-baby-accessories/download",
     "raw": "/examples/premium-baby-accessories/raw",
-    "preview": ""
+    "preview": "/examples/premium-baby-accessories/preview.webp"
   },
   {
     "slug": "spotify-desktop",
@@ -1041,16 +969,8 @@
         "value": "#121212"
       },
       {
-        "name": "surface-card",
-        "value": "#181818"
-      },
-      {
         "name": "surface-card-hover",
         "value": "#242424"
-      },
-      {
-        "name": "surface-elevated",
-        "value": "#282828"
       },
       {
         "name": "accent-green",
@@ -1063,6 +983,10 @@
       {
         "name": "text-secondary",
         "value": "#B3B3B3"
+      },
+      {
+        "name": "text-muted",
+        "value": "#727272"
       }
     ],
     "download": "/examples/spotify-desktop/download",
@@ -1077,14 +1001,6 @@
       {
         "name": "bg",
         "value": "#F1EFE9"
-      },
-      {
-        "name": "bg-2",
-        "value": "#E7E3D8"
-      },
-      {
-        "name": "surface",
-        "value": "#FBFAF6"
       },
       {
         "name": "ink",
@@ -1105,6 +1021,14 @@
       {
         "name": "accent",
         "value": "#E8401F"
+      },
+      {
+        "name": "inv-text-2",
+        "value": "#A39E92"
+      },
+      {
+        "name": "inv-border",
+        "value": "#322E26"
       }
     ],
     "download": "/examples/sundial-studio/download",
@@ -1121,20 +1045,8 @@
         "value": "#2A2D2C"
       },
       {
-        "name": "surface",
-        "value": "#323634"
-      },
-      {
-        "name": "surface-2",
-        "value": "#363A38"
-      },
-      {
         "name": "line",
         "value": "#E6E3DA1A"
-      },
-      {
-        "name": "text",
-        "value": "#E7E4DB"
       },
       {
         "name": "muted",
@@ -1147,10 +1059,14 @@
       {
         "name": "sage",
         "value": "#A7B894"
+      },
+      {
+        "name": "rose",
+        "value": "#C9A8A3"
       }
     ],
     "download": "/examples/farfield/download",
     "raw": "/examples/farfield/raw",
-    "preview": ""
+    "preview": "/examples/farfield/preview.webp"
   }
 ]

@@ -66,18 +66,53 @@ function slugify(file: string): string {
     .toLowerCase()
 }
 
+/** #rgb / #rgba / #rrggbb / #rrggbbaa → [r, g, b] in 0–255 (alpha ignored). */
+function hexToRgb(hex: string): [number, number, number] | null {
+  let h = hex.replace('#', '')
+  if (h.length === 3 || h.length === 4) h = h.slice(0, 3).replace(/./g, (c) => c + c)
+  if (h.length !== 6 && h.length !== 8) return null
+  const n = parseInt(h.slice(0, 6), 16)
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+}
+
+/**
+ * Perceptual distance between two RGB colors (redmean — a cheap approximation
+ * of how different two colors *look*). ~0 = identical, larger = more distinct.
+ */
+function colorDistance(a: [number, number, number], b: [number, number, number]): number {
+  const rmean = (a[0] + b[0]) / 2
+  const dr = a[0] - b[0]
+  const dg = a[1] - b[1]
+  const db = a[2] - b[2]
+  return Math.sqrt(
+    (2 + rmean / 256) * dr * dr + 4 * dg * dg + (2 + (255 - rmean) / 256) * db * db
+  )
+}
+
+// Below this redmean distance, two swatches read as "the same color" (e.g. a
+// stack of near-blacks). The palette is decorative info, not the token list, so
+// we keep only visually distinct colors.
+const MIN_DISTINCT = 40
+
 function parseGuix(xml: string): { name: string; colors: ExampleColor[] } {
   const nameMatch = xml.match(/<gui[^>]*\bname="([^"]+)"/)
   const name = nameMatch ? humanize(nameMatch[1]) : ''
 
   const colors: ExampleColor[] = []
+  const rgbs: [number, number, number][] = []
   const seen = new Set<string>()
   const colorRe = /<color\s+name="([^"]+)"\s+value="(#[0-9a-fA-F]{3,8})"/g
   let m: RegExpExecArray | null
   while ((m = colorRe.exec(xml)) && colors.length < 8) {
-    if (seen.has(m[2].toLowerCase())) continue
-    seen.add(m[2].toLowerCase())
-    colors.push({ name: m[1], value: m[2] })
+    const value = m[2]
+    if (seen.has(value.toLowerCase())) continue
+    seen.add(value.toLowerCase())
+    const rgb = hexToRgb(value)
+    // Skip colors too close to one already in the palette — show distinct hues,
+    // not every near-duplicate shade. Unparseable values fall through as-is.
+    if (rgb && rgbs.some((prev) => colorDistance(rgb, prev) < MIN_DISTINCT)) continue
+    if (rgb) rgbs.push(rgb)
+    colors.push({ name: m[1], value })
   }
   return { name, colors }
 }
