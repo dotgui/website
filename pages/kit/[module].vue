@@ -140,7 +140,7 @@ useHead({
 }
 .breadcrumb a { color: var(--text-muted); text-decoration: none; }
 .breadcrumb a:hover { color: var(--text); }
-.breadcrumb .current { color: var(--text); font-family: var(--mono); }
+.breadcrumb .current { color: var(--text); }
 
 .leaf-lead {
   font-family: var(--sans);

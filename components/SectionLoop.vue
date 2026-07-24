@@ -70,7 +70,6 @@
 .loop-card:hover { transform: rotate(0deg) translateY(-4px); }
 
 .loop-step {
-  font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -108,7 +107,6 @@
 }
 
 .loop-cta {
-  font-family: var(--mono);
   font-size: 12.5px;
   font-weight: 500;
 }

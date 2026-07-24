@@ -19,6 +19,27 @@ export default defineNuxtConfig({
   // the heavy interactive playground stays client-only.
   ssr: true,
   compatibilityDate: '2026-05-20',
+  modules: ['nuxt-gtag'],
+  // Google Analytics 4. The Measurement ID is a public, client-side value
+  // (it ships in the browser either way), so it's safe to commit; override
+  // per-environment with NUXT_PUBLIC_GTAG_ID if ever needed.
+  //
+  // initMode 'manual' means the gtag.js script is NOT loaded until the user
+  // accepts cookies — see components/CookieConsent.vue, which calls
+  // initialize() on consent. Consent Mode defaults to denied so anything that
+  // does run stays cookieless until granted.
+  gtag: {
+    id: 'G-WSWVKF5N3Q',
+    initMode: 'manual',
+    initCommands: [
+      ['consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied'
+      }]
+    ]
+  },
   experimental: {
     viteEnvironmentApi: true,
     // Trailing-slash URLs are canonical (Netlify serves <route>/ as 200 and

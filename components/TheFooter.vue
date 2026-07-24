@@ -71,7 +71,6 @@ import { formatVersion } from '~/lib/spec-data'
 }
 
 .footer-col-label {
-  font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;

@@ -95,14 +95,12 @@ const items = [
 }
 
 .eco-name {
-  font-family: var(--mono);
   font-size: 14.5px;
   font-weight: 600;
   color: var(--ink);
 }
 
 .eco-badge {
-  font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;

@@ -33,19 +33,8 @@
           :to="`/examples/${ex.slug}`"
           class="ex-card"
         >
-          <div class="ex-thumb" :class="{ 'is-web': ex.category === 'web' }">
-            <img
-              v-if="ex.preview"
-              :src="ex.preview"
-              :alt="`${ex.title} — .gui preview`"
-              loading="lazy"
-              class="ex-thumb-img"
-            />
-            <span
-              v-else
-              class="ex-thumb-fallback"
-              :style="fallbackStyle(ex.colors)"
-            >{{ ex.title }}</span>
+          <div class="ex-thumb">
+            <GuiThumb :ex="ex" />
           </div>
           <div class="ex-card-meta">
             <span class="ex-card-title">{{ ex.title }}</span>
@@ -60,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { examples, CATEGORY_LABELS, type ExampleColor, type ExampleCategory } from '~/lib/examples-data'
+import { examples, CATEGORY_LABELS, type ExampleCategory } from '~/lib/examples-data'
 
 type Filter = 'all' | ExampleCategory
 const filter = ref<Filter>('all')
@@ -80,14 +69,6 @@ const filterOptions: { value: Filter; label: string; count: number }[] = [
 const visible = computed(() =>
   filter.value === 'all' ? examples : examples.filter((e) => e.category === filter.value)
 )
-
-// Fallback tile for bundles without a preview.webp: a diagonal wash of the
-// file's own token colors, so the tile still reads as "this design's palette."
-function fallbackStyle(colors: ExampleColor[]) {
-  const stops = colors.slice(0, 3).map((c) => c.value)
-  if (stops.length < 2) return { background: stops[0] || 'var(--surface)' }
-  return { background: `linear-gradient(135deg, ${stops.join(', ')})` }
-}
 
 usePageSeo({
   path: '/examples',
@@ -128,7 +109,6 @@ useHead({
 
 .ex-header { max-width: 640px; margin-bottom: 32px; }
 .ex-eyebrow {
-  font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -163,48 +143,22 @@ useHead({
 }
 .ex-filter:hover { border-color: var(--border-strong, var(--muted-soft)); }
 .ex-filter.active { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
-.ex-filter-count { font-family: var(--mono); font-size: 11px; opacity: 0.6; }
+.ex-filter-count { font-size: 11px; opacity: 0.6; }
 
 .ex-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
 }
 
 .ex-card { text-decoration: none; display: flex; flex-direction: column; gap: 12px; }
-.ex-thumb {
-  position: relative;
-  aspect-ratio: 3 / 4;
-  border-radius: 14px;
-  overflow: hidden;
-  background: var(--surface);
-  border: 1px solid var(--hairline);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: border-color 180ms var(--ease-out), transform 180ms var(--ease-out);
-}
-.ex-card:hover .ex-thumb { border-color: var(--muted-soft); transform: translateY(-2px); }
-.ex-thumb-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
-.ex-thumb-fallback {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  text-align: center;
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 18px;
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
-}
+.ex-thumb { transition: transform 180ms var(--ease-out); }
+.ex-card:hover .ex-thumb { transform: translateY(-2px); }
+.ex-card:hover .ex-thumb :deep(.gui-thumb) { border-color: var(--muted-soft); }
 
 .ex-card-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .ex-card-title { font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--ink); }
 .ex-card-cat {
-  font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.06em;
   text-transform: uppercase;

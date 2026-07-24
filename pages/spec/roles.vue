@@ -177,7 +177,7 @@ useHead({
   color: var(--text);
   white-space: nowrap;
 }
-.cell-reach { font-family: var(--mono); font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+.cell-reach { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
 .cell-platforms { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
 .cell-desc { color: var(--text-muted); }
 .aka {

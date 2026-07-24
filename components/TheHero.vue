@@ -90,7 +90,6 @@
 }
 
 .stage-eyebrow {
-  font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.08em;
   color: #5a5852;
@@ -179,7 +178,6 @@
   color: #26251e;
 }
 .hw-meta {
-  font-family: var(--mono);
   font-size: 10.5px;
   color: #a09c92;
   margin-left: auto;
@@ -232,7 +230,6 @@
 }
 
 .stage-label {
-  font-family: var(--mono);
   font-size: 11px;
   line-height: 1.6;
   color: #3f3d36;

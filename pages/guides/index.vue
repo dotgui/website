@@ -143,7 +143,6 @@ useHead({
 .card-head { margin-bottom: 8px; }
 
 .card-name {
-  font-family: var(--mono);
   font-size: 14px;
   font-weight: 600;
   color: var(--text);

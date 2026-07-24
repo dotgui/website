@@ -100,7 +100,7 @@ const isOverview = computed(() => isSamePath(route.path, props.overview))
 .nav-link.active { color: var(--text); }
 .nav-link.active::before { content: '›'; margin-right: 6px; color: var(--text-muted); }
 .nav-overview { margin-bottom: 24px; }
-.nav-mono { font-family: var(--mono); font-size: 12px; }
+.nav-mono { font-size: 12px; }
 
 .doc-content { min-width: 0; }
 

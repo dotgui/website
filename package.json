@@ -25,6 +25,7 @@
     "codemirror": "^6.0.2",
     "commander": "^13.1.0",
     "fflate": "^0.8.3",
+    "nuxt-gtag": "^4.1.0",
     "xml-formatter": "^3.7.0"
   },
   "devDependencies": {

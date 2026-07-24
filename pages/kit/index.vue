@@ -128,7 +128,6 @@ useProductSchema({
 <style scoped>
 .kit-header { padding: 48px 40px 8px; }
 .kit-eyebrow {
-  font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -165,7 +164,7 @@ useProductSchema({
   border-radius: var(--radius-sm);
   padding: 9px 15px;
 }
-.ver { font-family: var(--mono); font-size: 11.5px; color: var(--text-dim); }
+.ver { font-size: 11.5px; color: var(--text-dim); }
 
 .cat { padding: 40px 40px 0; border-top: none; }
 .cat-label {

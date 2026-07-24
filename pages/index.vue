@@ -7,7 +7,7 @@
       <h1 class="reveal">The interface,<br>finally a file.</h1>
       <p class="sub reveal"><b>.gui</b> is an open file format for user interfaces. Text you can read, a file you can send, a design that stays a design:whoever, or whatever, made it.</p>
       <div class="cta-row reveal">
-        <a class="btn-install" href="https://github.com/dotgui/core" target="_blank" rel="noopener">
+        <a class="btn-install" href="https://github.com/dotgui/core" target="_blank" rel="noopener" @click="track('github_click', { location: 'hero' })">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.62-2.81 5.64-5.49 5.94.43.37.81 1.1.81 2.22 0 1.6-.01 2.89-.01 3.28 0 .32.22.7.83.58A12 12 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/></svg>
           GitHub
         </a>
@@ -242,7 +242,7 @@
           <span class="pill" style="background:var(--blue)">RENDER</span>
           <span class="pill" style="background:var(--purple)">SCORE</span>
           <span class="pill" style="background:var(--yellow);color:var(--ink)">SHIP</span>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--muted);align-self:center;padding-left:10px">only validate is required</span>
+          <span style="font-size:11px;color:var(--muted);align-self:center;padding-left:10px">only validate is required</span>
         </div>
         <div class="products">
           <NuxtLink class="prod reveal" to="/cli" style="background:var(--blue);color:#fff">
@@ -264,44 +264,47 @@
       </div>
     </section>
 
-    <section class="hairtop">
+    <section class="hairtop library">
       <div class="wrap">
         <p class="kicker reveal">THE LIBRARY</p>
         <h2 class="reveal">The proof is in the files.</h2>
-        <div class="plates">
-          <div class="plate reveal">
-            <div class="canvas" style="background:var(--canvas);border:1px solid var(--hairline)">
-              <p style="font-size:13px;font-weight:600;margin-bottom:14px">Portfolio</p>
-              <div style="display:flex;gap:8px;align-items:flex-end;height:90px">
-                <i style="width:26px;height:42px;background:var(--blue);border-radius:3px"></i>
-                <i style="width:26px;height:64px;background:var(--blue);border-radius:3px"></i>
-                <i style="width:26px;height:50px;background:var(--blue);border-radius:3px"></i>
-                <i style="width:26px;height:88px;background:var(--ink);border-radius:3px"></i>
-                <i style="width:26px;height:70px;background:var(--blue);border-radius:3px"></i>
-              </div>
-              <p style="font-size:11px;font-weight:500;color:var(--green);margin-top:10px">+2.4% today</p>
-            </div>
-            <div class="cap"><span>stocks.gui</span><b>score 97</b></div>
-          </div>
-          <div class="plate reveal">
-            <div class="canvas" style="background:var(--dark)">
-              <i style="display:block;width:118px;height:118px;background:var(--purple);border-radius:9px;margin-bottom:14px"></i>
-              <p style="font-size:13px;font-weight:600;color:#fafaf7">Night Drive</p>
-              <p style="font-size:11px;color:#8a8578;margin-top:3px">Solar State:3:42</p>
-            </div>
-            <div class="cap"><span>player.gui · dark</span><b>score 91</b></div>
-          </div>
-          <div class="plate reveal">
-            <div class="canvas" style="background:var(--canvas);border:1px solid var(--hairline)">
-              <p style="font-size:13px;font-weight:600;margin-bottom:12px">Order summary</p>
-              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--body);padding:4px 0"><span>Ceramic mug ×2</span><span style="color:var(--ink)">$36</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--body);padding:4px 0;border-bottom:1px solid var(--hairline)"><span>Shipping</span><span style="color:var(--ink)">$5</span></div>
-              <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;padding:8px 0"><span>Total</span><span>$41</span></div>
-              <i style="display:block;width:140px;height:26px;background:var(--orange);border-radius:6px"></i>
-            </div>
-            <div class="cap"><span>checkout.gui</span><b>score 88</b></div>
+        <p class="lede reveal">Real <code>.gui</code> files — every one is plain text you can read, preview, and download. Some are ambitious clones of complex, well-known interfaces (Spotify, Figma, Instagram and more). They're here to show the format can carry a serious, real-world design end to end — not to reproduce anyone's product.</p>
+      </div>
+
+      <div class="marquee reveal" aria-hidden="true">
+        <div class="marquee-row">
+          <div class="marquee-track">
+            <NuxtLink
+              v-for="(ex, i) in [...libraryRowTop, ...libraryRowTop]"
+              :key="`t-${i}`"
+              :to="`/examples/${ex.slug}`"
+              class="tile"
+            >
+              <GuiThumb :ex="ex" />
+              <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
+            </NuxtLink>
           </div>
         </div>
+        <div class="marquee-row">
+          <div class="marquee-track reverse">
+            <NuxtLink
+              v-for="(ex, i) in [...libraryRowBottom, ...libraryRowBottom]"
+              :key="`b-${i}`"
+              :to="`/examples/${ex.slug}`"
+              class="tile"
+            >
+              <GuiThumb :ex="ex" />
+              <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <NuxtLink class="library-cta reveal" to="/examples">
+          View all {{ libraryCount }} examples
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </NuxtLink>
       </div>
     </section>
 
@@ -394,6 +397,27 @@
 </template>
 
 <script setup lang="ts">
+import { examples } from '~/lib/examples-data'
+
+const { track } = useAnalytics()
+
+// Curated highlight reel for the "proof is in the files" marquee — a hand-picked
+// subset of the library (not all 29), balancing mobile and web and leading with
+// the ambitious clones. Order here is the display order.
+const LIBRARY_PICKS = [
+  'spotify-desktop', 'skeuomorphic-music', 'figma-clone', 'whoop-dashboard',
+  'music-production-daw', 'material-expressive-fitness', 'echelon-atelier-events', 'spotify-playlist'
+]
+const bySlug = new Map(examples.map((e) => [e.slug, e]))
+const libraryTiles = LIBRARY_PICKS.map((s) => bySlug.get(s)).filter((e): e is NonNullable<typeof e> => Boolean(e && e.preview))
+
+// Split across two rows that scroll in opposite directions; each row is
+// duplicated in the template so the CSS loop is seamless.
+const libraryRowTop = libraryTiles.filter((_, i) => i % 2 === 0)
+const libraryRowBottom = libraryTiles.filter((_, i) => i % 2 === 1)
+// The "view all" link still advertises the full library, not the curated count.
+const libraryCount = examples.length
+
 const SITE_URL = 'https://dotgui.org'
 // Canonical homepage URL (trailing slash) for structured-data identity refs.
 const HOME_URL = canonicalUrl('/')
@@ -887,11 +911,11 @@ onMounted(() => {
 
 /* hero */
 .hero { text-align: center; padding: 96px 0 76px; }
-.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .09em; color: var(--muted); }
+.eyebrow { font-size: 12px; letter-spacing: .09em; color: var(--muted); }
 .hero h1 { font-family: var(--display); font-size: clamp(52px, 6.8vw, 86px); font-weight: 600; line-height: 1.02; letter-spacing: -0.035em; margin: 24px auto 22px; max-width: 940px; }
 .hero .sub { font-size: 17px; line-height: 1.65; color: var(--body); max-width: 620px; margin: 0 auto 30px; }
 .cta-row { display: flex; gap: 14px; justify-content: center; align-items: center; }
-.btn-install { display: inline-flex; align-items: center; gap: 9px; background: var(--ink); color: #fff; font-family: var(--mono); font-size: 13.5px; border-radius: 999px; padding: 13px 24px; text-decoration: none; }
+.btn-install { display: inline-flex; align-items: center; gap: 9px; background: var(--ink); color: #fff; font-size: 13.5px; border-radius: 999px; padding: 13px 24px; text-decoration: none; }
 .btn-install:hover { background: #2a2a26; }
 .btn-install svg { width: 17px; height: 17px; fill: currentColor; }
 .btn-ghost { border: 1.5px solid var(--ink); color: var(--ink); border-radius: 999px; padding: 12.5px 26px; font-size: 14px; font-weight: 500; text-decoration: none; }
@@ -942,7 +966,7 @@ onMounted(() => {
   .annot-code { right: 100%; top: 60%; margin-right: 14px; transform: rotate(-4deg); align-items: flex-end; }
   .annot-pix  { left: 100%; top: 24%; margin-left: 14px; transform: rotate(3deg); align-items: flex-start; }
 }
-.fmt-cap { text-align: center; font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 2px; }
+.fmt-cap { text-align: center; font-size: 12px; color: var(--muted); margin-top: 2px; }
 @media (max-width: 720px) {
   .hf-code { padding-left: 20px; }
   .hf-code pre { font-size: 9.5px; line-height: 1.6; }
@@ -982,7 +1006,7 @@ onMounted(() => {
 .gp-pointer { position: relative; width: 18px; height: 22px; filter: drop-shadow(0 2px 2px rgba(16,16,16,.18)); transform: rotate(-8deg); transform-origin: 4px 4px; }
 .gp-pointer::before { content: ""; position: absolute; left: 1px; top: 0; width: 15px; height: 20px; background: var(--gp-color); clip-path: polygon(0 0, 0 19px, 5px 14px, 8px 21px, 12px 19px, 9px 12px, 16px 12px); }
 .gp-pointer::after { content: ""; position: absolute; left: 3px; top: 3px; width: 9px; height: 12px; background: #fff; opacity: .22; clip-path: polygon(0 0, 0 12px, 3px 9px, 6px 13px, 8px 12px, 5px 7px, 10px 7px); }
-.gp-name { border-radius: 999px; background: var(--gp-color); color: #fff; font: 600 11px/1 var(--mono); letter-spacing: .02em; padding: 7px 10px; box-shadow: 0 10px 28px rgba(16,16,16,.12); white-space: nowrap; transform: translate(6px, -12px); }
+.gp-name { border-radius: 999px; background: var(--gp-color); color: #fff; font: 600 11px/1 var(--sans); letter-spacing: .02em; padding: 7px 10px; box-shadow: 0 10px 28px rgba(16,16,16,.12); white-space: nowrap; transform: translate(6px, -12px); }
 .gp-meaning { position: absolute; left: 50%; bottom: 46px; transform: translateX(-50%); width: min(92%, 600px); text-align: center; }
 .gp-line { position: relative; min-height: 32px; }
 .gp-role { position: absolute; inset: 0; opacity: 0; transform: translateY(8px); color: var(--ink); font-family: var(--display); font-size: clamp(20px, 2.5vw, 30px); font-weight: 600; letter-spacing: -.02em; transition: opacity 320ms ease, transform 360ms ease; }
@@ -1004,7 +1028,7 @@ onMounted(() => {
 /* section shell */
 section { padding: 92px 0; border-top: none; }
 .hairtop { border-top: 1px solid var(--hairline); }
-.kicker { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
+.kicker { font-size: 11.5px; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
 h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weight: 600; line-height: 1.08; letter-spacing: -0.025em; }
 .lede { font-size: 17px; line-height: 1.6; color: var(--body); max-width: 640px; margin-top: 16px; }
 
@@ -1024,7 +1048,7 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 
 .stations { position: absolute; top: 96px; left: 0; right: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; padding: 0 40px; }
 .station { background: var(--card); border: 1px solid var(--hairline); border-radius: 16px; padding: 18px; height: 330px; position: relative; overflow: hidden; transition: border-color 400ms, box-shadow 400ms, transform 400ms; }
-.station .st-label { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+.station .st-label { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); margin-bottom: 14px; }
 .station .st-label .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--hairline); transition: background 400ms; }
 .station .st-label .soon-tag { margin-left: 6px; padding: 1px 6px; border-radius: 999px; background: var(--orange); color: #fff; font-size: 8.5px; letter-spacing: 0.06em; text-transform: uppercase; }
 .station.active { border-color: var(--ink); box-shadow: 0 14px 40px rgba(16,16,16,.10); transform: translateY(-3px); }
@@ -1083,7 +1107,7 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .fig-cursor { position: absolute; right: 30px; bottom: 44px; width: 18px; height: 18px; opacity: 0; transition: opacity 300ms; }
 .station.figma.selected .fig-cursor { opacity: 1; }
 
-.loop-caption { text-align: center; font-family: var(--mono); font-size: 11.5px; color: var(--muted); margin-top: 26px; }
+.loop-caption { text-align: center; font-size: 11.5px; color: var(--muted); margin-top: 26px; }
 
 /* ── imagine bands ── */
 .band { padding: 100px 0; }
@@ -1099,12 +1123,12 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .hub-lines { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; overflow: visible; }
 .hub-lines path { fill: none; stroke: #d8d5cc; stroke-width: 1.5; stroke-dasharray: 4 7; animation: hubflow 1.3s linear infinite; }
 @keyframes hubflow { to { stroke-dashoffset: -22; } }
-.hub-head { position: absolute; top: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--muted); z-index: 2; }
+.hub-head { position: absolute; top: 8px; font-size: 11px; letter-spacing: .06em; color: var(--muted); z-index: 2; }
 .hub-head.l { left: 2px; } .hub-head.r { right: 2px; text-align: right; }
 .hub-node { position: absolute; width: 190px; display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--hairline); border-radius: 12px; padding: 11px 15px; font-size: 13.5px; color: var(--ink); z-index: 2; }
 .hub-node.l { left: 0; } .hub-node.r { right: 0; }
 .hub-node .nd { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-.hub-node .verb { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--muted); }
+.hub-node .verb { margin-left: auto; font-size: 10px; color: var(--muted); }
 .hub-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 188px; z-index: 3; background: var(--card); border: 2px solid var(--ink); border-radius: 16px; padding: 16px; box-shadow: 0 18px 50px rgba(16,16,16,.13); }
 .hub-center .hc-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
 .hub-center .hc-top .w { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -.02em; color: var(--blue); }
@@ -1115,14 +1139,14 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 /* readable band */
 .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 44px; }
 .why-card { background: #17161200; border: 1px solid #2a2a24; border-radius: 16px; padding: 22px; }
-.why-card .wn { font-family: var(--mono); font-size: 11px; color: var(--term-green); margin-bottom: 14px; }
+.why-card .wn { font-size: 11px; color: var(--term-green); margin-bottom: 14px; }
 .why-card h3 { font-family: var(--display); font-size: 18px; font-weight: 600; letter-spacing: -0.01em; color: #fafaf7; margin-bottom: 8px; }
 .why-card p { font-size: 13.5px; line-height: 1.62; color: #9a968b; }
 @media (max-width: 900px) { .why-grid { grid-template-columns: 1fr; } }
 
 /* toolchain */
 .pills { display: flex; gap: 8px; flex-wrap: wrap; }
-.pill { font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: .09em; border-radius: 999px; padding: 9px 16px; color: #fff; }
+.pill { font-size: 10.5px; font-weight: 500; letter-spacing: .09em; border-radius: 999px; padding: 9px 16px; color: #fff; }
 .products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 44px; }
 .prod { border-radius: 16px; padding: 26px; min-height: 300px; display: flex; flex-direction: column; text-decoration: none; transition: transform 300ms cubic-bezier(.23,1,.32,1); }
 .prod:hover { transform: translateY(-4px); }
@@ -1132,29 +1156,42 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .prod h3 { font-family: var(--display); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; margin: auto 0 10px; padding-top: 90px; }
 .prod p { font-size: 13.5px; line-height: 1.65; }
 
-/* gallery */
-.plates { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 44px; }
-.plate { background: var(--card); border: 1px solid var(--hairline); border-radius: 16px; padding: 14px 14px 12px; }
-.plate .canvas { height: 195px; border-radius: 10px; padding: 16px; overflow: hidden; }
-.plate .cap { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 12px; }
-.plate .cap b { font-weight: 400; color: var(--ink); }
+/* gallery — moving marquee of real example previews */
+.library .lede { max-width: 640px; }
+.marquee { margin: 40px 0 4px; display: flex; flex-direction: column; gap: 18px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.marquee-row { overflow: hidden; }
+.marquee-track { display: flex; gap: 18px; width: max-content; animation: marquee 60s linear infinite; }
+.marquee-track.reverse { animation-direction: reverse; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* Uniform, Dribbble-style shots — the framing lives in the shared GuiThumb
+   component, reused here and on the /examples grid. */
+.tile { position: relative; flex: 0 0 auto; width: 375px; display: block; }
+.tile-cap { position: absolute; left: 10px; bottom: 10px; display: flex; align-items: baseline; padding: 4px 9px; border-radius: 999px; background: rgba(20,19,15,0.72); color: #fff; font-size: 11px; letter-spacing: -0.01em; opacity: 0; transition: opacity .2s ease; }
+.tile-cap b { font-weight: 400; opacity: 0.6; }
+.tile:hover .tile-cap { opacity: 1; }
+.tile:hover :deep(.gui-thumb) { border-color: var(--ink); }
+.library-cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 26px; font-size: 13px; font-weight: 500; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--hairline); padding-bottom: 3px; transition: border-color .2s ease, gap .2s ease; }
+.library-cta:hover { border-color: var(--ink); gap: 12px; }
+.library-cta svg { width: 17px; height: 17px; }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
 
 /* closing + grid finale */
 .closing { text-align: center; padding: 120px 0 76px; border-top: 1px solid var(--hairline); }
 .closing h2 { font-size: clamp(44px, 5vw, 66px); }
-.closing .mono-sub { font-family: var(--mono); font-size: 12px; color: var(--muted); margin: 18px 0 26px; }
+.closing .mono-sub { font-size: 12px; color: var(--muted); margin: 18px 0 26px; }
 .v3foot { padding: 30px 0 0; overflow: hidden; }
 .foot-links { display: flex; justify-content: space-between; align-items: center; padding-bottom: 22px; font-size: 13.5px; color: var(--body); }
 .foot-links .r { display: flex; gap: 22px; }
-.foot-links a { font-family: var(--mono); font-size: 12px; color: var(--muted); text-decoration: none; }
-.gridhint { font-family: var(--mono); font-size: 11px; color: var(--muted); text-align: center; padding: 14px 0 10px; }
+.foot-links a { font-size: 12px; color: var(--muted); text-decoration: none; }
+.gridhint { font-size: 11px; color: var(--muted); text-align: center; padding: 14px 0 10px; }
 .gridwall { position: relative; height: 400px; border-top: 1px solid var(--hairline); cursor: crosshair; }
 .gridwall :deep(.gridcell) { position: absolute; width: 38px; height: 38px; border-right: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
 .gridwall .seed { position: absolute; width: 38px; height: 38px; }
 .gridwall .wordmark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52%); font-family: var(--display); font-weight: 700; font-size: clamp(150px, 20vw, 280px); letter-spacing: -0.05em; line-height: 1; pointer-events: none;
   background: linear-gradient(to bottom, color-mix(in srgb, var(--ink) 14%, transparent) 0%, color-mix(in srgb, var(--ink) 4%, transparent) 55%, transparent 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent; }
-.gridwall :deep(.hovercell) { position: absolute; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 8px; pointer-events: none; opacity: 0; transition: opacity 500ms; white-space: nowrap; z-index: 2; }
+.gridwall :deep(.hovercell) { position: absolute; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 8px; pointer-events: none; opacity: 0; transition: opacity 500ms; white-space: nowrap; z-index: 2; }
 .gridwall :deep(.hovercell.show) { opacity: 1; transition: opacity 80ms; }
 
 @media (max-width: 900px) {
@@ -1185,12 +1222,12 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .aeo-table-wrap { margin-top: 40px; overflow-x: auto; border: 1px solid var(--hairline); border-radius: 16px; background: var(--card); }
 .aeo-table { width: 100%; border-collapse: collapse; font-family: var(--sans); font-size: 13.5px; min-width: 760px; }
 .aeo-table th, .aeo-table td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
-.aeo-table thead th { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--canvas); }
-.aeo-table tbody th[scope="row"] { font-family: var(--mono); font-weight: 600; color: var(--ink); white-space: nowrap; }
+.aeo-table thead th { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--canvas); }
+.aeo-table tbody th[scope="row"] { font-weight: 600; color: var(--ink); white-space: nowrap; }
 .aeo-table td { color: var(--body); }
 .aeo-table tbody tr:last-child th, .aeo-table tbody tr:last-child td { border-bottom: none; }
 .aeo-table tr.is-gui { background: color-mix(in srgb, var(--blue) 7%, transparent); }
 .aeo-table tr.is-gui th[scope="row"] { color: var(--blue); }
-.aeo-note { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 20px; max-width: 760px; line-height: 1.7; }
+.aeo-note { font-size: 12px; color: var(--muted); margin-top: 20px; max-width: 760px; line-height: 1.7; }
 .aeo-note a { color: var(--blue); text-decoration: none; }
 </style>
