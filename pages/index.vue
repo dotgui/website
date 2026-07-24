@@ -279,10 +279,8 @@
               :key="`t-${i}`"
               :to="`/examples/${ex.slug}`"
               class="tile"
-              :class="`tile-${ex.category}`"
-              :style="{ background: frameColor(ex) }"
             >
-              <img :src="ex.preview" :alt="`${ex.title} — .gui preview`" loading="lazy" />
+              <GuiThumb :ex="ex" />
               <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
             </NuxtLink>
           </div>
@@ -294,10 +292,8 @@
               :key="`b-${i}`"
               :to="`/examples/${ex.slug}`"
               class="tile"
-              :class="`tile-${ex.category}`"
-              :style="{ background: frameColor(ex) }"
             >
-              <img :src="ex.preview" :alt="`${ex.title} — .gui preview`" loading="lazy" />
+              <GuiThumb :ex="ex" />
               <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
             </NuxtLink>
           </div>
@@ -419,36 +415,6 @@ const libraryRowTop = libraryTiles.filter((_, i) => i % 2 === 0)
 const libraryRowBottom = libraryTiles.filter((_, i) => i % 2 === 1)
 // The "view all" link still advertises the full library, not the curated count.
 const libraryCount = examples.length
-
-// Frame colour behind each shot. Uses the design's dominant colour, but when
-// that colour is near-white or near-black (which would read as a plain white or
-// black background) it falls back to the most saturated accent in the palette,
-// or a soft neutral if the palette has no colour to offer.
-const NEUTRAL_FRAME = '#EAE6DF'
-const isHex6 = (v: string) => /^#[0-9a-fA-F]{6}$/.test(v)
-const hexBrightness = (hex: string) => {
-  const h = hex.slice(1)
-  return (parseInt(h.slice(0, 2), 16) + parseInt(h.slice(2, 4), 16) + parseInt(h.slice(4, 6), 16)) / 3 / 255
-}
-const hexSaturation = (hex: string) => {
-  const r = parseInt(hex.slice(1, 3), 16) / 255
-  const g = parseInt(hex.slice(3, 5), 16) / 255
-  const b = parseInt(hex.slice(5, 7), 16) / 255
-  const mx = Math.max(r, g, b)
-  const mn = Math.min(r, g, b)
-  return mx === 0 ? 0 : (mx - mn) / mx
-}
-const isExtreme = (hex: string) => {
-  const b = hexBrightness(hex)
-  return b < 0.1 || b > 0.9
-}
-const frameColor = (ex: (typeof examples)[number]) => {
-  const cols = (ex.colors || []).map((c) => c.value).filter(isHex6)
-  if (!cols.length) return NEUTRAL_FRAME
-  if (!isExtreme(cols[0])) return cols[0]
-  const accents = cols.filter((c) => !isExtreme(c)).sort((a, b) => hexSaturation(b) - hexSaturation(a))
-  return accents[0] || NEUTRAL_FRAME
-}
 
 const SITE_URL = 'https://dotgui.org'
 // Canonical homepage URL (trailing slash) for structured-data identity refs.
@@ -1196,18 +1162,13 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .marquee-track.reverse { animation-direction: reverse; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-/* Dribbble-style uniform shots: every tile is the same landscape frame.
-   Web previews crop to their top edge; mobile previews float as a device,
-   centered and top-aligned, so the whole row reads at one consistent size. */
-.tile { position: relative; flex: 0 0 auto; width: 375px; height: 263px; border-radius: 16px; overflow: hidden; border: 1px solid var(--hairline); background: var(--card); display: block; }
-.tile-web { padding: 19px 19px 0; display: flex; justify-content: center; align-items: flex-start; }
-.tile-web img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top center; border-radius: 9px 9px 0 0; border: 1px solid var(--hairline); border-bottom: none; box-shadow: 0 8px 24px rgba(20,19,15,0.16); }
-.tile-mobile { display: flex; justify-content: center; align-items: flex-start; }
-.tile-mobile img { width: 160px; height: auto; margin-top: 25px; display: block; border-radius: 14px; box-shadow: 0 8px 24px rgba(20,19,15,0.18); border: 1px solid var(--hairline); }
+/* Uniform, Dribbble-style shots — the framing lives in the shared GuiThumb
+   component, reused here and on the /examples grid. */
+.tile { position: relative; flex: 0 0 auto; width: 375px; display: block; }
 .tile-cap { position: absolute; left: 10px; bottom: 10px; display: flex; align-items: baseline; padding: 4px 9px; border-radius: 999px; background: rgba(20,19,15,0.72); color: #fff; font-size: 11px; letter-spacing: -0.01em; opacity: 0; transition: opacity .2s ease; }
 .tile-cap b { font-weight: 400; opacity: 0.6; }
 .tile:hover .tile-cap { opacity: 1; }
-.tile:hover { border-color: var(--ink); }
+.tile:hover :deep(.gui-thumb) { border-color: var(--ink); }
 .library-cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 26px; font-size: 13px; font-weight: 500; color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--hairline); padding-bottom: 3px; transition: border-color .2s ease, gap .2s ease; }
 .library-cta:hover { border-color: var(--ink); gap: 12px; }
 .library-cta svg { width: 17px; height: 17px; }
