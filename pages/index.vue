@@ -655,19 +655,24 @@ onMounted(() => {
     }))
     const guiEl = fill.querySelector('.gui') as HTMLElement | null
 
-    // Each phrase highlights on its own, a subtle beat after ITS text finishes
-    // revealing (so a fast scroller still catches each one), and stays lit —
-    // highlights are never removed. .gui starts its disco loop once it reveals.
+    // Markers follow the scroll: each turns on a subtle beat after ITS text is
+    // fully revealed, and turns back off (sweeping out) when scrolled up past —
+    // symmetric with the word reveal. .gui's marker is its repeating disco loop.
     const HL_DELAY = 350   // subtle pause between a phrase being fully shown and its highlight
-    const timers: ReturnType<typeof setTimeout>[] = []
-    cleanups.push(() => timers.forEach(clearTimeout))
-    const scheduleOnce = (isLit: () => boolean, apply: () => void, flag: { done: boolean }) => {
-      if (flag.done || !isLit()) return
-      flag.done = true
-      timers.push(setTimeout(() => { if (isLit()) apply() }, HL_DELAY))
-    }
-    const phraseFlags = phrases.map(() => ({ done: false }))
-    const discoFlag = { done: false }
+    type Marker = { lit: () => boolean; on: () => void; off: () => void; state: 'off' | 'pending' | 'on'; timer: ReturnType<typeof setTimeout> | 0 }
+    const markers: Marker[] = phrases.map(ph => ({
+      lit: () => ph.words.every(w => w.classList.contains('lit')),
+      on: () => ph.el.classList.add('hl'),
+      off: () => ph.el.classList.remove('hl'),
+      state: 'off', timer: 0,
+    }))
+    if (guiEl) markers.push({
+      lit: () => guiEl.classList.contains('lit'),
+      on: () => guiEl.classList.add('disco'),
+      off: () => guiEl.classList.remove('disco'),
+      state: 'off', timer: 0,
+    })
+    cleanups.push(() => markers.forEach(m => m.timer && clearTimeout(m.timer)))
 
     let ticking = false
     const paint = () => {
@@ -677,12 +682,17 @@ onMounted(() => {
       const p = Math.max(0, Math.min(1, (vh * 0.82 - r.top) / (vh * 0.62)))
       const n = Math.round(p * words.length)
       words.forEach((w, i) => w.classList.toggle('lit', i < n))
-      // per-phrase: light the marker a beat after that phrase is fully revealed
-      phrases.forEach((ph, i) => {
-        const lit = () => ph.words.every(w => w.classList.contains('lit'))
-        scheduleOnce(lit, () => ph.el.classList.add('hl'), phraseFlags[i])
+      markers.forEach(m => {
+        if (m.lit()) {
+          if (m.state === 'off') {                       // just revealed → delay, then sweep in
+            m.state = 'pending'
+            m.timer = setTimeout(() => { m.timer = 0; if (m.lit()) { m.on(); m.state = 'on' } else { m.state = 'off' } }, HL_DELAY)
+          }
+        } else {                                          // scrolled back up → sweep out
+          if (m.timer) { clearTimeout(m.timer); m.timer = 0 }
+          if (m.state !== 'off') { m.off(); m.state = 'off' }
+        }
       })
-      if (guiEl) scheduleOnce(() => guiEl.classList.contains('lit'), () => guiEl.classList.add('disco'), discoFlag)
     }
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(paint) } }
     addEventListener('scroll', onScroll, { passive: true })
@@ -1036,16 +1046,27 @@ onMounted(() => {
   background-repeat: no-repeat;
   background-position: 0 62%;
   background-size: 0% 82%;
+  transition: background-size 560ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 .statement .fill span.gui.disco {
   color: var(--ink);
-  background-size: 100% 82%;
-  animation: gui-disco 3s linear infinite;
+  transition: none;
+  animation: gui-disco 2.7s linear infinite;
 }
+/* re-highlight over and over — a fresh left→right marker sweep each pass,
+   a different colour every time (yellow → green → purple), then repeat.
+   The 100%→0% resets happen instantly (adjacent keyframes) so there's no
+   visible retract; it just lifts and swipes again. */
 @keyframes gui-disco {
-  0%,  100% { background-color: rgba(242, 179, 0, 0.5); }   /* yellow */
-  33%       { background-color: rgba(126, 226, 155, 0.6); } /* green */
-  66%       { background-color: rgba(201, 178, 245, 0.7); } /* purple */
+  0%     { background-size: 0% 82%;   background-color: rgba(242, 179, 0, 0.5); }   /* yellow sweep */
+  22%    { background-size: 100% 82%; background-color: rgba(242, 179, 0, 0.5); }
+  33.33% { background-size: 100% 82%; background-color: rgba(242, 179, 0, 0.5); }   /* hold */
+  33.34% { background-size: 0% 82%;   background-color: rgba(126, 226, 155, 0.6); } /* green sweep */
+  55%    { background-size: 100% 82%; background-color: rgba(126, 226, 155, 0.6); }
+  66.66% { background-size: 100% 82%; background-color: rgba(126, 226, 155, 0.6); } /* hold */
+  66.67% { background-size: 0% 82%;   background-color: rgba(201, 178, 245, 0.7); } /* purple sweep */
+  88%    { background-size: 100% 82%; background-color: rgba(201, 178, 245, 0.7); }
+  100%   { background-size: 100% 82%; background-color: rgba(201, 178, 245, 0.7); }  /* hold, then wraps to yellow */
 }
 @media (prefers-reduced-motion: reduce) {
   .statement .fill span { color: var(--ink); }
