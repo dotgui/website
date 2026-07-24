@@ -1051,22 +1051,28 @@ onMounted(() => {
 .statement .fill span.gui.disco {
   color: var(--ink);
   transition: none;
-  animation: gui-disco 2.7s linear infinite;
+  animation: gui-disco 3.3s infinite;
 }
-/* re-highlight over and over — a fresh left→right marker sweep each pass,
-   a different colour every time (yellow → green → purple), then repeat.
-   The 100%→0% resets happen instantly (adjacent keyframes) so there's no
-   visible retract; it just lifts and swipes again. */
+/* re-highlight over and over: for each colour the marker starts empty, then
+   draws left→right across .gui, briefly holds, and clears — then the next
+   colour draws again. It's the same left→right sweep as the phrases, looping
+   yellow → green → purple. Easing on the draw keyframes gives the marker feel. */
 @keyframes gui-disco {
-  0%     { background-size: 0% 82%;   background-color: rgba(242, 179, 0, 0.5); }   /* yellow sweep */
-  22%    { background-size: 100% 82%; background-color: rgba(242, 179, 0, 0.5); }
-  33.33% { background-size: 100% 82%; background-color: rgba(242, 179, 0, 0.5); }   /* hold */
-  33.34% { background-size: 0% 82%;   background-color: rgba(126, 226, 155, 0.6); } /* green sweep */
-  55%    { background-size: 100% 82%; background-color: rgba(126, 226, 155, 0.6); }
-  66.66% { background-size: 100% 82%; background-color: rgba(126, 226, 155, 0.6); } /* hold */
-  66.67% { background-size: 0% 82%;   background-color: rgba(201, 178, 245, 0.7); } /* purple sweep */
-  88%    { background-size: 100% 82%; background-color: rgba(201, 178, 245, 0.7); }
-  100%   { background-size: 100% 82%; background-color: rgba(201, 178, 245, 0.7); }  /* hold, then wraps to yellow */
+  /* yellow */
+  0%     { background-size: 0% 82%;   background-color: rgba(242, 179, 0, 0.5); }
+  4%     { background-size: 0% 82%;   background-color: rgba(242, 179, 0, 0.5); animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+  26%    { background-size: 100% 82%; background-color: rgba(242, 179, 0, 0.5); }
+  33.33% { background-size: 100% 82%; background-color: rgba(242, 179, 0, 0.5); }
+  /* green */
+  33.34% { background-size: 0% 82%;   background-color: rgba(126, 226, 155, 0.6); }
+  37.34% { background-size: 0% 82%;   background-color: rgba(126, 226, 155, 0.6); animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+  59.33% { background-size: 100% 82%; background-color: rgba(126, 226, 155, 0.6); }
+  66.66% { background-size: 100% 82%; background-color: rgba(126, 226, 155, 0.6); }
+  /* purple */
+  66.67% { background-size: 0% 82%;   background-color: rgba(201, 178, 245, 0.7); }
+  70.67% { background-size: 0% 82%;   background-color: rgba(201, 178, 245, 0.7); animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+  93%    { background-size: 100% 82%; background-color: rgba(201, 178, 245, 0.7); }
+  100%   { background-size: 100% 82%; background-color: rgba(201, 178, 245, 0.7); }
 }
 @media (prefers-reduced-motion: reduce) {
   .statement .fill span { color: var(--ink); }
