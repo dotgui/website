@@ -280,6 +280,7 @@
               :to="`/examples/${ex.slug}`"
               class="tile"
               :class="`tile-${ex.category}`"
+              :style="ex.category === 'mobile' ? { background: dominantColor(ex) } : undefined"
             >
               <img :src="ex.preview" :alt="`${ex.title} — .gui preview`" loading="lazy" />
               <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
@@ -294,6 +295,7 @@
               :to="`/examples/${ex.slug}`"
               class="tile"
               :class="`tile-${ex.category}`"
+              :style="ex.category === 'mobile' ? { background: dominantColor(ex) } : undefined"
             >
               <img :src="ex.preview" :alt="`${ex.title} — .gui preview`" loading="lazy" />
               <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
@@ -401,13 +403,27 @@
 <script setup lang="ts">
 import { examples } from '~/lib/examples-data'
 
-// Real preview tiles for the "proof is in the files" marquee. Split across two
-// rows that scroll in opposite directions; each row is duplicated in the
-// template so the CSS loop is seamless.
-const libraryTiles = examples.filter((e) => e.preview)
+// Curated highlight reel for the "proof is in the files" marquee — a hand-picked
+// subset of the library (not all 29), balancing mobile and web and leading with
+// the ambitious clones. Order here is the display order.
+const LIBRARY_PICKS = [
+  'spotify-desktop', 'skeuomorphic-music', 'figma-clone', 'whoop-dashboard',
+  'music-production-daw', 'material-expressive-fitness', 'echelon-atelier-events', 'instagram-clone',
+  'sundial-studio', 'spotify-playlist', 'premium-baby-accessories', 'headspace-clone',
+  'farfield', 'meridian-flight-results'
+]
+const bySlug = new Map(examples.map((e) => [e.slug, e]))
+const libraryTiles = LIBRARY_PICKS.map((s) => bySlug.get(s)).filter((e): e is NonNullable<typeof e> => Boolean(e && e.preview))
+
+// Split across two rows that scroll in opposite directions; each row is
+// duplicated in the template so the CSS loop is seamless.
 const libraryRowTop = libraryTiles.filter((_, i) => i % 2 === 0)
 const libraryRowBottom = libraryTiles.filter((_, i) => i % 2 === 1)
-const libraryCount = libraryTiles.length
+// The "view all" link still advertises the full library, not the curated count.
+const libraryCount = examples.length
+
+// Dominant colour of each design, used to tint the frame behind mobile shots.
+const dominantColor = (ex: (typeof examples)[number]) => ex.colors?.[0]?.value || 'var(--canvas)'
 
 const SITE_URL = 'https://dotgui.org'
 // Canonical homepage URL (trailing slash) for structured-data identity refs.
