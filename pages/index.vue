@@ -49,9 +49,9 @@
       <div class="wrap">
         <p class="fill" ref="fillEl">
           <span>Interfaces</span> <span>never</span> <span>got</span> <span>a</span> <span>format</span> <span>of</span> <span>their</span> <span>own.</span>
-          <span>HTML</span> <span>is</span> <span>the</span> <span>web.</span>
-          <span>Swift</span> <span>is</span> <span>a</span> <span>runtime.</span>
-          <span>A</span> <span>mockup</span> <span>is</span> <span>a</span> <span>picture.</span>
+          <span class="phrase phrase--html"><span>HTML</span> <span>is</span> <span>the</span> <span>web.</span></span>
+          <span class="phrase phrase--swift"><span>Swift</span> <span>is</span> <span>a</span> <span>runtime.</span></span>
+          <span class="phrase phrase--mockup"><span>A</span> <span>mockup</span> <span>is</span> <span>a</span> <span>picture.</span></span>
           <span>Each</span> <span>one</span> <span>belongs</span> <span>to</span> <span>a</span> <span>platform</span> <span></span> <span>none</span> <span>of</span> <span>them</span> <span>is</span> <span>just</span> <span>the</span> <span>design,</span> <span>ready</span> <span>to</span> <span>travel.</span>
           <span class="gui">.gui</span> <span>is</span> <span>the</span> <span>first</span> <span>that</span> <span>is.</span>
         </p>
@@ -648,7 +648,12 @@ onMounted(() => {
   // ── statement: fill words in as the section scrolls through ──
   const fill = fillEl.value
   if (fill && !reduced) {
-    const words = [...fill.querySelectorAll('span')]
+    const words = [...fill.querySelectorAll('span:not(.phrase)')]
+    // phrases that get a highlighter sweep once fully revealed — one lit at a time
+    const phrases = [...fill.querySelectorAll('.phrase')].map(p => ({
+      el: p as HTMLElement,
+      words: [...p.querySelectorAll('span')],
+    }))
     let ticking = false
     const paint = () => {
       ticking = false
@@ -657,6 +662,13 @@ onMounted(() => {
       const p = Math.max(0, Math.min(1, (vh * 0.82 - r.top) / (vh * 0.62)))
       const n = Math.round(p * words.length)
       words.forEach((w, i) => w.classList.toggle('lit', i < n))
+      // the active highlight = the last phrase whose words are all lit
+      let active = -1
+      phrases.forEach((ph, i) => { if (ph.words.every(w => w.classList.contains('lit'))) active = i })
+      phrases.forEach((ph, i) => {
+        ph.el.classList.toggle('hl', i === active)       // sweeping in / held
+        ph.el.classList.toggle('hl-done', i < active)    // superseded → fades off
+      })
     }
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(paint) } }
     addEventListener('scroll', onScroll, { passive: true })
@@ -979,7 +991,28 @@ onMounted(() => {
 .statement .fill span { color: #dcd9d0; transition: color 260ms ease; }
 .statement .fill span.lit { color: var(--ink); }
 .statement .fill span.gui.lit { color: var(--blue); }
-@media (prefers-reduced-motion: reduce) { .statement .fill span { color: var(--ink); } }
+
+/* highlighter sweep — one phrase lit at a time, previous fades off.
+   --hl-alpha is @property-registered so it can transition (marker fade-out);
+   background-size drives the left→right sweep, box-decoration-break clones it per line. */
+@property --hl-alpha { syntax: "<number>"; inherits: false; initial-value: 0; }
+.statement .fill .phrase {
+  --hl-alpha: 0;
+  background-image: linear-gradient(to right, rgb(var(--hl-rgb) / calc(var(--hl-alpha) * var(--hl-max))), rgb(var(--hl-rgb) / calc(var(--hl-alpha) * var(--hl-max))));
+  background-repeat: no-repeat;
+  background-position: 0 62%;
+  background-size: 0% 82%;
+  border-radius: 4px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 560ms cubic-bezier(0.2, 0.7, 0.2, 1), --hl-alpha 700ms ease;
+}
+.statement .fill .phrase.hl      { --hl-alpha: 1; background-size: 100% 82%; }  /* sweep in + hold */
+.statement .fill .phrase.hl-done { --hl-alpha: 0; background-size: 100% 82%; }  /* full width, fades away */
+.statement .fill .phrase--html   { --hl-rgb: 242 179 0;   --hl-max: 0.5; }   /* yellow */
+.statement .fill .phrase--swift  { --hl-rgb: 126 226 155; --hl-max: 0.6; }   /* green */
+.statement .fill .phrase--mockup { --hl-rgb: 201 178 245; --hl-max: 0.7; }   /* purple */
+@media (prefers-reduced-motion: reduce) { .statement .fill span { color: var(--ink); } .statement .fill .phrase { background-image: none; } }
 
 /* what does GUI stand for:collaborative cursor study */
 .gui-profiles { border-top: 1px solid var(--hairline); background: var(--canvas); padding: 104px 0 112px; overflow: hidden; }
