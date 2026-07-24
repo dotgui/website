@@ -19,6 +19,16 @@ export default defineNuxtConfig({
   // the heavy interactive playground stays client-only.
   ssr: true,
   compatibilityDate: '2026-05-20',
+  modules: ['nuxt-gtag'],
+  // Google Analytics 4. The Measurement ID is a public, client-side value
+  // (it ships in the browser either way), so it's safe to commit; override
+  // per-environment with NUXT_PUBLIC_GTAG_ID if ever needed. Disabled in dev
+  // so local traffic doesn't pollute the reports (the production build runs
+  // with NODE_ENV=production, where it's enabled).
+  gtag: {
+    id: 'G-WSWVKF5N3Q',
+    enabled: process.env.NODE_ENV === 'production'
+  },
   experimental: {
     viteEnvironmentApi: true,
     // Trailing-slash URLs are canonical (Netlify serves <route>/ as 200 and
