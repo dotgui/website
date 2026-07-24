@@ -49,9 +49,9 @@
       <div class="wrap">
         <p class="fill" ref="fillEl">
           <span>Interfaces</span> <span>never</span> <span>got</span> <span>a</span> <span>format</span> <span>of</span> <span>their</span> <span>own.</span>
-          <span>HTML</span> <span>is</span> <span>the</span> <span>web.</span>
-          <span>Swift</span> <span>is</span> <span>a</span> <span>runtime.</span>
-          <span>A</span> <span>mockup</span> <span>is</span> <span>a</span> <span>picture.</span>
+          <span class="phrase phrase--html"><span>HTML</span> <span>is</span> <span>the</span> <span>web.</span></span>
+          <span class="phrase phrase--swift"><span>Swift</span> <span>is</span> <span>a</span> <span>runtime.</span></span>
+          <span class="phrase phrase--mockup"><span>A</span> <span>mockup</span> <span>is</span> <span>a</span> <span>picture.</span></span>
           <span>Each</span> <span>one</span> <span>belongs</span> <span>to</span> <span>a</span> <span>platform</span> <span></span> <span>none</span> <span>of</span> <span>them</span> <span>is</span> <span>just</span> <span>the</span> <span>design,</span> <span>ready</span> <span>to</span> <span>travel.</span>
           <span class="gui">.gui</span> <span>is</span> <span>the</span> <span>first</span> <span>that</span> <span>is.</span>
         </p>
@@ -648,7 +648,32 @@ onMounted(() => {
   // ── statement: fill words in as the section scrolls through ──
   const fill = fillEl.value
   if (fill && !reduced) {
-    const words = [...fill.querySelectorAll('span')]
+    const words = [...fill.querySelectorAll('span:not(.phrase)')]
+    const phrases = [...fill.querySelectorAll('.phrase')].map(p => ({
+      el: p as HTMLElement,
+      words: [...p.querySelectorAll('span')],
+    }))
+    const guiEl = fill.querySelector('.gui') as HTMLElement | null
+
+    // Markers follow the scroll: each turns on a subtle beat after ITS text is
+    // fully revealed, and turns back off (sweeping out) when scrolled up past —
+    // symmetric with the word reveal. .gui's marker is its repeating disco loop.
+    const HL_DELAY = 350   // subtle pause between a phrase being fully shown and its highlight
+    type Marker = { lit: () => boolean; on: () => void; off: () => void; state: 'off' | 'pending' | 'on'; timer: ReturnType<typeof setTimeout> | 0 }
+    const markers: Marker[] = phrases.map(ph => ({
+      lit: () => ph.words.every(w => w.classList.contains('lit')),
+      on: () => ph.el.classList.add('hl'),
+      off: () => ph.el.classList.remove('hl'),
+      state: 'off', timer: 0,
+    }))
+    if (guiEl) markers.push({
+      lit: () => guiEl.classList.contains('lit'),
+      on: () => guiEl.classList.add('disco'),
+      off: () => guiEl.classList.remove('disco'),
+      state: 'off', timer: 0,
+    })
+    cleanups.push(() => markers.forEach(m => m.timer && clearTimeout(m.timer)))
+
     let ticking = false
     const paint = () => {
       ticking = false
@@ -657,6 +682,17 @@ onMounted(() => {
       const p = Math.max(0, Math.min(1, (vh * 0.82 - r.top) / (vh * 0.62)))
       const n = Math.round(p * words.length)
       words.forEach((w, i) => w.classList.toggle('lit', i < n))
+      markers.forEach(m => {
+        if (m.lit()) {
+          if (m.state === 'off') {                       // just revealed → delay, then sweep in
+            m.state = 'pending'
+            m.timer = setTimeout(() => { m.timer = 0; if (m.lit()) { m.on(); m.state = 'on' } else { m.state = 'off' } }, HL_DELAY)
+          }
+        } else {                                          // scrolled back up → sweep out
+          if (m.timer) { clearTimeout(m.timer); m.timer = 0 }
+          if (m.state !== 'off') { m.off(); m.state = 'off' }
+        }
+      })
     }
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(paint) } }
     addEventListener('scroll', onScroll, { passive: true })
@@ -664,6 +700,8 @@ onMounted(() => {
     paint()
   } else if (fill) {
     fill.querySelectorAll('span').forEach(s => s.classList.add('lit'))
+    // reduced motion: show the highlights statically, no sweep or disco
+    fill.querySelectorAll('.phrase').forEach(p => p.classList.add('hl'))
   }
 
   // ── what does GUI stand for: profile-driven auto meaning ──
@@ -895,8 +933,9 @@ onMounted(() => {
   --green: #3ea45c;
   --purple: #9d5bea;
   --purple-soft: #c9b2f5;
-  --display: "Bricolage Grotesque", "Inter", sans-serif;
-  --sans: "Inter", -apple-system, sans-serif;
+  --display: "Fraunces", "Geist", sans-serif;
+  --display-weight: 400;
+  --sans: "Geist", -apple-system, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, monospace;
 
   background: var(--canvas);
@@ -912,7 +951,7 @@ onMounted(() => {
 /* hero */
 .hero { text-align: center; padding: 96px 0 76px; }
 .eyebrow { font-size: 12px; letter-spacing: .09em; color: var(--muted); }
-.hero h1 { font-family: var(--display); font-size: clamp(52px, 6.8vw, 86px); font-weight: 600; line-height: 1.02; letter-spacing: -0.035em; margin: 24px auto 22px; max-width: 940px; }
+.hero h1 { font-family: var(--display); font-size: clamp(52px, 6.8vw, 86px); font-weight: var(--display-weight); line-height: 1.02; letter-spacing: -0.035em; margin: 24px auto 22px; max-width: 940px; }
 .hero .sub { font-size: 17px; line-height: 1.65; color: var(--body); max-width: 620px; margin: 0 auto 30px; }
 .cta-row { display: flex; gap: 14px; justify-content: center; align-items: center; }
 .btn-install { display: inline-flex; align-items: center; gap: 9px; background: var(--ink); color: #fff; font-size: 13.5px; border-radius: 999px; padding: 13px 24px; text-decoration: none; }
@@ -974,11 +1013,81 @@ onMounted(() => {
 
 /* the statement:huge type that fills in on scroll */
 .statement { border-top: 1px solid var(--hairline); padding: 22vh 0; }
-.statement .fill { font-family: var(--display); font-weight: 600; font-size: clamp(32px, 5vw, 66px); line-height: 1.16; letter-spacing: -0.03em; max-width: 1000px; }
+.statement .fill { font-family: var(--display); font-weight: var(--display-weight); font-size: clamp(32px, 5vw, 66px); line-height: 1.16; letter-spacing: -0.03em; max-width: 1000px; }
 .statement .fill span { color: #dcd9d0; transition: color 260ms ease; }
 .statement .fill span.lit { color: var(--ink); }
-.statement .fill span.gui.lit { color: var(--blue); }
-@media (prefers-reduced-motion: reduce) { .statement .fill span { color: var(--ink); } }
+
+/* highlighter sweep — each phrase lights up in turn (on a timer) and stays lit.
+   --hl-alpha is @property-registered so it can transition; background-size drives
+   the left→right sweep, box-decoration-break clones the marker per wrapped line. */
+@property --hl-alpha { syntax: "<number>"; inherits: false; initial-value: 0; }
+.statement .fill .phrase {
+  --hl-alpha: 0;
+  background-image: linear-gradient(to right, rgb(var(--hl-rgb) / calc(var(--hl-alpha) * var(--hl-max))), rgb(var(--hl-rgb) / calc(var(--hl-alpha) * var(--hl-max))));
+  background-repeat: no-repeat;
+  background-position: 0 62%;
+  background-size: 0% 82%;
+  border-radius: 4px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: background-size 560ms cubic-bezier(0.2, 0.7, 0.2, 1), --hl-alpha 700ms ease;
+}
+.statement .fill .phrase.hl      { --hl-alpha: 1; background-size: 100% 82%; }  /* sweep in + hold (persists) */
+.statement .fill .phrase--html   { --hl-rgb: 242 179 0;   --hl-max: 0.5; }   /* yellow */
+.statement .fill .phrase--swift  { --hl-rgb: 126 226 155; --hl-max: 0.6; }   /* green */
+.statement .fill .phrase--mockup { --hl-rgb: 201 178 245; --hl-max: 0.7; }   /* purple */
+
+/* .gui: same ink colour as the rest, with a continuous disco loop cycling all
+   three highlight colours — .gui unites what the three phrases separate. */
+.statement .fill span.gui {
+  border-radius: 4px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  background-repeat: no-repeat;
+  background-position: 0 62%;
+  background-size: 0% 82%;
+  transition: background-size 560ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.statement .fill span.gui.disco {
+  color: var(--ink);
+  transition: none;
+  animation: gui-disco 3s infinite;
+}
+/* highlight-over-highlight, no erasing: two background layers — a settled
+   BASE colour (full width) and the incoming TOP colour drawing left→right
+   over it. When the TOP colour finishes, it becomes the new BASE and the
+   next colour starts drawing over it. Loops yellow → green → purple, each
+   painting on top of the last. (background-image list: TOP, BASE.) */
+@keyframes gui-disco {
+  /* green draws over yellow */
+  0%     { animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+           background-size: 0% 82%, 100% 82%;
+           background-image: linear-gradient(to right, rgba(126, 226, 155, 0.85), rgba(126, 226, 155, 0.85)), linear-gradient(to right, rgba(242, 179, 0, 0.85), rgba(242, 179, 0, 0.85)); }
+  23.33% { background-size: 100% 82%, 100% 82%;
+           background-image: linear-gradient(to right, rgba(126, 226, 155, 0.85), rgba(126, 226, 155, 0.85)), linear-gradient(to right, rgba(242, 179, 0, 0.85), rgba(242, 179, 0, 0.85)); }
+  33.33% { background-size: 100% 82%, 100% 82%;
+           background-image: linear-gradient(to right, rgba(126, 226, 155, 0.85), rgba(126, 226, 155, 0.85)), linear-gradient(to right, rgba(242, 179, 0, 0.85), rgba(242, 179, 0, 0.85)); }
+  /* purple draws over green */
+  33.34% { animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+           background-size: 0% 82%, 100% 82%;
+           background-image: linear-gradient(to right, rgba(201, 178, 245, 0.85), rgba(201, 178, 245, 0.85)), linear-gradient(to right, rgba(126, 226, 155, 0.85), rgba(126, 226, 155, 0.85)); }
+  56.67% { background-size: 100% 82%, 100% 82%;
+           background-image: linear-gradient(to right, rgba(201, 178, 245, 0.85), rgba(201, 178, 245, 0.85)), linear-gradient(to right, rgba(126, 226, 155, 0.85), rgba(126, 226, 155, 0.85)); }
+  66.66% { background-size: 100% 82%, 100% 82%;
+           background-image: linear-gradient(to right, rgba(201, 178, 245, 0.85), rgba(201, 178, 245, 0.85)), linear-gradient(to right, rgba(126, 226, 155, 0.85), rgba(126, 226, 155, 0.85)); }
+  /* yellow draws over purple → wraps back to green-over-yellow */
+  66.67% { animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+           background-size: 0% 82%, 100% 82%;
+           background-image: linear-gradient(to right, rgba(242, 179, 0, 0.85), rgba(242, 179, 0, 0.85)), linear-gradient(to right, rgba(201, 178, 245, 0.85), rgba(201, 178, 245, 0.85)); }
+  90%    { background-size: 100% 82%, 100% 82%;
+           background-image: linear-gradient(to right, rgba(242, 179, 0, 0.85), rgba(242, 179, 0, 0.85)), linear-gradient(to right, rgba(201, 178, 245, 0.85), rgba(201, 178, 245, 0.85)); }
+  100%   { background-size: 100% 82%, 100% 82%;
+           background-image: linear-gradient(to right, rgba(242, 179, 0, 0.85), rgba(242, 179, 0, 0.85)), linear-gradient(to right, rgba(201, 178, 245, 0.85), rgba(201, 178, 245, 0.85)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .statement .fill span { color: var(--ink); }
+  .statement .fill span.gui.disco { animation: none; background-color: rgba(201, 178, 245, 0.6); }
+}
 
 /* what does GUI stand for:collaborative cursor study */
 .gui-profiles { border-top: 1px solid var(--hairline); background: var(--canvas); padding: 104px 0 112px; overflow: hidden; }
@@ -986,7 +1095,7 @@ onMounted(() => {
 .gp-head { max-width: 620px; margin-bottom: 46px; }
 .gp-head h2 { max-width: 560px; }
 .gp-stage { --gp-accent: var(--blue); position: relative; min-height: 500px; display: grid; place-items: center; }
-.gp-wordmark { position: relative; display: flex; align-items: baseline; justify-content: center; gap: .015em; font-family: var(--display); font-size: clamp(72px, 13vw, 158px); font-weight: 700; line-height: .86; letter-spacing: -.07em; color: var(--ink); transform: translateY(-26px); }
+.gp-wordmark { position: relative; display: flex; align-items: baseline; justify-content: center; gap: .015em; font-family: var(--display); font-size: clamp(72px, 13vw, 158px); font-weight: var(--display-weight); line-height: .86; letter-spacing: -.07em; color: var(--ink); transform: translateY(-26px); }
 .gp-g::before { content: ""; position: absolute; inset: -.08em -.1em -.04em -.08em; border: 1.5px solid var(--gp-accent); border-radius: 5px; opacity: 0; transform: scale(.985); transition: opacity 160ms ease, transform 180ms ease, border-color 360ms ease; pointer-events: none; }
 .gp-g::after { content: ""; position: absolute; inset: -.08em -.1em -.04em -.08em; opacity: 0; transform: scale(.985); transition: opacity 160ms ease, transform 180ms ease; pointer-events: none; background:
   linear-gradient(var(--gp-accent), var(--gp-accent)) left top / 8px 8px no-repeat,
@@ -1009,7 +1118,7 @@ onMounted(() => {
 .gp-name { border-radius: 999px; background: var(--gp-color); color: #fff; font: 600 11px/1 var(--sans); letter-spacing: .02em; padding: 7px 10px; box-shadow: 0 10px 28px rgba(16,16,16,.12); white-space: nowrap; transform: translate(6px, -12px); }
 .gp-meaning { position: absolute; left: 50%; bottom: 46px; transform: translateX(-50%); width: min(92%, 600px); text-align: center; }
 .gp-line { position: relative; min-height: 32px; }
-.gp-role { position: absolute; inset: 0; opacity: 0; transform: translateY(8px); color: var(--ink); font-family: var(--display); font-size: clamp(20px, 2.5vw, 30px); font-weight: 600; letter-spacing: -.02em; transition: opacity 320ms ease, transform 360ms ease; }
+.gp-role { position: absolute; inset: 0; opacity: 0; transform: translateY(8px); color: var(--ink); font-family: var(--display); font-size: clamp(20px, 2.5vw, 30px); font-weight: var(--display-weight); letter-spacing: -.02em; transition: opacity 320ms ease, transform 360ms ease; }
 .gp-role.active { opacity: 1; transform: none; }
 .gp-copy { position: relative; min-height: 46px; margin-top: 10px; }
 .gp-copy span { position: absolute; inset: 0; opacity: 0; transform: translateY(8px); color: var(--body); font-size: clamp(13.5px, 1.2vw, 15.5px); line-height: 1.55; transition: opacity 320ms ease, transform 360ms ease; }
@@ -1029,7 +1138,7 @@ onMounted(() => {
 section { padding: 92px 0; border-top: none; }
 .hairtop { border-top: 1px solid var(--hairline); }
 .kicker { font-size: 11.5px; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
-h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weight: 600; line-height: 1.08; letter-spacing: -0.025em; }
+h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weight: var(--display-weight); line-height: 1.08; letter-spacing: -0.025em; }
 .lede { font-size: 17px; line-height: 1.6; color: var(--body); max-width: 640px; margin-top: 16px; }
 
 /* ── THE LOOP:hero animated moment ── */
@@ -1131,7 +1240,7 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .hub-node .verb { margin-left: auto; font-size: 10px; color: var(--muted); }
 .hub-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 188px; z-index: 3; background: var(--card); border: 2px solid var(--ink); border-radius: 16px; padding: 16px; box-shadow: 0 18px 50px rgba(16,16,16,.13); }
 .hub-center .hc-top { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.hub-center .hc-top .w { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -.02em; color: var(--blue); }
+.hub-center .hc-top .w { font-family: var(--display); font-weight: var(--display-weight); font-size: 22px; letter-spacing: -.02em; color: var(--blue); }
 .hub-center .hc-file { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 10px; }
 .hub-center .hc-code { font-family: var(--mono); font-size: 10px; line-height: 1.8; color: var(--body); }
 .hub-center .hc-code .t { color: var(--blue); }
@@ -1140,7 +1249,7 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 44px; }
 .why-card { background: #17161200; border: 1px solid #2a2a24; border-radius: 16px; padding: 22px; }
 .why-card .wn { font-size: 11px; color: var(--term-green); margin-bottom: 14px; }
-.why-card h3 { font-family: var(--display); font-size: 18px; font-weight: 600; letter-spacing: -0.01em; color: #fafaf7; margin-bottom: 8px; }
+.why-card h3 { font-family: var(--display); font-size: 18px; font-weight: var(--display-weight); letter-spacing: -0.01em; color: #fafaf7; margin-bottom: 8px; }
 .why-card p { font-size: 13.5px; line-height: 1.62; color: #9a968b; }
 @media (max-width: 900px) { .why-grid { grid-template-columns: 1fr; } }
 
@@ -1153,7 +1262,7 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .prod .top { display: flex; justify-content: space-between; align-items: flex-start; }
 .prod .top .pkg { font-family: var(--mono); font-size: 12px; }
 .prod .top svg { width: 22px; height: 22px; }
-.prod h3 { font-family: var(--display); font-size: 20px; font-weight: 600; letter-spacing: -0.01em; margin: auto 0 10px; padding-top: 90px; }
+.prod h3 { font-family: var(--display); font-size: 20px; font-weight: var(--display-weight); letter-spacing: -0.01em; margin: auto 0 10px; padding-top: 90px; }
 .prod p { font-size: 13.5px; line-height: 1.65; }
 
 /* gallery — moving marquee of real example previews */
@@ -1188,7 +1297,7 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .gridwall { position: relative; height: 400px; border-top: 1px solid var(--hairline); cursor: crosshair; }
 .gridwall :deep(.gridcell) { position: absolute; width: 38px; height: 38px; border-right: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
 .gridwall .seed { position: absolute; width: 38px; height: 38px; }
-.gridwall .wordmark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52%); font-family: var(--display); font-weight: 700; font-size: clamp(150px, 20vw, 280px); letter-spacing: -0.05em; line-height: 1; pointer-events: none;
+.gridwall .wordmark { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52%); font-family: var(--display); font-weight: var(--display-weight); font-size: clamp(150px, 20vw, 280px); letter-spacing: -0.05em; line-height: 1; pointer-events: none;
   background: linear-gradient(to bottom, color-mix(in srgb, var(--ink) 14%, transparent) 0%, color-mix(in srgb, var(--ink) 4%, transparent) 55%, transparent 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent; }
 .gridwall :deep(.hovercell) { position: absolute; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 8px; pointer-events: none; opacity: 0; transition: opacity 500ms; white-space: nowrap; z-index: 2; }

@@ -118,7 +118,7 @@ useHead({
 .ex-title {
   font-family: var(--display);
   font-size: clamp(36px, 6vw, 52px);
-  font-weight: 700;
+  font-weight: var(--display-weight);
   letter-spacing: -0.02em;
   margin: 0 0 16px;
   color: var(--ink);

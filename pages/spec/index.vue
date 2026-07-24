@@ -86,7 +86,7 @@ useHead({
 .spec-header-title {
   font-family: var(--display);
   font-size: 36px;
-  font-weight: 600;
+  font-weight: var(--display-weight);
   letter-spacing: -0.03em;
   line-height: 1.05;
   color: var(--ink);

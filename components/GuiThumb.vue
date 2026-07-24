@@ -93,7 +93,7 @@ const fallbackStyle = computed(() => {
   padding: 16px;
   text-align: center;
   font-family: var(--display);
-  font-weight: 700;
+  font-weight: var(--display-weight);
   font-size: 18px;
   color: #fff;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
