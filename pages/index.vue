@@ -649,11 +649,29 @@ onMounted(() => {
   const fill = fillEl.value
   if (fill && !reduced) {
     const words = [...fill.querySelectorAll('span:not(.phrase)')]
-    // phrases that get a highlighter sweep once fully revealed — one lit at a time
     const phrases = [...fill.querySelectorAll('.phrase')].map(p => ({
       el: p as HTMLElement,
       words: [...p.querySelectorAll('span')],
     }))
+    const guiEl = fill.querySelector('.gui') as HTMLElement | null
+
+    // Highlighter sequence — plays once, on a timer, after all three phrases
+    // are fully revealed. Highlights sweep in one after another (overlapping)
+    // and stay lit; then .gui starts its continuous three-colour disco loop.
+    const HL_DELAY = 900   // pause after the text is fully shown, before the first sweep
+    const HL_STEP  = 950   // gap between each phrase lighting up (< sweep time, so they overlap)
+    let started = false
+    const timers: ReturnType<typeof setTimeout>[] = []
+    const startSequence = () => {
+      if (started) return
+      started = true
+      phrases.forEach((ph, i) => {
+        timers.push(setTimeout(() => ph.el.classList.add('hl'), HL_DELAY + i * HL_STEP))
+      })
+      timers.push(setTimeout(() => guiEl?.classList.add('disco'), HL_DELAY + phrases.length * HL_STEP))
+    }
+    cleanups.push(() => timers.forEach(clearTimeout))
+
     let ticking = false
     const paint = () => {
       ticking = false
@@ -662,13 +680,8 @@ onMounted(() => {
       const p = Math.max(0, Math.min(1, (vh * 0.82 - r.top) / (vh * 0.62)))
       const n = Math.round(p * words.length)
       words.forEach((w, i) => w.classList.toggle('lit', i < n))
-      // the active highlight = the last phrase whose words are all lit
-      let active = -1
-      phrases.forEach((ph, i) => { if (ph.words.every(w => w.classList.contains('lit'))) active = i })
-      phrases.forEach((ph, i) => {
-        ph.el.classList.toggle('hl', i === active)       // sweeping in / held
-        ph.el.classList.toggle('hl-done', i < active)    // superseded → fades off
-      })
+      // kick off the highlighter run once all three phrases are fully revealed
+      if (phrases.every(ph => ph.words.every(w => w.classList.contains('lit')))) startSequence()
     }
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(paint) } }
     addEventListener('scroll', onScroll, { passive: true })
@@ -676,6 +689,8 @@ onMounted(() => {
     paint()
   } else if (fill) {
     fill.querySelectorAll('span').forEach(s => s.classList.add('lit'))
+    // reduced motion: show the highlights statically, no sweep or disco
+    fill.querySelectorAll('.phrase').forEach(p => p.classList.add('hl'))
   }
 
   // ── what does GUI stand for: profile-driven auto meaning ──
@@ -990,11 +1005,10 @@ onMounted(() => {
 .statement .fill { font-family: var(--display); font-weight: var(--display-weight); font-size: clamp(32px, 5vw, 66px); line-height: 1.16; letter-spacing: -0.03em; max-width: 1000px; }
 .statement .fill span { color: #dcd9d0; transition: color 260ms ease; }
 .statement .fill span.lit { color: var(--ink); }
-.statement .fill span.gui.lit { color: var(--blue); }
 
-/* highlighter sweep — one phrase lit at a time, previous fades off.
-   --hl-alpha is @property-registered so it can transition (marker fade-out);
-   background-size drives the left→right sweep, box-decoration-break clones it per line. */
+/* highlighter sweep — each phrase lights up in turn (on a timer) and stays lit.
+   --hl-alpha is @property-registered so it can transition; background-size drives
+   the left→right sweep, box-decoration-break clones the marker per wrapped line. */
 @property --hl-alpha { syntax: "<number>"; inherits: false; initial-value: 0; }
 .statement .fill .phrase {
   --hl-alpha: 0;
@@ -1007,12 +1021,35 @@ onMounted(() => {
   box-decoration-break: clone;
   transition: background-size 560ms cubic-bezier(0.2, 0.7, 0.2, 1), --hl-alpha 700ms ease;
 }
-.statement .fill .phrase.hl      { --hl-alpha: 1; background-size: 100% 82%; }  /* sweep in + hold */
-.statement .fill .phrase.hl-done { --hl-alpha: 0; background-size: 100% 82%; }  /* full width, fades away */
+.statement .fill .phrase.hl      { --hl-alpha: 1; background-size: 100% 82%; }  /* sweep in + hold (persists) */
 .statement .fill .phrase--html   { --hl-rgb: 242 179 0;   --hl-max: 0.5; }   /* yellow */
 .statement .fill .phrase--swift  { --hl-rgb: 126 226 155; --hl-max: 0.6; }   /* green */
 .statement .fill .phrase--mockup { --hl-rgb: 201 178 245; --hl-max: 0.7; }   /* purple */
-@media (prefers-reduced-motion: reduce) { .statement .fill span { color: var(--ink); } .statement .fill .phrase { background-image: none; } }
+
+/* .gui: same ink colour as the rest, with a continuous disco loop cycling all
+   three highlight colours — .gui unites what the three phrases separate. */
+.statement .fill span.gui {
+  border-radius: 4px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  background-repeat: no-repeat;
+  background-position: 0 62%;
+  background-size: 0% 82%;
+}
+.statement .fill span.gui.disco {
+  color: var(--ink);
+  background-size: 100% 82%;
+  animation: gui-disco 3s linear infinite;
+}
+@keyframes gui-disco {
+  0%,  100% { background-color: rgba(242, 179, 0, 0.5); }   /* yellow */
+  33%       { background-color: rgba(126, 226, 155, 0.6); } /* green */
+  66%       { background-color: rgba(201, 178, 245, 0.7); } /* purple */
+}
+@media (prefers-reduced-motion: reduce) {
+  .statement .fill span { color: var(--ink); }
+  .statement .fill span.gui.disco { animation: none; background-color: rgba(201, 178, 245, 0.6); }
+}
 
 /* what does GUI stand for:collaborative cursor study */
 .gui-profiles { border-top: 1px solid var(--hairline); background: var(--canvas); padding: 104px 0 112px; overflow: hidden; }
