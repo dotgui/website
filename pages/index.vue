@@ -655,22 +655,19 @@ onMounted(() => {
     }))
     const guiEl = fill.querySelector('.gui') as HTMLElement | null
 
-    // Highlighter sequence — plays once, on a timer, after all three phrases
-    // are fully revealed. Highlights sweep in one after another (overlapping)
-    // and stay lit; then .gui starts its continuous three-colour disco loop.
-    const HL_DELAY = 900   // pause after the text is fully shown, before the first sweep
-    const HL_STEP  = 950   // gap between each phrase lighting up (< sweep time, so they overlap)
-    let started = false
+    // Each phrase highlights on its own, a subtle beat after ITS text finishes
+    // revealing (so a fast scroller still catches each one), and stays lit —
+    // highlights are never removed. .gui starts its disco loop once it reveals.
+    const HL_DELAY = 350   // subtle pause between a phrase being fully shown and its highlight
     const timers: ReturnType<typeof setTimeout>[] = []
-    const startSequence = () => {
-      if (started) return
-      started = true
-      phrases.forEach((ph, i) => {
-        timers.push(setTimeout(() => ph.el.classList.add('hl'), HL_DELAY + i * HL_STEP))
-      })
-      timers.push(setTimeout(() => guiEl?.classList.add('disco'), HL_DELAY + phrases.length * HL_STEP))
-    }
     cleanups.push(() => timers.forEach(clearTimeout))
+    const scheduleOnce = (isLit: () => boolean, apply: () => void, flag: { done: boolean }) => {
+      if (flag.done || !isLit()) return
+      flag.done = true
+      timers.push(setTimeout(() => { if (isLit()) apply() }, HL_DELAY))
+    }
+    const phraseFlags = phrases.map(() => ({ done: false }))
+    const discoFlag = { done: false }
 
     let ticking = false
     const paint = () => {
@@ -680,8 +677,12 @@ onMounted(() => {
       const p = Math.max(0, Math.min(1, (vh * 0.82 - r.top) / (vh * 0.62)))
       const n = Math.round(p * words.length)
       words.forEach((w, i) => w.classList.toggle('lit', i < n))
-      // kick off the highlighter run once all three phrases are fully revealed
-      if (phrases.every(ph => ph.words.every(w => w.classList.contains('lit')))) startSequence()
+      // per-phrase: light the marker a beat after that phrase is fully revealed
+      phrases.forEach((ph, i) => {
+        const lit = () => ph.words.every(w => w.classList.contains('lit'))
+        scheduleOnce(lit, () => ph.el.classList.add('hl'), phraseFlags[i])
+      })
+      if (guiEl) scheduleOnce(() => guiEl.classList.contains('lit'), () => guiEl.classList.add('disco'), discoFlag)
     }
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(paint) } }
     addEventListener('scroll', onScroll, { passive: true })
