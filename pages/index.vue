@@ -408,9 +408,7 @@ import { examples } from '~/lib/examples-data'
 // the ambitious clones. Order here is the display order.
 const LIBRARY_PICKS = [
   'spotify-desktop', 'skeuomorphic-music', 'figma-clone', 'whoop-dashboard',
-  'music-production-daw', 'material-expressive-fitness', 'echelon-atelier-events', 'instagram-clone',
-  'sundial-studio', 'spotify-playlist', 'premium-baby-accessories', 'headspace-clone',
-  'farfield', 'meridian-flight-results'
+  'music-production-daw', 'material-expressive-fitness', 'echelon-atelier-events', 'spotify-playlist'
 ]
 const bySlug = new Map(examples.map((e) => [e.slug, e]))
 const libraryTiles = LIBRARY_PICKS.map((s) => bySlug.get(s)).filter((e): e is NonNullable<typeof e> => Boolean(e && e.preview))
@@ -1201,11 +1199,11 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 /* Dribbble-style uniform shots: every tile is the same landscape frame.
    Web previews crop to their top edge; mobile previews float as a device,
    centered and top-aligned, so the whole row reads at one consistent size. */
-.tile { position: relative; flex: 0 0 auto; width: 300px; height: 210px; border-radius: 14px; overflow: hidden; border: 1px solid var(--hairline); background: var(--card); display: block; }
-.tile-web { padding: 15px 15px 0; display: flex; justify-content: center; align-items: flex-start; }
+.tile { position: relative; flex: 0 0 auto; width: 375px; height: 263px; border-radius: 16px; overflow: hidden; border: 1px solid var(--hairline); background: var(--card); display: block; }
+.tile-web { padding: 19px 19px 0; display: flex; justify-content: center; align-items: flex-start; }
 .tile-web img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top center; border-radius: 9px 9px 0 0; border: 1px solid var(--hairline); border-bottom: none; box-shadow: 0 8px 24px rgba(20,19,15,0.16); }
 .tile-mobile { display: flex; justify-content: center; align-items: flex-start; }
-.tile-mobile img { width: 128px; height: auto; margin-top: 20px; display: block; border-radius: 14px; box-shadow: 0 8px 24px rgba(20,19,15,0.18); border: 1px solid var(--hairline); }
+.tile-mobile img { width: 160px; height: auto; margin-top: 25px; display: block; border-radius: 14px; box-shadow: 0 8px 24px rgba(20,19,15,0.18); border: 1px solid var(--hairline); }
 .tile-cap { position: absolute; left: 10px; bottom: 10px; display: flex; align-items: baseline; padding: 4px 9px; border-radius: 999px; background: rgba(20,19,15,0.72); color: #fff; font-size: 11px; letter-spacing: -0.01em; opacity: 0; transition: opacity .2s ease; }
 .tile-cap b { font-weight: 400; opacity: 0.6; }
 .tile:hover .tile-cap { opacity: 1; }
