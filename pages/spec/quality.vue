@@ -157,7 +157,7 @@ useHead({
 .q-body h1 {
   font-family: var(--display);
   font-size: 36px;
-  font-weight: 600;
+  font-weight: var(--display-weight);
   letter-spacing: -0.03em;
   line-height: 1.05;
   color: var(--ink);
@@ -182,7 +182,7 @@ useHead({
 .q-body h2 {
   font-family: var(--display);
   font-size: 20px;
-  font-weight: 600;
+  font-weight: var(--display-weight);
   letter-spacing: -0.015em;
   color: var(--ink);
   margin: 32px 0 10px;

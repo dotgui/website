@@ -218,7 +218,7 @@ useHead({
 
 /* info column */
 .exd-cat { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-soft); }
-.exd-title { font-family: var(--display); font-size: clamp(28px, 4vw, 40px); font-weight: 700; letter-spacing: -0.02em; margin: 10px 0 16px; color: var(--ink); }
+.exd-title { font-family: var(--display); font-size: clamp(28px, 4vw, 40px); font-weight: var(--display-weight); letter-spacing: -0.02em; margin: 10px 0 16px; color: var(--ink); }
 .exd-desc { font-size: 16px; line-height: 1.65; color: var(--body); margin: 0 0 24px; }
 
 .exd-palette { display: flex; gap: 6px; margin-bottom: 28px; flex-wrap: wrap; }

@@ -100,7 +100,7 @@
 .hero-stage h1 {
   font-family: var(--display);
   font-size: clamp(44px, 6.5vw, 76px);
-  font-weight: 400;
+  font-weight: var(--display-weight);
   letter-spacing: -0.032em;
   line-height: 1.04;
   color: #26251e;
