@@ -88,7 +88,6 @@ async function copy() {
 }
 .cmd::before { content: '$ '; color: var(--muted-soft); }
 .copy {
-  font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: 0.04em;
   text-transform: uppercase;

@@ -101,7 +101,7 @@ const activeSlug = computed(() => (route.params.module as string) || '')
 .nav-link.active::before { content: '›'; margin-right: 6px; color: var(--text-muted); }
 .nav-overview { margin-bottom: 24px; }
 /* module names are code identifiers → mono */
-.nav-mod { font-family: var(--mono); font-size: 12px; }
+.nav-mod { font-size: 12px; }
 
 .kit-content { min-width: 0; }
 

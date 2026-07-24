@@ -87,7 +87,6 @@ defineProps<{ body: GuideBlock[] }>()
 .g-callout p { margin: 0; font-family: var(--sans); font-size: 13.5px; line-height: 1.65; color: var(--text-muted); }
 .g-callout-tag {
   flex: none;
-  font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: 0.06em;
   text-transform: uppercase;

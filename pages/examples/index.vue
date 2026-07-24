@@ -128,7 +128,6 @@ useHead({
 
 .ex-header { max-width: 640px; margin-bottom: 32px; }
 .ex-eyebrow {
-  font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -163,7 +162,7 @@ useHead({
 }
 .ex-filter:hover { border-color: var(--border-strong, var(--muted-soft)); }
 .ex-filter.active { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
-.ex-filter-count { font-family: var(--mono); font-size: 11px; opacity: 0.6; }
+.ex-filter-count { font-size: 11px; opacity: 0.6; }
 
 .ex-grid {
   display: grid;
@@ -204,7 +203,6 @@ useHead({
 .ex-card-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .ex-card-title { font-family: var(--sans); font-size: 14px; font-weight: 600; color: var(--ink); }
 .ex-card-cat {
-  font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.06em;
   text-transform: uppercase;

@@ -153,7 +153,6 @@ useProductSchema({
 <style scoped>
 .doc-header { padding: 48px 40px 8px; }
 .doc-eyebrow {
-  font-family: var(--mono);
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;

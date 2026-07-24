@@ -153,7 +153,7 @@ useHead({
 <style scoped>
 .exd { padding: 40px 24px 96px; }
 
-.exd-crumb { font-family: var(--mono); font-size: 12px; color: var(--muted-soft); margin-bottom: 28px; display: flex; align-items: center; gap: 8px; }
+.exd-crumb { font-size: 12px; color: var(--muted-soft); margin-bottom: 28px; display: flex; align-items: center; gap: 8px; }
 .exd-crumb a { color: var(--muted); text-decoration: none; }
 .exd-crumb a:hover { color: var(--ink); }
 .exd-crumb .current { color: var(--body); }
@@ -200,7 +200,6 @@ useHead({
 .exd-expand:hover { border-color: var(--muted-soft); }
 
 .exd-embed-credit {
-  font-family: var(--mono);
   font-size: 12px;
   color: var(--muted-soft);
   text-decoration: none;
@@ -211,11 +210,11 @@ useHead({
 .exd-preview-img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .exd-preview-empty {
   display: flex; align-items: center; justify-content: center;
-  height: 100%; color: var(--muted-soft); font-family: var(--mono); font-size: 13px;
+ height: 100%; color: var(--muted-soft); font-size: 13px;
 }
 
 /* info column */
-.exd-cat { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-soft); }
+.exd-cat { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-soft); }
 .exd-title { font-family: var(--display); font-size: clamp(28px, 4vw, 40px); font-weight: 700; letter-spacing: -0.02em; margin: 10px 0 16px; color: var(--ink); }
 .exd-desc { font-size: 16px; line-height: 1.65; color: var(--body); margin: 0 0 24px; }
 
@@ -237,7 +236,7 @@ useHead({
 
 .exd-facts { display: flex; flex-direction: column; gap: 10px; margin: 0; border-top: 1px solid var(--hairline); padding-top: 20px; }
 .exd-facts > div { display: flex; justify-content: space-between; gap: 16px; }
-.exd-facts dt { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted-soft); margin: 0; }
+.exd-facts dt { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted-soft); margin: 0; }
 .exd-facts dd { font-size: 13px; color: var(--body); margin: 0; }
 .exd-facts a { color: var(--body); }
 
