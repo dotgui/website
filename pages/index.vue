@@ -280,7 +280,7 @@
               :to="`/examples/${ex.slug}`"
               class="tile"
               :class="`tile-${ex.category}`"
-              :style="ex.category === 'mobile' ? { background: dominantColor(ex) } : undefined"
+              :style="{ background: frameColor(ex) }"
             >
               <img :src="ex.preview" :alt="`${ex.title} — .gui preview`" loading="lazy" />
               <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
@@ -295,7 +295,7 @@
               :to="`/examples/${ex.slug}`"
               class="tile"
               :class="`tile-${ex.category}`"
-              :style="ex.category === 'mobile' ? { background: dominantColor(ex) } : undefined"
+              :style="{ background: frameColor(ex) }"
             >
               <img :src="ex.preview" :alt="`${ex.title} — .gui preview`" loading="lazy" />
               <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
@@ -422,8 +422,35 @@ const libraryRowBottom = libraryTiles.filter((_, i) => i % 2 === 1)
 // The "view all" link still advertises the full library, not the curated count.
 const libraryCount = examples.length
 
-// Dominant colour of each design, used to tint the frame behind mobile shots.
-const dominantColor = (ex: (typeof examples)[number]) => ex.colors?.[0]?.value || 'var(--canvas)'
+// Frame colour behind each shot. Uses the design's dominant colour, but when
+// that colour is near-white or near-black (which would read as a plain white or
+// black background) it falls back to the most saturated accent in the palette,
+// or a soft neutral if the palette has no colour to offer.
+const NEUTRAL_FRAME = '#EAE6DF'
+const isHex6 = (v: string) => /^#[0-9a-fA-F]{6}$/.test(v)
+const hexBrightness = (hex: string) => {
+  const h = hex.slice(1)
+  return (parseInt(h.slice(0, 2), 16) + parseInt(h.slice(2, 4), 16) + parseInt(h.slice(4, 6), 16)) / 3 / 255
+}
+const hexSaturation = (hex: string) => {
+  const r = parseInt(hex.slice(1, 3), 16) / 255
+  const g = parseInt(hex.slice(3, 5), 16) / 255
+  const b = parseInt(hex.slice(5, 7), 16) / 255
+  const mx = Math.max(r, g, b)
+  const mn = Math.min(r, g, b)
+  return mx === 0 ? 0 : (mx - mn) / mx
+}
+const isExtreme = (hex: string) => {
+  const b = hexBrightness(hex)
+  return b < 0.1 || b > 0.9
+}
+const frameColor = (ex: (typeof examples)[number]) => {
+  const cols = (ex.colors || []).map((c) => c.value).filter(isHex6)
+  if (!cols.length) return NEUTRAL_FRAME
+  if (!isExtreme(cols[0])) return cols[0]
+  const accents = cols.filter((c) => !isExtreme(c)).sort((a, b) => hexSaturation(b) - hexSaturation(a))
+  return accents[0] || NEUTRAL_FRAME
+}
 
 const SITE_URL = 'https://dotgui.org'
 // Canonical homepage URL (trailing slash) for structured-data identity refs.
@@ -1175,8 +1202,9 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
    Web previews crop to their top edge; mobile previews float as a device,
    centered and top-aligned, so the whole row reads at one consistent size. */
 .tile { position: relative; flex: 0 0 auto; width: 300px; height: 210px; border-radius: 14px; overflow: hidden; border: 1px solid var(--hairline); background: var(--card); display: block; }
-.tile-web img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top center; }
-.tile-mobile { background: linear-gradient(160deg, var(--canvas), var(--card)); display: flex; justify-content: center; align-items: flex-start; }
+.tile-web { padding: 15px 15px 0; display: flex; justify-content: center; align-items: flex-start; }
+.tile-web img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top center; border-radius: 9px 9px 0 0; border: 1px solid var(--hairline); border-bottom: none; box-shadow: 0 8px 24px rgba(20,19,15,0.16); }
+.tile-mobile { display: flex; justify-content: center; align-items: flex-start; }
 .tile-mobile img { width: 128px; height: auto; margin-top: 20px; display: block; border-radius: 14px; box-shadow: 0 8px 24px rgba(20,19,15,0.18); border: 1px solid var(--hairline); }
 .tile-cap { position: absolute; left: 10px; bottom: 10px; display: flex; align-items: baseline; padding: 4px 9px; border-radius: 999px; background: rgba(20,19,15,0.72); color: #fff; font-family: var(--mono); font-size: 11px; letter-spacing: -0.01em; opacity: 0; transition: opacity .2s ease; }
 .tile-cap b { font-weight: 400; opacity: 0.6; }
