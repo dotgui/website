@@ -30,6 +30,7 @@ const props = defineProps<{
 const managers = ['npm', 'bun'] as const
 const mgr = ref<'npm' | 'bun'>('npm')
 const copied = ref(false)
+const { track } = useAnalytics()
 
 const command = computed(() => {
   const g = props.global ? ' -g' : ''
@@ -43,6 +44,7 @@ async function copy() {
   try {
     await navigator.clipboard.writeText(command.value)
     copied.value = true
+    track('install_copy', { package: props.pkg, manager: mgr.value })
     setTimeout(() => { copied.value = false }, 1400)
   } catch {}
 }

@@ -22,12 +22,23 @@ export default defineNuxtConfig({
   modules: ['nuxt-gtag'],
   // Google Analytics 4. The Measurement ID is a public, client-side value
   // (it ships in the browser either way), so it's safe to commit; override
-  // per-environment with NUXT_PUBLIC_GTAG_ID if ever needed. Disabled in dev
-  // so local traffic doesn't pollute the reports (the production build runs
-  // with NODE_ENV=production, where it's enabled).
+  // per-environment with NUXT_PUBLIC_GTAG_ID if ever needed.
+  //
+  // initMode 'manual' means the gtag.js script is NOT loaded until the user
+  // accepts cookies — see components/CookieConsent.vue, which calls
+  // initialize() on consent. Consent Mode defaults to denied so anything that
+  // does run stays cookieless until granted.
   gtag: {
     id: 'G-WSWVKF5N3Q',
-    enabled: process.env.NODE_ENV === 'production'
+    initMode: 'manual',
+    initCommands: [
+      ['consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied'
+      }]
+    ]
   },
   experimental: {
     viteEnvironmentApi: true,

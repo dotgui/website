@@ -52,8 +52,8 @@
           </div>
 
           <div class="exd-actions">
-            <a class="exd-btn exd-btn--primary" :href="ex.raw" target="_blank" rel="noopener">View raw</a>
-            <a class="exd-btn" :href="ex.download" :download="`${ex.slug}.gui`">Download .gui</a>
+            <a class="exd-btn exd-btn--primary" :href="ex.raw" target="_blank" rel="noopener" @click="track('example_view_raw', { slug: ex.slug })">View raw</a>
+            <a class="exd-btn" :href="ex.download" :download="`${ex.slug}.gui`" @click="track('example_download', { slug: ex.slug })">Download .gui</a>
             <button class="exd-btn" type="button" @click="copySource">{{ copied ? 'Copied!' : 'Copy source' }}</button>
           </div>
 
@@ -81,6 +81,8 @@ if (!ex) {
   throw createError({ statusCode: 404, statusMessage: `Unknown example: ${slug}`, fatal: true })
 }
 
+const { track } = useAnalytics()
+
 // Load the raw .guix so it can seed the JSON-LD (source in the HTML for AI
 // search) and the copy button. On the server read it off disk from public/;
 // on the client fetch the static asset. useAsyncData serializes the result
@@ -100,6 +102,7 @@ async function copySource() {
   try {
     await navigator.clipboard.writeText(source.value || '')
     copied.value = true
+    track('example_copy_source', { slug: ex.slug })
     setTimeout(() => (copied.value = false), 1600)
   } catch { /* clipboard unavailable */ }
 }
