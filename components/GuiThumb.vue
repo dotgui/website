@@ -1,10 +1,16 @@
 <template>
-  <div class="gui-thumb" :class="`is-${ex.category}`" :style="{ background: frameColor(ex) }">
+  <div
+    class="gui-thumb"
+    :class="[`is-${ex.category}`, { 'is-landscape': landscape }]"
+    :style="{ background: frameColor(ex) }"
+  >
     <img
       v-if="ex.preview"
+      ref="imgEl"
       :src="ex.preview"
       :alt="`${ex.title} — .gui preview`"
       loading="lazy"
+      @load="onLoad"
     />
     <span v-else class="gui-thumb-fallback" :style="fallbackStyle">{{ ex.title }}</span>
   </div>
@@ -15,6 +21,20 @@ import { frameColor } from '~/utils/frame-color'
 import type { Example } from '~/lib/examples-data'
 
 const props = defineProps<{ ex: Example }>()
+
+// Treat a preview by its real orientation, not just its category: a landscape
+// "mobile" shot (e.g. an iPad screen) should float as a wide device, not shrink
+// into a narrow phone with a huge empty frame around it.
+const landscape = ref(false)
+const imgEl = ref<HTMLImageElement | null>(null)
+function measure(img: HTMLImageElement | null) {
+  if (img && img.naturalWidth) landscape.value = img.naturalWidth > img.naturalHeight
+}
+function onLoad(e: Event) {
+  measure(e.target as HTMLImageElement)
+}
+// Fallback for images already complete (cached) before @load can fire.
+onMounted(() => measure(imgEl.value))
 
 // Wash of the file's own token colours for the rare bundle with no preview.webp.
 const fallbackStyle = computed(() => {
@@ -57,6 +77,12 @@ const fallbackStyle = computed(() => {
   border-radius: 14px;
   box-shadow: 0 8px 24px rgba(20, 19, 15, 0.18);
   border: 1px solid var(--hairline);
+}
+/* Landscape "mobile" shot (tablet): float wide and fully visible, centered. */
+.gui-thumb.is-mobile.is-landscape { align-items: center; }
+.gui-thumb.is-mobile.is-landscape img {
+  width: 86%;
+  margin-top: 0;
 }
 .gui-thumb-fallback {
   width: 100%;
