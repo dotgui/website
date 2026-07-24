@@ -1059,26 +1059,26 @@ onMounted(() => {
    yellow → green → purple. Easing gives the in/out marker strokes their feel. */
 @keyframes gui-disco {
   /* yellow — in, hold, out */
-  0%     { background-size: 0% 82%;   background-color: rgba(242, 179, 0, 0.5); }
-  2%     { background-size: 0% 82%;   background-color: rgba(242, 179, 0, 0.5); animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
-  14%    { background-size: 100% 82%; background-color: rgba(242, 179, 0, 0.5); }
-  17%    { background-size: 100% 82%; background-color: rgba(242, 179, 0, 0.5); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
-  29%    { background-size: 0% 82%;   background-color: rgba(242, 179, 0, 0.5); }
-  33.33% { background-size: 0% 82%;   background-color: rgba(242, 179, 0, 0.5); }
+  0%     { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(242, 179, 0, 0.5), rgba(242, 179, 0, 0.5)); }
+  2%     { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(242, 179, 0, 0.5), rgba(242, 179, 0, 0.5)); animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+  14%    { background-size: 100% 82%; background-image: linear-gradient(to right, rgba(242, 179, 0, 0.5), rgba(242, 179, 0, 0.5)); }
+  17%    { background-size: 100% 82%; background-image: linear-gradient(to right, rgba(242, 179, 0, 0.5), rgba(242, 179, 0, 0.5)); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+  29%    { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(242, 179, 0, 0.5), rgba(242, 179, 0, 0.5)); }
+  33.33% { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(242, 179, 0, 0.5), rgba(242, 179, 0, 0.5)); }
   /* green — in, hold, out */
-  33.34% { background-size: 0% 82%;   background-color: rgba(126, 226, 155, 0.6); }
-  35.34% { background-size: 0% 82%;   background-color: rgba(126, 226, 155, 0.6); animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
-  47.34% { background-size: 100% 82%; background-color: rgba(126, 226, 155, 0.6); }
-  50.34% { background-size: 100% 82%; background-color: rgba(126, 226, 155, 0.6); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
-  62.33% { background-size: 0% 82%;   background-color: rgba(126, 226, 155, 0.6); }
-  66.66% { background-size: 0% 82%;   background-color: rgba(126, 226, 155, 0.6); }
+  33.34% { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(126, 226, 155, 0.6), rgba(126, 226, 155, 0.6)); }
+  35.34% { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(126, 226, 155, 0.6), rgba(126, 226, 155, 0.6)); animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+  47.34% { background-size: 100% 82%; background-image: linear-gradient(to right, rgba(126, 226, 155, 0.6), rgba(126, 226, 155, 0.6)); }
+  50.34% { background-size: 100% 82%; background-image: linear-gradient(to right, rgba(126, 226, 155, 0.6), rgba(126, 226, 155, 0.6)); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+  62.33% { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(126, 226, 155, 0.6), rgba(126, 226, 155, 0.6)); }
+  66.66% { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(126, 226, 155, 0.6), rgba(126, 226, 155, 0.6)); }
   /* purple — in, hold, out */
-  66.67% { background-size: 0% 82%;   background-color: rgba(201, 178, 245, 0.7); }
-  68.67% { background-size: 0% 82%;   background-color: rgba(201, 178, 245, 0.7); animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
-  80.67% { background-size: 100% 82%; background-color: rgba(201, 178, 245, 0.7); }
-  83.67% { background-size: 100% 82%; background-color: rgba(201, 178, 245, 0.7); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
-  95.67% { background-size: 0% 82%;   background-color: rgba(201, 178, 245, 0.7); }
-  100%   { background-size: 0% 82%;   background-color: rgba(201, 178, 245, 0.7); }
+  66.67% { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(201, 178, 245, 0.7), rgba(201, 178, 245, 0.7)); }
+  68.67% { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(201, 178, 245, 0.7), rgba(201, 178, 245, 0.7)); animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+  80.67% { background-size: 100% 82%; background-image: linear-gradient(to right, rgba(201, 178, 245, 0.7), rgba(201, 178, 245, 0.7)); }
+  83.67% { background-size: 100% 82%; background-image: linear-gradient(to right, rgba(201, 178, 245, 0.7), rgba(201, 178, 245, 0.7)); animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4); }
+  95.67% { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(201, 178, 245, 0.7), rgba(201, 178, 245, 0.7)); }
+  100%   { background-size: 0% 82%;   background-image: linear-gradient(to right, rgba(201, 178, 245, 0.7), rgba(201, 178, 245, 0.7)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .statement .fill span { color: var(--ink); }
