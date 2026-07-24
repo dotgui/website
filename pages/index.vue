@@ -279,7 +279,7 @@
               :key="`t-${i}`"
               :to="`/examples/${ex.slug}`"
               class="tile"
-              :class="{ 'is-web': ex.category === 'web' }"
+              :class="`tile-${ex.category}`"
             >
               <img :src="ex.preview" :alt="`${ex.title} — .gui preview`" loading="lazy" />
               <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
@@ -293,7 +293,7 @@
               :key="`b-${i}`"
               :to="`/examples/${ex.slug}`"
               class="tile"
-              :class="{ 'is-web': ex.category === 'web' }"
+              :class="`tile-${ex.category}`"
             >
               <img :src="ex.preview" :alt="`${ex.title} — .gui preview`" loading="lazy" />
               <span class="tile-cap">{{ ex.title }}<b>.gui</b></span>
@@ -1155,9 +1155,13 @@ h2 { font-family: var(--display); font-size: clamp(32px, 3.6vw, 48px); font-weig
 .marquee-track.reverse { animation-direction: reverse; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.tile { position: relative; flex: 0 0 auto; height: 190px; border-radius: 14px; overflow: hidden; border: 1px solid var(--hairline); background: var(--card); display: block; }
-.tile img { height: 100%; width: auto; display: block; object-fit: cover; }
-.tile.is-web img { width: 320px; object-fit: cover; object-position: top; }
+/* Dribbble-style uniform shots: every tile is the same landscape frame.
+   Web previews crop to their top edge; mobile previews float as a device,
+   centered and top-aligned, so the whole row reads at one consistent size. */
+.tile { position: relative; flex: 0 0 auto; width: 300px; height: 210px; border-radius: 14px; overflow: hidden; border: 1px solid var(--hairline); background: var(--card); display: block; }
+.tile-web img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top center; }
+.tile-mobile { background: linear-gradient(160deg, var(--canvas), var(--card)); display: flex; justify-content: center; align-items: flex-start; }
+.tile-mobile img { width: 128px; height: auto; margin-top: 20px; display: block; border-radius: 14px; box-shadow: 0 8px 24px rgba(20,19,15,0.18); border: 1px solid var(--hairline); }
 .tile-cap { position: absolute; left: 10px; bottom: 10px; display: flex; align-items: baseline; padding: 4px 9px; border-radius: 999px; background: rgba(20,19,15,0.72); color: #fff; font-family: var(--mono); font-size: 11px; letter-spacing: -0.01em; opacity: 0; transition: opacity .2s ease; }
 .tile-cap b { font-weight: 400; opacity: 0.6; }
 .tile:hover .tile-cap { opacity: 1; }
