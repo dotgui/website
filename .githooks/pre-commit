@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+#
+# Auto-regenerate the derived files (sitemap.xml, llms.txt, llms-full.txt)
+# whenever a commit touches a source they are built from, and re-stage them.
+#
+# WHY THIS EXISTS: Netlify builds with `build:ci` (nuxt build, no sync), and
+# gen:llms reads the sibling ../core repo which does not exist on Netlify.
+# So these files can only be generated locally (in the monorepo) and MUST be
+# committed. This hook makes that automatic instead of a thing to remember.
+#
+# Activate once per clone:  git config core.hooksPath .githooks
+# Bypass for a one-off:     git commit --no-verify
+
+set -e
+
+# Only run when a source that feeds the generators is staged.
+if ! git diff --cached --name-only | grep -qE '^(lib/(guides-data|spec-data|kit-data|examples-data)\.ts|scripts/gen-(sitemap|llms)\.ts|utils/site-url\.ts|public/pricing\.md)$'; then
+  exit 0
+fi
+
+echo "pre-commit: regenerating sitemap + llms (source changed)…"
+bun run gen:sitemap
+bun run gen:llms
+git add public/sitemap.xml public/llms.txt public/llms-full.txt
+echo "pre-commit: derived files updated and staged."
