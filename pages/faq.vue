@@ -34,7 +34,7 @@
     <section id="guides" class="cat">
       <h2 class="cat-label">Still have questions?</h2>
       <p class="cat-lead">
-        The <NuxtLink to="/guides">guides</NuxtLink> go deeper than a one-line answer — comparisons
+        The <NuxtLink to="/guides">guides</NuxtLink> go deeper than a one-line answer, with comparisons
         to CSS, HTML, Figma, and SVG, plus best practices for structuring and prompting a .gui file.
       </p>
     </section>
@@ -47,7 +47,7 @@ import { siteFaq } from '~/lib/site-faq'
 const productFaqs = [
   { name: 'Kit', to: '/kit#faq', sub: 'the reference engine' },
   { name: 'CLI', to: '/cli#faq', sub: 'the command-line toolchain' },
-  { name: 'Figma', to: '/figma#faq', sub: 'export designs to .gui — coming soon' },
+  { name: 'Figma', to: '/figma#faq', sub: 'export designs to .gui (coming soon)' },
   { name: 'Embed', to: '/embed#faq', sub: 'render .gui in the browser' },
   { name: 'Quality', to: '/spec/quality', sub: 'the CCAC scoring model' }
 ]
