@@ -29,17 +29,24 @@ Key facts:
 
 ## Guides
 
-- [.gui vs CSS: a file format vs a styling language](https://dotgui.org/guides/vs-css/): CSS styles a document that already exists somewhere else. .gui is the document — structure, layout, and appearance in one file, with no cascade to fight.
+- [.gui vs CSS: a file format vs a styling language](https://dotgui.org/guides/vs-css/): CSS styles a document that already exists somewhere else. .gui is the document: structure, layout, and appearance in one file, with no cascade to fight.
 - [.gui vs HTML: a closed vocabulary vs an open runtime](https://dotgui.org/guides/vs-html/): HTML is a programming surface that happens to describe UI. .gui is a static, closed vocabulary that always terminates in the same picture, everywhere.
-- [.gui vs Figma files: portable text vs a vendor’s app](https://dotgui.org/guides/vs-figma/): A Figma file only exists inside Figma. A .gui file is plain text in a zip — readable, diffable, and versionable without opening any design tool.
-- [.gui vs a screenshot or PNG mockup](https://dotgui.org/guides/vs-screenshots/): A picture is a dead end — an agent has to guess spacing, hierarchy, and color from pixels. A .gui file hands those values over directly, already structured.
-- [.gui vs SVG: graphics format vs interface format](https://dotgui.org/guides/vs-svg/): SVG made graphics text. .gui borrows that idea but is purpose-built for interface layout and semantics — things SVG was never designed to express.
+- [.gui vs Figma files: portable text vs a vendor’s app](https://dotgui.org/guides/vs-figma/): A Figma file only exists inside Figma. A .gui file is plain text in a zip: readable, diffable, and versionable without opening any design tool.
+- [.gui vs a screenshot or PNG mockup](https://dotgui.org/guides/vs-screenshots/): A picture is a dead end: an agent has to guess spacing, hierarchy, and color from pixels. A .gui file hands those values over directly, already structured.
+- [.gui vs SVG: graphics format vs interface format](https://dotgui.org/guides/vs-svg/): SVG made graphics text. .gui borrows that idea but is purpose-built for interface layout and semantics: things SVG was never designed to express.
 - [Prompting your AI agent to build a .gui file](https://dotgui.org/guides/prompting-your-agent/): gui setup teaches your own agent the format. Here’s the mental model and what to actually say.
 - [Common mistakes AI agents make in .gui files](https://dotgui.org/guides/common-agent-mistakes/): An agent that hasn’t been taught the format brings habits over from HTML and CSS that don’t belong in .gui. Here are the five that show up most.
-- [Spacing in .gui: use gap, not an empty row](https://dotgui.org/guides/spacing-and-gaps/): The single most common habit agents bring over from HTML/CSS — and the one-attribute fix.
+- [Spacing in .gui: use gap, not an empty row](https://dotgui.org/guides/spacing-and-gaps/): The single most common habit agents bring over from HTML/CSS: and the one-attribute fix.
 - [How to get a good CCAC score](https://dotgui.org/guides/ccac-score/): The four levels explained on /spec/quality, turned into concrete things to actually go fix.
 - [Structuring a screen: row vs col vs grid](https://dotgui.org/guides/layout-row-col-grid/): Three layout elements cover almost every screen. Here’s how to pick between them without guessing.
 - [Making AI-generated UI not look generic](https://dotgui.org/guides/avoiding-generic-ui/): The tells of an unedited AI-generated screen, and the structural (not aesthetic) fixes .gui makes available.
+- [.gui is not a runtime: it’s a file you open and see](https://dotgui.org/guides/not-a-runtime/): The most common misread is that .gui is another framework you have to set up and run. It isn’t. Like an image, a .gui file stands on its own: you open it and see the interface, with no runtime required.
+- [What problem does .gui actually solve?](https://dotgui.org/guides/what-problem/): The honest version: .gui isn’t trying to replace HTML, CSS, or your design tool. It adds one missing thing: a portable, throwaway design layer for the AI era.
+- [Does .gui store layout intent or fixed pixels?](https://dotgui.org/guides/intent-vs-geometry/): The question that decides whether a UI format is worth having: does it record where things landed, or the rules that put them there? .gui stores intent, which is also its hardest spec problem.
+- [Versioning, interactivity, and the conformance corpus](https://dotgui.org/guides/roadmap/): Where the format is (v0.2), where it’s going (v1.0 visual completeness, v2.0 motion), and the honest answer to "the ecosystem is the existential question."
+- [.gui vs XAML, QML, and GTK .ui: interchange, not a runtime](https://dotgui.org/guides/vs-xaml/): The most common reaction to .gui is "isn’t this just XAML?" It has the same markup shape and a different job: those are UI languages bound to a runtime; .gui is a portable target that can emit them.
+- [.gui vs React and Vue: a file format, not a UI framework](https://dotgui.org/guides/vs-react-vue/): A question that comes up fast: "why is the dotgui site built in Vue, not .gui?" Because .gui isn’t a framework you deploy; it’s the design the framework gets built from. Here’s the distinction.
+- [Handoff, pixel-perfection, and your component library](https://dotgui.org/guides/handoff-and-fidelity/): The fair developer objection: "a designer sends me a .gui, AI interprets it, it won’t be pixel-perfect, and it won’t map to our internal components." True, and not what .gui is claiming to do.
 
 ## Examples
 

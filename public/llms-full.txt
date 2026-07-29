@@ -88,12 +88,15 @@ We are building the format that lets those tools talk to each other — and to A
 | Tool | Repo | What it does |
 |---|---|---|
 | **dotgui-core** | this folder | Format spec, principles, RFCs, roles — the authority |
-| **@dotgui/kit** | `kit/` | The implementation: parser, **validator**, types, renderer, scorer |
+| **@dotgui/kit** | `kit/` | The single implementation: parser, **validator**, types, renderer, scorer, linter, autofix, rasterizer, packager (and cleanup) |
+| **@dotgui/cli** | `cli/` | The `gui` command-line tool — read, write, lint, render, package |
+| **@dotgui/embed** | `embed/` | CDN embed library for rendering `.gui` in any webpage |
 | **dotgui-figma** | `dotgui/figma` | Figma plugin — exports screens as `.gui` |
-| **gui-optimizer** | `dotgui/optimizer` | Cleans and optimizes raw `.gui` output |
 | **dotgui-landing** | `dotgui/web` | Website |
 
-The goal is to grow this — more entry points, more design software integrations, more renderers, more AI-native tooling. A small, well-specified format with many readers and many writers.
+Everything that reads or writes `.gui` — parsing, validation, rendering, scoring, linting, cleanup — now lives in **one package, `@dotgui/kit`**. Earlier designs split these into separate tools (a standalone renderer, a separate optimizer); those were consolidated so there is a single implementation the spec is checked against. See [RFC-0009](rfcs/0009-optimizer-separate.md) for the original separation and why it was later folded in.
+
+The goal is to grow the *edges* — more entry points, more design software integrations, more AI-native tooling — around that one core. A small, well-specified format with many readers and many writers.
 
 ---
 
@@ -162,9 +165,9 @@ Every `.gui` file declares which version of the spec it targets:
 | Version | Status | Notes |
 |---|---|---|
 | `0.1` | Stable | Initial format design. XML over JSON, package format, token system, layout sugar tags, component/instance system. |
-| `0.2` | Current (in progress) | Layout API overhaul: unified sizing, 9-point align, gap/padding model, absolute children, complete paint and stroke model, text fidelity, effects, vector shapes, assets, grid system, component prop types. |
-| `1.0` | Planned | First public stable release. Full Figma layer coverage. Semver applies from this point. |
-| `2.0` | Future | Scroll, overlays, semantic roles, interactions. |
+| `0.2` | Current (in progress) | Layout API overhaul: unified sizing, 9-point align, gap/padding model, absolute children, complete paint and stroke model, text fidelity, effects, vector shapes, assets, grid system, component prop types. Also lands the `role=` semantic vocabulary and the CCAC quality-scoring model. |
+| `1.0` | Planned | First public stable release. Full design-tool layer coverage. Semver applies from this point. |
+| `2.0` | Future | Scroll, overlays, runtime interactions. |
 
 ---
 
@@ -181,6 +184,35 @@ if (!result.valid) {
   console.error(result.errors)
 }
 ```
+
+---
+
+## License
+
+The `.gui` format is open and free to implement, forever. This repository is
+licensed in two parts, because code and prose want different licenses:
+
+| What | License | Covers |
+|---|---|---|
+| **Code** | [MIT](LICENSE) | `schema/`, `scripts/`, and any source in this repo. The same permissive license applies to `@dotgui/kit`, `@dotgui/cli`, and `@dotgui/embed`. |
+| **Specification & docs** | [CC BY 4.0](LICENSE-DOCS) | `PRINCIPLES.md`, `GOVERNANCE.md`, `spec/`, `rfcs/`, `roles/`, `examples/` |
+
+In plain terms:
+
+- **Anyone can build a `.gui` reader or writer** — open source or commercial —
+  with no royalties, no permission, and no strings beyond keeping the copyright
+  notice (MIT) and crediting dotgui when reusing the spec text (CC BY 4.0).
+- **The format is unencumbered.** There is no patent toll and no field-of-use
+  restriction on implementing it. It belongs to no tool.
+- These licenses cover this repository and the core open-source toolchain
+  only. Products and services built *on top* of `.gui` (hosted services,
+  design libraries, and other offerings in the wider dotgui ecosystem) are
+  separate works under their own terms — the open license here does not
+  obligate them to be open.
+
+This mirrors how open standards work: the format stays a free, permanent
+public good (like SVG, PNG, or HTML), while tooling and services around it are
+free to choose their own model.
 
 
 ---
@@ -223,7 +255,9 @@ A `.gui` file is a ZIP package. Structure, styles, design tokens, font declarati
 
 ### Fidelity to source
 
-The format maps 1-1 to Figma's layer model. Auto-layout, fills, gradients, effects, constraints, mixed-style text, image crops, blend modes — everything is preserved exactly. Nothing is approximated, summarized, or dropped because it was inconvenient to encode. If it's on screen, it's in the file.
+The format belongs to no tool — it is a neutral interchange format for UI, the way SVG is for vector art (see [PRINCIPLES.md](../PRINCIPLES.md), P1). Any tool can write it and any tool can read it; a source tool's data model is an *input* to an extractor, never the format itself ([RFC-0003](../rfcs/0003-not-figma-data-model.md)).
+
+In practice we focus first on **Figma**, because that is where the overwhelming majority of UI design happens today — the format has to earn its keep in the tool people actually use. But "Figma-first" is a priority, not an identity: `.gui` is meant to describe *any* UI, from any tool, of any era. Auto-layout, fills, gradients, effects, constraints, mixed-style text, image crops, blend modes — everything a design contains is preserved exactly. Nothing is approximated, summarized, or dropped because it was inconvenient to encode. If it's on screen, it's in the file.
 
 ### Readable by machines and humans
 
@@ -231,11 +265,11 @@ Attributes are named for what they mean, not what the internal data model calls 
 
 ### No AI in the format pipeline
 
-The Figma plugin that produces `.gui` is deterministic and rule-based. The optimizer that cleans it up is deterministic and rule-based. Neither invents meaning, infers intent, or guesses at what the designer meant. The format carries what the design contains — nothing more.
+The Figma plugin that produces `.gui` is deterministic and rule-based. The cleanup pass that tidies it (now part of `@dotgui/kit`) is deterministic and rule-based. Neither invents meaning, infers intent, or guesses at what the designer meant. The format carries what the design contains — nothing more.
 
 ### Visual impact is zero
 
-The optimizer is explicitly forbidden from making changes that alter visual output. Every transformation either provably preserves the render or is skipped and logged. Structural cleanup is not an excuse to silently change what the user sees.
+The cleanup pass is explicitly forbidden from making changes that alter visual output. Every transformation either provably preserves the render or is skipped and logged. Structural cleanup is not an excuse to silently change what the user sees.
 
 ### Platform-agnostic
 
@@ -1209,11 +1243,11 @@ The Figma plugin. Select any visible layer — frame, component, group, shape, t
 
 The extractor is deterministic. Given the same Figma layer, it always produces the same output. It does not guess, summarize, or interpret.
 
-### gui-optimizer
+### Cleanup pass (in `@dotgui/kit`)
 
-A post-processing pipeline that converts raw extractor output into a cleaner, smaller, more semantically rich `.gui` file.
+A post-processing pipeline that converts raw extractor output into a cleaner, smaller, more semantically rich `.gui` file. Once a standalone optimizer ([RFC-0009](../rfcs/0009-optimizer-separate.md)), this now ships as part of the single implementation package, `@dotgui/kit`.
 
-The optimizer is also deterministic, non-AI, and rule-based. It does not invent meaning. Every transformation either provably preserves the visual render or is skipped and logged.
+The cleanup pass is also deterministic, non-AI, and rule-based. It does not invent meaning. Every transformation either provably preserves the visual render or is skipped and logged.
 
 **The one rule above all: visual impact must be zero.**
 
@@ -3260,35 +3294,35 @@ one self-contained file. Demo: `embed/demo/index.html`.
 
 ### .gui vs CSS: a file format vs a styling language
 
-CSS styles a document that already exists somewhere else. .gui is the document — structure, layout, and appearance in one file, with no cascade to fight.
+CSS styles a document that already exists somewhere else. .gui is the document: structure, layout, and appearance in one file, with no cascade to fight.
 
-**CSS styles something that already exists.** It is a rule language that attaches presentation to a DOM another format (HTML) already built — selectors, specificity, inheritance, a cascade that resolves at render time based on document order and rule weight. **.gui is the thing itself.** A `.gui` file is a zip package — `design.guix` markup, an `assets/` folder, a `preview.webp` thumbnail — that fully describes one interface: structure, layout, and appearance, together, in one file. There is no separate document to style and no cascade to resolve, because there is nothing upstream of it.
+**CSS styles something that already exists.** It is a rule language that attaches presentation to a DOM another format (HTML) already built: selectors, specificity, inheritance, a cascade that resolves at render time based on document order and rule weight. **.gui is the thing itself.** A `.gui` file is a zip package (`design.guix` markup, an `assets/` folder, a `preview.webp` thumbnail) that fully describes one interface: structure, layout, and appearance, together, in one file. There is no separate document to style and no cascade to resolve, because there is nothing upstream of it.
 
 ## What that actually changes
 
-In CSS, the same element can end up styled by five different rules from three different files, and the final appearance depends on specificity math and load order. Reading a stylesheet does not tell you what anything looks like — you have to run the cascade in your head. In `.gui`, every node carries its own resolved appearance attributes directly, plus optional [design tokens](https://dotgui.org/spec/tokens/) (`$brand`, `$spacing-md`) — a flat, named-reference system rather than CSS custom properties, since a `--variable` implies a CSS runtime and `.gui` is platform-agnostic ([RFC-0005](https://github.com/dotgui/core/blob/main/rfcs/0005-token-system.md)) — for values meant to repeat. There is one place a value lives and one place it’s read from.
+In CSS, the same element can end up styled by five different rules from three different files, and the final appearance depends on specificity math and load order. Reading a stylesheet does not tell you what anything looks like: you have to run the cascade in your head. In `.gui`, every node carries its own resolved appearance attributes directly, plus optional [design tokens](https://dotgui.org/spec/tokens/) for values meant to repeat (`$brand`, `$spacing-md`): a flat, named-reference system rather than CSS custom properties, since a `--variable` implies a CSS runtime and `.gui` is platform-agnostic ([RFC-0005](https://github.com/dotgui/core/blob/main/rfcs/0005-token-system.md)). There is one place a value lives and one place it’s read from.
 
-Layout works the same way. CSS spacing between siblings is usually simulated — margins on the parent or child, sometimes an empty spacer element left over from table-layout habits. `.gui`’s [`row`](https://dotgui.org/spec/row/), [`col`](https://dotgui.org/spec/col/), and [`grid`](https://dotgui.org/spec/grid/) elements take a literal `gap` attribute — one declared number, no simulated elements. See [Spacing and gaps](https://dotgui.org/guides/spacing-and-gaps/).
+Layout works the same way. CSS spacing between siblings is usually simulated: margins on the parent or child, sometimes an empty spacer element left over from table-layout habits. `.gui`’s [`row`](https://dotgui.org/spec/row/), [`col`](https://dotgui.org/spec/col/), and [`grid`](https://dotgui.org/spec/grid/) elements take a literal `gap` attribute: one declared number, no simulated elements. See [Spacing and gaps](https://dotgui.org/guides/spacing-and-gaps/).
 
 ## Direction and alignment as values, not axis algebra
 
-CSS expresses "these children run horizontally, evenly spaced" as a style declaration repeated on every container — `display: flex; flex-direction: row; gap: 16px` — whether it’s hand-written or generated by a utility system like Tailwind’s class list. `.gui` expresses the same thing as one element: `&lt;row gap="16"&gt;`. Direction is the tag itself, not a property that has to be set correctly and can silently be left off — see [RFC-0006](https://github.com/dotgui/core/blob/main/rfcs/0006-layout-sugar-tags.md).
+CSS expresses "these children run horizontally, evenly spaced" as a style declaration repeated on every container (`display: flex; flex-direction: row; gap: 16px`) whether it’s hand-written or generated by a utility system like Tailwind’s class list. `.gui` expresses the same thing as one element: `&lt;row gap="16"&gt;`. Direction is the tag itself, not a property that has to be set correctly and can silently be left off: see [RFC-0006](https://github.com/dotgui/core/blob/main/rfcs/0006-layout-sugar-tags.md).
 
-Alignment follows the same pattern. CSS splits it into two axis-relative properties — `justify-content` for the main axis, `align-items` for the cross axis — and which axis is "main" flips depending on `flex-direction`, a piece of mental bookkeeping baked into the model. `.gui` replaced both with a single `align` attribute using nine positional values (`top-left` … `bottom-right`) that always name a visual position directly, the way a designer already describes layout, rather than a main-axis/cross-axis calculation — modeled on Figma’s own alignment grid, not flexbox terminology (see [RFC-0012](https://github.com/dotgui/core/blob/main/rfcs/0012-align-9point.md)).
+Alignment follows the same pattern. CSS splits it into two axis-relative properties (`justify-content` for the main axis, `align-items` for the cross axis) and which axis is "main" flips depending on `flex-direction`, a piece of mental bookkeeping baked into the model. `.gui` replaced both with a single `align` attribute using nine positional values (`top-left` … `bottom-right`) that always name a visual position directly, the way a designer already describes layout, rather than a main-axis/cross-axis calculation: modeled on Figma’s own alignment grid, not flexbox terminology (see [RFC-0012](https://github.com/dotgui/core/blob/main/rfcs/0012-align-9point.md)).
 
 There’s no controlled benchmark for the token difference this makes, but the intent is explicit in the format’s own design record: a single `row` or one `align="middle-center"` value is harder for a model to get wrong than a multi-property, axis-relative CSS block, and there’s less text to generate for the same layout intent either way.
 
 ## Why this matters for AI agents
 
-An agent asked to "style this the way the mockup looks" using CSS has to reason about cascade order across every stylesheet that could touch the element. An agent asked to change a `.gui` node’s fill changes one attribute on one node — nothing else in the file is implicated. That’s also what makes `.gui` deterministically [scoreable](https://dotgui.org/spec/quality/): a validator can check a CSS ruleset for syntax errors, but it can’t tell you the cascade produced a sane result. A `.gui` file’s resolved appearance is just sitting there, readable, checkable.
+An agent asked to "style this the way the mockup looks" using CSS has to reason about cascade order across every stylesheet that could touch the element. An agent asked to change a `.gui` node’s fill changes one attribute on one node: nothing else in the file is implicated. That’s also what makes `.gui` deterministically [scoreable](https://dotgui.org/spec/quality/): a validator can check a CSS ruleset for syntax errors, but it can’t tell you the cascade produced a sane result. A `.gui` file’s resolved appearance is just sitting there, readable, checkable.
 
-**.gui** is not trying to replace CSS on the web — a browser still needs CSS to paint DOM. What `.gui` replaces is using CSS (or a CSS-in-JS system, or Tailwind classes) as the source of truth for a design. The design lives in the `.gui` file; CSS, if it appears at all, is one possible render target for it, generated rather than hand-maintained.
+**.gui** is not trying to replace CSS on the web: a browser still needs CSS to paint DOM. What `.gui` replaces is using CSS (or a CSS-in-JS system, or Tailwind classes) as the source of truth for a design. The design lives in the `.gui` file; CSS, if it appears at all, is one possible render target for it, generated rather than hand-maintained.
 
 **FAQ**
 
-- **Does .gui replace CSS?** No — a browser still uses CSS to paint. .gui replaces CSS (or any styling system) as the source of truth for a design: the design lives in the .gui file, and any styling code is a generated render target, not the original.
-- **Why doesn’t .gui have a cascade?** Because every node carries its own resolved appearance directly, plus optional token references for values meant to repeat. There’s no upstream document to cascade from, so there’s nothing to resolve — what you read on a node is what renders.
-- **How does .gui handle repeated values without a cascade?** Design tokens ($brand, $spacing-md, etc.) — a node references a token by name instead of repeating a literal value. That gets you reuse without needing cascade or inheritance rules to find out which value actually applies.
+- **Does .gui replace CSS?** No: a browser still uses CSS to paint. .gui replaces CSS (or any styling system) as the source of truth for a design: the design lives in the .gui file, and any styling code is a generated render target, not the original.
+- **Why doesn’t .gui have a cascade?** Because every node carries its own resolved appearance directly, plus optional token references for values meant to repeat. There’s no upstream document to cascade from, so there’s nothing to resolve: what you read on a node is what renders.
+- **How does .gui handle repeated values without a cascade?** Design tokens ($brand, $spacing-md, etc.): a node references a token by name instead of repeating a literal value. That gets you reuse without needing cascade or inheritance rules to find out which value actually applies.
 
 ---
 
@@ -3296,117 +3330,121 @@ An agent asked to "style this the way the mockup looks" using CSS has to reason 
 
 HTML is a programming surface that happens to describe UI. .gui is a static, closed vocabulary that always terminates in the same picture, everywhere.
 
-HTML, in practice, is never just HTML — it’s HTML plus CSS plus JavaScript, an open runtime where arbitrary code can mutate the DOM at any time. Two loads of the same page can render differently depending on network timing, a feature flag, or a script that hasn’t finished executing yet. **.gui has no scripting.** It is a closed, fixed vocabulary — `row`, `col`, `frame`, `grid`, `text`, `img`, `rect`, `ellipse`, `line` — and nothing in that vocabulary can execute logic. A given `.gui` file renders to the same picture every time, on every renderer, because there is no code path for it to do otherwise.
+HTML, in practice, is never just HTML: it’s HTML plus CSS plus JavaScript, an open runtime where arbitrary code can mutate the DOM at any time. Two loads of the same page can render differently depending on network timing, a feature flag, or a script that hasn’t finished executing yet. **.gui has no scripting.** It is a closed, fixed vocabulary (`row`, `col`, `frame`, `grid`, `text`, `img`, `rect`, `ellipse`, `line`) and nothing in that vocabulary can execute logic. A given `.gui` file renders to the same picture every time, on every renderer, because there is no code path for it to do otherwise.
 
 ## What "closed vocabulary" buys you
 
-A file that can’t run code is a file that can be fully understood by reading it. That’s what makes a `.gui` file **diffable** (two versions differ by exactly the attributes that changed, not by whatever a script does at runtime), **validatable** (a fixed vocabulary has a fixed set of legal shapes to check against), and **scoreable** (see [the CCAC model](https://dotgui.org/spec/quality/)) — none of which is meaningfully possible for an arbitrary HTML+JS bundle, because the actual rendered result depends on execution, not just the source.
+A file that can’t run code is a file that can be fully understood by reading it. That’s what makes a `.gui` file **diffable** (two versions differ by exactly the attributes that changed, not by whatever a script does at runtime), **validatable** (a fixed vocabulary has a fixed set of legal shapes to check against), and **scoreable** (see [the CCAC model](https://dotgui.org/spec/quality/)): none of which is meaningfully possible for an arbitrary HTML+JS bundle, because the actual rendered result depends on execution, not just the source.
 
 ## Where HTML still wins
 
-HTML is the right choice when the interface needs behavior — a live feed, client-side validation, a WebSocket connection. `.gui` is not a competitor there; it’s a source-of-truth format for the design that a real app (in HTML, SwiftUI, Jetpack Compose, whatever) then gets built from. The [`&lt;gui-embed&gt;`](https://dotgui.org/embed/) library renders a `.gui` file directly on a web page with one script tag when you do want it live in a browser, but the file itself stays inert — no logic, no side effects, same output every render.
+HTML is the right choice when the interface needs behavior: a live feed, client-side validation, a WebSocket connection. `.gui` is not a competitor there; it’s a source-of-truth format for the design that a real app (in HTML, SwiftUI, Jetpack Compose, whatever) then gets built from. The [`&lt;gui-embed&gt;`](https://dotgui.org/embed/) library renders a `.gui` file directly on a web page with one script tag when you do want it live in a browser, but the file itself stays inert: no logic, no side effects, same output every render.
 
-The role vocabulary closes the same gap semantic HTML tries to close with tags like `&lt;nav&gt;` or `&lt;article&gt;` — except `.gui`’s [53 roles](https://dotgui.org/spec/roles/) ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)) are a closed, enumerated set rather than a loose convention, so `role="button"` means the same thing in every file, not "probably a button, check the click handler to be sure."
+The role vocabulary closes the same gap semantic HTML tries to close with tags like `&lt;nav&gt;` or `&lt;article&gt;`: except `.gui`’s [53 roles](https://dotgui.org/spec/roles/) ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)) are a closed, enumerated set rather than a loose convention, so `role="button"` means the same thing in every file, not "probably a button, check the click handler to be sure."
 
 ## Borrowing the idea, not the tax
 
-HTML started as a simple trio — markup, style, script. In practice almost nobody hand-writes plain HTML for a real interface today; the actual authoring surface is a JavaScript framework (React, Vue, and the rest) sitting on top, and that layer is where most of the weight now lives. HTML won by adoption, not because raw markup is a great design representation — it’s the one format every browser, tool, and person already knows, so "design in code" defaults to it by network effect more than by merit.
+HTML started as a simple trio: markup, style, script. In practice almost nobody hand-writes plain HTML for a real interface today; the actual authoring surface is a JavaScript framework (React, Vue, and the rest) sitting on top, and that layer is where most of the weight now lives. HTML won by adoption, not because raw markup is a great design representation: it’s the one format every browser, tool, and person already knows, so "design in code" defaults to it by network effect more than by merit.
 
-The markup itself is a deliberate, direct descendant of that instinct: `.gui` is XML-inspired rather than JSON, specifically because a tag name carries meaning a JSON `"type"` key has to fake, and because every major model has been trained on enormous amounts of tag-based markup — asking an agent to write `.gui` is closer to asking it to write JSX than to invent a new schema ([RFC-0001](https://github.com/dotgui/core/blob/main/rfcs/0001-xml-over-json.md)).
+The markup itself is a deliberate, direct descendant of that instinct: `.gui` is XML-inspired rather than JSON, specifically because a tag name carries meaning a JSON `"type"` key has to fake, and because every major model has been trained on enormous amounts of tag-based markup: asking an agent to write `.gui` is closer to asking it to write JSX than to invent a new schema ([RFC-0001](https://github.com/dotgui/core/blob/main/rfcs/0001-xml-over-json.md)).
 
-`.gui` borrows HTML’s actual insight — plain markup any tool can parse, no proprietary format underneath — while trying not to inherit what widespread adoption did to it. A small, concrete example lives in its own layout vocabulary: the underlying primitive is a single [`&lt;stack direction="..."&gt;`](https://dotgui.org/spec/stack/) element, but writing `direction="horizontal"` on every row-shaped container turned out to be noisy in practice, so `&lt;row&gt;`, `&lt;col&gt;`, and `&lt;grid&gt;` exist as sugar that drop the `direction` attribute for the common case ([RFC-0006](https://github.com/dotgui/core/blob/main/rfcs/0006-layout-sugar-tags.md)). Same capability, less to write, less for an agent to get wrong — cutting tax on an idea, not just copying it.
+`.gui` borrows HTML’s actual insight (plain markup any tool can parse, no proprietary format underneath) while trying not to inherit what widespread adoption did to it. A small, concrete example lives in its own layout vocabulary: the underlying primitive is a single [`&lt;stack direction="..."&gt;`](https://dotgui.org/spec/stack/) element, but writing `direction="horizontal"` on every row-shaped container turned out to be noisy in practice, so `&lt;row&gt;`, `&lt;col&gt;`, and `&lt;grid&gt;` exist as sugar that drop the `direction` attribute for the common case ([RFC-0006](https://github.com/dotgui/core/blob/main/rfcs/0006-layout-sugar-tags.md)). Same capability, less to write, less for an agent to get wrong: cutting tax on an idea, not just copying it.
 
 **FAQ**
 
-- **Can a .gui file contain JavaScript or run logic?** No. The element vocabulary is closed and static — there is no scripting surface. A .gui file always renders to the same output because there is no code path for it to differ.
+- **Can a .gui file contain JavaScript or run logic?** No. The element vocabulary is closed and static: there is no scripting surface. A .gui file always renders to the same output because there is no code path for it to differ.
 - **Is .gui meant to replace HTML for building apps?** No. HTML (or SwiftUI, Compose, etc.) is still the right choice for interfaces with real behavior. .gui is a source-of-truth design format those apps get built from, not a runtime.
-- **How does .gui handle semantic meaning without HTML tags like <nav> or <button>?** A closed 53-role vocabulary via the role= attribute — role="button", role="nav-bar", and so on. Unlike semantic HTML, every role means exactly one thing everywhere, since the vocabulary is fixed rather than a loose convention.
-- **Is row/col/grid a different format from stack, or the same thing?** The same thing. row, col, and grid are sugar tags for stack with a direction already set — row is stack direction="horizontal", col is stack direction="vertical". stack remains valid to write directly; the sugar tags just remove the extra attribute for the common case.
+- **How does .gui handle semantic meaning without HTML tags like <nav> or <button>?** A closed 53-role vocabulary via the role= attribute: role="button", role="nav-bar", and so on. Unlike semantic HTML, every role means exactly one thing everywhere, since the vocabulary is fixed rather than a loose convention.
+- **Is row/col/grid a different format from stack, or the same thing?** The same thing. row, col, and grid are sugar tags for stack with a direction already set: row is stack direction="horizontal", col is stack direction="vertical". stack remains valid to write directly; the sugar tags just remove the extra attribute for the common case.
 
 ---
 
 ### .gui vs Figma files: portable text vs a vendor’s app
 
-A Figma file only exists inside Figma. A .gui file is plain text in a zip — readable, diffable, and versionable without opening any design tool.
+A Figma file only exists inside Figma. A .gui file is plain text in a zip: readable, diffable, and versionable without opening any design tool.
 
-A Figma file is only fully readable inside Figma — the app, the API, or an export. It’s an excellent design environment, but the file itself is not a portable artifact you can open in a text editor, diff in git, or hand to an agent without going through Figma’s servers. **A `.gui` file is plain text.** Unzip it and `design.guix` is readable XML — open it in any editor, `git diff` it line by line, generate it from a script with no design tool involved at all.
+A Figma file is only fully readable inside Figma: the app, the API, or an export. It’s an excellent design environment, but the file itself is not a portable artifact you can open in a text editor, diff in git, or hand to an agent without going through Figma’s servers. **A `.gui` file is plain text.** Unzip it and `design.guix` is readable XML: open it in any editor, `git diff` it line by line, generate it from a script with no design tool involved at all.
 
 ## .gui doesn’t require Figma
 
-The [Figma plugin](https://dotgui.org/figma/) (coming soon — currently in review) will export any Figma layer tree to a `.gui` file — auto-layout, fills, gradients, effects, and tokens carried over as a 1:1 mapping of Figma’s own layer model, not approximated. That makes Figma **one entry point among several**, not a requirement. Today, an agent can already write a `.gui` file directly from a prompt with no design tool touched at any point — see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent/).
+The [Figma plugin](https://dotgui.org/figma/) (coming soon (currently in review) will export any Figma layer tree to a `.gui` file) auto-layout, fills, gradients, effects, and tokens carried over as a 1:1 mapping of Figma’s own layer model, not approximated. That makes Figma **one entry point among several**, not a requirement. Today, an agent can already write a `.gui` file directly from a prompt with no design tool touched at any point: see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent/).
 
 ## The loop, not a one-way export
 
-Because the same file is legible to both a design tool and an agent, it can move in either direction: an agent writes `home.gui`, a designer opens it in Figma to nudge a color, the file goes back to the agent to wire up. Every stop in that loop reads and writes the same file — nothing gets re-derived from a screenshot at each step. That loop is the actual point; Figma export is one leg of it, not the whole story.
+Because the same file is legible to both a design tool and an agent, it can move in either direction: an agent writes `home.gui`, a designer opens it in Figma to nudge a color, the file goes back to the agent to wire up. Every stop in that loop reads and writes the same file: nothing gets re-derived from a screenshot at each step. That loop is the actual point; Figma export is one leg of it, not the whole story.
 
 ## No live connection required
 
-Figma’s own AI integration path runs through MCP (Model Context Protocol) — a live tool-calling connection where an agent queries Figma’s API, often across several round-trips, to reconstruct a design piece by piece. Exporting to `.gui` once removes that dependency: the result is a static file an agent reads directly, with no persistent connection, no repeated API calls, and no dependency on Figma’s servers being reachable at generation time.
+Figma’s own AI integration path runs through MCP (Model Context Protocol): a live tool-calling connection where an agent queries Figma’s API, often across several round-trips, to reconstruct a design piece by piece. Exporting to `.gui` once removes that dependency: the result is a static file an agent reads directly, with no persistent connection, no repeated API calls, and no dependency on Figma’s servers being reachable at generation time.
 
 **FAQ**
 
-- **Do I need Figma to create a .gui file?** No. An AI agent with the dotgui skill installed (via gui setup) can write a .gui file directly from a prompt — Figma is one entry point among several, not a requirement.
-- **What gets preserved when exporting a Figma design to .gui?** The Figma plugin is coming soon (in review). Once live, it will preserve auto-layout, fills, gradients, effects, and design tokens — a 1:1 mapping of Figma’s own layer model, not an approximation.
+- **Do I need Figma to create a .gui file?** No. An AI agent with the dotgui skill installed (via gui setup) can write a .gui file directly from a prompt: Figma is one entry point among several, not a requirement.
+- **What gets preserved when exporting a Figma design to .gui?** The Figma plugin is coming soon (in review). Once live, it will preserve auto-layout, fills, gradients, effects, and design tokens: a 1:1 mapping of Figma’s own layer model, not an approximation.
 - **Can I open a .gui file back in Figma after an agent edits it?** That’s the eventual point of the format: the same file is legible to a design tool and an agent, so it can move in either direction. The Figma plugin that enables this is coming soon.
-- **Does reading a .gui file require an MCP connection to Figma?** No. Once a design is exported to .gui, it’s a static file — no live connection, API calls, or access to Figma’s servers required to read it.
+- **Does reading a .gui file require an MCP connection to Figma?** No. Once a design is exported to .gui, it’s a static file: no live connection, API calls, or access to Figma’s servers required to read it.
 
 ---
 
 ### .gui vs a screenshot or PNG mockup
 
-A picture is a dead end — an agent has to guess spacing, hierarchy, and color from pixels. A .gui file hands those values over directly, already structured.
+A picture is a dead end: an agent has to guess spacing, hierarchy, and color from pixels. A .gui file hands those values over directly, already structured.
 
-A mockup is a picture. However it was made — Figma export, a hand-drawn comp, a screenshot of a competitor’s app — once it’s a PNG, the structure that produced it is gone. An agent asked to build from it has to reverse-engineer spacing, hierarchy, and exact colors from pixels: is that gap 16px or 20px? Is that gray `#F5F5F5` or `#F4F4F4`? Nothing in a screenshot answers that with certainty.
+A mockup is a picture. However it was made (Figma export, a hand-drawn comp, a screenshot of a competitor’s app) once it’s a PNG, the structure that produced it is gone. An agent asked to build from it has to reverse-engineer spacing, hierarchy, and exact colors from pixels: is that gap 16px or 20px? Is that gray `#F5F5F5` or `#F4F4F4`? Nothing in a screenshot answers that with certainty.
 
 ## Structure survives, instead of being reverse-engineered
 
 A `.gui` file keeps the values that produced the picture, not just the picture. A `gap="16"` attribute is unambiguous in a way that a rendered 16px visual gap in a PNG is not. A `fill="$surface"` token reference tells you a color is intentional and reused, something a screenshot can’t distinguish from a one-off. Editing a `.gui` file means changing one attribute; editing a mockup to explore a variant usually means regenerating the whole image and hoping the rest stayed consistent.
 
-## It still renders to a picture — that part didn’t go away
+## It still renders to a picture: that part didn’t go away
 
-A `.gui` file always renders to a real preview image too (`preview.webp`, part of every package) — nothing is lost by moving to structured data. The difference is the picture is a byproduct of the file, not the only artifact that exists. An agent, a designer, and a renderer can all work from the same source instead of each starting over from pixels.
+A `.gui` file always renders to a real preview image too (`preview.webp`, part of every package): nothing is lost by moving to structured data. The difference is the picture is a byproduct of the file, not the only artifact that exists. An agent, a designer, and a renderer can all work from the same source instead of each starting over from pixels.
 
 ## Still true as vision models improve
 
-A more capable vision model closes some of this gap, but it doesn’t remove the extraction step — reading a screenshot still means inferring structure, spacing, and hierarchy from pixels, a lossy process that can guess wrong with just as much confidence as it guesses right. A `.gui` file skips extraction entirely: the structure is already data, not something to be reconstructed.
+A more capable vision model closes some of this gap, but it doesn’t remove the extraction step: reading a screenshot still means inferring structure, spacing, and hierarchy from pixels, a lossy process that can guess wrong with just as much confidence as it guesses right. A `.gui` file skips extraction entirely: the structure is already data, not something to be reconstructed.
 
-That’s what makes `.gui` work as a design handoff format specifically: export once, and any AI tool downstream reads the actual design, with nothing to reverse-engineer and nothing to hallucinate — the difference between receiving a file and receiving a description of one.
+That’s what makes `.gui` work as a design handoff format specifically: export once, and any AI tool downstream reads the actual design, with nothing to reverse-engineer and nothing to hallucinate: the difference between receiving a file and receiving a description of one.
 
 **FAQ**
 
-- **Does a .gui file still have a visual preview like a screenshot?** Yes — every .gui package includes a preview.webp thumbnail. The difference is that the structured markup that produced it is preserved alongside it, not thrown away.
-- **Why can’t an AI agent just work from a screenshot directly?** It can, but it has to guess exact spacing, hierarchy, and colors from pixels — there’s no way to tell an intentional 16px gap from an accidental 15px one in a raster image. A .gui file states the value directly.
-- **Do better vision models make this comparison less relevant?** Not really — a stronger model still has to run an extraction step to infer structure from pixels, and extraction can produce a confident wrong answer. A .gui file has nothing to extract; the structure is already the data.
+- **Does a .gui file still have a visual preview like a screenshot?** Yes: every .gui package includes a preview.webp thumbnail. The difference is that the structured markup that produced it is preserved alongside it, not thrown away.
+- **Why can’t an AI agent just work from a screenshot directly?** It can, but it has to guess exact spacing, hierarchy, and colors from pixels: there’s no way to tell an intentional 16px gap from an accidental 15px one in a raster image. A .gui file states the value directly.
+- **Do better vision models make this comparison less relevant?** Not really: a stronger model still has to run an extraction step to infer structure from pixels, and extraction can produce a confident wrong answer. A .gui file has nothing to extract; the structure is already the data.
 
 ---
 
 ### .gui vs SVG: graphics format vs interface format
 
-SVG made graphics text. .gui borrows that idea but is purpose-built for interface layout and semantics — things SVG was never designed to express.
+SVG made graphics text. .gui borrows that idea but is purpose-built for interface layout and semantics: things SVG was never designed to express.
 
-SVG proved something important: a graphic doesn’t have to be a raster of pixels. It can be readable text — `&lt;circle&gt;`, `&lt;path&gt;`, `&lt;rect&gt;` — that any tool can parse, diff, and edit directly. `.gui` takes that same premise and applies it to interfaces instead of arbitrary graphics: the way `.svg` is to graphics, `.gui` is to UI.
+SVG proved something important: a graphic doesn’t have to be a raster of pixels. It can be readable text (`&lt;circle&gt;`, `&lt;path&gt;`, `&lt;rect&gt;`) that any tool can parse, diff, and edit directly. `.gui` takes that same premise and applies it to interfaces instead of arbitrary graphics: the way `.svg` is to graphics, `.gui` is to UI.
+
+## The part they share: a file you open and see
+
+Before the differences, the most important thing `.gui` inherits from SVG is easy to miss because it’s so obvious for SVG: it’s a **standalone, viewable file, not a runtime**. You open an SVG and you see the graphic. There is no framework to install and no code to run first. `.gui` is built to work the same way: you open the file and you see the interface, because the file already contains everything it needs to be shown (markup, assets, and a rendered `preview.webp`, all in one package, per [RFC-0004](https://github.com/dotgui/core/blob/main/rfcs/0004-package-format.md)). It’s not only a format for moving a design between tools; like an image, it stands on its own. See [.gui is not a runtime](https://dotgui.org/guides/not-a-runtime/). Everything below is about where the two formats diverge after that shared foundation.
 
 ## Why SVG alone doesn’t cover interfaces
 
-SVG has no concept of a layout system — no flex-like `row`/`col` with a `gap`, no responsive behavior, no design tokens, no idea of what a "button" or "nav bar" is. Everything in an SVG is either an absolutely positioned shape or a manually computed path. That’s exactly right for an icon or an illustration, and exactly wrong for a screen that needs to lay itself out, carry semantic roles, and reference reusable tokens.
+SVG has no concept of a layout system: no flex-like `row`/`col` with a `gap`, no responsive behavior, no design tokens, no idea of what a "button" or "nav bar" is. Everything in an SVG is either an absolutely positioned shape or a manually computed path. That’s exactly right for an icon or an illustration, and exactly wrong for a screen that needs to lay itself out, carry semantic roles, and reference reusable tokens.
 
-`.gui` adds the layer SVG is missing: [`row`](https://dotgui.org/spec/row/)/[`col`](https://dotgui.org/spec/col/)/[`grid`](https://dotgui.org/spec/grid/) for layout with a real `gap`, [design tokens](https://dotgui.org/spec/tokens/) for values meant to repeat, and a closed [53-role vocabulary](https://dotgui.org/spec/roles/) so a node can declare *what it is* (`role="button"`), not just how it’s drawn. Shape primitives (`rect`, `ellipse`, `line`) exist in `.gui` too, so an icon or illustration can sit inside a `.gui` file natively — it just isn’t the whole story the way it is in SVG.
+`.gui` adds the layer SVG is missing: [`row`](https://dotgui.org/spec/row/)/[`col`](https://dotgui.org/spec/col/)/[`grid`](https://dotgui.org/spec/grid/) for layout with a real `gap`, [design tokens](https://dotgui.org/spec/tokens/) for values meant to repeat, and a closed [53-role vocabulary](https://dotgui.org/spec/roles/) so a node can declare *what it is* (`role="button"`), not just how it’s drawn. Shape primitives (`rect`, `ellipse`, `line`) exist in `.gui` too, so an icon or illustration can sit inside a `.gui` file natively: it just isn’t the whole story the way it is in SVG.
 
-For genuinely complex vector artwork, `.gui` doesn’t reject SVG outright — an `&lt;svg&gt;` node can hold raw inline SVG markup directly, with no asset file or indirection needed, specifically so an AI agent that already knows how to write SVG paths can emit a logo or icon in place, in the layout tree, instead of fabricating an asset pipeline for a few shapes ([RFC-0020](https://github.com/dotgui/core/blob/main/rfcs/0020-svg-inline-content.md)). SVG is exactly right for that job — it’s just not asked to be the layout language too.
+For genuinely complex vector artwork, `.gui` doesn’t reject SVG outright: an `&lt;svg&gt;` node can hold raw inline SVG markup directly, with no asset file or indirection needed, specifically so an AI agent that already knows how to write SVG paths can emit a logo or icon in place, in the layout tree, instead of fabricating an asset pipeline for a few shapes ([RFC-0020](https://github.com/dotgui/core/blob/main/rfcs/0020-svg-inline-content.md)). SVG is exactly right for that job: it’s just not asked to be the layout language too.
 
 ## Why .gui is a package, not a single file
 
-There’s a second gap SVG leaves for interfaces: a single SVG file has nowhere good to put a real photo. Embedding an actual raster image means either linking an external URL — the file alone no longer carries what it needs, so portability breaks — or inlining it as base64 text, which bloats the file enormously. If an AI model has to pass that file through, it pays the token cost of every base64 character even though the image data is completely opaque to it.
+There’s a second gap SVG leaves for interfaces: a single SVG file has nowhere good to put a real photo. Embedding an actual raster image means either linking an external URL (the file alone no longer carries what it needs, so portability breaks) or inlining it as base64 text, which bloats the file enormously. If an AI model has to pass that file through, it pays the token cost of every base64 character even though the image data is completely opaque to it.
 
-That cost is measured, not assumed: in early testing, inlining just two to four images as base64 consumed roughly half the token budget of a multi-hour session converting a file ([RFC-0004](https://github.com/dotgui/core/blob/main/rfcs/0004-package-format.md)). Plain path references cost nothing to reference — which is also why `.gui` skips a separate asset-manifest block entirely: an image just declares `src="assets/hero.webp"` inline, at the point it appears, the same way HTML, SwiftUI, and Android handle images ([RFC-0031](https://github.com/dotgui/core/blob/main/rfcs/0031-images-and-assets.md)).
+That cost is measured, not assumed: in early testing, inlining just two to four images as base64 consumed roughly half the token budget of a multi-hour session converting a file ([RFC-0004](https://github.com/dotgui/core/blob/main/rfcs/0004-package-format.md)). Plain path references cost nothing to reference: which is also why `.gui` skips a separate asset-manifest block entirely: an image just declares `src="assets/hero.webp"` inline, at the point it appears, the same way HTML, SwiftUI, and Android handle images ([RFC-0031](https://github.com/dotgui/core/blob/main/rfcs/0031-images-and-assets.md)).
 
-That’s one of the two reasons `.gui` is defined as a zip package rather than a flat text file: real image files sit in an `assets/` folder alongside the markup, referenced by a plain relative path. See [.gui vs a screenshot](https://dotgui.org/guides/vs-screenshots/) for why keeping the structure itself — not just the image — is the bigger point.
+That’s one of the two reasons `.gui` is defined as a zip package rather than a flat text file: real image files sit in an `assets/` folder alongside the markup, referenced by a plain relative path. See [.gui vs a screenshot](https://dotgui.org/guides/vs-screenshots/) for why keeping the structure itself (not just the image) is the bigger point.
 
 **FAQ**
 
-- **Can I put SVG shapes inside a .gui file?** .gui has its own shape primitives — rect, ellipse, line — that cover the same ground for icons and simple graphics. For more complex artwork, an <svg> node can also hold raw inline SVG markup directly, no asset file required.
-- **Why not just extend SVG with a layout system instead of a new format?** SVG’s design targets arbitrary vector graphics, not application interfaces — it has no concept of roles, tokens, or a UI-shaped element vocabulary. .gui borrows SVG’s "readable text, not pixels" idea but is purpose-built for UI from the ground up.
-- **Why is .gui a zip package instead of a single text file like SVG?** Mainly to keep real images as real files instead of inlined base64 text. Testing found that inlining a handful of images as base64 could consume roughly half the token budget of a long AI session — a plain path reference into the package’s assets/ folder costs almost nothing by comparison.
+- **Can I put SVG shapes inside a .gui file?** .gui has its own shape primitives (rect, ellipse, line) that cover the same ground for icons and simple graphics. For more complex artwork, an <svg> node can also hold raw inline SVG markup directly, no asset file required.
+- **Why not just extend SVG with a layout system instead of a new format?** SVG’s design targets arbitrary vector graphics, not application interfaces: it has no concept of roles, tokens, or a UI-shaped element vocabulary. .gui borrows SVG’s "readable text, not pixels" idea but is purpose-built for UI from the ground up.
+- **Why is .gui a zip package instead of a single text file like SVG?** Mainly to keep real images as real files instead of inlined base64 text. Testing found that inlining a handful of images as base64 could consume roughly half the token budget of a long AI session: a plain path reference into the package’s assets/ folder costs almost nothing by comparison.
 
 ---
 
@@ -3414,7 +3452,7 @@ That’s one of the two reasons `.gui` is defined as a zip package rather than a
 
 gui setup teaches your own agent the format. Here’s the mental model and what to actually say.
 
-**.gui contains no AI.** The CLI and the reference engine are 100% deterministic — validation, rendering, and scoring, zero model calls, by design ([RFC-0010](https://github.com/dotgui/core/blob/main/rfcs/0010-no-ai-in-pipeline.md)): a deterministic pipeline is one an agent can trust to mean exactly what it says. The actual design generation happens in **your own agent** — Claude Code, Gemini CLI, Cursor, Codex, whatever you already use. `gui setup` installs the dotgui skill into that agent, so when you ask it to build something, it already knows the format instead of guessing at markup.
+**.gui contains no AI.** The CLI and the reference engine are 100% deterministic: validation, rendering, and scoring, zero model calls, by design ([RFC-0010](https://github.com/dotgui/core/blob/main/rfcs/0010-no-ai-in-pipeline.md)): a deterministic pipeline is one an agent can trust to mean exactly what it says. The actual design generation happens in **your own agent**: Claude Code, Gemini CLI, Cursor, Codex, whatever you already use. `gui setup` installs the dotgui skill into that agent, so when you ask it to build something, it already knows the format instead of guessing at markup.
 
 ## The mental model
 
@@ -3424,7 +3462,7 @@ gui setup teaches your own agent the format. Here’s the mental model and what 
 you ──ask──▶ your agent ──uses──▶ dotgui skill ──calls──▶ gui (this tool)
 ```
 
-You ask in plain language. The skill tells your agent the format’s vocabulary, conventions, and pitfalls (see [Common agent mistakes](https://dotgui.org/guides/common-agent-mistakes/)). The agent writes `design.guix` markup directly, then calls the `gui` CLI to validate and package it — `gui` never designs anything itself, it only checks and packages what the agent wrote.
+You ask in plain language. The skill tells your agent the format’s vocabulary, conventions, and pitfalls (see [Common agent mistakes](https://dotgui.org/guides/common-agent-mistakes/)). The agent writes `design.guix` markup directly, then calls the `gui` CLI to validate and package it: `gui` never designs anything itself, it only checks and packages what the agent wrote.
 
 ## Getting started
 
@@ -3439,19 +3477,19 @@ gui setup   # installs the dotgui skill into detected agents
 
 ## What to actually say
 
-> **Do:** Say what the screen is for and let the agent choose structure: "a stocks watchlist screen, dark mode, one card per holding." The skill already knows the vocabulary — you don’t need to write markup yourself.
+> **Do:** Say what the screen is for and let the agent choose structure: "a stocks watchlist screen, dark mode, one card per holding." The skill already knows the vocabulary: you don’t need to write markup yourself.
 
-> **Don't:** Don’t ask for "a screenshot" or "a mockup image" of the UI — that sends the agent toward pixels instead of a .gui file, and you lose everything covered in vs a screenshot or PNG mockup.
+> **Don't:** Don’t ask for "a screenshot" or "a mockup image" of the UI: that sends the agent toward pixels instead of a .gui file, and you lose everything covered in vs a screenshot or PNG mockup.
 
-> **Do:** If you already have a reference — a competitor’s screen, a Figma file, a hand sketch — hand it over and ask for a .gui file built from it. The skill handles translating intent into the format’s elements, roles, and tokens.
+> **Do:** If you already have a reference (a competitor’s screen, a Figma file, a hand sketch) hand it over and ask for a .gui file built from it. The skill handles translating intent into the format’s elements, roles, and tokens.
 
 Once you have a file, iteration is just more asks: "make the balance number larger," "use the brand token for the CTA fill." Each change is a targeted edit to the existing file, not a regeneration from scratch.
 
 **FAQ**
 
-- **Does gui setup work with any AI coding agent?** It installs the dotgui skill into detected agents — Claude Code, Gemini CLI, Cursor, Codex, and others with a skill/plugin model. For agents without one, it prints the format snippet to add manually.
-- **Does the gui CLI itself generate designs?** No — the CLI and engine are 100% deterministic, zero AI. Your own agent does the designing; gui only reads, validates, lints, renders, and packages the result.
-- **What should I say to my agent to get a .gui file instead of a mockup image?** Just ask for what the screen is for in plain language — after gui setup, the skill already tells the agent to produce a .gui file. Avoid asking for a "screenshot" or "image," which points the agent at pixels instead of structured markup.
+- **Does gui setup work with any AI coding agent?** It installs the dotgui skill into detected agents: Claude Code, Gemini CLI, Cursor, Codex, and others with a skill/plugin model. For agents without one, it prints the format snippet to add manually.
+- **Does the gui CLI itself generate designs?** No: the CLI and engine are 100% deterministic, zero AI. Your own agent does the designing; gui only reads, validates, lints, renders, and packages the result.
+- **What should I say to my agent to get a .gui file instead of a mockup image?** Just ask for what the screen is for in plain language: after gui setup, the skill already tells the agent to produce a .gui file. Avoid asking for a "screenshot" or "image," which points the agent at pixels instead of structured markup.
 
 ---
 
@@ -3463,37 +3501,37 @@ An agent that generates `.gui` without the dotgui skill installed (see [Promptin
 
 ## 1. Faking spacing with an empty row
 
-> **Don't:** Adding an empty <col height="16"/> between two elements to create visual space — a leftover habit from table-based HTML layout.
+> **Don't:** Adding an empty <col height="16"/> between two elements to create visual space: a leftover habit from table-based HTML layout.
 
 > **Do:** Use the gap attribute on the parent row or col. One declared number, no dead markup. Full explanation in Spacing and gaps.
 
 ## 2. Hardcoding colors instead of using tokens
 
-Repeating the same literal `fill="#2B6BE4"` across a dozen nodes instead of declaring it once as a [token](https://dotgui.org/spec/tokens/) and referencing `$brand`. This directly costs points on the **Consistent** level of [CCAC scoring](https://dotgui.org/spec/quality/) — a file that hand-repeats a value doesn’t agree with itself the way a token-backed one does.
+Repeating the same literal `fill="#2B6BE4"` across a dozen nodes instead of declaring it once as a [token](https://dotgui.org/spec/tokens/) and referencing `$brand`. This directly costs points on the **Consistent** level of [CCAC scoring](https://dotgui.org/spec/quality/): a file that hand-repeats a value doesn’t agree with itself the way a token-backed one does.
 
 ## 3. Skipping role= entirely
 
-Leaving structural nodes without a [`role=`](https://dotgui.org/spec/roles/) anchor. It costs nothing to add and it’s the entire basis of the **Comprehensible** CCAC level — a button without `role="button"` is invisible to any tool trying to read the file’s semantics, not just to a human. Roles are declared, not inferred, on purpose: only the author (or the agent writing the file) actually knows a subtree is a nav-bar rather than a breadcrumb trail that happens to look similar ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)).
+Leaving structural nodes without a [`role=`](https://dotgui.org/spec/roles/) anchor. It costs nothing to add and it’s the entire basis of the **Comprehensible** CCAC level: a button without `role="button"` is invisible to any tool trying to read the file’s semantics, not just to a human. Roles are declared, not inferred, on purpose: only the author (or the agent writing the file) actually knows a subtree is a nav-bar rather than a breadcrumb trail that happens to look similar ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)).
 
 ## 4. Over-nesting containers
 
-Wrapping a `row` inside a `col` inside a `frame` when a single `row` would do — an old defensive-div habit. Extra nesting with no layout purpose is exactly what the **Clean** CCAC level flags as waste.
+Wrapping a `row` inside a `col` inside a `frame` when a single `row` would do: an old defensive-div habit. Extra nesting with no layout purpose is exactly what the **Clean** CCAC level flags as waste.
 
 ## 5. Forgetting the assets folder
 
-Referencing an `img` `src` that doesn’t point to a real file inside the package’s `assets/` folder. A file can be syntactically valid and still be broken this way — the **Intact** gate (part of CCAC’s scoring gate) exists specifically to catch it.
+Referencing an `img` `src` that doesn’t point to a real file inside the package’s `assets/` folder. A file can be syntactically valid and still be broken this way: the **Intact** gate (part of CCAC’s scoring gate) exists specifically to catch it.
 
 **FAQ**
 
 - **Why do AI agents fake spacing with empty elements in .gui?** It’s a carried-over habit from HTML/CSS, where an invisible spacer element is a common (if outdated) way to force a gap. .gui’s row and col elements take a literal gap attribute instead, so the workaround is unnecessary.
-- **Does a hardcoded color still produce a valid .gui file?** Yes — it validates fine. But it costs points on the Consistent CCAC level, since the file doesn’t agree with itself the way a token-backed value does, and it makes global color changes harder to make correctly.
-- **What happens if role= is left off a node?** The file still validates and renders — role is optional structurally. But it’s the entire basis of the Comprehensible CCAC level, so leaving it off means the node is invisible to any tool or agent trying to read the file’s semantics.
+- **Does a hardcoded color still produce a valid .gui file?** Yes: it validates fine. But it costs points on the Consistent CCAC level, since the file doesn’t agree with itself the way a token-backed value does, and it makes global color changes harder to make correctly.
+- **What happens if role= is left off a node?** The file still validates and renders: role is optional structurally. But it’s the entire basis of the Comprehensible CCAC level, so leaving it off means the node is invisible to any tool or agent trying to read the file’s semantics.
 
 ---
 
 ### Spacing in .gui: use gap, not an empty row
 
-The single most common habit agents bring over from HTML/CSS — and the one-attribute fix.
+The single most common habit agents bring over from HTML/CSS: and the one-attribute fix.
 
 A pattern shows up constantly in AI-generated `.gui` files: an empty element sitting between two real ones, existing only to create visual space.
 
@@ -3507,11 +3545,11 @@ A pattern shows up constantly in AI-generated `.gui` files: an empty element sit
 </col>
 ```
 
-It renders correctly, and it will pass a naive visual check against a reference design. It is still wrong, for two concrete reasons: it’s dead markup with no semantic purpose (a node that exists purely as a workaround), and it’s brittle — change the parent’s padding or add a third child and the spacing math has to be redone by hand at every spacer.
+It renders correctly, and it will pass a naive visual check against a reference design. It is still wrong, for two concrete reasons: it’s dead markup with no semantic purpose (a node that exists purely as a workaround), and it’s brittle: change the parent’s padding or add a third child and the spacing math has to be redone by hand at every spacer.
 
 ## The fix: gap
 
-[`row`](https://dotgui.org/spec/row/), [`col`](https://dotgui.org/spec/col/), and [`grid`](https://dotgui.org/spec/grid/) all take a `gap` attribute — the space between every child, declared once on the parent.
+[`row`](https://dotgui.org/spec/row/), [`col`](https://dotgui.org/spec/col/), and [`grid`](https://dotgui.org/spec/grid/) all take a `gap` attribute: the space between every child, declared once on the parent.
 
 **Do**
 
@@ -3522,21 +3560,21 @@ It renders correctly, and it will pass a naive visual check against a reference 
 </col>
 ```
 
-One number, on the container that actually owns the spacing decision. Add a third child and the gap still applies correctly with no extra markup. This isn’t a style preference — it’s the difference between a value the file can be reasoned about and a value that has to be reverse-engineered from node heights.
+One number, on the container that actually owns the spacing decision. Add a third child and the gap still applies correctly with no extra markup. This isn’t a style preference: it’s the difference between a value the file can be reasoned about and a value that has to be reverse-engineered from node heights.
 
 ## Why agents default to the old pattern
 
-It’s inherited from HTML, where a real `gap` property only reliably exists in flex/grid layout contexts and plenty of training data still comes from table-layout-era markup or naive absolute positioning, where an invisible spacer was the only tool available. `.gui`’s layout elements always support `gap` — there’s never a context where the workaround is actually necessary, so an agent that reaches for it either hasn’t been told the format has `gap`, or is pattern-matching from HTML habit. `gui setup` installs a skill that teaches this explicitly (see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent/)).
+It’s inherited from HTML, where a real `gap` property only reliably exists in flex/grid layout contexts and plenty of training data still comes from table-layout-era markup or naive absolute positioning, where an invisible spacer was the only tool available. `.gui`’s layout elements always support `gap`: there’s never a context where the workaround is actually necessary, so an agent that reaches for it either hasn’t been told the format has `gap`, or is pattern-matching from HTML habit. `gui setup` installs a skill that teaches this explicitly (see [Prompting your agent](https://dotgui.org/guides/prompting-your-agent/)).
 
 ## It also affects your score
 
-A dead spacer node is exactly what the **Clean** level of [CCAC scoring](https://dotgui.org/spec/quality/) flags — unused markup with no layout purpose. Swapping it for `gap` is a direct, mechanical fix, not a matter of taste.
+A dead spacer node is exactly what the **Clean** level of [CCAC scoring](https://dotgui.org/spec/quality/) flags: unused markup with no layout purpose. Swapping it for `gap` is a direct, mechanical fix, not a matter of taste.
 
 **FAQ**
 
-- **Which elements support the gap attribute?** row, col, and grid — every .gui layout container that arranges children in a direction or track system takes a literal gap attribute for the space between them.
+- **Which elements support the gap attribute?** row, col, and grid: every .gui layout container that arranges children in a direction or track system takes a literal gap attribute for the space between them.
 - **Is an empty spacer element ever necessary in .gui?** No. row, col, and grid always support gap, so there’s no layout situation in .gui that requires a dead spacer node the way older HTML table-layout patterns sometimes did.
-- **Does a fake spacer row break validation?** No, it still validates and renders correctly — which is exactly why it’s easy to miss. It does cost points on the Clean level of CCAC scoring as unused markup.
+- **Does a fake spacer row break validation?** No, it still validates and renders correctly: which is exactly why it’s easy to miss. It does cost points on the Clean level of CCAC scoring as unused markup.
 
 ---
 
@@ -3546,36 +3584,36 @@ The four levels explained on /spec/quality, turned into concrete things to actua
 
 The [CCAC model](https://dotgui.org/spec/quality/) explains what the score measures. This is the companion piece: what to actually change in a file to move each number, assuming a file has already cleared the **Valid + Intact** gate (a file that fails either isn’t scored at all).
 
-## Clean — remove waste
+## Clean: remove waste
 
-- Delete nodes with no layout or visual purpose — the classic case is an empty spacer element; see Spacing and gaps.
+- Delete nodes with no layout or visual purpose: the classic case is an empty spacer element; see Spacing and gaps.
 - Flatten unnecessary nesting: a row wrapped in a col wrapped in a frame, where one container would do.
 - Remove declared tokens or styles that nothing in the file actually references.
 
-## Consistent — agree with yourself
+## Consistent: agree with yourself
 
 - Replace repeated literal values (a color, a spacing number used five times) with a single declared token, referenced everywhere.
-- Pick one system and stay in it — don’t mix ad hoc pixel values with token references for the same kind of value across the file.
+- Pick one system and stay in it: don’t mix ad hoc pixel values with token references for the same kind of value across the file.
 
-## Accessible — stay legible
+## Accessible: stay legible
 
 - Check text-to-background contrast against WCAG 2.2 visual criteria, particularly on colored fills and overlays.
-- Keep tap targets (buttons, interactive rows) at a real minimum size — a role="button" that’s visually tiny still fails this even though it validates.
+- Keep tap targets (buttons, interactive rows) at a real minimum size: a role="button" that’s visually tiny still fails this even though it validates.
 - Don’t drop text size below what the criteria allow for body copy.
 
-## Comprehensible — be readable by a machine
+## Comprehensible: be readable by a machine
 
-- Add role= to every structural node it applies to, from the closed 53-role vocabulary — a button without role="button" scores as if it isn’t one.
+- Add role= to every structural node it applies to, from the closed 53-role vocabulary: a button without role="button" scores as if it isn’t one.
 - Prefer the most specific correct role over a generic one when the vocabulary has it.
 - Understand the score is reach-coverage, not a flat tag-everything ratio: each declared role documents its own subtree as far as its catalog-defined reach allows. A self-contained widget’s reach covers everything inside it; a card’s reach covers one chrome level before its contents need their own roles. A few roles placed on the right nodes can legitimately cover a large share of the tree.
 
-None of this is a gate — [a low score is still a valid, packable file](https://dotgui.org/spec/quality/). The score is a diagnostic, not a blocker; treat a low number as a punch list, not a rejection. The scoring model ([RFC-0040](https://github.com/dotgui/core/blob/main/rfcs/0040-quality-scoring-model.md)) and the role vocabulary it reads ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)) both document the exact mechanics if you want the full reasoning.
+None of this is a gate: [a low score is still a valid, packable file](https://dotgui.org/spec/quality/). The score is a diagnostic, not a blocker; treat a low number as a punch list, not a rejection. The scoring model ([RFC-0040](https://github.com/dotgui/core/blob/main/rfcs/0040-quality-scoring-model.md)) and the role vocabulary it reads ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)) both document the exact mechanics if you want the full reasoning.
 
 **FAQ**
 
-- **Do I need a perfect CCAC score to ship a .gui file?** No. A low score still describes a valid, packable file — the score is advisory, not a gate. Any pass/fail threshold is a decision made by whatever tool consumes the score, not by the format itself.
-- **What’s the fastest single fix to improve a low score?** Usually adding role= to structural nodes (Comprehensible) or swapping repeated literal values for tokens (Consistent) — both are mechanical changes, not redesigns, and both move the number directly.
-- **Does Comprehensible require tagging every single node with a role?** No — it’s reach-coverage, not full coverage. Each declared role documents its own subtree as far as its catalog-defined reach allows (a self-contained widget’s reach covers everything inside it; a card’s reach covers one chrome level before its payload needs its own roles), so a handful of well-placed roles can cover a large share of the tree without individually tagging every node.
+- **Do I need a perfect CCAC score to ship a .gui file?** No. A low score still describes a valid, packable file: the score is advisory, not a gate. Any pass/fail threshold is a decision made by whatever tool consumes the score, not by the format itself.
+- **What’s the fastest single fix to improve a low score?** Usually adding role= to structural nodes (Comprehensible) or swapping repeated literal values for tokens (Consistent): both are mechanical changes, not redesigns, and both move the number directly.
+- **Does Comprehensible require tagging every single node with a role?** No: it’s reach-coverage, not full coverage. Each declared role documents its own subtree as far as its catalog-defined reach allows (a self-contained widget’s reach covers everything inside it; a card’s reach covers one chrome level before its payload needs its own roles), so a handful of well-placed roles can cover a large share of the tree without individually tagging every node.
 
 ---
 
@@ -3583,11 +3621,11 @@ None of this is a gate — [a low score is still a valid, packable file](https:/
 
 Three layout elements cover almost every screen. Here’s how to pick between them without guessing.
 
-Most screens are built from three layout elements. Picking the right one is mostly about which direction the content actually flows in — not a stylistic choice.
+Most screens are built from three layout elements. Picking the right one is mostly about which direction the content actually flows in: not a stylistic choice.
 
-## row and col — direction
+## row and col: direction
 
-[`row`](https://dotgui.org/spec/row/) arranges children left to right; [`col`](https://dotgui.org/spec/col/) arranges children top to bottom. Both belong to the same underlying stack family and both take `gap` and standard spacing/alignment attributes (see [Spacing and gaps](https://dotgui.org/guides/spacing-and-gaps/)). Default to whichever matches the actual reading direction of the content — a settings list is a `col` of rows; a button toolbar is a `row`.
+[`row`](https://dotgui.org/spec/row/) arranges children left to right; [`col`](https://dotgui.org/spec/col/) arranges children top to bottom. Both belong to the same underlying stack family and both take `gap` and standard spacing/alignment attributes (see [Spacing and gaps](https://dotgui.org/guides/spacing-and-gaps/)). Default to whichever matches the actual reading direction of the content: a settings list is a `col` of rows; a button toolbar is a `row`.
 
 **A settings screen: col of rows**
 
@@ -3602,9 +3640,9 @@ Most screens are built from three layout elements. Picking the right one is most
 </col>
 ```
 
-## grid — fixed multi-track layout
+## grid: fixed multi-track layout
 
-Reach for [`grid`](https://dotgui.org/spec/grid/) when content repeats across more than one axis at once — a photo gallery, a dashboard of cards, anything that would otherwise be a `row` of `col`s (or vice versa) faked to look like a grid. `grid` takes its own track and `gap` attributes and expresses the two-axis relationship directly instead of nesting stacks to fake it.
+Reach for [`grid`](https://dotgui.org/spec/grid/) when content repeats across more than one axis at once: a photo gallery, a dashboard of cards, anything that would otherwise be a `row` of `col`s (or vice versa) faked to look like a grid. `grid` takes its own track and `gap` attributes and expresses the two-axis relationship directly instead of nesting stacks to fake it.
 
 **A card gallery: grid, not nested rows**
 
@@ -3624,12 +3662,12 @@ Reach for [`grid`](https://dotgui.org/spec/grid/) when content repeats across mo
 | Repeats across rows and columns at once | `grid` |
 | A fixed positioned container or canvas root | `frame` |
 
-Nesting a `row` inside a `col` to fake a grid is exactly the kind of over-nesting the **Clean** CCAC level penalizes (see [Common agent mistakes](https://dotgui.org/guides/common-agent-mistakes/)) — if the content is genuinely two-axis, `grid` is the correct element, not a workaround.
+Nesting a `row` inside a `col` to fake a grid is exactly the kind of over-nesting the **Clean** CCAC level penalizes (see [Common agent mistakes](https://dotgui.org/guides/common-agent-mistakes/)): if the content is genuinely two-axis, `grid` is the correct element, not a workaround.
 
 **FAQ**
 
-- **When should I use grid instead of nesting row and col?** When content repeats across two axes at once — a card gallery, a dashboard — grid expresses that directly. Nesting row inside col to fake the same layout is unnecessary and gets flagged as over-nesting by the Clean CCAC level.
-- **What’s the difference between row/col and the stack family mentioned in the spec?** row and col are the two directional members of the same underlying stack family — row lays out left to right, col lays out top to bottom. Both share the same spacing and alignment attributes.
+- **When should I use grid instead of nesting row and col?** When content repeats across two axes at once (a card gallery, a dashboard) grid expresses that directly. Nesting row inside col to fake the same layout is unnecessary and gets flagged as over-nesting by the Clean CCAC level.
+- **What’s the difference between row/col and the stack family mentioned in the spec?** row and col are the two directional members of the same underlying stack family: row lays out left to right, col lays out top to bottom. Both share the same spacing and alignment attributes.
 
 ---
 
@@ -3637,24 +3675,263 @@ Nesting a `row` inside a `col` to fake a grid is exactly the kind of over-nestin
 
 The tells of an unedited AI-generated screen, and the structural (not aesthetic) fixes .gui makes available.
 
-Unedited AI-generated interfaces tend to converge on the same handful of tells: a purple-to-blue gradient with no relationship to the product, fully rounded pill buttons everywhere regardless of size, one spacing value (usually 16px) reused for every gap with no rhythm, and a single generic type scale with no real hierarchy. None of this is a `.gui` problem specifically — it’s what happens when a model defaults instead of deciding. But `.gui`’s structure makes the fix mechanical rather than vague.
+Unedited AI-generated interfaces tend to converge on the same handful of tells: a purple-to-blue gradient with no relationship to the product, fully rounded pill buttons everywhere regardless of size, one spacing value (usually 16px) reused for every gap with no rhythm, and a single generic type scale with no real hierarchy. None of this is a `.gui` problem specifically: it’s what happens when a model defaults instead of deciding. But `.gui`’s structure makes the fix mechanical rather than vague.
 
 ## Replace default fills with a real token palette
 
-A generic gradient is usually a placeholder nobody committed to. Define [tokens](https://dotgui.org/spec/tokens/) that came from the actual product — a brand color, a real neutral scale — and reference them everywhere instead of leaving default fills in place. This is the same fix that improves **Consistent** scoring in [CCAC](https://dotgui.org/guides/ccac-score/): one committed system beats several undecided ones.
+A generic gradient is usually a placeholder nobody committed to. Define [tokens](https://dotgui.org/spec/tokens/) that came from the actual product (a brand color, a real neutral scale) and reference them everywhere instead of leaving default fills in place. This is the same fix that improves **Consistent** scoring in [CCAC](https://dotgui.org/guides/ccac-score/): one committed system beats several undecided ones.
 
 ## Give spacing a scale, not one number
 
-Uniform 16px everywhere is a tell precisely because real interfaces don’t space everything identically — related items sit closer together than unrelated sections. Use a small set of deliberate `gap` values (say 4 / 8 / 16 / 32) and apply the smaller ones inside a group and the larger ones between groups, instead of one value applied everywhere by default.
+Uniform 16px everywhere is a tell precisely because real interfaces don’t space everything identically: related items sit closer together than unrelated sections. Use a small set of deliberate `gap` values (say 4 / 8 / 16 / 32) and apply the smaller ones inside a group and the larger ones between groups, instead of one value applied everywhere by default.
 
 ## Use role= to make hierarchy structural, not just visual
 
-Generic UI often has visual hierarchy (a bigger font here, a bolder weight there) with nothing underneath it. Declaring [`role=`](https://dotgui.org/spec/roles/) on headings, primary actions, and key content makes the hierarchy a structural fact of the file, not just a font-size choice — and it’s the same signal that improves **Comprehensible** scoring.
+Generic UI often has visual hierarchy (a bigger font here, a bolder weight there) with nothing underneath it. Declaring [`role=`](https://dotgui.org/spec/roles/) on headings, primary actions, and key content makes the hierarchy a structural fact of the file, not just a font-size choice: and it’s the same signal that improves **Comprehensible** scoring.
 
-None of this requires design taste to execute — it requires actually deciding on a token set and a spacing scale instead of accepting whatever a model defaulted to, and the closed vocabulary makes it possible to check that those decisions were actually applied consistently across the file.
+None of this requires design taste to execute: it requires actually deciding on a token set and a spacing scale instead of accepting whatever a model defaulted to, and the closed vocabulary makes it possible to check that those decisions were actually applied consistently across the file.
 
 **FAQ**
 
-- **Why does AI-generated UI often look the same regardless of tool?** It converges on defaults instead of decisions — the same gradient, the same uniform spacing value, the same generic type scale — because nobody committed to a real token set or spacing scale for the specific product.
-- **Can .gui’s quality score catch a generic-looking design?** CCAC scores the file, not the design’s taste — it won’t flag "boring" directly. But undecided defaults usually show up as inconsistency (repeated literal values instead of a token system), which the Consistent level does catch.
+- **Why does AI-generated UI often look the same regardless of tool?** It converges on defaults instead of decisions (the same gradient, the same uniform spacing value, the same generic type scale) because nobody committed to a real token set or spacing scale for the specific product.
+- **Can .gui’s quality score catch a generic-looking design?** CCAC scores the file, not the design’s taste: it won’t flag "boring" directly. But undecided defaults usually show up as inconsistency (repeated literal values instead of a token system), which the Consistent level does catch.
+
+---
+
+### .gui is not a runtime: it’s a file you open and see
+
+The most common misread is that .gui is another framework you have to set up and run. It isn’t. Like an image, a .gui file stands on its own: you open it and see the interface, with no runtime required.
+
+Almost every skeptical question about `.gui` ("so it’s XAML?", "why not just HTML?", "isn’t this another framework?") comes from one wrong assumption: that `.gui` is a **runtime** you have to set up, wire together, and execute to get anything out of. It isn’t. The single sentence that resolves most of the confusion is this: **.gui is a file format, not a runtime. It’s something you open and see, the way you open an image.**
+
+## Two things a runtime makes you do that .gui doesn’t
+
+A runtime (a browser running HTML/CSS/JS, the .NET stack running XAML, Qt running QML) asks two things of you before you can see a UI. First, **set it up**: install the framework, its toolchain, its dependencies, a dev server. Second, **execute it**: the interface only exists after code runs, and it can render differently depending on timing, data, or a script that hasn’t finished ([.gui vs HTML](https://dotgui.org/guides/vs-html/)). A `.gui` file asks for neither. There is nothing to install and no code to run, because the file already *is* the interface, sitting there fully described.
+
+## It behaves like an image, not like source code
+
+This is the part the "interchange format" framing undersells. Yes, `.gui` moves cleanly between tools, but it isn’t only a courier that’s meaningless until some other tool ingests it. It’s a **standalone artifact**, the way `.png`, `.pdf`, and `.svg` are. You don’t "set up" a PNG; you open it and see the picture. You don’t compile a PDF; you open it and read it. A `.gui` file is meant to work the same way: double-click it, and you see the interface, because the file already contains everything it needs to be shown (the `design.guix` markup, the `assets/` folder, and a rendered `preview.webp` thumbnail, all in one package, per [RFC-0004](https://github.com/dotgui/core/blob/main/rfcs/0004-package-format.md)).
+
+> **Do:** The right mental model: .gui is to interfaces what SVG is to graphics and PDF is to documents, a self-contained file you view directly that also happens to be editable and convertible. "You open it and you see it" is the whole promise.
+
+The reason it can behave like an image is *precisely because* it isn’t a runtime. A file that runs no logic and depends on no framework has a single, fixed appearance, so a viewer can just show it, with no execution step in between ([Intent vs geometry](https://dotgui.org/guides/intent-vs-geometry/)). The reference renderer, the one-line [`&lt;gui-embed&gt;`](https://dotgui.org/embed/) script, and any future native previewer are all just *viewers* for a file that already knows what it looks like, the same role a PDF reader plays for a PDF, not the role a browser plays for a web app.
+
+## Then what are the CLI, kit, and embed for?
+
+Reasonable question, since they look like "setup." They aren’t required to *view* a file; they’re optional tools for *producing and embedding* one. The [CLI](https://dotgui.org/cli/) validates and packages a file an agent wrote; [the kit](https://dotgui.org/kit/) lets a third-party app read and render `.gui`; [embed](https://dotgui.org/embed/) drops a viewer onto a web page with one script tag. None of them is a runtime the file depends on to exist, the way a React app depends on React. Take them all away and the file is still a complete, viewable description of an interface; it just wouldn’t have a fancy viewer wrapped around it yet.
+
+## Why this matters for where the format is going
+
+The end state is the one every standalone file format reached: a `.gui` file is as easy to open as a `.png`. You get one from an AI agent, from a design tool export, or from a teammate, and you see it immediately; then, if you want, you edit it, version it, or convert it to code. "Interchange" is one thing it’s good for. "Stands on its own" is what makes it a format at all, rather than an intermediate representation that only exists in transit between two other tools.
+
+**FAQ**
+
+- **Do I need to install or set anything up to view a .gui file?** No. A .gui file is self-contained: it carries its markup, assets, and a rendered preview in one package, so viewing it is like opening an image or a PDF. You open it and see the interface, with no framework, toolchain, or dev server to set up. The CLI, kit, and embed library are optional tools for producing or embedding files, not a runtime the file depends on to exist.
+- **Is .gui a framework or a runtime like React, XAML, or Qt?** No. Those are runtimes: you install them, and the UI only exists after their code executes. .gui runs no logic and depends on no framework, so the file already is the interface, with a single fixed appearance. That is exactly why it can behave like an image you open and see, rather than source code you have to build and run.
+- **If it’s standalone like an image, why do you call it an interchange format?** It’s both, and the two are related. Because a .gui file is self-contained and runs no logic, it has one fixed appearance any viewer can show directly: that’s the "standalone, open it and see it" property. And because it’s open text that no single tool owns, it also moves cleanly between AI models, design tools, and code: that’s the interchange property. Standing alone is what makes it a real format; interchange is one of the things that format is good for.
+
+---
+
+### What problem does .gui actually solve?
+
+The honest version: .gui isn’t trying to replace HTML, CSS, or your design tool. It adds one missing thing: a portable, throwaway design layer for the AI era.
+
+The fair skeptic’s question, asked several ways when the format was first shown publicly, is "what problem does this solve that HTML, CSS, or Figma don’t already?" HTML is as simple as it gets; design tools already exist; AI already writes code. Adding a file format sounds like adding a step. So it’s worth answering directly: **.gui is not a better way to build the final product.** HTML, SwiftUI, and Compose already do that, and `.gui` doesn’t try to compete with them ([.gui vs HTML](https://dotgui.org/guides/vs-html/)). What it adds is a layer that didn’t have an open format before: **disposable design ideation**.
+
+## The gap: there’s no cheap unit of "a UI idea"
+
+Today an interface idea has to be born as one of two heavy things. Either it’s **code** (which means a repo, a toolchain, a component library, and a design that’s now entangled with an application you have to maintain) or it’s a **design-tool document**, which lives inside one vendor’s app, in a workspace, behind an account. Both are workspaces. Neither is a *file* you can generate ten of, glance at, keep one, and delete the rest. A screenshot is that cheap, but a screenshot is a dead end: you can’t edit it, render it at a different size, or convert it to code without starting over ([.gui vs a screenshot](https://dotgui.org/guides/vs-screenshots/)).
+
+A `.gui` file *is* that missing cheap unit: one file is one screen, not a workspace. You can ask an agent for six variations of a checkout screen, get six files, compare them side by side, keep one, and throw the rest away, and none of them ever touched your codebase or your production Figma file. That workflow (rapid, low-commitment, before anything is real) is the one the format is actually built for.
+
+## Why now, and not five years ago
+
+The honest answer to "why didn’t this need to exist before" is that until recently the only things authoring and consuming UIs were humans, and humans were fine with tool-specific formats. Now AI generates and reads interfaces too, and an AI agent wants a *structured, textual target it can write directly*, not a screenshot it has to reason about visually, and not a full application it has to scaffold to express one screen ([see the FAQ on AI-readability](https://dotgui.org/faq/)). The format that fits between "an image" and "a running app" simply had no open standard, the way graphics had none before SVG.
+
+## What it is NOT solving
+
+> **Don't:** It’s not solving "pixel-perfect designer-to-developer handoff." A .gui file is an exchange and ideation artifact, not a guarantee that generated code matches your internal component library. See Handoff, fidelity, and your component library.
+
+> **Don't:** It’s not solving "build and ship a production app from one file." The final app is still HTML/SwiftUI/Compose. .gui is the source-of-truth design those get built from, not the runtime.
+
+> **Do:** It IS solving "give an AI agent, a design tool, and a developer one portable thing they can all read, generate, preview, and convert": the interchange gap, not the runtime.
+
+If your workflow never generates throwaway design ideas and never moves a design between an AI model, a design tool, and code, it’s reasonable to conclude you don’t have the problem `.gui` addresses. The format is for the workflow where those handoffs happen constantly and each one currently means a re-authoring step.
+
+**FAQ**
+
+- **Isn’t adding a file format just adding a step to the process?** Only if you were going to move a design between an AI model, a design tool, and code anyway, which today means re-authoring it at each hop. .gui replaces those re-authoring steps with one portable file, and adds a cheap ideation layer (one file = one screen) that didn’t have an open format before. If your workflow never does those handoffs, you likely don’t need it.
+- **Why not just use a single HTML file?** You can, and for a finished web page you probably should. But an HTML file is a runtime artifact tied to the browser, and using it as a design’s source of truth drags in CSS, a toolchain, and eventual entanglement with an app. .gui is a static, closed-vocabulary file meant to be generated, compared, and discarded cheaply, then converted to HTML (or SwiftUI, or Compose) when you commit.
+- **What can .gui do that Figma plus AI can’t already?** Give you a design as a portable open file instead of a document locked inside one vendor’s workspace. A .gui file can be generated by any AI agent, previewed with one script tag, version-controlled as text, and converted to code, without a Figma account or API in the loop. Figma remains a great place to refine one; .gui is what moves between tools.
+
+---
+
+### Does .gui store layout intent or fixed pixels?
+
+The question that decides whether a UI format is worth having: does it record where things landed, or the rules that put them there? .gui stores intent, which is also its hardest spec problem.
+
+There’s a sharp version of the "is this just SVG?" critique that’s worth taking head-on: *the hard call for any UI format is whether a file stores layout intent or absolute geometry. Store absolute positions and you’ve reinvented SVG. Store intent and you have to commit to one layout model that iOS, Android, and web will each disagree with.* That’s exactly the right framing, and `.gui` chooses **intent**, knowingly, because it’s the only choice that makes the format more than a screenshot with editable text.
+
+## What "intent" means concretely
+
+A geometry-only file says "this box is at x=16, y=240, 343 wide." An intent file says "these cards are a [`col`](https://dotgui.org/spec/col/) with `gap="16"`, each one full-width, inside a frame with 16 padding." The second form carries the *reason* the layout looks the way it does, so a renderer on a wider screen, or a different platform, can re-run the rule instead of replaying stale coordinates ([row vs col vs grid](https://dotgui.org/guides/layout-row-col-grid/)). `.gui`’s layout vocabulary (stacks, grids, `gap`, nine-point `align` per [RFC-0012](https://github.com/dotgui/core/blob/main/rfcs/0012-align-9point.md), and [tokens](https://dotgui.org/spec/tokens/) for values meant to repeat per [RFC-0005](https://github.com/dotgui/core/blob/main/rfcs/0005-token-system.md)) exists precisely so the file records rules, not resolved pixels.
+
+Semantic [roles](https://dotgui.org/spec/roles/) are the same instinct one level up: `role="nav-bar"` records what a subtree *is*, not just how it was drawn, so a tool reading the file inherits the author’s intent rather than guessing it back from geometry ([RFC-0041](https://github.com/dotgui/core/blob/main/rfcs/0041-role-attribute.md)). A card grid that only carries coordinates will be rebuilt by the next tool as boxes that happen to line up; one that carries "this is a grid, these are cards" can be rebuilt as the same idea.
+
+## The honest cost of choosing intent
+
+Committing to intent means committing to *one* layout model, and no single model maps losslessly onto every platform’s engine: flexbox, Auto Layout, and Compose’s modifiers genuinely disagree at the edges. This is the real spec work, and the format doesn’t pretend otherwise. Two design decisions keep it tractable rather than solved-by-fiat: the layout primitives are deliberately a *small* set (a single [`stack`](https://dotgui.org/spec/stack/) with `row`/`col`/`grid` as sugar, per [RFC-0006](https://github.com/dotgui/core/blob/main/rfcs/0006-layout-sugar-tags.md)), so there’s less surface for platforms to diverge on; and open edge cases are worked out in public RFCs rather than hidden in a reference implementation, so the grid system’s unresolved corners, for instance, are argued out in [RFC-0032](https://github.com/dotgui/core/blob/main/rfcs/0032-grid-system.md).
+
+The precedent the format follows on purpose is the one that already survived this: the layout model that gets nailed down is defined by the *renderer conformance corpus*, not by prose in the spec. Where GTK’s `.ui`, QML, and XAML each kept a single reference implementation and let platforms diverge silently, the intent-vs-geometry line only holds if "what this layout means" is pinned by shared pass/fail fixtures every renderer must agree on ([Versioning and the conformance corpus](https://dotgui.org/guides/roadmap/)).
+
+## So: SVG or not?
+
+Not SVG, because SVG is the geometry answer by design: it has shapes and absolute paths and no concept of a layout that re-runs ([.gui vs SVG](https://dotgui.org/guides/vs-svg/)). `.gui` pays a real price for taking the intent side of the fork (a layout model it has to defend across platforms), and that price is the whole reason the format is useful instead of being SVG with extra tags.
+
+**FAQ**
+
+- **Does a .gui file store absolute x/y coordinates?** No, not as the primary model. It stores layout intent (stacks, grids, gaps, alignment, tokens, and roles) so a renderer re-runs the layout rule per platform and screen size instead of replaying fixed coordinates. Absolute positioning exists where a design genuinely needs it, but it isn’t how the format describes ordinary layout.
+- **If it stores intent, how can iOS, Android, and web all render it the same?** By pinning what each layout construct means with a shared conformance corpus (pass/fail fixtures every renderer must agree on) rather than leaving it to prose. That’s the lesson from SVG and HTML, which shipped huge test suites, versus XAML/QML/GTK .ui, which kept single reference implementations and diverged. It’s the format’s hardest, most deliberate work.
+- **Doesn’t committing to one layout model make .gui opinionated?** Yes, deliberately. A small, opinionated set of primitives (stack/row/col/grid with gap and nine-point align) is what lets the same file mean the same thing across tools. The alternative, exposing every platform’s full layout API, would make files unportable, which defeats the point of an interchange format.
+
+---
+
+### Versioning, interactivity, and the conformance corpus
+
+Where the format is (v0.2), where it’s going (v1.0 visual completeness, v2.0 motion), and the honest answer to "the ecosystem is the existential question."
+
+Two of the most substantive questions raised about the format weren’t about syntax. They were about time and trust: *does it handle component state and interactivity?* and *the ecosystem is the existential question, not the spec.* Both are fair, and both have the same shape of answer: a deliberate order of operations, published in the open, rather than a promise everything already works.
+
+## Where the format is: v0.2, visual first
+
+The current spec (v0.2) already covers the visual building blocks: [frames, stacks, grids, text, images, shapes](https://dotgui.org/spec/), [tokens](https://dotgui.org/spec/tokens/), styles, variants, fonts, effects, and light/dark modes. The whole point of the 0.x line is to *find what’s still missing on the visual side* and close it, so that v1.0 can credibly claim to describe any static UI completely. That’s the near-term work: coverage of the visual surface, not new capability categories.
+
+## Interactivity and state: planned for v2.0
+
+Today `.gui` describes **components, variants, and styles**, so a button’s hover and pressed *appearances* can exist as variants, but it does not yet describe **behavior**: what triggers a state change, conditional visibility, data binding, or motion. That’s intentional sequencing, not an oversight. The plan is to stabilize the visual format through v1.0 first, then layer motion and richer interactivity on top in v2.0, the same way SVG settled its static drawing model before SMIL animation was built over it. Designing interactivity before the visual base is stable would mean specifying behavior against a moving target.
+
+> **Do:** Practical read for today: use .gui for static screens and multi-state appearance (via variants). Don’t expect it to express runtime behavior or animation yet; that’s the v2.0 line.
+
+## The ecosystem question, answered honestly
+
+The sharpest critique is historical: SVG and HTML won because standards bodies shipped *thousands of pass/fail conformance tests* alongside reference renderers, so platforms couldn’t diverge silently. XAML, QML, and GTK’s `.ui` each had a single reference implementation, no public test corpus, and each platform drifted until the format stayed an export target. A UI format’s real spec is its conformance corpus, not its prose, and any serious effort has to ship fixtures (nested grids, RTL, intrinsic sizing) before it ships features.
+
+The format takes that seriously rather than waving it off. Two things already point that direction: the engine is **100% deterministic** (validation, rendering, and scoring make zero AI calls, per [RFC-0010](https://github.com/dotgui/core/blob/main/rfcs/0010-no-ai-in-pipeline.md)), which is a precondition for reproducible pass/fail tests at all; and every change to the format goes through a **public RFC process** in [dotgui/core](https://github.com/dotgui/core), so the edge cases that break naïve renderers (see [RFC-0032](https://github.com/dotgui/core/blob/main/rfcs/0032-grid-system.md) on grids) get argued out in the open before they’re fixed in one implementation’s quirks. The honest status: a growing fixture corpus and a second independent renderer are the work that matters most for the format’s survival, and they’re treated as such, not as something the spec already finished.
+
+## What "1.0" will actually mean
+
+A credible v1.0 is not "more tags." It’s (1) visual completeness, nothing static a designer needs that the format can’t express, and (2) enough of a conformance corpus that two independent renderers agree on the fixtures. Motion, behavior, and data binding are explicitly deferred to v2.0 so that 1.0 can be a stable, testable, boring foundation. That ordering is the roadmap.
+
+**FAQ**
+
+- **Does .gui support interactivity, component state, or animation today?** It supports multi-state appearance through components, variants, and styles, so hover/pressed looks can exist as variants, but not runtime behavior, conditional logic, data binding, or motion. Those are planned for v2.0, after the visual format stabilizes at v1.0. Use .gui for static screens today.
+- **What is the difference between v1.0 and v2.0 on the roadmap?** v1.0 is about visual completeness plus a conformance corpus solid enough that independent renderers agree: a stable, testable static format. v2.0 builds motion and richer interactivity on top of that base, the way SVG added animation after its static model was settled.
+- **How will .gui avoid the fate of XAML, QML, and GTK .ui?** By treating the conformance corpus as the real spec. Those formats kept single reference implementations and no public test suite, so platforms diverged silently. .gui’s engine is fully deterministic (a precondition for reproducible tests) and its changes go through public RFCs; a shared fixture corpus and a second independent renderer are treated as the format’s most important work, not an afterthought.
+
+---
+
+### .gui vs XAML, QML, and GTK .ui: interchange, not a runtime
+
+The most common reaction to .gui is "isn’t this just XAML?" It has the same markup shape and a different job: those are UI languages bound to a runtime; .gui is a portable target that can emit them.
+
+Show a markup-based UI format to enough engineers and someone will say "so… XAML?", and they’re not wrong to notice the resemblance. XAML, QML, GTK’s `.ui`, JavaFX FXML, and `.gui` all describe interfaces as declarative, tag-based markup. The XKCD "now there are 15 competing standards" reflex is the honest thing to feel here. The difference isn’t syntax; it’s **what the file is for**.
+
+## XAML/QML/.ui are runtimes; .gui is an interchange target
+
+XAML is a UI language for Microsoft’s frameworks (WPF, WinUI, MAUI); QML is Qt’s; GTK `.ui` is GTK’s; FXML is JavaFX’s. Each is bound to *its own* runtime and toolchain: a XAML file expects the .NET layout engine, data-binding system, and control library to be present, and it is meaningless without them. That binding is a feature for building an app on that stack and a wall for moving a design off it. `.gui` deliberately has **no runtime of its own**: it’s not a framework, it runs no logic ([.gui vs HTML](https://dotgui.org/guides/vs-html/)), and it isn’t meant to be the application you ship.
+
+The mental model is one layer up. Think of `.gui` as sitting *above* XAML/SwiftUI/Compose the way SVG sits above a specific rendering engine: a portable, human-readable representation of a UI that can be previewed, edited, versioned, generated by AI, and then *converted into* any of those runtime languages, rather than competing with them ([What problem does .gui solve?](https://dotgui.org/guides/what-problem/)). Asking "XAML or `.gui`?" is a category error; the intended answer is ".gui, then generate the XAML."
+
+## Where the analogy to XAML breaks down
+
+|  | XAML / QML / .ui | .gui |
+| --- | --- | --- |
+| Primary purpose | Author an app on one framework | Exchange a design between tools, AI, and platforms |
+| Runtime | Bound to one (.NET, Qt, GTK) | None: converted to a target |
+| Logic / bindings | Yes: code-behind, data binding | No logic; static by design |
+| Portability across stacks | Not a goal | The entire goal |
+| Meant to ship as-is | Yes | No: it’s the source, not the product |
+
+"But MAUI already runs XAML cross-platform" is the strongest version of the objection. It’s true, and it proves the point rather than refuting it: MAUI makes XAML portable *across Microsoft’s runtime on multiple OSes*. It does not let a Figma plugin, a web CDN viewer, a Swift codebase, and an arbitrary AI agent all read and write the same file without the .NET stack. Cross-platform-within-one-ecosystem is not the same problem as tool-and-model-agnostic interchange, which is the one `.gui` targets.
+
+## Why reuse a markup shape at all, then?
+
+Because the resemblance is the point: models are trained on enormous amounts of tag-based markup, so an AI agent writing `.gui` is closer to writing JSX than to learning a novel schema ([RFC-0001](https://github.com/dotgui/core/blob/main/rfcs/0001-xml-over-json.md)). Borrowing the *familiar shape* of XAML-family markup while dropping the runtime binding is a deliberate trade, not an accident: the goal was the most learnable possible surface for both humans and models, not a new aesthetic.
+
+The XKCD worry only really applies to a *15th runtime*. A portable interchange layer whose whole job is to convert *into* the existing runtimes is the opposite move: fewer re-authoring steps between the standards that already exist, not one more island beside them.
+
+**FAQ**
+
+- **Isn’t .gui just XAML with different tags?** They share a declarative, tag-based shape but not a purpose. XAML is a UI language bound to Microsoft’s runtime: it needs the .NET layout and binding engine to mean anything. .gui has no runtime of its own; it’s a portable interchange file that gets converted into XAML, SwiftUI, Compose, or HTML. You wouldn’t pick one over the other; you’d design in .gui and generate the XAML.
+- **MAUI already runs XAML cross-platform, doesn’t that cover this?** It covers cross-platform within Microsoft’s runtime. It doesn’t let a design tool, a web viewer, a Swift codebase, and an arbitrary AI agent all read and write the same file without the .NET stack. .gui targets tool- and model-agnostic interchange, which is a different problem from one framework running on several operating systems.
+- **Isn’t this the "15 competing standards" problem?** That reflex applies to a new runtime competing with existing ones. .gui isn’t a runtime; it’s a layer above them whose job is to convert into XAML, SwiftUI, Compose, and HTML. It aims to reduce re-authoring between existing standards, not to become a 15th framework beside them.
+- **Why copy XAML-style markup instead of inventing a cleaner syntax?** Because familiarity is the feature. AI models are trained on huge amounts of tag-based markup, so writing .gui is close to writing JSX rather than learning a new schema. The format reuses the learnable shape of markup while dropping the runtime binding that ties XAML to .NET.
+
+---
+
+### .gui vs React and Vue: a file format, not a UI framework
+
+A question that comes up fast: "why is the dotgui site built in Vue, not .gui?" Because .gui isn’t a framework you deploy; it’s the design the framework gets built from. Here’s the distinction.
+
+When people first meet `.gui`, a very common reflex is to slot it next to React or Vue and ask which one wins. There’s even a sharp version of the question aimed straight at this site: *"if `.gui` is so good, why is dotgui.org itself built in Vue instead of `.gui`?"* It’s a fair thing to ask, and the answer is the whole distinction: **React and Vue are UI frameworks you build and run an application with; `.gui` is a design file format, not a framework at all** ([.gui is not a runtime](https://dotgui.org/guides/not-a-runtime/)). They aren’t competing; they sit at different stages of the same pipeline.
+
+## Different layers, not different options
+
+React and Vue are **runtimes**: you install them, write components that hold state and logic, and ship a running application whose interface only exists after their code executes in a browser. `.gui` runs no logic and ships nothing; it’s a static, self-contained file that *describes* an interface ([.gui vs HTML](https://dotgui.org/guides/vs-html/)). Asking "React or `.gui`?" is like asking "React or a Figma file?": the design is the input, the framework is what you build from it. The right sentence is "design it in `.gui`, then generate the React (or Vue) code," not "pick one."
+
+|  | React / Vue | .gui |
+| --- | --- | --- |
+| What it is | A UI framework / runtime | A design file format |
+| You install it? | Yes, plus a toolchain | No, you open the file |
+| Holds state & logic | Yes | No: static by design |
+| Is the shipped app | Yes | No: it’s the design the app is built from |
+| Portable across stacks | No: framework-specific | Yes: convert to React, Vue, SwiftUI, Compose, HTML |
+
+## So why is this site built in Vue?
+
+Because that question actually reveals how the format is meant to be used, not a contradiction. dotgui.org is a real, deployed web application: it needs routing, interactivity, and a runtime, which is exactly the job a framework like Vue exists to do and exactly the job `.gui` deliberately does *not* do. What actually happened is the useful part: the site’s pages were **designed as `.gui` files first** (generated with AI, iterated on, previewed), and once the design was right, converted into a Vue project to ship. The `.gui` file was the source of truth for the design; Vue is the runtime it was built into. A design format shipping *as itself* would be the contradiction, the same way you wouldn’t deploy a Figma file as your production frontend.
+
+> **Do:** The mental model: .gui is upstream of your framework. Ideate and agree on the design as a .gui file, then generate React/Vue/SwiftUI/Compose from it and build the real app there.
+
+## Where each one is the right tool
+
+Reach for React or Vue when you’re building the actual product: anything with behavior, data, and state that has to run. Reach for `.gui` one step earlier: to generate and compare interface ideas cheaply, hand a design between an AI agent, a designer, and a developer as one portable file, and keep a readable source of truth for what the screen is supposed to look like before it’s entangled in framework code ([What problem does .gui solve?](https://dotgui.org/guides/what-problem/)). One doesn’t replace the other; `.gui` makes the step *before* React or Vue an open, machine-readable artifact instead of a screenshot or a locked design-tool document.
+
+**FAQ**
+
+- **Is .gui a replacement for React or Vue?** No. React and Vue are UI frameworks you install and ship a running app with; they hold state and logic. .gui is a static design file format that runs no logic and ships nothing. It doesn’t compete with them; you design a screen as a .gui file and then generate React or Vue code from it, the way you’d build from a Figma file. They’re different stages of the same pipeline.
+- **Why is the dotgui website built in Vue instead of .gui?** Because dotgui.org is a real deployed web app that needs a runtime (routing, interactivity, state), which is exactly what a framework like Vue is for and exactly what .gui deliberately isn’t. The site’s pages were designed as .gui files first (generated with AI and iterated on), then converted into a Vue project to ship. The .gui file was the design source of truth; Vue is the runtime it was built into. Deploying a design format as-is would be the actual contradiction.
+- **Can I build a full application directly from a .gui file?** Not as a runtime: a .gui file has no logic, state, or data binding, so it isn’t a shippable app on its own. What you do is generate framework code (React, Vue, SwiftUI, Compose, HTML) from it and build the real app there. .gui is the portable design upstream of the framework, not a substitute for it.
+
+---
+
+### Handoff, pixel-perfection, and your component library
+
+The fair developer objection: "a designer sends me a .gui, AI interprets it, it won’t be pixel-perfect, and it won’t map to our internal components." True, and not what .gui is claiming to do.
+
+One of the most grounded objections raised about the format comes from developers, not designers: *a designer hands me a `.gui`, an AI layer interprets it into code, that output is not going to be pixel-perfect, and it won’t map to our internal component system, so for a real web project, isn’t it useless?* The honest answer is that this is a real limitation of *one* workflow, and it’s not the workflow `.gui` is actually selling.
+
+## What .gui does and doesn’t promise
+
+> **Don't:** It does NOT promise: feed a .gui file to a code generator and get production code that pixel-matches the design and slots into your existing component library. No format delivers that reliably, because your component library is opinionated in ways a portable file can’t know about.
+
+> **Do:** It DOES promise: a portable, readable, convertible description of a screen that a designer, an AI agent, and a developer can all open, for ideation, review, and a strong first-draft translation, not a final build.
+
+This is the same boundary every portable design format lives inside. A Figma file doesn’t emit your production components either; a developer looks at it and rebuilds the screen with the team’s own primitives. `.gui` doesn’t change that reality; it makes the thing being handed over an *open, diffable, AI-readable file* instead of a screenshot or a link to a vendor workspace ([.gui vs Figma files](https://dotgui.org/guides/vs-figma/)).
+
+## The component-library gap is real, and unavoidable
+
+Every serious front-end team has a highly opinionated component library, and generated markup that doesn’t map to it will get looked at and rebuilt by hand regardless of source format. That’s not a `.gui` failure; it’s true of any design-to-code path, including Figma-to-code. What a semantic format can do is make the rebuild *cheaper*: because `.gui` carries [roles](https://dotgui.org/spec/roles/) (`role="button"`, `role="card"`) and [tokens](https://dotgui.org/spec/tokens/) rather than only geometry, an agent mapping a screen onto your `&lt;Button&gt;` and `&lt;Card&gt;` has explicit intent to match against, instead of inferring "this rounded box was probably a button" from pixels ([Intent vs geometry](https://dotgui.org/guides/intent-vs-geometry/)).
+
+## Where it actually pays off
+
+The value shows up before the pixel-perfect stage, not at it. A developer can prompt an idea, get a `.gui` file, and share it with a designer for feedback without touching production Figma or the app itself ([What problem does .gui solve?](https://dotgui.org/guides/what-problem/)). A designer can hand a developer a file that previews identically in any browser with one script tag ([the embed library](https://dotgui.org/embed/)) and reads as structured intent, so the "what did they mean here" round-trips shrink. The final, pixel-perfect implementation is still a developer building with the team’s components; `.gui` just makes everything upstream of that step portable and machine-readable.
+
+> **Do:** Realistic expectation: treat generated code from a .gui file as a first draft and a source of intent, then implement for real with your own component library, exactly as you already do with a Figma handoff.
+
+**FAQ**
+
+- **Will code generated from a .gui file be pixel-perfect?** No, and it doesn’t claim to be. .gui is an exchange and ideation format, not a codegen guarantee. Generated code is a strong first draft carrying explicit intent (roles, tokens), which a developer then implements properly with their own component library, the same as a Figma-to-code handoff.
+- **Our team has its own component library, the output won’t map to it. Is .gui useless for us?** The generated markup won’t map to your components automatically, but neither does any design format, including Figma. What .gui adds is that the handoff artifact is an open, AI-readable file carrying roles and tokens, so mapping a screen onto your <Button>/<Card> has explicit intent to match instead of guessing from pixels. It makes the rebuild cheaper, not automatic.
+- **So how is a .gui handoff better than a Figma handoff?** It’s portable and machine-readable without a vendor account or API: it previews in any browser with one script tag, version-controls as text, is diffable, and an AI agent can read exactly what’s on screen. The developer still rebuilds with their own components, but everything upstream of that step is an open file rather than a locked workspace.
 
