@@ -16,16 +16,24 @@
 # "View raw" → the extension-less /examples/<slug>/raw file. Serve it as UTF-8
 # text so the .gui source displays in-browser (GitHub-style) instead of
 # downloading, since Netlify would otherwise default to octet-stream.
+# X-Robots-Tag: noindex — the raw .gui source duplicates the rendered example
+# page, so keep it out of traditional search results (avoids thin/duplicate
+# content and a bad UX landing on raw XML). This does NOT block fetching, so
+# AI crawlers can still read the .gui source, which is on-brand for the format.
 [[headers]]
   for = "/examples/*/raw"
   [headers.values]
     Content-Type = "text/plain; charset=utf-8"
+    X-Robots-Tag = "noindex"
 
 # "Download .gui" → the extension-less /examples/<slug>/download file (the .gui
 # bundle). Force a download so a direct visit saves the file rather than
 # rendering garbage; the anchor's download attribute supplies the real name.
+# X-Robots-Tag: noindex — a binary download is not a page; keep it out of the
+# search index.
 [[headers]]
   for = "/examples/*/download"
   [headers.values]
     Content-Type = "application/octet-stream"
     Content-Disposition = "attachment"
+    X-Robots-Tag = "noindex"
